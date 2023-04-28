@@ -15,7 +15,7 @@
 </head>
 <script type="text/javascript">
 	$(function(){
-		
+		//히히히힛
 		//팔로우하기
 		$("#btn1").click(function(){
 			
