@@ -111,6 +111,7 @@
 	<button type="button" id="btn2">팔로우확인</button>
 	
 	
-	수정할거지롱~~
+	수정할거지롱~~ <br>
+	예지도 수정 했지롱~~
 </body>
 </html>
