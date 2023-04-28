@@ -14,5 +14,8 @@ public class CommentDto {
 	private String user_num;
 	private String post_num;
 	private String comment_content;
+	private int comment_group;
+	private int comment_step;
+	private int comment_level;
 	private Timestamp comment_writeday;
 }
