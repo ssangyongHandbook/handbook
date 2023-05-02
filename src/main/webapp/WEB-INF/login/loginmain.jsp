@@ -18,5 +18,15 @@
 <body>
 시작페이지<br>
 <b>유저 개수: ${total }</b>
+<div>
+   <h1>handbook</h1>
+   <p>Handbook에서 전세에 있는 친구, 가족 <br>지인들과 함께 이야기를 나눠 보세요.​</p>
+</div>
+<table class="table table-bordered">
+   <form action="" method="post">
+      <input class="form-control" type="email" name="email" required="required" placeholder="이메일 입력"><br>
+      <input class="form-control" type="password" name="pass" required="required" placeholder="비밀번호 입력">
+   </form>
+</table>
 </body>
 </html>

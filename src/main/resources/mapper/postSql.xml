@@ -4,4 +4,11 @@
 	<select id="getTotalCount" resultType="int">
 		select count(*) from post
 	</select>
+	<insert id="insertPost" parameterType="PostDto">
+		insert into post(user_num,post_content,post_file,post_access,post_writeday) values (#{user_num},#{post_content},#{post_file},#{post_access},now())
+	</insert>
+	
+	<select id ="postList" parameterType="HashMap" resultType="PostDto">
+	select * from post order by num desc 
+	</select>
 </mapper>
