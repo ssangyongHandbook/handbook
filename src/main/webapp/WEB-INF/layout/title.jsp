@@ -43,7 +43,10 @@
 	</div> 
 
 	<div>
-		<button type ="button">로그아웃</button>
+		<c:if test="${sessionScope.loginok!=null }">
+    		<button type ="button" onclick="location.href='/login/logoutprocess'">로그아웃</button>
+		</c:if>
+		
 		<a href="#"><span><img src="../image/message.png" alt="" style = "width:40px;"></span></a>
 		<a href="#"><span><img src="../image/bell.png" alt="" style = "width:40px;"></span></a>
 		<a href="#"><span><img src="../image/user.png" alt="" style = "width:40px;"></span></a>
