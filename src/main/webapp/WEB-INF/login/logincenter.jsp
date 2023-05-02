@@ -16,17 +16,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
 </head>
 <body>
-시작페이지<br>
-<b>유저 개수: ${total }</b><br>
 <div>
-	<div style="margin:20px; float:left; width: 50%;">
-		<div style="margin-left: 100px;">
-			<p style="font-size: 50px;">handbook</p>
-			<p style="font-size: 20px;">Handbook에서 전세에 있는 친구, 가족 <br>지인들과 함께 이야기를 나눠 보세요.​</p>
-		</div>
-	</div>
-	<div style="margin:20px; float:right; width: 40%;">
-		<div style="margin-right: 100px;">
+	<div style="margin:0px auto; width: 400px; margin-top: 100px;">
+		<p style="font-size: 3em;" align="center">handbook</p>
+		<div>
 			<form action="/login/loginprocess" method="post">
 				<div class="form-floating">
 				   <input type="text" class="form-control" id="user_id" name="user_id" placeholder="아이디 입력">
@@ -39,12 +32,11 @@
 				</div><br>
 			</form>
 			
+			
 			<div align="center">
 					<a href="#">계정을 잊으셨나요?</a>
 			</div><br>
-			<div align="center">
-				<button type="button" class="btn btn-warning" onclick="location.href=''">새 계정 만들기</button>
-			</div>
+			
 		</div>
 	</div>
 </div>
