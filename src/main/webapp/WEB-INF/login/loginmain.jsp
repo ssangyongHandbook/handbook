@@ -43,7 +43,7 @@
 					<a href="#">계정을 잊으셨나요?</a>
 			</div><br>
 			<div align="center">
-				<button type="button" class="btn btn-warning" onclick="location.href=''">새 계정 만들기</button>
+				<button type="button" class="btn btn-warning" onclick="location.href='/signupform'">새 계정 만들기</button>
 			</div>
 		</div>
 	</div>
