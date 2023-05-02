@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTDMapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sns.handbook.mapper.MessageMapperInter">
+	<select id="selectAllChatMemeber" parameterType="String" resultType="MessageDto">
+		select distinct mess_group,sender_num,receiver_num from message where sender_num=#{unum} or receiver_num=#{unum};
+	</select>
+</mapper>
