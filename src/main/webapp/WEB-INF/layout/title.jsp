@@ -49,7 +49,7 @@
 		
 		<a href="#"><span><img src="../image/message.png" alt="" style = "width:40px;"></span></a>
 		<a href="#"><span><img src="../image/bell.png" alt="" style = "width:40px;"></span></a>
-		<a href="#"><span><img src="../image/user.png" alt="" style = "width:40px;"></span></a>
+		<a href="/user/mypage"><span><img src="../image/user.png" alt="" style = "width:40px;"></span></a>
 		<a href="#"><span class="glyphicon glyphicon-th" style="padding:10px; float:right; font-size:20pt;"></span></a>
 	</div>
 

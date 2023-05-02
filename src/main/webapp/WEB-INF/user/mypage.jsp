@@ -13,6 +13,34 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
+<script type="text/javascript">
+	$(function(){
+		
+		//강제 호출
+		$("#btnnewcover").click(function(){
+			
+			$("#newcover").trigger("click");
+		});
+		
+		//커버 사진 변경
+		$("#newcover").change(function(){
+			
+			var num=$(this).attr("num");
+			alert(num);
+			
+			var form=new FormData();
+			form.append("user_cover",$("#newcover")[0].files[0]); //선택한 1개 추가
+			form.append("user_num",num);
+			
+			$.ajax({
+				
+				type: "post",
+				dataType: "text",
+				url:
+			})
+		});
+	})
+</script>
 <style type="text/css">
 	.cover{
 			width: 100%;
@@ -101,24 +129,21 @@
 			background-color: pink;
 		}
 		
-		.cover-label{
+		#btnnewcover{
 			cursor: pointer;
 			color: white;
 			background-color: black;
 			padding: 6px 16px;
 			border-radius: 5px;
+			position: relative;
+			left: 85%;
+			top: 50%;
 		}
 		
 		.btnprofile{
 			position: relative;
     		bottom: 30%;
     		left: 86%;
-		}
-		
-		.btncover{
-			position: relative;
-    		top: 60%;
-    		left: 85%;
 		}
 		
 		.modal-photo{
@@ -201,10 +226,14 @@
 		</div>
 		
 		<div class="cover-bottom" style="width: 100%; height: 33%">
-			<div class="btncover">
-				<label for="cover-photo" class="cover-label">커버 사진 추가</label>
-				<input type="file" style="display: none;" id="cover-photo" class="cover-photo">
-			</div>
+	
+				<!-- <label for="cover-photo" class="cover-label">커버 사진 추가</label>
+				<input type="file" style="display: none;" id="cover-photo" class="cover-photo"> -->
+				<input type="file" id="newcover" style="display: none;" num="${dto.user_num }">
+				
+				<!-- 수정 시 호출 -->
+				<button type="button" id="btnnewcover">커버 사진 추가</button>
+			
 		</div>
 	</div>
 	
