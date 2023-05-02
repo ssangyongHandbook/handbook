@@ -21,4 +21,3 @@ mybatis:
   type-aliases-package: com.sns.handbook.*
   mapper-locations:
   - /mapper/**/*.xml #mapper 폴더 안에 어느 폴더에 있든 xml로 끝나는 파일      
-

@@ -14,8 +14,43 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
+<style type="text/css">
+ul{
+   list-style:none;
+  }
+</style>
 </head>
 <body>
-메뉴
+	<div>
+	<ul class = "menu">
+		<li>
+		<br>
+        <c:set var = "root" value = "<%=request.getContextPath() %>"/>
+	
+		<c:if test="${sessionScope.loginok==null }">
+		
+		<img alt = "" src = "${root }/noimg.png" width="130" height="130" class = "img-circle" style ="border:1px solid black;">
+		</c:if>
+	
+		<c:if test="${sessionScope.loginok!=null }">
+		<img alt = "" src = "${root }/photo/${sessionScope.loginphoto}" width="130" height="130" class = "img-circle">
+		</c:if>
+		<br><br>
+		</li>
+		
+        <li>
+            <a href="#"><span class="glyphicon glyphicon-search" style="padding:10px;">&nbsp;팔로우 추천</span></a>
+        </li>
+        <li>
+            <a href="#"><span class="glyphicon glyphicon-th-list" style="padding:10px;">&nbsp;팔로우 목록</span></a>
+        </li>
+        <li>
+            <a href="#"><span class="glyphicon glyphicon-star" style="padding:10px;">&nbsp;즐겨찾기</span></a>
+        </li>
+        <li>
+            <a href="#"><span class="glyphicon glyphicon-check" style="padding:10px;">&nbsp;게시글</span></a>
+        </li>
+    </ul>
+</div>
 </body>
 </html>

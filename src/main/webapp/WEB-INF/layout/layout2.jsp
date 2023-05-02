@@ -33,33 +33,34 @@ div.layout div.title {
 	width: 100%;
 	height: 80px;
 	background-color: yellow;
+	z-index: 1;
 }
 
-div.layout div.menu {
+/* div.layout div.menu {
 	position: fixed;
 	margin-top: 80px;
 	width: 200px;
 	height: 100%;
 	background-color: pink;
-}
+} */
 
 div.layout div.main {
-	max-width: 60%;
+	max-width: 80%;
 	min-width: 400px;
-	height: 1200px;
+	height: 1800px;
 	background-color: skyblue;
 	margin: 0 auto;
 	padding-top: 80px;
 }
 
-div.layout div.sideinfo {
+/* div.layout div.sideinfo {
 	position: fixed;
 	right: 0px;
 	margin-top: 80px;
 	width: 200px;
 	height: 100%;
 	background-color: lightgray;
-}
+} */
 </style>
 
 <script type="text/javascript">
@@ -71,7 +72,7 @@ div.layout div.sideinfo {
 		});
 	})
 
-	function side_change() {
+	/* function side_change() {
 		var windowWidth = $(window).width();
 		if (windowWidth < 900) {
 			$("div.menu").hide();
@@ -80,7 +81,7 @@ div.layout div.sideinfo {
 			$("div.menu").show();
 			$("div.sideinfo").show();
 		}
-	}
+	} */
 </script>
 </head>
 <body>
@@ -88,12 +89,12 @@ div.layout div.sideinfo {
 		<div class="title">
 			<tiles:insertAttribute name="title" />
 		</div>
-		<div class="menu">
+		<%-- <div class="menu">
 			<tiles:insertAttribute name="menu" />
 		</div>
 		<div class="sideinfo">
 			<tiles:insertAttribute name="sideinfo" />
-		</div>
+		</div> --%>
 		<div class="main">
 			<tiles:insertAttribute name="main" />
 		</div>
