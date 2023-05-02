@@ -18,5 +18,9 @@
 <body>
 시작페이지<br>
 <b>유저 개수: ${total }</b>
+
+<div>
+<button type="button" onclick="location.href='/user/mypage'">마이페이지</button>
+</div>
 </body>
 </html>
