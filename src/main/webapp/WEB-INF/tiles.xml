@@ -23,6 +23,7 @@
 	<!-- wild card_macro설정 -->
 	<definition name="/*/*" extends="layout">
 		<put-attribute name="main" value="/WEB-INF/{1}/{2}.jsp"></put-attribute>
+		<put-attribute name="sideinfo" value="/WEB-INF/layout/sideinfo.jsp"/>
 	</definition>
 	
 </tiles-definitions>

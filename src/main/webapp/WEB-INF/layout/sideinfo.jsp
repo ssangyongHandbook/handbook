@@ -17,5 +17,6 @@
 </head>
 <body>
 사이드바
+totalCount: ${total }
 </body>
 </html>

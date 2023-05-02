@@ -16,6 +16,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
 </head>
 <body>
-${total} 
+시작페이지<br>
+<b>유저 개수: ${total }</b>
 </body>
 </html>
