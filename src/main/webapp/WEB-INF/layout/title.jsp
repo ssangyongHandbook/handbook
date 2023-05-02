@@ -14,8 +14,42 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
+<style type="text/css">
+	.titlecontainer{
+		width:100%;
+		display: inline-flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+</style>
+
 </head>
 <body>
-제목
+<div class = "titlecontainer">
+
+	<div style="width: 180px;"><img src="../image/handbooklogo.png" style = "width:130px;"></div>
+	 <div class = "searcharea" style = "width:550px; margin: 10px;">
+			<form action = "list" class = "form-inline" style = "width:600px;">
+				
+					<div style = "width: 600px; background-color: white; display: inline-flex; align-items: center;">
+					<span class = "glyphicon glyphicon-search" style = "font-size: 15pt;"></span>
+					<input type = "text" name = "searchword" class = "form-control" style = "width:550px; border: none;" placeholder="검색어를 입력하세요">
+					<button type = "submit" class = "btn btn-success">검색</button>
+					</div>
+					
+				
+			</form>
+	</div> 
+
+<div>
+<button type ="button">로그아웃</button>
+<span><img src="../image/message.png" alt="" style = "width:40px;"></span>
+<span><img src="../image/bell.png" alt="" style = "width:40px;"></span>
+<span><img src="../image/user.png" alt="" style = "width:40px;"></span>
+<span class="glyphicon glyphicon-th" style="padding:10px; float:right; font-size:20pt;"></span>
+</div>
+
+</div>
+
 </body>
 </html>
