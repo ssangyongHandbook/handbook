@@ -25,6 +25,7 @@
 
 </head>
 <body>
+
 <div class = "titlecontainer">
 
 	<div style="width: 180px;"><img src="../image/handbooklogo.png" style = "width:130px;"></div>

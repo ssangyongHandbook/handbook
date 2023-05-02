@@ -4,4 +4,11 @@
 	<select id="getTotalCount" resultType="int">
 		select count(*) from user
 	</select>
+	
+	<!-- id와 pass 파라미터로 넘겨서 (map) 1 or 0 반환
+	1이면 있는 계정 0이면 없는 계정
+	-->
+	<select id="loginIdPassCheck" parameterType="Map" resultType="int">
+		select count(*) from user where user_id=#{user_id} and user_pass=#{user_pass}
+	</select>
 </mapper>
