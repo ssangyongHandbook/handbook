@@ -16,6 +16,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
 </head>
 <body>
-제목
+<img src="../image/handbooklogo.png" style = "width:130px;">
+<span class="glyphicon glyphicon-home" style="padding:10px; font-size:25pt;"></span>
+<span><img src ="../image/friend.png" style="width:50px;"></span>
+<span><img src ="../image/group.jpg" style="width:50px;"></span>
 </body>
 </html>
