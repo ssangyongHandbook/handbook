@@ -1,6 +1,7 @@
 package com.sns.handbook.serivce;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +30,31 @@ public class UserService implements UserServiceInter{
 		return mapperInter.loginIdPassCheck(map);
 	}
 
+	//우형 시작	
+	@Override
+	public void updateCover(String user_num, String user_cover) {
+		// TODO Auto-generated method stub
+		Map<String, String>map=new HashMap<>();
+		map.put("user_num", user_num);
+		map.put("user_cover", user_cover);
+		
+		mapperInter.updateCover(map);
+		
+	}
+
+	@Override
+	public List<UserDto> getAllUsers() {
+		// TODO Auto-generated method stub
+		return mapperInter.getAllUsers();
+	//우형 끝	
+	}
+
 	//이 아래 김희수
 	@Override
 	public void insertUserInfo(UserDto dto) {
 		mapperInter.insertUserInfo(dto);
 	}
 	//이 위 김희수
+
 	
 }
