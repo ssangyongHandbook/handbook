@@ -16,7 +16,6 @@ spring:
     url: jdbc:mysql://handbook.car3oj5eeydj.ap-northeast-2.rds.amazonaws.com:3306/handbook?serverTimezone=Asia/Seoul
     username: handbook
     password: rAkilcwjyB3c5aX
-    
 #mybatis
 mybatis:
   type-aliases-package: com.sns.handbook.*

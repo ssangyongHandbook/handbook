@@ -20,7 +20,6 @@ public interface UserServiceInter {
 
 	//이 아래 김희수 구현
 	public void insertUserInfo(UserDto dto);
-	public UserDto getUserDtoById(String user_id);
 	//이 위 김희수 구현
 
 }
