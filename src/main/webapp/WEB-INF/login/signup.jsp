@@ -28,7 +28,7 @@
 				</div><br>
 				
 				<div class="form-floating">
-				   <input type="email" class="form-control" id="user_email" name="user_email" placeholder="이메일 입력" required="required">
+					<input type="email" class="form-control" id="user_email" name="user_email" placeholder="이메일 입력" required="required">
 				</div><br>
 				
 				<div class="form-floating">
@@ -50,6 +50,7 @@
 						<input type="text" class="form-control" id="hp3" name="hp3" size="3" required="required" style="width:100px;display:inline-block;" required="required">
 					</p>
 				</div>
+
 				
 				<div class="form-floating">
 					<p>주소</p>
@@ -57,7 +58,7 @@
 					<input id="member_addr" name="addr1" class="form-control"type="text" placeholder="주소" readonly style="background-color: white;" required="required"> <br>
 					<input type="text" name="addr2" class="form-control" placeholder="상세주소">
   				</div><br>
-				
+  				
 				<div class="form-floating">
 					<p>생일</p>
 					<input type="date" class="form-control" name="user_birth" value="1990-01-01">
@@ -103,6 +104,5 @@
 	        }
 	    }).open();
 	}
-
 </script>
 </html>

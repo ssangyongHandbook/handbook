@@ -13,5 +13,6 @@ public interface UserMapperInter {
 	public int loginIdPassCheck(Map<String, String> map);
 	//이 아래 김희수 구현
 	public void insertUserInfo(UserDto dto);
-	//이 위 김희수 구현
+	public UserDto getUserDtoById(String user_id);
+	//이 위 김희수 구현 
 }

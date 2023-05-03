@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sns.handbook.dto.UserDto;
 import com.sns.handbook.serivce.UserService;
@@ -59,6 +60,5 @@ public class SignupController {
 		
 		//새 계정 생성 후 로그인 화면으로 간다.
 		return "/";
-
 	}
 }

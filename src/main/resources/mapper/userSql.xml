@@ -16,5 +16,10 @@
 	<insert id="insertUserInfo" parameterType="UserDto">
 		insert into user (user_id,user_pass,user_name,user_hp,user_addr,user_email,user_joindate,user_gender,user_birth) values(#{user_id},#{user_pass},#{user_name},#{user_hp},#{user_addr},#{user_email},now(),#{user_gender},#{user_birth});
 	</insert>
+	
+	<!-- id로 dto 반환 -->
+	<select id="getUserDtoById" parameterType="String" resultType="UserDto">
+		select * from user where user_id=#{user_id}
+	</select>
 	<!-- 여기 위까지는 김희수가 구현함. -->
 </mapper>

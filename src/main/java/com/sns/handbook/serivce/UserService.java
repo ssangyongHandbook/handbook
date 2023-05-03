@@ -34,6 +34,14 @@ public class UserService implements UserServiceInter{
 	public void insertUserInfo(UserDto dto) {
 		mapperInter.insertUserInfo(dto);
 	}
+	
+	@Override
+	public UserDto getUserDtoById(String user_id) {
+		// TODO Auto-generated method stub
+		return mapperInter.getUserDtoById(user_id);
+	}
 	//이 위 김희수
+
+	
 	
 }
