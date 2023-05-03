@@ -11,6 +11,14 @@
 	<select id="loginIdPassCheck" parameterType="Map" resultType="int">
 		select count(*) from user where user_id=#{user_id} and user_pass=#{user_pass}
 	</select>
+	
+	<!-- 예지 -->
+	<select id="getUserById" parameterType="String" resultType="UserDto">
+		select * from user where user_id=#{user_id}
+	</select>
+	<select id="getUserByNum" parameterType="String" resultType="UserDto">
+		select * from user where user_num=#{user_num}
+	</select>
 
 	
 	<!-- 우형 시작 -->
