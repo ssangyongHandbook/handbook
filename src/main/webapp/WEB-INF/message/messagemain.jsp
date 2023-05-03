@@ -23,7 +23,8 @@
 	}
 	
 	.messagememberlist{
-		width: 25%;
+		width: 350px;
+		min-width: 0px;
 		height: 100%;
 		background-color: pink;
 		position: fixed;
@@ -80,6 +81,51 @@
 		border: none;
 		outline: none;
 	}
+	
+	.messagememberphotobox{
+		width: 20%;
+	}
+	
+	.messagememberphoto{
+		width: 65px;
+		height: 65px;	
+		overflow: hidden;
+		border-radius: 100px;
+	}
+	
+	.messagememberphoto img{
+		width: 65px;
+	}
+	
+	.messagmember{
+		padding-left: 15px;
+		padding: 15px;
+		width: 100%;
+	}
+	
+	.onemember{
+		display: inline-flex;
+		width: 100%;
+	}
+	
+	.messagememberinfo{
+		margin-left: 10px;
+		margin-top: 10px;
+		display: inline-flex;
+		flex-direction: column;
+		width: 80%;
+	}
+	
+	#membername{
+		font-size: 13pt;
+		margin-bottom: 5px;
+	}
+	
+	#chatdetail{
+		width: 95%;
+		display: inline-flex;
+		justify-content: space-between;
+	}
 </style>
 </head>
 <body>
@@ -99,6 +145,29 @@
 		<div class="messagesearch">
 			<span class="glyphicon glyphicon-search"></span>
 			<input type="text" placeholder="Messenger 검색">
+		</div>
+		<div class="messagmember">
+			<c:forEach items="${chatMember }" var="chat">
+				<div class="onemember">
+					<div class="messagememberphotobox">
+						<div class="messagememberphoto">
+							<c:if test="${chat.member_photo==null }">
+								<img alt="사용자사진(없음)" src="/image/noimg.png">
+							</c:if>
+							<c:if test="${chat.member_photo!=null }">
+								<img alt="사용자사진" src="/사진업로드경로/${chat.member_photo }">
+							</c:if>
+						</div>
+					</div>
+					<div class="messagememberinfo">
+						<span id="membername">${chat.member_name }</span>
+						<div id="chatdetail">
+							<span id="recentchat">${chat.content }</span>
+							<span>${chat.writeday }</span>
+						</div>
+					</div>
+				</div>
+			</c:forEach>
 		</div>
 	</div>
 	
