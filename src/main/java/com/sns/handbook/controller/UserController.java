@@ -50,6 +50,29 @@ public class UserController {
 		}
 	}
 	
+	@PostMapping("/user/photoupdate")
+	@ResponseBody
+	public void photoupdate(String user_num,MultipartFile photo,
+			HttpSession session)
+	{
+		//업로드 경로
+		String path=session.getServletContext().getRealPath("/photo");
+		
+		//파일명 구하기
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
+		String photoName="f_"+sdf.format(new Date())+photo.getOriginalFilename();
+		
+		try {
+			photo.transferTo(new File(path+"\\"+photoName));
+			
+			uservice.updatePhoto(user_num, photoName);
+			
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@GetMapping("/user/mypage")
 	public String mypage(Model model)
 	{

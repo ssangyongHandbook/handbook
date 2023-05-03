@@ -45,6 +45,35 @@
 				}
 			})
 		});
+		
+		//강제 호출
+		$("#btnnewphoto").click(function(){
+			
+			$("#newphoto").trigger("click");
+		});
+		
+		$("#newphoto").change(function(){
+			
+			var num=$(this).attr("num");
+			
+			var form=new FormData();
+			form.append("photo",$("#newphoto")[0].files[0]);
+			form.append("user_num",num);
+			
+			$.ajax({
+				
+				type: "post",
+				dataType: "text",
+				url: "photoupdate",
+				processData: false,
+				contentType: false,
+				data: form,
+				success: function(){
+					
+					location.reload();
+				}
+			});
+		})	
 	})
 </script>
 <style type="text/css">
@@ -58,8 +87,6 @@
 			width: 100%;
 			height: 120px;
 			background-color: white;
-			border: 1px solid gray;
-			word-break:break-all;
 		}
 		
 		.menu{
@@ -229,7 +256,7 @@
 		
 			<div class="cover">	
 			
-				<img src="../cover/${dto.user_cover }"style="width: 100%; height: 100%;">
+				<img src="${root }/cover/${dto.user_cover }"style="width: 100%; height: 100%;">
 			
 						<input type="file" id="newcover" style="display: none;" num="${dto.user_num }">
 						
@@ -239,27 +266,28 @@
 						</button>
 			</div>
 			
-			<div class="profile">
-			                                      
-					  <div class="dropdown">
+			<div class="profile">                         
+				<div class="dropdown" style="width: 10%; height: 83%;">
+				
+					<input type="file" id="newphoto" style="display: none;" num="${dto.user_num }">
 					  
 					    <ul class="dropdown-menu">
-					      <li><a href="#">프로필 사진 보기</a></li>
-					      <li><a href="#">프로필 사진 업데이트</a></li>
+					      <li><a href="${root }/phto/${dto.user_photo}">프로필 사진 보기</a></li>
+					      <li><a href="#" id="btnnewphoto">프로필 사진 업데이트</a></li>
 					    </ul>
-					    
+					     
+						
 					    <img data-toggle="dropdown" alt="" src="${root }/image/profile.png" style="width: 120px; height: 120px; cursor: pointer;
-					    position: relative; bottom: 20px; left: 20px;">	
+					    position: relative; bottom: 20%; left: 20%;">
 					    
 					   <img alt="" src="${root }/image/camera.png" style="width: 30px; height: 30px; cursor: pointer;
-					   position: relative; right: 20px; top: 20px;">			
-					   	 
-					  </div>
-
+					   position: relative; bottom:50%; left: 80%;">			
+					  
+				</div>
+				
 				<button type="button" class="btnprofile" data-toggle="modal" data-target="#myModal" style="border-radius: 5px; border: none;">
 					<img alt="" src="${root }/image/pencil.png" style="width: 30px; height: 30px;">프로필 편집
 				</button>
-				
 			</div>
 			
 			<div class="menu">

@@ -14,6 +14,7 @@ public interface UserServiceInter {
 	//우형 시작	
 	public void updateCover(String user_num,String user_cover);
 	public List<UserDto> getAllUsers();
+	public void updatePhoto(String user_num,String user_photo);
 	//우형 끝	
 
 	//이 아래 김희수 구현
