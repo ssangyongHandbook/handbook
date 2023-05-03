@@ -11,6 +11,28 @@
 	<select id="loginIdPassCheck" parameterType="Map" resultType="int">
 		select count(*) from user where user_id=#{user_id} and user_pass=#{user_pass}
 	</select>
+	
+	<!-- 예지 -->
+	<select id="getUserById" parameterType="String" resultType="UserDto">
+		select * from user where user_id=#{user_id}
+	</select>
+	<select id="getUserByNum" parameterType="String" resultType="UserDto">
+		select * from user where user_num=#{user_num}
+	</select>
+
+	
+	<!-- 우형 시작 -->
+	<!-- 마이페이지 커버 사진 변경 -->
+	<update id="updateCover" parameterType="Map">
+		update user set user_cover=#{user_cover} where user_num=#{user_num}
+	</update>
+	
+	<!-- 전체 유저 num 값 넘겨주기 -->
+	<select id="getAllUsers" resultType="UserDto">
+		select * from user order by user_num asc
+	</select>
+	<!-- 우형 끝 -->
+
 	<!-- 이 아래는 김희수가 구현함. -->
 	<!-- 회원 가입 -->
 	<insert id="insertUserInfo" parameterType="UserDto">
@@ -22,4 +44,5 @@
 		select * from user where user_id=#{user_id}
 	</select>
 	<!-- 여기 위까지는 김희수가 구현함. -->
+
 </mapper>

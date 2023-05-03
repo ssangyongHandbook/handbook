@@ -45,12 +45,17 @@ div.layout div.title {
 } */
 
 div.layout div.main {
-	max-width: 80%;
+	max-width: 100%;
 	min-width: 400px;
-	height: 1800px;
+<<<<<<< HEAD
+	height: 100%;
 	background-color: skyblue;
+=======
+	height: 1800px;
+	background-color: #F0F2F5;
+>>>>>>> 368dcd5e5c5a5a148050df94e1405434f2675ac4
 	margin: 0 auto;
-	padding-top: 80px;
+	padding-top: 65px;
 }
 
 /* div.layout div.sideinfo {

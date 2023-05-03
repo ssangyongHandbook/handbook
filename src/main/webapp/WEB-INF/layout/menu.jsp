@@ -17,6 +17,7 @@
 <style type="text/css">
 ul{
    list-style:none;
+   line-height: 30px;
   }
 </style>
 </head>
@@ -25,30 +26,28 @@ ul{
 	<ul class = "menu">
 		<li>
 		<br>
-        <c:set var = "root" value = "<%=request.getContextPath() %>"/>
-	
+      
 		<c:if test="${sessionScope.loginok==null }">
-		
-		<img alt = "" src = "${root }/noimg.png" width="130" height="130" class = "img-circle" style ="border:1px solid black;">
+		<img alt = "" src = "${root }/image/noimg.png" width="60" height="60" class = "img-circle" style ="border:1px solid black; border: none;">
 		</c:if>
 	
 		<c:if test="${sessionScope.loginok!=null }">
-		<img alt = "" src = "${root }/photo/${sessionScope.loginphoto}" width="130" height="130" class = "img-circle">
+		<img alt = "" src = "${root }/image/${sessionScope.loginphoto}" width="130" height="130" class = "img-circle">
 		</c:if>
 		<br><br>
 		</li>
 		
         <li>
-            <a href="#"><span class="glyphicon glyphicon-search" style="padding:10px;">&nbsp;팔로우 추천</span></a>
+            <a href="#"><span class="glyphicon glyphicon-search" style="padding:10px; font-size: 20pt;">&nbsp;팔로우 추천</span></a>
         </li>
         <li>
-            <a href="#"><span class="glyphicon glyphicon-th-list" style="padding:10px;">&nbsp;팔로우 목록</span></a>
+            <a href="#"><span class="glyphicon glyphicon-th-list" style="padding:10px; font-size: 20pt;">&nbsp;팔로우 목록</span></a>
         </li>
         <li>
-            <a href="#"><span class="glyphicon glyphicon-star" style="padding:10px;">&nbsp;즐겨찾기</span></a>
+            <a href="#"><span class="glyphicon glyphicon-star" style="padding:10px; font-size: 20pt;">&nbsp;즐겨찾기</span></a>
         </li>
         <li>
-            <a href="#"><span class="glyphicon glyphicon-check" style="padding:10px;">&nbsp;게시글</span></a>
+            <a href="#"><span class="glyphicon glyphicon-check" style="padding:10px; font-size: 20pt;">&nbsp;게시글</span></a>
         </li>
     </ul>
 </div>

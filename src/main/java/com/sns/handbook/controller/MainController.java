@@ -43,9 +43,5 @@ public class MainController {
 	}
 	
 	
-	@GetMapping("/user/mypage")
-	public String mypage()
-	{
-		return "/sub/user/mypage";
-	}
+
 }
