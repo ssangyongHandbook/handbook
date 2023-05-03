@@ -21,35 +21,68 @@
 		align-items: center;
 		justify-content: space-between;
 	}
+	
 </style>
 
 </head>
 <body>
+
 <div class = "titlecontainer">
 
-	<div style="width: 180px;"><img src="../image/handbooklogo.png" style = "width:130px;"></div>
-	 <div class = "searcharea" style = "width:550px; margin: 10px;">
+	<div style="width: 180px;"><img src="../image/handbooklogo.png" style = "height: 80px; "></div>
+	 <div class = "searcharea" style = "width:550px;  margin: 10px;">
 			<form action = "list" class = "form-inline" style = "width:600px;">
 				
 					<div style = "width: 600px; background-color: white; display: inline-flex; align-items: center;">
-					<span class = "glyphicon glyphicon-search" style = "font-size: 15pt;"></span>
-					<input type = "text" name = "searchword" class = "form-control" style = "width:550px; border: none;" placeholder="검색어를 입력하세요">
-					<button type = "submit" class = "btn btn-success">검색</button>
+					<select class = "form-control" style ="width:150px;" name = "searchcolumn">
+					<option value = "name">작성자</option>
+					<option value = "content">내용</option>
+					</select>
+					&nbsp;&nbsp;&nbsp;
+					<div style="background-color: #F0F2F5; border-radius: 60px; display: inline-flex; align-items: center; padding-left: 2%">
+						<span class = "glyphicon glyphicon-search" style = "font-size: 16pt;"></span>
+						<input type = "text" name = "searchword" style = "width:530px; border: none; background: none; outline: none; font-size: 15pt; padding: 10px;" placeholder="Handbook 검색">
+					</div>
 					</div>
 					
 				
 			</form>
 	</div> 
 
-<div>
-<button type ="button">로그아웃</button>
-<span><img src="../image/message.png" alt="" style = "width:40px;"></span>
-<span><img src="../image/bell.png" alt="" style = "width:40px;"></span>
-<span><img src="../image/user.png" alt="" style = "width:40px;"></span>
-<span class="glyphicon glyphicon-th" style="padding:10px; float:right; font-size:20pt;"></span>
-</div>
+	<div>
+		<c:if test="${sessionScope.loginok!=null }">
+    		<button type ="button" onclick="location.href='/login/logoutprocess'">로그아웃</button>
+		</c:if>
+	
+		
+		<a href="#"><span><img src="../image/menuicon.jpg" class = "titlemenubar" alt="" style = "width: 40px; height: 40px;"></span></a>
+		<a href="#"><span><img src="../image/message.png" alt="" style = "width:40px; height: 40px;"></span></a>
+		<a href="/user/mypage"><span><img src="../image/bell.png" alt="" style = "width:40px; height: 40px;"></span></a>
+		<a href="#"><span><img src="../image/noimg.png" alt="" style = "width:40px; height: 40px; border-radius: 100px;"></span></a>
+		
+	</div>
 
 </div>
 
+ <ul class = "titlemenu" style = "position: relative; left: 85%; top: 8%; height:500px; background-color: white; width: 35%;">
+		 	<li>
+		   		<ul class = "subtitlemenu" style = "font-size: 25pt; line-height: 1.5em;">
+		   			<li class = "titeldetail">메뉴</li>
+		   			
+					<li class = "titeldetail"><a href = "#">게시물 작성</a></li>
+					<li class = "titeldetail"><a href = "#">친구 찾기</a></li>
+					<li class = "titeldetail"><a href = "#">즐겨 찾기</a></li>
+				</ul>
+			</li>
+</ul> 
+
+<script type="text/javascript">
+	$(".titlemenu").hide();
+	$(".titlemenubar").click(function(){
+		$(".titlemenu").toggle();
+		
+	});
+
+</script>
 </body>
 </html>
