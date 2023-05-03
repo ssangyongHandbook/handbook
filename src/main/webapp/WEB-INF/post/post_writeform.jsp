@@ -52,8 +52,8 @@
 		</td>
 		</tr>
 	</table>
+	</form>
 </div>
 	
-	</form>
 </body>
 </html>
