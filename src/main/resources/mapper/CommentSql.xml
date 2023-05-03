@@ -6,7 +6,7 @@
 		select ifnull(max(comment_num),0) from comment
 	</select>
 	
-	<update id="updateRestep" parameterType="Map">
+	<update id="updateStep" parameterType="Map">
 		update comment set comment_step=comment_step+1 where comment_group=#{comment_group} and comment_step>#{comment_step}
 	</update>
 	
@@ -18,5 +18,12 @@
 		delete from comment where comment_num=#{comment_num}
 	</delete>
 	
+	<select id="getData" parameterType="String" resultType="CommentDto">
+		select * from comment where comment_num=#{comment_num}
+	</select>
+	
+	<update id="update" parameterType="CommentDto">
+		update comment set comment_content=#{comment_content} where comment_num=#{comment_num}
+	</update>
 	
 </mapper>
