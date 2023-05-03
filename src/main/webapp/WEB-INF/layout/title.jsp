@@ -21,6 +21,9 @@
 		align-items: center;
 		justify-content: space-between;
 	}
+	.titledetail{
+		
+	}
 	
 </style>
 
@@ -66,15 +69,18 @@
 
 </div>
 
- <ul class = "titlemenu" style = "position: relative; left: 85%; top: 8%; height:500px; background-color: white; width: 35%;">
+ <ul class = "titlemenu" style = "position: relative; left: 85%; top: 8%; height:500px; background-color: #F7F8FA; width: 300px; border-radius: 10px;">
 		 	<li>
-		   		<ul class = "subtitlemenu" style = "font-size: 25pt; line-height: 1.5em;">
-		   			<li class = "titeldetail">메뉴</li>
-		   			
-					<li class = "titeldetail"><a href = "#">게시물 작성</a></li>
-					<li class = "titeldetail"><a href = "#">친구 찾기</a></li>
-					<li class = "titeldetail"><a href = "#">즐겨 찾기</a></li>
+		 		<br>
+		 		<h1>메뉴</h1>
+		 		
+		 		<!-- <div style="background-color: white; border-radius: 10px;  height: 300px;"> -->
+		   		<ul class = "subtitlemenu" style = "font-size: 15pt; line-height: 1.5em; background-color: white; padding-bottom: 70px; padding-top: 70px; text-align: center;" >
+					<li class = "titledetail" style="margin-bottom: 10px; align-items: center;"><a href = "#"><img src = "../image/createboard.png" style = "width:50px;">게시물 작성</a></li>
+					<li class = "titledetail" style="margin-bottom: 10px; align-items: center;"><a href = "#"><img src = "../image/findfriend.png" style = "width:50px;">친구 찾기</a></li>
+					<li class = "titledetail" style="margin-bottom: 10px; align-items: center;"><a href = "#"><img src = "../image/star.png" style = "width:50px;">즐겨 찾기</a></li>
 				</ul>
+				<!-- </div> -->
 			</li>
 </ul> 
 
