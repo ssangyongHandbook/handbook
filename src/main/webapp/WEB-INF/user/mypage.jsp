@@ -57,7 +57,9 @@
 		.profile{
 			width: 100%;
 			height: 120px;
-			background-color: green;
+			background-color: white;
+			border: 1px solid gray;
+			word-break:break-all;
 		}
 		
 		.menu{
@@ -117,22 +119,12 @@
 		.left{
 			width: 50%;
 			float: left;
+			background-color: 
 		}
 		
 		.right{
 			width:50%;
 			float: right;
-		}
-		
-		.photo{
-			position: relative;
-			bottom: 20px;
-			left: 20px;
-			width: 120px;
-			height: 120px;
-			border-radius: 60px;
-			background-color: pink;
-			cursor: pointer;
 		}
 		
 		#btnnewcover{
@@ -148,8 +140,9 @@
 		
 		.btnprofile{
 			position: relative;
-    		bottom: 30%;
-    		left: 86%;
+    		bottom: 60%;
+    		left: 88%;
+    		font-weight: bold;
 		}
 		
 		.modal-photo{
@@ -178,6 +171,10 @@
 </style>
 </head>
 <body>
+<c:set var="root" value="<%=request.getContextPath() %>"/>
+
+
+
 <c:forEach var="dto" items="${list }">
 
 	<c:if test="${sessionScope.loginok!=null && sessionScope.myid==dto.user_id }">
@@ -237,15 +234,31 @@
 						<input type="file" id="newcover" style="display: none;" num="${dto.user_num }">
 						
 						<!-- 수정 시 호출 -->
-						<button type="button" id="btnnewcover">커버 사진 추가</button>
+						<button type="button" id="btnnewcover" >
+							<img style="width: 30px; height: 30px;" alt="" src="${root }/image/camera.png">커버 사진 추가
+						</button>
 			</div>
 			
-			<div class="profile">	
-				<div class="photo">
-						<a></a>
-				</div>
-				
-				<button type="button" class="btnprofile" data-toggle="modal" data-target="#myModal">프로필 편집</button>
+			<div class="profile">
+			                                      
+					  <div class="dropdown">
+					  
+					    <ul class="dropdown-menu">
+					      <li><a href="#">프로필 사진 보기</a></li>
+					      <li><a href="#">프로필 사진 업데이트</a></li>
+					    </ul>
+					    
+					    <img data-toggle="dropdown" alt="" src="${root }/image/profile.png" style="width: 120px; height: 120px; cursor: pointer;
+					    position: relative; bottom: 20px; left: 20px;">	
+					    
+					   <img alt="" src="${root }/image/camera.png" style="width: 30px; height: 30px; cursor: pointer;
+					   position: relative; right: 20px; top: 20px;">			
+					   	 
+					  </div>
+
+				<button type="button" class="btnprofile" data-toggle="modal" data-target="#myModal" style="border-radius: 5px; border: none;">
+					<img alt="" src="${root }/image/pencil.png" style="width: 30px; height: 30px;">프로필 편집
+				</button>
 				
 			</div>
 			

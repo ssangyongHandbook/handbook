@@ -30,6 +30,7 @@ public class UserService implements UserServiceInter{
 		return mapperInter.loginIdPassCheck(map);
 	}
 
+	//우형 시작	
 	@Override
 	public void updateCover(String user_num, String user_cover) {
 		// TODO Auto-generated method stub
@@ -45,6 +46,7 @@ public class UserService implements UserServiceInter{
 	public List<UserDto> getAllUsers() {
 		// TODO Auto-generated method stub
 		return mapperInter.getAllUsers();
+	//우형 끝	
 	}
 	
 }

@@ -48,7 +48,7 @@ div.layout div.main {
 	max-width: 80%;
 	min-width: 400px;
 	height: 1800px;
-	background-color: skyblue;
+	background-color: #F0F2F5;
 	margin: 0 auto;
 	padding-top: 80px;
 }
