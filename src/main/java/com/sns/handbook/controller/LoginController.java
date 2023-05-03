@@ -22,9 +22,11 @@ public class LoginController {
 	public String loginproc(@RequestParam String user_id, @RequestParam String user_pass, HttpSession session) {
 		int check = service.loginIdPassCheck(user_id, user_pass); // 입력한 아이디 비번에 맞는 계정 있는지 없는지 확인
 		if (check == 1) { // 계정 있으면
+			UserDto dto = service.getUserDtoById(user_id);
 			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
 			session.setAttribute("myid", user_id);
 			session.setAttribute("loginok", "yes");
+			session.setAttribute("user_num", dto.getUser_num()); // session에 num값 넣음.
 
 			return "redirect:../post/timeline"; // 로그인 하면 타임라인으로 넘어감.
 		} else { // 로그인 실패시
