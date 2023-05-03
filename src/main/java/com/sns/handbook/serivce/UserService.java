@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sns.handbook.dto.UserDto;
 import com.sns.handbook.mapper.UserMapperInter;
 
 @Service
@@ -27,5 +28,12 @@ public class UserService implements UserServiceInter{
 		map.put("user_pass", user_pass);
 		return mapperInter.loginIdPassCheck(map);
 	}
+
+	//이 아래 김희수
+	@Override
+	public void insertUserInfo(UserDto dto) {
+		mapperInter.insertUserInfo(dto);
+	}
+	//이 위 김희수
 	
 }
