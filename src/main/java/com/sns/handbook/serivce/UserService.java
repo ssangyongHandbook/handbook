@@ -74,7 +74,5 @@ public class UserService implements UserServiceInter{
 		return mapperInter.getUserDtoById(user_id);
 	}
 	//이 위 김희수
-
-
 	
 }
