@@ -23,12 +23,13 @@
 	}
 	
 	.messagememberlist{
-		width: 350px;
+		width: 25%;
 		min-width: 0px;
 		height: 100%;
 		background-color: pink;
 		position: fixed;
 		overflow-y:scroll;
+		overflow-x: hidden;
 	}
 	
 	.messagechatlist{
@@ -41,7 +42,6 @@
 	}
 	
 	.mmltitle{
-		width: 100%;
 		padding: 15px;
 		display: inline-flex;
 		align-items: center;
@@ -83,12 +83,14 @@
 	}
 	
 	.messagememberphotobox{
-		width: 20%;
+		
 	}
 	
 	.messagememberphoto{
-		width: 65px;
-		height: 65px;	
+		max-width: 65px;
+		min-width: 30px;
+		max-height: 65px;
+		min-height: 30px;	
 		overflow: hidden;
 		border-radius: 100px;
 	}
@@ -105,15 +107,16 @@
 	
 	.onemember{
 		display: inline-flex;
-		width: 100%;
+		width: 100%:
 	}
 	
 	.messagememberinfo{
+		max-width: 200px;
+		min-width: 180px;
 		margin-left: 10px;
 		margin-top: 10px;
 		display: inline-flex;
 		flex-direction: column;
-		width: 80%;
 	}
 	
 	#membername{

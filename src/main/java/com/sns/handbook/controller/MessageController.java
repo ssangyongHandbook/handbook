@@ -70,7 +70,7 @@ public class MessageController {
 			//일시분초
 			long day=(diffSec/(60*60*24*1000L))%365;
 			long hour=(diffSec/(60*60*1000L))%24;
-			long minute=(diffSec-day/(60*1000L))%60;
+			long minute=(diffSec/(60*1000L))%60;
 			long second=(diffSec/1000L)%60;
 			
 			String preTime="";
