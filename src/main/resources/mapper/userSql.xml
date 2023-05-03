@@ -4,4 +4,17 @@
 	<select id="getTotalCount" resultType="int">
 		select count(*) from user
 	</select>
+	
+	<!-- id와 pass 파라미터로 넘겨서 (map) 1 or 0 반환
+	1이면 있는 계정 0이면 없는 계정
+	-->
+	<select id="loginIdPassCheck" parameterType="Map" resultType="int">
+		select count(*) from user where user_id=#{user_id} and user_pass=#{user_pass}
+	</select>
+	<!-- 이 아래는 김희수가 구현함. -->
+	<!-- 회원 가입 -->
+	<insert id="insertUserInfo" parameterType="UserDto">
+		insert into user (user_id,user_pass,user_name,user_hp,user_addr,user_email,user_joindate,user_gender,user_birth) values(#{user_id},#{user_pass},#{user_name},#{user_hp},#{user_addr},#{user_email},now(),#{user_gender},#{user_birth});
+	</insert>
+	<!-- 여기 위까지는 김희수가 구현함. -->
 </mapper>

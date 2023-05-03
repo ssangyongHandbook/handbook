@@ -14,11 +14,46 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
+<style type="text/css">
+	.titlecontainer{
+		width:100%;
+		display: inline-flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+</style>
+
 </head>
 <body>
-<img src="../image/handbooklogo.png" style = "width:130px;">
-<span class="glyphicon glyphicon-home" style="padding:10px; font-size:25pt;"></span>
-<span><img src ="../image/friend.png" style="width:50px;"></span>
-<span><img src ="../image/group.jpg" style="width:50px;"></span>
+
+<div class = "titlecontainer">
+
+	<div style="width: 180px;"><img src="../image/handbooklogo.png" style = "width:130px;"></div>
+	 <div class = "searcharea" style = "width:550px; margin: 10px;">
+			<form action = "list" class = "form-inline" style = "width:600px;">
+				
+					<div style = "width: 600px; background-color: white; display: inline-flex; align-items: center;">
+					<span class = "glyphicon glyphicon-search" style = "font-size: 15pt;"></span>
+					<input type = "text" name = "searchword" class = "form-control" style = "width:550px; border: none;" placeholder="검색어를 입력하세요">
+					<button type = "submit" class = "btn btn-success">검색</button>
+					</div>
+					
+				
+			</form>
+	</div> 
+
+	<div>
+		<c:if test="${sessionScope.loginok!=null }">
+    		<button type ="button" onclick="location.href='/login/logoutprocess'">로그아웃</button>
+		</c:if>
+		
+		<a href="#"><span><img src="../image/message.png" alt="" style = "width:40px;"></span></a>
+		<a href="#"><span><img src="../image/bell.png" alt="" style = "width:40px;"></span></a>
+		<a href="#"><span><img src="../image/user.png" alt="" style = "width:40px;"></span></a>
+		<a href="#"><span class="glyphicon glyphicon-th" style="padding:10px; float:right; font-size:20pt;"></span></a>
+	</div>
+
+</div>
+
 </body>
 </html>
