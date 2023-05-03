@@ -32,22 +32,24 @@ div.layout div.title {
 	position: fixed;
 	width: 100%;
 	height: 80px;
-	background-color: yellow;
+	background-color: white;
+	z-index: 90;
+	box-shadow: 0px 2px 8px #E2E2E2;
 }
 
 div.layout div.menu {
 	position: fixed;
 	margin-top: 80px;
-	width: 200px;
+	width: 350px;
 	height: 100%;
-	background-color: pink;
+	background-color: #F0F2F5;
 }
 
 div.layout div.main {
 	max-width: 60%;
 	min-width: 400px;
 	height: 1200px;
-	background-color: skyblue;
+	background-color: white;
 	margin: 0 auto;
 	padding-top: 80px;
 }
@@ -56,9 +58,9 @@ div.layout div.sideinfo {
 	position: fixed;
 	right: 0px;
 	margin-top: 80px;
-	width: 200px;
+	width: 350px;
 	height: 100%;
-	background-color: lightgray;
+	background-color: #F0F2F5;
 }
 </style>
 

@@ -48,5 +48,13 @@ public class UserService implements UserServiceInter{
 		return mapperInter.getAllUsers();
 	//우형 끝	
 	}
+
+	//이 아래 김희수
+	@Override
+	public void insertUserInfo(UserDto dto) {
+		mapperInter.insertUserInfo(dto);
+	}
+	//이 위 김희수
+
 	
 }
