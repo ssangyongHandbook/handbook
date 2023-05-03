@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.sns.handbook.dto.UserDto;
 import com.sns.handbook.serivce.UserService;
@@ -27,10 +26,15 @@ public class SignupController {
 			@RequestParam String user_name, @RequestParam String user_email, @RequestParam String user_pass,
 			@RequestParam String user_birth, @RequestParam String user_gender, @RequestParam String addr1,
 			@RequestParam String addr2) {
-		System.out.println("들어오냐");
-		// ModelAndView model = new ModelAndView();
-
-		String user_addr = addr1 + " " + addr2;
+		
+		String user_addr;
+		if (addr2.equals("")) {
+			user_addr = addr1;
+		}
+		else {
+			user_addr = addr1 + " " + addr2;
+		}
+		
 		String user_hp = hp1 + hp2 + hp3;
 		String split_user_emali[] = user_email.split("@");
 
@@ -51,12 +55,10 @@ public class SignupController {
 		 * System.out.println(user_gender); System.out.println(user.getUser_id());
 		 */
 		
-		
-
 		service.insertUserInfo(user);
 		
-		//새 계정 생성 후 타임라인으로 갈지, 마이페이지로 갈지 고민중.
-		return "/post/post_timeline";
+		//새 계정 생성 후 로그인 화면으로 간다.
+		return "/";
 
 	}
 }

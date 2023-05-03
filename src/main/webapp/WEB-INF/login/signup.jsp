@@ -55,7 +55,7 @@
 					<p>주소</p>
 					<input id="member_post" class="form-control" type="text" placeholder="우편번호" readonly onclick="findAddr()" style="background-color: white;">
 					<input id="member_addr" name="addr1" class="form-control"type="text" placeholder="주소" readonly style="background-color: white;" required="required"> <br>
-					<input type="text" name="addr2" class="form-control" placeholder="상세주소" required="required">
+					<input type="text" name="addr2" class="form-control" placeholder="상세주소">
   				</div><br>
 				
 				<div class="form-floating">
