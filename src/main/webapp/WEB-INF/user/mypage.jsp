@@ -26,17 +26,23 @@
 		$("#newcover").change(function(){
 			
 			var num=$(this).attr("num");
-			alert(num);
-			
+	
 			var form=new FormData();
-			form.append("user_cover",$("#newcover")[0].files[0]); //선택한 1개 추가
+			form.append("cover",$("#newcover")[0].files[0]); //선택한 1개 추가
 			form.append("user_num",num);
 			
 			$.ajax({
 				
 				type: "post",
 				dataType: "text",
-				url:
+				url: "coverupdate",
+				processData: false,
+				contentType: false,
+				data: form,
+				success: function(){
+					
+					location.reload();
+				}
 			})
 		});
 	})
@@ -46,7 +52,6 @@
 			width: 100%;
 			height: 300px;
 			border-radius: 10px 10px;
-			background-color: red;
 		}
 		
 		.profile{
@@ -127,6 +132,7 @@
 			height: 120px;
 			border-radius: 60px;
 			background-color: pink;
+			cursor: pointer;
 		}
 		
 		#btnnewcover{
@@ -137,7 +143,7 @@
 			border-radius: 5px;
 			position: relative;
 			left: 85%;
-			top: 50%;
+			bottom:20%;
 		}
 		
 		.btnprofile{
@@ -172,111 +178,110 @@
 </style>
 </head>
 <body>
+<c:forEach var="dto" items="${list }">
 
-<div class="container">
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title" style="font-weight: 600; text-align: center;">프로필 수정</h4>
-        </div>
-        
-        <div class="modal-body">
-          <div class="title-photo">
-          	<span style="font-weight: 700; margin-right: 450px; font-size: 12pt;">프로필 사진</span> 
-          	<span style="color:lightblue">수정</span>
-
-          	<div class="modal-photo">
-          		
-          	</div>
-          </div>
-          
-          <div class="title-cover">
-          	<span style="font-weight: 700; margin-right: 465px; font-size: 12pt;">커버 사진</span> 
-          	<span style="color:lightblue">수정</span>
-          	
-          	<div class="modal-cover">
-          		
-          	</div>
-          </div>
-          
-          <div class="modal-intro">
-          	<span style="font-weight: 700; margin-right: 264px; font-size: 12pt;">회원님을 소개할 항목을 구성해주세요</span> 
-          	<span style="color:lightblue">수정</span>
-          </div>
-        </div>
-        
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" id="btnupdate">정보 수정</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-</div>
-
-<div class="mypage">
-	<div class="cover">
-		<div class="cover-top" style="width: 100%; height: 67%;">
+	<c:if test="${sessionScope.loginok!=null && sessionScope.myid==dto.user_id }">
+	
+		<div class="container">
+		  <!-- Modal -->
+		  <div class="modal fade" id="myModal" role="dialog">
+		    <div class="modal-dialog">
+		    
+		      <!-- Modal content-->
+		      <div class="modal-content">
+		        <div class="modal-header">
+		          <button type="button" class="close" data-dismiss="modal">&times;</button>
+		          <h4 class="modal-title" style="font-weight: 600; text-align: center;">프로필 수정</h4>
+		        </div>
+		        
+		        <div class="modal-body">
+		          <div class="title-photo">
+		          	<span style="font-weight: 700; margin-right: 450px; font-size: 12pt;">프로필 사진</span> 
+		          	<span style="color:lightblue">수정</span>
 		
+		          	<div class="modal-photo">
+		          		
+		          	</div>
+		          </div>
+		          
+		          <div class="title-cover">
+		          	<span style="font-weight: 700; margin-right: 465px; font-size: 12pt;">커버 사진</span> 
+		          	<span style="color:lightblue">수정</span>
+		          	
+		          	<div class="modal-cover">
+		          		
+		          	</div>
+		          </div>
+		          
+		          <div class="modal-intro">
+		          	<span style="font-weight: 700; margin-right: 264px; font-size: 12pt;">회원님을 소개할 항목을 구성해주세요</span> 
+		          	<span style="color:lightblue">수정</span>
+		          </div>
+		        </div>
+		        
+		        <div class="modal-footer">
+		          <button type="button" class="btn btn-default" data-dismiss="modal" id="btnupdate">정보 수정</button>
+		        </div>
+		      </div>
+		      
+		    </div>
+		  </div>
 		</div>
 		
-		<div class="cover-bottom" style="width: 100%; height: 33%">
-	
-				<!-- <label for="cover-photo" class="cover-label">커버 사진 추가</label>
-				<input type="file" style="display: none;" id="cover-photo" class="cover-photo"> -->
-				<input type="file" id="newcover" style="display: none;" num="${dto.user_num }">
+		<div class="mypage">
+		
+			<div class="cover">	
+			
+				<img src="../cover/${dto.user_cover }"style="width: 100%; height: 100%;">
+			
+						<input type="file" id="newcover" style="display: none;" num="${dto.user_num }">
+						
+						<!-- 수정 시 호출 -->
+						<button type="button" id="btnnewcover">커버 사진 추가</button>
+			</div>
+			
+			<div class="profile">	
+				<div class="photo">
+						<a></a>
+				</div>
 				
-				<!-- 수정 시 호출 -->
-				<button type="button" id="btnnewcover">커버 사진 추가</button>
-			
-		</div>
-	</div>
-	
-	<div class="profile">	
-		<div class="photo">
-				프로필 사진
-		</div>
-		
-		<button type="button" class="btnprofile" data-toggle="modal" data-target="#myModal">프로필 편집</button>
-		
-	</div>
-	
-	<div class="menu">
-		메뉴
-	</div>
-	
-	<div class="mypage-main">
-		<div class="left">
-			<div class="intro">
-				프로필 소개
-			</div>
-			
-			<div class="galary">
-				사진
-			</div>
-			
-			<div class="friend">
-				친구
-			</div>
-			
-		</div>
-		
-		<div class="right">
-			<div class="write">
-				게시글 작성
-			</div>
+				<button type="button" class="btnprofile" data-toggle="modal" data-target="#myModal">프로필 편집</button>
 				
-			<div class="content">
-				게시글
 			</div>
+			
+			<div class="menu">
+				메뉴
+			</div>
+			
+			<div class="mypage-main">
+				<div class="left">
+					<div class="intro">
+						프로필 소개
+					</div>
+					
+					<div class="galary">
+						사진
+					</div>
+					
+					<div class="friend">
+						친구
+					</div>
+					
+				</div>
+				
+				<div class="right">
+					<div class="write">
+						게시글 작성
+					</div>
+						
+					<div class="content">
+						게시글
+					</div>
+				</div>
+			</div>
+			
 		</div>
-	</div>
-	
-</div>
+	</c:if>
+</c:forEach>
 </body>
 </html>
