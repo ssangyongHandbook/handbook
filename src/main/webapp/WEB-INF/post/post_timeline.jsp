@@ -61,7 +61,9 @@
 	<style type="text/css">
 	
 	.divmain{
-	width:80%;
+	/* 예지가 width값 고침 */
+	max-width: 650px;
+	min-width: 550px;
 	margin-left:10%;
 	height :700px;
 		border : 1px solid gray;

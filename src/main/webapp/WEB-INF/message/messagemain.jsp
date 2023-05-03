@@ -19,11 +19,10 @@
 	.messagecontainer{
 		width: 100%;
 		height: 100%;
-		display: inline-flex;
 	}
 	
 	.messagememberlist{
-		width: 25%;
+		width: 350px;
 		min-width: 0px;
 		height: 100%;
 		background-color: pink;
@@ -33,12 +32,12 @@
 	}
 	
 	.messagechatlist{
-		width: 75%;
 		height: 100%;
 		background-color: orange;
 		position: fixed;
-		left: 25%;
+		left: 350px;
 		overflow-y:scroll;
+		overflow-x: hidden;
 	}
 	
 	.mmltitle{
@@ -47,6 +46,7 @@
 		align-items: center;
 		justify-content: space-between;
 		font-size: 15pt;
+		width: 100%;
 	}
 	
 	.mmlbtnbox{
@@ -111,8 +111,7 @@
 	}
 	
 	.messagememberinfo{
-		max-width: 200px;
-		min-width: 180px;
+		width: 250px;
 		margin-left: 10px;
 		margin-top: 10px;
 		display: inline-flex;
@@ -129,7 +128,39 @@
 		display: inline-flex;
 		justify-content: space-between;
 	}
+	
+	#chatdetaildate{
+		margin-right: 15px;
+	}
 </style>
+
+<script type="text/javascript">
+	$(function(){
+		listWidthChange();
+		
+		$( window ).resize(function() {
+			//창크기 변화 감지
+			listWidthChange();
+		});
+		
+	})
+	
+	function listWidthChange() {
+		var windowWidth = $( window ).width();
+		var listWidht=((windowWidth-350)/windowWidth)*100;
+		
+		if(windowWidth<600){
+			$(".messagememberlist").hide();
+			$(".messagechatlist").css("left","0px");
+			listWidht=100;
+		}else{
+			$(".messagememberlist").show();
+			$(".messagechatlist").css("left","350px");
+		}
+		
+		$(".messagechatlist").css("width",listWidht+"%");
+	}
+</script>
 </head>
 <body>
 <div class="messagecontainer">
@@ -166,7 +197,7 @@
 						<span id="membername">${chat.member_name }</span>
 						<div id="chatdetail">
 							<span id="recentchat">${chat.content }</span>
-							<span>${chat.writeday }</span>
+							<span id="chatdetaildate">${chat.writeday }</span>
 						</div>
 					</div>
 				</div>
