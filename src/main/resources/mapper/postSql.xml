@@ -8,7 +8,7 @@
 		insert into post(user_num,post_content,post_file,post_access,post_writeday) values (#{user_num},#{post_content},#{post_file},#{post_access},now())
 	</insert>
 	
-	<select id ="postList" parameterType="HashMap" resultType="PostDto">
-	select * from post order by num desc 
+	<select id ="postList" parameterType="int" resultType="PostDto">
+	select * from post order by post_num desc limit 2 offset #{offset}  
 	</select>
 </mapper>

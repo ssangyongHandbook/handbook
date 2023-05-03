@@ -27,9 +27,11 @@ public class PostService implements PostServiceInter {
 	}
 
 	@Override
-	public List<PostDto> postList() {
+	public List<PostDto> postList(int offset) {
 		// TODO Auto-generated method stub
-		return pmapperInter.postList();
+		return pmapperInter.postList(offset);
 	}
+
+
 	
 }

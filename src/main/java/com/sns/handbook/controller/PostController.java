@@ -21,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.serivce.PostService;
 
-import lombok.Builder.Default;
 
 @Controller
 public class PostController {
@@ -36,12 +35,12 @@ public class PostController {
 	
 	
 	@GetMapping("/post/timeline")
-	public ModelAndView list() {
-		List<PostDto> list = pserivce.postList();
+	public ModelAndView list(@RequestParam(defaultValue = "0") int offset) {
+		List<PostDto> list = pserivce.postList(offset);
         ModelAndView model=new ModelAndView();
         int totalCount=pserivce.getTotalCount();
 		
-        
+        model.addObject("offset",offset);
 		model.addObject("total",totalCount);
 		model.addObject("list",list);
         model.setViewName("/post/post_timeline");

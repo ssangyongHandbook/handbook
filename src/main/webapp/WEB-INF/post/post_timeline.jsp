@@ -20,6 +20,9 @@
 	
 	<script type="text/javascript">
 	 $(function(){
+		 
+		 
+		 
 		$("#insertbtn").click(function(){
 			  
 			  
@@ -54,9 +57,83 @@
 		  });
 	});
 	</script>
+	
+	<style type="text/css">
+	
+	.divmain{
+	width:80%;
+	margin-left:10%;
+	height :700px;
+		border : 1px solid gray;
+	}
+	.top{
+	
+	width:100%;
+	height:15%;
+	}
+	
+	
+	.top-left{
+	float:left;
+	width:50%;
+	height:100%;
+	border : 1px solid red;	
+	}
+	
+	.top-right{
+	text-align:right;
+	float:right;
+	width:50%;
+	height:100%;
+		border : 1px solid green;
+	}
+	.center{
+	width:100%;
+	height:80%;
+	border : 1px solid green;
+	}
+	.center-up{
+	width:100%;
+	height:30%;
+	}
+	.center-down{
+	text-align:center;
+	width:100%;
+	height:70%;
+		border : 1px solid green;
+	
+	}
+	.bottom{
+	width:100%;
+	height:5%;
+	
+	}
+	.bottom-left{
+	text-align:center;
+	font-size:1.2em;
+	float:left;
+	width:50%;
+	height:100%;
+	}
+	
+	.bottom-right{
+	text-align:center;
+	font-size:1.2em;
+	float:right;
+	width:50%;
+	height:100%;
+	}
+	
+	.img{
+	text-align:center;
+	width:20%;
+	height:100%;
+	}
+	
+	</style>
 </head>
 <body>
-	<div>
+	<div >
 		<!-- Trigger the modal with a button -->
 		<button type="button" class="btn btn-info btn-lg" data-toggle="modal"
 			data-target="#myModal">글쓰기</button>
@@ -107,19 +184,33 @@
 
 
 
-		<button type="button" class="btn btn-info"
-			onclick="location.href='write'">글쓰기</button>
+<c:forEach var="dto" items="${list }">
+		
+<div class="divmain">
+<div class="top">
+<span class="top-left">이름: 지성웅</span><span class="top-right">시간: ${dto.post_writeday }</span>
+</div>
+<div class="center">
+<div class="center-up">${dto.post_content }</div>
 
-		<table class="table table-bordered">
+<div class="center-down">
 
-			<tr>
-				<th>이름: (지성웅)</th>
-				<td>시간: (시간)</td>
-			</tr>
-			<tr>
-		</table>
+<c:if test="${dto.post_file!='no' }">
+<img src="/post_file/${dto.post_file }"  class="img">
+</c:if>
+</div>
+</div>
+<div class="bottom">
+<span class="bottom-left  "><span class="glyphicon glyphicon-heart" style="font-size:1.2em;top:3px; color:red;"></span>&nbsp;좋아요</span>
+<span class="bottom-right"><span class="glyphicon glyphicon-comment" style="font-size:1.2em;top:3px; color:white;"></span>&nbsp;댓글</span>
+</div>
+
+</div>
+<br><br>
+</c:forEach>
 	</div>
 
+<button type="button" id ="btnbtn"> 버튼튼</button>
 
 	post_timeline ${total }
 </body>
