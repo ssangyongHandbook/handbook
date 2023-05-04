@@ -17,7 +17,7 @@
 	$(function(){
 		
 		//강제 호출
-		$("#btnnewcover").click(function(){
+		$("#btnnewcover,#btnnewcover2").click(function(){
 			
 			$("#newcover").trigger("click");
 		});
@@ -47,7 +47,7 @@
 		});
 		
 		//강제 호출
-		$("#btnnewphoto").click(function(){
+		$("#btnnewphoto,#btnnewphoto2").click(function(){
 			
 			$("#newphoto").trigger("click");
 		});
@@ -77,6 +77,10 @@
 	})
 </script>
 <style type="text/css">
+	html{
+		background-color: #F0F2F5;
+	}
+
 	.cover{
 			width: 100%;
 			height: 300px;
@@ -102,7 +106,7 @@
 		.intro{
 			width: 98%;
 			height: 320px;
-			background-color: green;
+			background-color: white;
 			border-radius: 10px 10px;
 			margin: 10px;
 			
@@ -111,7 +115,7 @@
 		.galary{
 			width: 98%;
 			height: 380px;
-			background-color: green;
+			background-color: white;
 			border-radius: 10px 10px;
 			margin: 10px;
 			
@@ -120,7 +124,7 @@
 		.friend{
 			width: 98%;
 			height: 500px;
-			background-color: green;
+			background-color: white;
 			border-radius: 10px 10px;
 			margin: 10px;
 		
@@ -129,7 +133,7 @@
 		 .write{
 			width:96%;
 			height: 100px;
-			background-color: green;
+			background-color: white;
 			border-radius: 10px 10px;
 			margin: 10px;
 		
@@ -138,7 +142,7 @@
 		.content{
 			width:96%;
 			height: 200px;
-			background-color: green;
+			background-color: white;
 			border-radius: 10px 10px;
 			margin: 10px;
 		}
@@ -172,20 +176,13 @@
     		font-weight: bold;
 		}
 		
-		.modal-photo{
-			width: 100px;
-			height: 100px;
-			border-radius: 50px;
-			border: 1px solid gray;
-			margin: 20px auto;
-		}
 		
 		.modal-cover{
-			width: 400px;
+			/* width: 400px;
 			height: 150px;
 			background-color: gray;
 			border-radius: 10px;
-			margin: 20px auto;
+			margin: 20px auto; */
 		}
 		
 		#btnupdate{
@@ -208,7 +205,7 @@
 	
 		<div class="container">
 		  <!-- Modal -->
-		  <div class="modal fade" id="myModal" role="dialog">
+		  <div class="modal fade" id="infoupdate" role="dialog">
 		    <div class="modal-dialog">
 		    
 		      <!-- Modal content-->
@@ -221,25 +218,43 @@
 		        <div class="modal-body">
 		          <div class="title-photo">
 		          	<span style="font-weight: 700; margin-right: 450px; font-size: 12pt;">프로필 사진</span> 
-		          	<span style="color:lightblue">수정</span>
+		          	<span style="color:lightblue; cursor: pointer;"><a id="btnnewphoto2" >수정</a></span>
 		
 		          	<div class="modal-photo">
+		          		<c:if test="${sessionScope.loginok!=null &&  dto.user_photo!=null}">
+		          			<img src="${root }/photo/${dto.user_photo}" style="width: 180px; height: 180px; border-radius: 90px; margin: 3% 34%;
+		          			border:3px solid gray;">
+		          		</c:if>
+		          		
+		          		<c:if test="${sessionScope.loginok!=null &&  dto.user_photo==null}" >
+		          			<img src="${root }/image/profile.png" style="width: 180px; height: 180px; border-radius: 90px; margin: 3% 34%;">
+		          		</c:if>
 		          		
 		          	</div>
 		          </div>
 		          
 		          <div class="title-cover">
 		          	<span style="font-weight: 700; margin-right: 465px; font-size: 12pt;">커버 사진</span> 
-		          	<span style="color:lightblue">수정</span>
+		          	<span style="color:lightblue; cursor: pointer;"><a id="btnnewcover2">수정</a></span>
 		          	
 		          	<div class="modal-cover">
+		          		<c:if test="${sessionScope.loginok!=null &&  dto.user_cover!=null}">
+		          			<img src="${root }/cover/${dto.user_cover}" style="width: 400px; height: 150px; border-radius: 10px; margin: 3% 16%;">
+		          		</c:if>
 		          		
+		          		<c:if test="${sessionScope.loginok!=null &&  dto.user_cover==null}" >
+		          			<img src="${root }/image/cover.png" style="width: 400px; height: 150px; border-radius: 10px; margin: 3% 16%;">
+		          		</c:if>
 		          	</div>
 		          </div>
 		          
-		          <div class="modal-intro">
+		          <div class="title-intro">
 		          	<span style="font-weight: 700; margin-right: 264px; font-size: 12pt;">회원님을 소개할 항목을 구성해주세요</span> 
-		          	<span style="color:lightblue">수정</span>
+		          	<span style="color:lightblue; cursor: pointer;"><a>수정</a></span>
+		          	
+		          	<div class="modal-intro">
+		          		
+		          	</div>
 		          </div>
 		        </div>
 		        
@@ -252,15 +267,15 @@
 		  </div>
 		</div>
 		
-		<div class="mypage">
+		<div class="mypage" >
 		
 			<div class="cover">	
 			
-				<c:if test="${sessionScope.loginok!=null && dto.user_cover!='no' }">
-					<img src="${root }/cover/${dto.user_cover }"style="width: 100%; height: 100%;">
+				<c:if test="${sessionScope.loginok!=null && dto.user_cover!=null }">
+					<img src="${root }/cover/${dto.user_cover }"style="width: 100%; height: 100%; ">
 				</c:if>
 				
-				<c:if test="${sessionScope.loginok!=null && dto.user_cover=='no' }">
+				<c:if test="${sessionScope.loginok!=null && dto.user_cover==null }">
 					<img src="${root }/image/cover.png"style="width: 100%; height: 100%;">
 				</c:if>
 				
@@ -278,16 +293,16 @@
 					<input type="file" id="newphoto" style="display: none;" num="${dto.user_num }">
 					  
 					    <ul class="dropdown-menu">
-					      <li><a href="${root }/photo/${dto.user_photo}">프로필 사진 보기</a></li>
+					      <li><a href="${root }/photo/${sessionScope.user_photo}">프로필 사진 보기</a></li>
 					      <li><a href="#" id="btnnewphoto">프로필 사진 업데이트</a></li>
 					    </ul>
 					     
-						<c:if test="${sessionScope.loginok!=null && dto.user_photo!='no' }">
+						<c:if test="${sessionScope.loginok!=null && dto.user_photo!=null }">
 					    <img data-toggle="dropdown" alt="" src="${root }/photo/${dto.user_photo}" 
-					    style="width: 180px; height: 180px; cursor: pointer; border-radius: 90px; position: relative; bottom: 80%;">
+					    style="width: 180px; height: 180px; border:3px solid gray; cursor: pointer; border-radius: 90px; position: relative; bottom: 80%;">
 					    </c:if>
 					    
-					    <c:if test="${sessionScope.loginok!=null && dto.user_photo=='no' }">
+					    <c:if test="${sessionScope.loginok!=null && dto.user_photo==null }">
 					    <img data-toggle="dropdown" alt="" src="${root }/image/profile.png" 
 					    style="width: 180px; height: 180px; cursor: pointer; border-radius: 90px; position: relative; bottom: 80%;">
 					    </c:if>
@@ -297,7 +312,7 @@
 					  
 				</div>
 				
-				<button type="button" class="btnprofile" data-toggle="modal" data-target="#myModal" style="border-radius: 5px; border: none;">
+				<button type="button" class="btnprofile" data-toggle="modal" data-target="#infoupdate" style="border-radius: 5px; border: none;">
 					<img alt="" src="${root }/image/pencil.png" style="width: 30px; height: 30px;">프로필 편집
 				</button>
 			</div>
@@ -307,14 +322,22 @@
 				<div style="font-weight: bold; font-size: 15pt;">
 					<a href="/user/mypage"><span>게시글</span></a>
 					<a href="#"><span>정보</span></a>
-					<a><span>친구</span></a>
+					<a href="#"><span>친구</span></a>
 				</div>
 			</div>
 			
 			<div class="mypage-main">
 				<div class="left">
 					<div class="intro">
-						프로필 소개
+						<span><b style="font-size: 16pt;">소개</b></span>
+						<div class="intro-info">
+							<span><img src="${root }/image/home.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr }</b>&nbsp;&nbsp;거주</span><br>
+							<span><img src="${root }/image/location.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr }</b>&nbsp;&nbsp;출신</span><br>
+							<span><img src="${root }/image/follow.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${followercount }</b>&nbsp;&nbsp;명이 팔로우함</span><br>
+							<span><img style="width:30px; height: 35px;" src="${root }/image/email.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_email }</b>&nbsp;&nbsp;</span><br>
+							<span><img style="width:30px; height: 35px;" src="${root }/image/hp.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_hp }</b>&nbsp;&nbsp;</span>
+						</div>
+						
 					</div>
 					
 					<div class="galary">
@@ -329,7 +352,24 @@
 				
 				<div class="right">
 					<div class="write">
-						게시글 작성
+						<%-- <div class="wirtearea">
+							<div>
+								<img alt="" src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
+							</div>
+							<div style="background-color: #F0F2F5; border-radius: 60px;">
+								<input type = "text" style = "width:300px; border: none; background: none; outline: none; font-size: 15pt; padding: 10px;" placeholder="무슨 생각을 하고 계신가요?">
+							</div>
+						</div> --%>
+						
+						<div class = "searcharea">
+							<div style = "width: 600px; display: inline-flex; align-items: center; margin: 3%;">
+							<img alt="" src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
+							&nbsp;&nbsp;&nbsp;
+							<div style="background-color: #F0F2F5; border-radius: 60px; padding-left: 2%">
+								<input type = "text" name = "searchword" style = "width:700px; border: none; background: none; outline: none; font-size: 15pt; padding: 10px;" placeholder="무슨 생각을 하고 계신가요?">
+							</div>
+							</div>	
+						</div> 
 					</div>
 						
 					<div class="content">
