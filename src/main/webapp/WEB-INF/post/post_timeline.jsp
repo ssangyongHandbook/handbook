@@ -188,7 +188,8 @@
 		
 <div class="divmain">
 <div class="top">
-<span class="top-left">이름: 지성웅</span><span class="top-right">시간: ${dto.post_writeday }</span>
+<span class="top-left">이름: 지성웅<span>게시글범위:${dto.post_access }</span></span>
+<span class="top-right"><span></span>시간: ${dto.post_writeday }</span>
 </div>
 <div class="center">
 <div class="center-up">${dto.post_content }</div>
