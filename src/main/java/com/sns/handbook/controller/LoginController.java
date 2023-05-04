@@ -44,7 +44,7 @@ public class LoginController {
 	// 로그아웃 버튼 누르면 로그아웃되게함. 그 후에 메인화면으로 리다이렉트
 	@GetMapping("/login/logoutprocess")
 	public String logout(HttpSession session) {
-		session.removeAttribute("loginok");
+		session.invalidate();
 		return "redirect:/";
 	}
 }

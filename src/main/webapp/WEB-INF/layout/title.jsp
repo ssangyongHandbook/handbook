@@ -21,6 +21,9 @@
 		align-items: center;
 		justify-content: space-between;
 	}
+	.titledetail{
+		
+	}
 	
 </style>
 
@@ -29,7 +32,7 @@
 
 <div class = "titlecontainer">
 
-	<div style="width: 180px;"><img src="../image/handbooklogo.png" style = "height: 80px; "></div>
+	<div style="width: 180px;"><a href = "${root }/"><img src="../image/handbooklogo.png" style = "height: 80px; "></a></div>
 	 <div class = "searcharea" style = "width:550px;  margin: 10px;">
 			<form action = "list" class = "form-inline" style = "width:600px;">
 				
@@ -53,26 +56,34 @@
 		<c:if test="${sessionScope.loginok!=null }">
     		<button type ="button" onclick="location.href='/login/logoutprocess'">로그아웃</button>
 		</c:if>
-	
+		
 		
 		<a href="#"><span><img src="../image/menuicon.jpg" class = "titlemenubar" alt="" style = "width: 40px; height: 40px;"></span></a>
 		<a href="#"><span><img src="../image/message.png" alt="" style = "width:40px; height: 40px;"></span></a>
 		<a href="#"><span><img src="../image/bell.png" alt="" style = "width:40px; height: 40px;"></span></a>
+		<c:if test="${sessionScope.user_photo==null }">
 		<a href="/user/mypage"><span><img src="../image/noimg.png" alt="" style = "width:40px; height: 40px; border-radius: 100px;"></span></a>
+		</c:if>
 		
+		<c:if test="${sessionScope.user_photo!=null }">
+		<a href="/user/mypage"><span><img src="../photo/${sessionScope.user_photo }" alt="" style = "width:40px; height: 40px; border-radius: 100px;"></span></a>
+		</c:if>
 	</div>
 
 </div>
 
- <ul class = "titlemenu" style = "position: relative; left: 85%; top: 8%; height:500px; background-color: white; width: 35%;">
+ <ul class = "titlemenu" style = "position: relative; left: 85%; top: 8%; height:500px; background-color: #F7F8FA; width: 300px; border-radius: 10px;">
 		 	<li>
-		   		<ul class = "subtitlemenu" style = "font-size: 25pt; line-height: 1.5em;">
-		   			<li class = "titeldetail">메뉴</li>
-		   			
-					<li class = "titeldetail"><a href = "#">게시물 작성</a></li>
-					<li class = "titeldetail"><a href = "#">친구 찾기</a></li>
-					<li class = "titeldetail"><a href = "#">즐겨 찾기</a></li>
+		 		<br>
+		 		<h1>메뉴</h1>
+		 		
+		 		<!-- <div style="background-color: white; border-radius: 10px;  height: 300px;"> -->
+		   		<ul class = "subtitlemenu" style = "font-size: 15pt; line-height: 1.5em; background-color: white; padding-bottom: 70px; padding-top: 70px; text-align: center; margin-right: 30px;" >
+					<li class = "titledetail" style="margin-bottom: 10px; align-items: center;"><a href = "#"><img src = "../image/createboard.png" style = "width:50px;">게시물 작성</a></li>
+					<li class = "titledetail" style="margin-bottom: 10px; align-items: center;"><a href = "#"><img src = "../image/findfriend.png" style = "width:50px;">친구 찾기</a></li>
+					<li class = "titledetail" style="margin-bottom: 10px; align-items: center;"><a href = "#"><img src = "../image/star.png" style = "width:50px;">즐겨 찾기</a></li>
 				</ul>
+				<!-- </div> -->
 			</li>
 </ul> 
 
@@ -82,7 +93,7 @@
 		$(".titlemenu").toggle();
 		
 	});
-
+	하이
 </script>
 </body>
 </html>
