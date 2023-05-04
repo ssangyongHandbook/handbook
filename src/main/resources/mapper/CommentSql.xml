@@ -26,4 +26,11 @@
 		update comment set comment_content=#{comment_content} where comment_num=#{comment_num}
 	</update>
 	
+	<select id="selectScroll" parameterType="Map" resultType="CommentDto">
+		select * from comment where post_num=#{post_num} order by comment_num limit 1 offset #{offset}
+	</select>
+	
+	<select id="getAllDatas"  resultType="CommentDto">
+		select * from comment 
+	</select>
 </mapper>
