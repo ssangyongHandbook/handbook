@@ -27,6 +27,7 @@ public class LoginController {
 			session.setAttribute("myid", user_id);
 			session.setAttribute("loginok", "yes");
 			session.setAttribute("user_num", dto.getUser_num()); // session에 num값 넣음.
+			session.setAttribute("user_photo", dto.getUser_photo());// session에 photo 넣음.
 
 			return "redirect:../post/timeline"; // 로그인 하면 타임라인으로 넘어감.
 		} else { // 로그인 실패시

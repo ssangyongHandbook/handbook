@@ -1,5 +1,6 @@
 package com.sns.handbook.mapper;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -15,4 +16,6 @@ public interface CommentMapperInter {
 	public void delete(String comment_num);
 	public CommentDto getData(String comment_num);
 	public void update(CommentDto dto);
+	public List<CommentDto> selectScroll(Map<String, Object> map);
+	public List<CommentDto> getAllDatas();
 }
