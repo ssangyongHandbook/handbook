@@ -336,11 +336,21 @@
         
         ws.onmessage = function(data) {
             var msg = data.data;
-            //msg=msg.split(":")[1];
+            //msg=msg.split(":")[1]; <<----이거 분해 ---------------------------------------------
             //msg=msg.substring(1,msg.lenght-1);
             if(msg != null && msg.trim() != ''){
                 $("#chatShow").append("<p>" + msg + "</p>");
                 memberListOut();
+                
+                //내 번호
+                var user_num="${user_num}";
+                //받는 사람 번호
+                var reciever=$("#receivernum").val();
+                
+                //받은 또는 보낸 상대이며 접속한 채팅방 그룹일 경우
+                if(reciever=""){
+                	
+                }
                 //메시지 잘 들어왔을 때 실행하는 내용
             }
         }

@@ -53,6 +53,7 @@ public class MessageController {
 		//저장
 		model.addObject("recentgroup",recentGroup);
 		model.addObject("otherinfo",otherInfo);
+		model.addObject("user_num",user_num);
 		
 		model.setViewName("/sub/message/messagemain");
 		
