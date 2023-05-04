@@ -1,6 +1,7 @@
 package com.sns.handbook.serivce;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,5 +82,22 @@ public class CommentService implements CommentServiceInter {
 		
 		mapper.insert(dto);
 	}
-
+	
+	@Override
+	public List<CommentDto> selectScroll(String post_num,int offset) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map=new HashMap<>();
+		
+		map.put("post_num", post_num);
+		map.put("offset",offset);
+		
+		
+		return mapper.selectScroll(map);
+	}
+	
+	@Override
+	public List<CommentDto> getAllDatas() {
+		// TODO Auto-generated method stub
+		return mapper.getAllDatas();
+	}
 }
