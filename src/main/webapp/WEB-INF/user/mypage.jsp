@@ -92,7 +92,7 @@
 		.menu{
 			width: 100%;
 			height: 50px;
-			background-color: yellow;
+			background-color: white;
 		}
 		
 		.mypage-main{
@@ -167,8 +167,8 @@
 		
 		.btnprofile{
 			position: relative;
-    		bottom: 60%;
-    		left: 88%;
+    		bottom: 27%;
+    		left: 87%;
     		font-weight: bold;
 		}
 		
@@ -256,8 +256,14 @@
 		
 			<div class="cover">	
 			
-				<img src="${root }/cover/${dto.user_cover }"style="width: 100%; height: 100%;">
-			
+				<c:if test="${sessionScope.loginok!=null && dto.user_cover!='no' }">
+					<img src="${root }/cover/${dto.user_cover }"style="width: 100%; height: 100%;">
+				</c:if>
+				
+				<c:if test="${sessionScope.loginok!=null && dto.user_cover=='no' }">
+					<img src="${root }/image/cover.png"style="width: 100%; height: 100%;">
+				</c:if>
+				
 						<input type="file" id="newcover" style="display: none;" num="${dto.user_num }">
 						
 						<!-- 수정 시 호출 -->
@@ -267,21 +273,27 @@
 			</div>
 			
 			<div class="profile">                         
-				<div class="dropdown" style="width: 10%; height: 83%;">
+				<div class="dropdown" style="width: 0%; height: 82%; position: relative; left: 10%;">
 				
 					<input type="file" id="newphoto" style="display: none;" num="${dto.user_num }">
 					  
 					    <ul class="dropdown-menu">
-					      <li><a href="${root }/phto/${dto.user_photo}">프로필 사진 보기</a></li>
+					      <li><a href="${root }/photo/${dto.user_photo}">프로필 사진 보기</a></li>
 					      <li><a href="#" id="btnnewphoto">프로필 사진 업데이트</a></li>
 					    </ul>
 					     
-						
-					    <img data-toggle="dropdown" alt="" src="${root }/image/profile.png" style="width: 120px; height: 120px; cursor: pointer;
-					    position: relative; bottom: 20%; left: 20%;">
+						<c:if test="${sessionScope.loginok!=null && dto.user_photo!='no' }">
+					    <img data-toggle="dropdown" alt="" src="${root }/photo/${dto.user_photo}" 
+					    style="width: 180px; height: 180px; cursor: pointer; border-radius: 90px; position: relative; bottom: 80%;">
+					    </c:if>
 					    
-					   <img alt="" src="${root }/image/camera.png" style="width: 30px; height: 30px; cursor: pointer;
-					   position: relative; bottom:50%; left: 80%;">			
+					    <c:if test="${sessionScope.loginok!=null && dto.user_photo=='no' }">
+					    <img data-toggle="dropdown" alt="" src="${root }/image/profile.png" 
+					    style="width: 180px; height: 180px; cursor: pointer; border-radius: 90px; position: relative; bottom: 80%;">
+					    </c:if>
+					    
+					   <img alt="" src="${root }/image/camera.png" style="width: 50px; height: 50px; cursor: pointer;
+					   position: relative; bottom:125%;">			
 					  
 				</div>
 				
@@ -291,7 +303,12 @@
 			</div>
 			
 			<div class="menu">
-				메뉴
+			<hr style="border: 1px solid lightgray; margin:0px;">
+				<div style="font-weight: bold; font-size: 15pt;">
+					<a href="/user/mypage"><span>게시글</span></a>
+					<a href="#"><span>정보</span></a>
+					<a><span>친구</span></a>
+				</div>
 			</div>
 			
 			<div class="mypage-main">
@@ -307,7 +324,7 @@
 					<div class="friend">
 						친구
 					</div>
-					
+				 	
 				</div>
 				
 				<div class="right">
