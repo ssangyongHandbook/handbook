@@ -3,6 +3,9 @@ package com.sns.handbook.serivce;
 
 
 
+import java.util.List;
+import java.util.Map;
+
 import com.sns.handbook.dto.FollowingDto;
 
 public interface FollowingServiceInter {
@@ -13,4 +16,5 @@ public interface FollowingServiceInter {
 	public int getTotalFollower(String to_user);
 	public void insertFollowing(FollowingDto dto);
 	public void deleteFollowing(String to_user);
+	public List<FollowingDto> getFollowList(String from_user, int offset);
 }

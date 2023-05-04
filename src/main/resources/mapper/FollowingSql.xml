@@ -21,6 +21,12 @@
 		select count(*) from following where to_user=#{to_user}
 	</select>
 	
+	<!-- 내가 팔로우한 사람 리스트 출력 -->
+	<select id="getFollowList" parameterType="Map" resultType="FollowingDto">
+		select * from following where from_user =#{from_user} limit 1 offset #{offset}
+	</select>
+	
+	
 	<!-- 팔로잉하기 -->
 	<insert id="insertFollowing" parameterType="FollowingDto">
 		insert into following value(null,#{from_user},#{to_user})

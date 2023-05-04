@@ -22,6 +22,8 @@ ul{
 </style>
 </head>
 <body>
+	<c:set var = "root" value = "<%=request.getContextPath() %>"/>
+
 	<div>
 	<ul class = "menu">
 		<li>
@@ -31,17 +33,19 @@ ul{
 		<img alt = "" src = "${root }/image/noimg.png" width="60" height="60" class = "img-circle" style ="border:1px solid black; border: none;">
 		</c:if>
 	
-		<c:if test="${sessionScope.loginok!=null }">
-		<img alt = "" src = "${root }/image/${sessionScope.loginphoto}" width="130" height="130" class = "img-circle">
+		<c:if test="${sessionScope.loginok!=null }"> <!-- 로그인 컨트롤러에서 세션으로 받아온다 -->
+		<img alt = "" src = "${root }/image/${sessionScope.login_user_photo}" width="60" height="60" class = "img-circle">
 		</c:if>
+		
 		<br><br>
+		
 		</li>
 		
         <li>
             <a href="#"><span class="glyphicon glyphicon-search" style="padding:10px; font-size: 20pt;">&nbsp;팔로우 추천</span></a>
         </li>
         <li>
-            <a href="#"><span class="glyphicon glyphicon-th-list" style="padding:10px; font-size: 20pt;">&nbsp;팔로우 목록</span></a>
+            <a href="${root }/following/followlist?from_user=${sessionScope.user_num}"><span class="glyphicon glyphicon-th-list" style="padding:10px; font-size: 20pt;">&nbsp;팔로우 목록</span></a>
         </li>
         <li>
             <a href="#"><span class="glyphicon glyphicon-star" style="padding:10px; font-size: 20pt;">&nbsp;즐겨찾기</span></a>

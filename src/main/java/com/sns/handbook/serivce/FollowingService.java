@@ -1,6 +1,7 @@
 package com.sns.handbook.serivce;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,5 +63,17 @@ public class FollowingService implements FollowingServiceInter {
 	public void insertFollowing(FollowingDto dto) {
 		// TODO Auto-generated method stub
 		mapper.insertFollowing(dto);
+	}
+	
+	@Override
+	public List<FollowingDto> getFollowList(String from_user, int offset) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("from_user", from_user);
+		map.put("offset", offset);
+		
+		
+		return mapper.getFollowList(map);
 	}
 }

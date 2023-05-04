@@ -11,4 +11,7 @@ public class FollowingDto {
 	private String fing_num;
 	private String from_user;
 	private String to_user;
+	
+	private String user_name;
+	private String user_photo;
 }
