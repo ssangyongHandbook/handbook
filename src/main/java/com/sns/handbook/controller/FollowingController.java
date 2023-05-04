@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,7 +69,7 @@ public class FollowingController {
 	}
 	
 	@GetMapping("followlist")
-	public ModelAndView followList(@RequestParam(defaultValue = "0") int offset, String from_user) {
+	public ModelAndView followList(@RequestParam(defaultValue = "0") int offset, String from_user, HttpSession session) {
 		
 		
 		ModelAndView model = new ModelAndView();
@@ -79,16 +81,20 @@ public class FollowingController {
 			UserDto dto = uservice.getUserByNum(list.get(i).getTo_user()); //여러가지 수많은 데이터에서 i번째 데이터만 가져오기, 여기서 필요한 상대방 num을 list에서 뽑아옴
 			list.get(i).setUser_name(dto.getUser_name());// 위에서 dto에서 name photo를 뽑아내서 리스트에 set을 해줌
 			list.get(i).setUser_photo(dto.getUser_photo());
+			list.get(i).setTf_count(service.togetherFollow(dto.getUser_num(),(String)session.getAttribute("user_num")));
+
 		}
 		
 		model.addObject("list", list);
 		model.addObject("offset", offset);
 		model.setViewName("/follow/followlist");
-		System.out.println(list.size());
+
 		
 		return model;
 		
 	}
+	
+	
 	
 	
 }

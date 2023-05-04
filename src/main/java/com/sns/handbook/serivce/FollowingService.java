@@ -76,4 +76,15 @@ public class FollowingService implements FollowingServiceInter {
 		
 		return mapper.getFollowList(map);
 	}
+	
+	@Override
+	public int togetherFollow(String to_user, String from_user) {
+		// TODO Auto-generated method stub
+		Map<String, String> map = new HashMap<>();
+		
+		map.put("to_user", to_user);
+		map.put("from_user", from_user);
+		
+		return mapper.togetherFollow(map);
+	}
 }

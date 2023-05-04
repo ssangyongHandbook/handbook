@@ -34,7 +34,7 @@ ul{
 		</c:if>
 	
 		<c:if test="${sessionScope.loginok!=null }"> <!-- 로그인 컨트롤러에서 세션으로 받아온다 -->
-		<img alt = "" src = "${root }/image/${sessionScope.login_user_photo}" width="60" height="60" class = "img-circle">
+		<img alt = "" src = "${root }/photo/${sessionScope.user_photo}" width="60" height="60" class = "img-circle">
 		</c:if>
 		
 		<br><br>

@@ -26,6 +26,10 @@
 		select * from following where from_user =#{from_user} limit 1 offset #{offset}
 	</select>
 	
+	<!-- 함께 아는 친구 인원 수 출력 -->
+	<select id="togetherFollow" resultType="int" parameterType="Map">
+		select count(*) from following where to_user = #{to_user} and from_user in (select to_user from following where from_user = #{from_user} )
+	</select>
 	
 	<!-- 팔로잉하기 -->
 	<insert id="insertFollowing" parameterType="FollowingDto">

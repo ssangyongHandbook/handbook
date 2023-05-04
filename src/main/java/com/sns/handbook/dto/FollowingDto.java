@@ -14,4 +14,6 @@ public class FollowingDto {
 	
 	private String user_name;
 	private String user_photo;
+	
+	private int tf_count;
 }
