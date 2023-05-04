@@ -59,9 +59,21 @@ public class UserService implements UserServiceInter{
 	public List<UserDto> getAllUsers() {
 		// TODO Auto-generated method stub
 		return mapperInter.getAllUsers();
-	//우형 끝	
+	
 	}
-
+	
+	@Override
+	public void updatePhoto(String user_num, String user_photo) {
+		// TODO Auto-generated method stub
+		Map<String, String>map=new HashMap<>();
+		map.put("user_num", user_num);
+		map.put("user_photo", user_photo);
+			
+		mapperInter.updatePhoto(map);
+		
+		}
+	//우형 끝	
+	
 	//이 아래 김희수
 	@Override
 	public void insertUserInfo(UserDto dto) {
@@ -74,5 +86,6 @@ public class UserService implements UserServiceInter{
 		return mapperInter.getUserDtoById(user_id);
 	}
 	//이 위 김희수
+
 	
 }
