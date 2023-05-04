@@ -40,7 +40,8 @@ div.layout div.title {
 div.layout div.menu {
 	position: fixed;
 	margin-top: 80px;
-	max-width: 300px;
+	/* width값 바꿈 */
+	width: 300px;
 	height: 100%;
 	background-color: #F0F2F5;
 }
@@ -58,6 +59,7 @@ div.layout div.sideinfo {
 	position: fixed;
 	right: 0px;
 	margin-top: 80px;
+	/* width값 바꿈 */
 	width: 300px;
 	height: 100%;
 	background-color: #F0F2F5;
