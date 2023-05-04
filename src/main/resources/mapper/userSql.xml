@@ -31,6 +31,11 @@
 	<select id="getAllUsers" resultType="UserDto">
 		select * from user order by user_num asc
 	</select>
+	
+	<!-- 프사 업뎃 -->
+	<update id="updatePhoto" parameterType="Map">
+		update user set user_photo=#{user_photo} where user_num=#{user_num}
+	</update>
 	<!-- 우형 끝 -->
 
 	<!-- 이 아래는 김희수가 구현함. -->
