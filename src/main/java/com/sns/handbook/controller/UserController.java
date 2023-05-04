@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.sns.handbook.dto.FollowingDto;
 import com.sns.handbook.dto.UserDto;
+import com.sns.handbook.serivce.FollowingService;
 import com.sns.handbook.serivce.UserService;
 
 @Controller
@@ -27,15 +30,14 @@ public class UserController {
 	@Autowired
 	UserService uservice;
 	
+	@Autowired
+	FollowingService fservice;
+	
 	@PostMapping("/user/coverupdate")
 	@ResponseBody
 	public void coverupdate(String user_num, MultipartFile cover,
 			HttpSession session,@ModelAttribute UserDto dto)
 	{
-		if(cover.getOriginalFilename().equals(""))
-			dto.setUser_photo("no");
-		else {
-
 			//업로드 경로
 			String path=session.getServletContext().getRealPath("/cover");
 			
@@ -53,7 +55,6 @@ public class UserController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
-		}
 	}
 	
 	@PostMapping("/user/photoupdate")
@@ -63,11 +64,7 @@ public class UserController {
 	{
 		//업로드 경로
 		String path=session.getServletContext().getRealPath("/photo");
-		
-		if(photo.getOriginalFilename().equals(""))
-			dto.setUser_photo("no");
-		else {
-			
+
 		
 			//파일명 구하기
 			SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
@@ -82,17 +79,23 @@ public class UserController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
 	}
 	
 	@GetMapping("/user/mypage")
-	public String mypage(Model model)
+	public ModelAndView mypage(HttpSession session)
 	{
+		ModelAndView model=new ModelAndView();
+		
+		int followercount=fservice.getTotalFollower((String)session.getAttribute("user_num"));
+		
 		List<UserDto> list=uservice.getAllUsers();
 		
-		model.addAttribute("list", list);
+		model.addObject("list", list);
+		model.addObject("followercount", followercount);
 		
-		return "/sub/user/mypage";
+		model.setViewName("/sub/user/mypage");
+		
+		return model;
 	}
 	
 	@GetMapping("/user/info")
