@@ -17,12 +17,12 @@
 	$(function(){
 		
 		//강제 호출
-		$("#btnnewcover,#btnnewcover2").click(function(){
+		$("#btnnewcover").click(function(){
 			
 			$("#newcover").trigger("click");
 		});
 		
-		//커버 사진 변경
+		//커버 사진만 변경
 		$("#newcover").change(function(){
 			
 			var num=$(this).attr("num");
@@ -47,11 +47,30 @@
 		});
 		
 		//강제 호출
-		$("#btnnewphoto,#btnnewphoto2").click(function(){
+		$("#btnnewcover2").click(function(){
+			
+			$("#newcover2").trigger("click");
+		});
+		
+		//프로필 편집 시 커버 미리보기하기
+		$("#newcover2").change(function(){
+			
+			 if($(this)[0].files[0]){
+			  var reader=new FileReader();
+			  reader.onload=function(e){
+			   $("#showcover").attr("src",e.target.result);
+			  }
+			  reader.readAsDataURL($(this)[0].files[0]);
+			 }
+		});
+		
+		//강제 호출
+		$("#btnnewphoto").click(function(){
 			
 			$("#newphoto").trigger("click");
 		});
 		
+		//프로필 사진만 변경
 		$("#newphoto").change(function(){
 			
 			var num=$(this).attr("num");
@@ -73,9 +92,84 @@
 					location.reload();
 				}
 			});
-		})	
+		})
+		
+		//강제 호출
+		$("#btnnewphoto2").click(function(){
+			
+			$("#newphoto2").trigger("click");
+		});
+		
+		//프로필 편집 시 사진 미리보기하기
+		$("#newphoto2").change(function(){
+			
+			 if($(this)[0].files[0]){
+			  var reader=new FileReader();
+			  reader.onload=function(e){
+			   $("#showphoto").attr("src",e.target.result);
+			  }
+			  reader.readAsDataURL($(this)[0].files[0]);
+			 }
+		});
+		
+		//프로필 편집 미리보기 후 수정
+		$("#btnupdate").click(function(){
+					
+					var num=$(this).attr("num");
+					var form=new FormData();
+					form.append("photo",$("#newphoto2")[0].files[0]);
+					form.append("cover",$("#newcover2")[0].files[0]);
+					form.append("user_num",num);
+					
+					$.ajax({
+						
+						type: "post",
+						dataType: "text",
+						url: "photoupdate",
+						processData: false,
+						contentType: false,
+						data: form,
+						success: function(){
+							
+							location.reload();
+						}
+					});
+					
+					$.ajax({
+						
+						type: "post",
+						dataType: "text",
+						url: "coverupdate",
+						processData: false,
+						contentType: false,
+						data: form,
+						success: function(){
+							
+							location.reload();
+						}
+					});
+				})
+		
+		//강제 호출
+		$("#btncontentphoto").click(function(){
+			
+			$("#contentphoto").trigger("click");
+		});
+		
+		//게시글 작성 시 사진 미리보기하기
+		$("#contentphoto").change(function(){
+			
+			 if($(this)[0].files[0]){
+			  var reader=new FileReader();
+			  reader.onload=function(e){
+			   $("#showimg").attr("src",e.target.result);
+			  }
+			  reader.readAsDataURL($(this)[0].files[0]);
+			 }
+		});
 	})
 </script>
+
 <style type="text/css">
 	html{
 		background-color: #F0F2F5;
@@ -176,19 +270,17 @@
     		font-weight: bold;
 		}
 		
-		
-		.modal-cover{
-			/* width: 400px;
-			height: 150px;
-			background-color: gray;
-			border-radius: 10px;
-			margin: 20px auto; */
-		}
-		
 		#btnupdate{
 			width:570px;
 			background-color: lightblue;
 			color: blue;
+			font-weight: 700;
+		}
+		
+		#btnwrite{
+			width: 570px;
+			background-color: lightblue;
+			color: white;
 			font-weight: 700;
 		}
 		
@@ -207,7 +299,6 @@
 		  <!-- Modal -->
 		  <div class="modal fade" id="infoupdate" role="dialog">
 		    <div class="modal-dialog">
-		    
 		      <!-- Modal content-->
 		      <div class="modal-content">
 		        <div class="modal-header">
@@ -219,15 +310,16 @@
 		          <div class="title-photo">
 		          	<span style="font-weight: 700; margin-right: 450px; font-size: 12pt;">프로필 사진</span> 
 		          	<span style="color:lightblue; cursor: pointer;"><a id="btnnewphoto2" >수정</a></span>
+		          	<input type="file" id="newphoto2" name="newphoto2" style="display: none;">
 		
 		          	<div class="modal-photo">
 		          		<c:if test="${sessionScope.loginok!=null &&  dto.user_photo!=null}">
-		          			<img src="${root }/photo/${dto.user_photo}" style="width: 180px; height: 180px; border-radius: 90px; margin: 3% 34%;
+		          			<img src="${root }/photo/${dto.user_photo}" id="showphoto" style="width: 180px; height: 180px; border-radius: 90px; margin: 3% 34%;
 		          			border:3px solid gray;">
 		          		</c:if>
 		          		
 		          		<c:if test="${sessionScope.loginok!=null &&  dto.user_photo==null}" >
-		          			<img src="${root }/image/profile.png" style="width: 180px; height: 180px; border-radius: 90px; margin: 3% 34%;">
+		          			<img src="${root }/image/profile.png" id="showphoto"  style="width: 180px; height: 180px; border-radius: 90px; margin: 3% 34%;">
 		          		</c:if>
 		          		
 		          	</div>
@@ -236,14 +328,15 @@
 		          <div class="title-cover">
 		          	<span style="font-weight: 700; margin-right: 465px; font-size: 12pt;">커버 사진</span> 
 		          	<span style="color:lightblue; cursor: pointer;"><a id="btnnewcover2">수정</a></span>
+		          	<input type="file" id="newcover2" name="newcover2" style="display: none;">
 		          	
 		          	<div class="modal-cover">
 		          		<c:if test="${sessionScope.loginok!=null &&  dto.user_cover!=null}">
-		          			<img src="${root }/cover/${dto.user_cover}" style="width: 400px; height: 150px; border-radius: 10px; margin: 3% 16%;">
+		          			<img src="${root }/cover/${dto.user_cover}" id="showcover" style="width: 400px; height: 150px; border-radius: 10px; margin: 3% 16%;">
 		          		</c:if>
 		          		
 		          		<c:if test="${sessionScope.loginok!=null &&  dto.user_cover==null}" >
-		          			<img src="${root }/image/cover.png" style="width: 400px; height: 150px; border-radius: 10px; margin: 3% 16%;">
+		          			<img src="${root }/image/cover.png" id="showcover" style="width: 400px; height: 150px; border-radius: 10px; margin: 3% 16%;">
 		          		</c:if>
 		          	</div>
 		          </div>
@@ -259,12 +352,47 @@
 		        </div>
 		        
 		        <div class="modal-footer">
-		          <button type="button" class="btn btn-default" data-dismiss="modal" id="btnupdate">정보 수정</button>
+		          <button type="button" class="btn btn-default" data-dismiss="modal" id="btnupdate"  num="${dto.user_num }">정보 수정</button>
 		        </div>
 		      </div>
 		      
 		    </div>
 		  </div>
+		</div>
+		
+		<div class="container">
+		  <!-- Modal -->
+		  <div class="modal fade" id="contentwrite" role="dialog" >
+		    <div class="modal-dialog">
+		    
+		      <!-- Modal content-->
+		      <div class="modal-content">
+		      
+		        <div class="modal-header">
+		          <button type="button" class="close" data-dismiss="modal">&times;</button>
+		          <h4 class="modal-title" style="font-weight: 700; text-align: center;">게시물 만들기</h4>
+		        </div>
+		        
+		        <div class="modal-body">
+		          <img alt="" src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
+		          <span>${dto.user_name }</span><br>
+		          <input type="text" placeholder="무슨 생각을 하고 계신가요?" style="border: none; width: 100%; outline: none;"><br>
+		          
+				  <img id="showimg" style="width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
+				  <input type="file" id="contentphoto" name="contentphoto" style="display: none;">
+				  <button type="button" id="btncontentphoto">사진 선택</button>
+
+		        </div>
+		        
+		        <div class="modal-footer">
+		          <button type="button" class="btn btn-default" data-dismiss="modal" id="btnwrite">게시</button>
+		        </div>
+		        
+		      </div>
+		      
+		    </div>
+		  </div>
+		  
 		</div>
 		
 		<div class="mypage" >
@@ -352,22 +480,17 @@
 				
 				<div class="right">
 					<div class="write">
-						<%-- <div class="wirtearea">
-							<div>
-								<img alt="" src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
-							</div>
-							<div style="background-color: #F0F2F5; border-radius: 60px;">
-								<input type = "text" style = "width:300px; border: none; background: none; outline: none; font-size: 15pt; padding: 10px;" placeholder="무슨 생각을 하고 계신가요?">
-							</div>
-						</div> --%>
-						
 						<div class = "searcharea">
 							<div style = "width: 600px; display: inline-flex; align-items: center; margin: 3%;">
+							
 							<img alt="" src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
 							&nbsp;&nbsp;&nbsp;
+							
 							<div style="background-color: #F0F2F5; border-radius: 60px; padding-left: 2%">
-								<input type = "text" name = "searchword" style = "width:700px; border: none; background: none; outline: none; font-size: 15pt; padding: 10px;" placeholder="무슨 생각을 하고 계신가요?">
+								<input type = "button" data-toggle="modal" data-target="#contentwrite" name = "searchword" 
+								style = "width:700px; border: none; text-align:left; background: none; outline: none; font-size: 15pt; padding: 10px;" value="무슨 생각을 하고 계신가요?">
 							</div>
+							
 							</div>	
 						</div> 
 					</div>
