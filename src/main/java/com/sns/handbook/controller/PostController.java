@@ -39,13 +39,16 @@ public class PostController {
 		List<PostDto> list = pserivce.postList(offset);
         ModelAndView model=new ModelAndView();
         int totalCount=pserivce.getTotalCount();
-		
+        
         model.addObject("offset",offset);
 		model.addObject("total",totalCount);
 		model.addObject("list",list);
         model.setViewName("/post/post_timeline");
 		return model;
 	}
+	
+
+	
 	
 	@PostMapping("/post/insert")
 	@ResponseBody
@@ -72,7 +75,7 @@ public class PostController {
 		}
 		
 		pserivce.insertPost(dto);
-	      }
+	    }
 }
 	//delete
 	@GetMapping("/post/delete")

@@ -32,7 +32,7 @@ div.layout div.title {
 	position: fixed;
 	width: 100%;
 	height: 80px;
-	background-color: yellow;
+	background-color: white;
 	z-index: 1;
 }
 
@@ -47,13 +47,10 @@ div.layout div.title {
 div.layout div.main {
 	max-width: 100%;
 	min-width: 400px;
-<<<<<<< HEAD
+
 	height: 100%;
 	background-color: skyblue;
-=======
-	height: 1800px;
-	background-color: #F0F2F5;
->>>>>>> 368dcd5e5c5a5a148050df94e1405434f2675ac4
+
 	margin: 0 auto;
 	padding-top: 65px;
 }
