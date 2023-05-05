@@ -167,6 +167,33 @@
 			  reader.readAsDataURL($(this)[0].files[0]);
 			 }
 		});
+		
+		//게시글 작성
+		$("#btnwrite").click(function() {
+
+			var post_content = $("#post_content").val();
+			var num=$(this).attr("num");
+			
+			var form = new FormData();
+			form.append("photo", $("#contentphoto")[0].files[0]);
+			form.append("post_content", post_content);
+			form.append("user_num",num);
+
+			$.ajax({
+
+				type : "post",
+				dataType : "text",
+				processData : false,
+				contentType : false,
+				data : form,
+				url : "insertpost",
+				success : function() {
+					
+					location.reload();
+				}
+			});
+		});
+
 	})
 </script>
 
@@ -376,7 +403,7 @@
 		        <div class="modal-body">
 		          <img alt="" src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
 		          <span>${dto.user_name }</span><br>
-		          <input type="text" placeholder="무슨 생각을 하고 계신가요?" style="border: none; width: 100%; outline: none;"><br>
+		          <input type="text" id="post_content"  placeholder="무슨 생각을 하고 계신가요?" style="border: none; width: 100%; outline: none;"><br>
 		          
 				  <img id="showimg" style="width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
 				  <input type="file" id="contentphoto" name="contentphoto" style="display: none;">
@@ -385,7 +412,7 @@
 		        </div>
 		        
 		        <div class="modal-footer">
-		          <button type="button" class="btn btn-default" data-dismiss="modal" id="btnwrite">게시</button>
+		          <button type="button" class="btn btn-default" data-dismiss="modal" id="btnwrite" num="${dto.user_num }">게시</button>
 		        </div>
 		        
 		      </div>
@@ -494,10 +521,36 @@
 							</div>	
 						</div> 
 					</div>
-						
-					<div class="content">
-						게시글
-					</div>
+					
+					<c:forEach var="dto" items="${postlist }">
+						<div class="content">
+								<div class="divmain">
+									<div class="top">
+										<span class="top-left">이름: 지성웅 <span>시간:
+												${dto.post_writeday }</span>
+										</span>
+									</div>
+
+									<div class="center">
+										<div class="center-up">${dto.post_content }</div>
+
+										<div class="center-down">
+											<img src="/post_file/${dto.post_file }">
+										</div>
+									</div>
+
+									<div class="bottom">
+										<span class="bottom-left"><span
+											class="glyphicon glyphicon-heart"
+											style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요</span>
+										<span class="bottom-right"><span
+											class="glyphicon glyphicon-comment"
+											style="font-size: 1.2em; top: 3px; color: gray;"></span>&nbsp;댓글</span>
+									</div>
+									
+								</div>
+							</div>
+					</c:forEach>	
 				</div>
 			</div>
 			

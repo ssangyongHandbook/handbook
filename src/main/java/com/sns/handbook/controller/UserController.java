@@ -20,8 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sns.handbook.dto.FollowingDto;
+import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.UserDto;
 import com.sns.handbook.serivce.FollowingService;
+import com.sns.handbook.serivce.PostService;
 import com.sns.handbook.serivce.UserService;
 
 @Controller
@@ -32,6 +34,9 @@ public class UserController {
 	
 	@Autowired
 	FollowingService fservice;
+	
+	@Autowired
+	PostService pservice;
 	
 	@PostMapping("/user/coverupdate")
 	@ResponseBody
@@ -89,14 +94,43 @@ public class UserController {
 		int followercount=fservice.getTotalFollower((String)session.getAttribute("user_num"));
 		
 		List<UserDto> list=uservice.getAllUsers();
+		List<PostDto> postlist=uservice.getPost((String)session.getAttribute("user_num"));
 		
 		model.addObject("list", list);
+		model.addObject("postlist",postlist);
 		model.addObject("followercount", followercount);
-		
 		model.setViewName("/sub/user/mypage");
 		
 		return model;
 	}
+	@PostMapping("/user/insertpost")
+	@ResponseBody
+	public void insertPost(@ModelAttribute PostDto dto, @RequestParam(required = false ) MultipartFile photo, HttpSession session) {
+		
+		String path = session.getServletContext().getRealPath("/post_file");
+		
+		if(photo==null) {
+	         dto.setPost_file("no");
+	         pservice.insertPost(dto);
+	         
+	      }else {//upload 한 경우
+
+	  		SimpleDateFormat sdf= new SimpleDateFormat("yyyyMMddHHmm");
+	  		String fileName="f_"+sdf.format(new Date())+photo.getOriginalFilename();
+
+	  		dto.setPost_file(fileName);
+		
+		try {
+			photo.transferTo(new File(path+"\\"+fileName));
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		pservice.insertPost(dto);
+	    }
+}
+	
 	
 	@GetMapping("/user/info")
 	public String info()

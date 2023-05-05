@@ -36,6 +36,11 @@
 	<update id="updatePhoto" parameterType="Map">
 		update user set user_photo=#{user_photo} where user_num=#{user_num}
 	</update>
+	
+	<!-- 마이페이지 게시글 가져오기 -->
+	<select id="getPost" parameterType="String" resultType="PostDto">
+		select user_num,post_content,post_file,post_writeday from post where user_num=#{user_num} order by post_num desc
+	</select>
 	<!-- 우형 끝 -->
 
 	<!-- 이 아래는 김희수가 구현함. -->
