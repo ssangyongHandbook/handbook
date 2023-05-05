@@ -26,7 +26,7 @@ import com.sns.handbook.serivce.PostService;
 public class PostController {
 
 	@Autowired
-	PostService pserivce;
+	PostService pservice;
 	
 	@GetMapping("/post/write")
 	public String write() {
@@ -36,9 +36,9 @@ public class PostController {
 	
 	@GetMapping("/post/timeline")
 	public ModelAndView list(@RequestParam(defaultValue = "0") int offset) {
-		List<PostDto> list = pserivce.postList(offset);
+		List<PostDto> list = pservice.postList(offset);
         ModelAndView model=new ModelAndView();
-        int totalCount=pserivce.getTotalCount();
+        int totalCount=pservice.getTotalCount();
         
         model.addObject("offset",offset);
 		model.addObject("total",totalCount);
@@ -58,7 +58,7 @@ public class PostController {
 		
 		if(photo==null) {
 	         dto.setPost_file("no");
-	         pserivce.insertPost(dto);
+	         pservice.insertPost(dto);
 	         
 	      }else {//upload 한 경우
 
@@ -74,14 +74,58 @@ public class PostController {
 			e.printStackTrace();
 		}
 		
-		pserivce.insertPost(dto);
+		pservice.insertPost(dto);
 	    }
 }
 	//delete
 	@GetMapping("/post/delete")
-	public void delete (int num) {
+	public void delete (@RequestParam int post_num) {
 		
-		pserivce.deletePost(num);
+		pservice.deletePost(post_num);
 	}
+	
+	@PostMapping("/post/updatephoto")
+	@ResponseBody
+	public void photoUpload(String post_num,@RequestParam(required = false ) MultipartFile photo,
+			HttpSession session)
+	{
+		//업로드될 경로구하기
+		String path=session.getServletContext().getRealPath("/post_file");
+		
+		//파일명구하기
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
+		String fileName="f_"+sdf.format(new Date())+photo.getOriginalFilename();
+		
+		try {
+			photo.transferTo(new File(path+"\\"+fileName));
+			
+			pservice.updatePhoto(post_num, fileName); //db사진 수정
+			session.setAttribute("post_file", fileName);  //세션의 사진변경
+			
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	@GetMapping("/post/updateform")
+	@ResponseBody
+	public PostDto getData(String post_num) {
+		
+		return pservice.getDataByNum(post_num);
+	}
+	
+	//수정
+		@PostMapping("/post/update")
+		@ResponseBody
+		public void update(PostDto dto,HttpSession session)
+		{
+			pservice.updatePost(dto);
+			
+			//세션에 저장된 이름 변경
+			//session.setAttribute("loginname", dto.getName());
+		}
+	
 	
 }

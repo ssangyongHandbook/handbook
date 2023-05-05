@@ -2,6 +2,7 @@ package com.sns.handbook.mapper;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,7 +13,9 @@ public interface PostMapperInter {
 	public int getTotalCount();
 	public void insertPost(PostDto dto);
 	public List<PostDto> postList(int offset);
-	public void deletePost(int num);
-
+	public void deletePost(int post_num);
+	public void updatePhoto(Map<String, String> map);
+	public void updatePost(PostDto dto);
+	public PostDto getDataByNum(String post_num);
  
 }
