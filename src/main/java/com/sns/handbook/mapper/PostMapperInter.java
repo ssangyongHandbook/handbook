@@ -12,5 +12,7 @@ public interface PostMapperInter {
 	public int getTotalCount();
 	public void insertPost(PostDto dto);
 	public List<PostDto> postList(int offset);
+	public void deletePost(int num);
+
  
 }

@@ -57,13 +57,38 @@
 			$("#"+i).toggle();
 
 		});
+		
+		
+		
+		$(document).on("click", "#postdelete", function(){
+		      var num=$(this).attr("num");
+		      
+		       $.ajax({
+		         type:"get",
+		         dataType:"text",
+		         url:"delete",
+		         data:{"num":num},
+		         success:function(){
+		        	 location.reload();
+		         }
+		      }) 
+		   })
+		
+		
 	});
 </script>
 
 <style type="text/css">
+.allmain{
+	width:1000px;
+	
+	margin: auto; 
+	border: 1px solid yellow;
+		
+}
 .divmain {
-	width: 80%;
-	margin-left: 10%;
+	max-width: 650px;
+	min-width:550px;
 	height: 700px;
 	border: 1px solid gray;
 }
@@ -135,7 +160,8 @@
 
 /* 파일 없을 경우  */
 .divmain2 {
-	width: 80%;
+	max-width: 650px;
+	min-width:550px
 	margin-left: 10%;
 	height: 400px;
 	border: 1px solid gray;
@@ -203,7 +229,7 @@ text-decoration: underline;
 </style>
 </head>
 <body>
-	<div>
+			<div class="allmain">
 		<!-- Trigger the modal with a button -->
 		<button type="button" class="btn btn-info btn-lg" data-toggle="modal"
 			data-target="#myModal">글쓰기</button>
@@ -258,6 +284,7 @@ text-decoration: underline;
 		<!-- 파일이 있을경우0 -->
 		<c:forEach var="dto" items="${list }" varStatus="i">
 			<c:if test="${dto.post_file!='no' }">
+			
 				<div class="divmain">
 					<div class="top">
 						<span class="top-left">이름: 지성웅<span>게시글범위:${dto.post_access }</span><span>시간:

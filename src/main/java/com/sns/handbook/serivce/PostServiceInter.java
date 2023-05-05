@@ -9,4 +9,6 @@ public interface PostServiceInter {
 	public int getTotalCount();
 	public void insertPost(PostDto dto);
 	public List<PostDto> postList(int offset);
+	public void deletePost(int num);
+
 }
