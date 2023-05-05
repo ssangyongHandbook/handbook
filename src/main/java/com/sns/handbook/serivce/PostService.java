@@ -1,6 +1,8 @@
 package com.sns.handbook.serivce;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,9 +35,33 @@ public class PostService implements PostServiceInter {
 	}
 
 	@Override
-	public void deletePost(int num) {
+	public void deletePost(int post_num) {
 		// TODO Auto-generated method stub
-		pmapperInter.deletePost(num);
+		pmapperInter.deletePost(post_num);
+	}
+
+	@Override
+	public void updatePost(PostDto dto) {
+		// TODO Auto-generated method stub
+		pmapperInter.updatePost(dto);
+	}
+
+	@Override
+	public PostDto getDataByNum(String post_num) {
+		// TODO Auto-generated method stub
+		return pmapperInter.getDataByNum(post_num);
+	}
+
+	@Override
+	public void updatePhoto(String post_num, String post_file) {
+		// TODO Auto-generated method stub
+		
+		Map<String,String> map= new HashMap<>();
+		map.put("post_num", post_num);
+		map.put("post_file", post_file);
+		
+		pmapperInter.updatePhoto(map);
+		
 	}
 	
 

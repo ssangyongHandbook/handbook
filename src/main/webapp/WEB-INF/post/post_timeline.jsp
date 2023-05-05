@@ -51,44 +51,42 @@
 		});
 
 		$(".postsubmenu").hide();
-		$(document).on("click",".postmenu",function(){
-	
+		$(document).on("click", ".postmenu", function() {
+
 			var i = $(this).attr("i");
-			$("#"+i).toggle();
+			$("#" + i).toggle();
 
 		});
-		
-		
-		
-		$(document).on("click", "#postdelete", function(){
-		      var num=$(this).attr("num");
-		      
-		       $.ajax({
-		         type:"get",
-		         dataType:"text",
-		         url:"delete",
-		         data:{"num":num},
-		         success:function(){
-		        	 location.reload();
-		         }
-		      }) 
-		   })
-		
-		
+
+		$(document).on("click", "#postdelete", function() {
+			var post_num = $(this).attr("post_num");
+
+			$.ajax({
+				type : "get",
+				dataType : "text",
+				url : "delete",
+				data : {
+					"post_num" : post_num
+				},
+				success : function() {
+					location.reload();
+				}
+			})
+		})
+
 	});
 </script>
 
 <style type="text/css">
-.allmain{
-	width:1000px;
-	
-	margin: auto; 
+.allmain {
+	width: 1000px;
+	margin: auto;
 	border: 1px solid yellow;
-		
 }
+
 .divmain {
 	max-width: 650px;
-	min-width:550px;
+	min-width: 550px;
 	height: 700px;
 	border: 1px solid gray;
 }
@@ -161,10 +159,10 @@
 /* 파일 없을 경우  */
 .divmain2 {
 	max-width: 650px;
-	min-width:550px
-	margin-left: 10%;
+	min-width: 550px margin-left: 10%;
 	height: 400px;
 	border: 1px solid gray;
+	height: 400px;
 }
 
 .top2 {
@@ -223,13 +221,13 @@
 	cursor: pointer;
 }
 
-.postdetail:hover{
-text-decoration: underline;
+.postdetail:hover {
+	text-decoration: underline;
 }
 </style>
 </head>
 <body>
-			<div class="allmain">
+	<div class="allmain">
 		<!-- Trigger the modal with a button -->
 		<button type="button" class="btn btn-info btn-lg" data-toggle="modal"
 			data-target="#myModal">글쓰기</button>
@@ -278,22 +276,74 @@ text-decoration: underline;
 			</div>
 		</div>
 
+		<!-- 수정 Modal -->
+
+
+		<div class="modal fade" id="updatepost" role="dialog">
+			<div class="modal-dialog">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">게시글 수정</h4>
+					</div>
+
+
+
+					<div class="modal-body">
+						<div class="form-group" style="width: 150px;">
+							<select class="form-control" name="post_access" id="post_access">
+								<option value="all">전체공개</option>
+								<option value="follower">팔로워 공개</option>
+								<option value="onlyme">나만보기</option>
+							</select>
+						</div>
+						<div class="form-group" style="width: 500px;">
+							<input type="file" name="post_file" class="form-control"
+								multiple="multiple" id="pfile">
+						</div>
+						<div class="form-group">
+							<textarea style="width: 550px; height: 150px;"
+								name="post_content" class="form-control" required="required"
+								id="post_content" placeholder="내용을 입력해주세요"></textarea>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal"
+							id="updatetbtn">수정</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+
+
+
+
 
 
 
 		<!-- 파일이 있을경우0 -->
 		<c:forEach var="dto" items="${list }" varStatus="i">
 			<c:if test="${dto.post_file!='no' }">
-			
+
 				<div class="divmain">
 					<div class="top">
 						<span class="top-left">이름: 지성웅<span>게시글범위:${dto.post_access }</span><span>시간:
 								${dto.post_writeday }</span></span> <span class="top-right"> <span
 							class="glyphicon glyphicon-th-list postmenu" i="${i.count}"
 							style="font-size: 1.3em; margin-right: 3%; color: gray;">
-								<ul id="${i.count }" class="postsubmenu" style="font-size: 25pt; line-height: 1.5em;">
-									<li id="postupdate" class="postdetail">게시물 수정</li>
-									<li id="postdelete" class="postdetail">게시물 삭제</li>
+								<ul id="${i.count }" class="postsubmenu"
+									style="font-size: 25pt; line-height: 1.5em;">
+									<li id="postupdate" class="postdetail" data-toggle="modal"
+										data-target="#updatepost" post_num="${dto.post_num }">게시물
+										수정</li>
+									<li id="postdelete" class="postdetail"
+										post_num="${dto.post_num }">게시물 삭제</li>
 									<!--  이부분 팔로일땐 팔로우하기 or 팔로우 하고 있을 땐 팔로우 끊기 -->
 									<li class="postdetail">팔로우 하기</li>
 								</ul>
@@ -332,9 +382,13 @@ text-decoration: underline;
 						</span> <span class="top-right"> <span
 							class="glyphicon glyphicon-th-list postmenu" i="${i.count }"
 							style="font-size: 1.3em; margin-right: 3%; color: gray;">
-								<ul id="${i.count }" class="postsubmenu" style="font-size: 25pt; line-height: 1.5em;">
-									<li id="postupdate" class="postdetail">게시물 수정</li>
-									<li id="postdelete" class="postdetail">게시물 삭제</li>
+								<ul id="${i.count }" class="postsubmenu"
+									style="font-size: 25pt; line-height: 1.5em;">
+									<li id="postupdate" class="postdetail" data-toggle="modal"
+										data-target="#updatepost" post_num="${dto.post_num }">게시물
+										수정</li>
+									<li id="postdelete" class="postdetail"
+										post_num="${dto.post_num }">게시물 삭제</li>
 									<!--  이부분 팔로일땐 팔로우하기 or 팔로우 하고 있을 땐 팔로우 끊기 -->
 									<li class="postdetail">팔로우 하기</li>
 								</ul>
