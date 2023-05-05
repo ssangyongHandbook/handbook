@@ -32,6 +32,12 @@ public class PostService implements PostServiceInter {
 		return pmapperInter.postList(offset);
 	}
 
+	@Override
+	public void deletePost(int num) {
+		// TODO Auto-generated method stub
+		pmapperInter.deletePost(num);
+	}
+	
 
 	
 }

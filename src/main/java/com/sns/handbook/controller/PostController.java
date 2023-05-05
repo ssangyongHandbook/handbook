@@ -74,4 +74,11 @@ public class PostController {
 		pserivce.insertPost(dto);
 	      }
 }
+	//delete
+	@GetMapping("/post/delete")
+	public void delete (int num) {
+		
+		pserivce.deletePost(num);
+	}
+	
 }

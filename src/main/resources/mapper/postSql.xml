@@ -11,4 +11,7 @@
 	<select id ="postList" parameterType="int" resultType="PostDto">
 	select * from post order by post_num desc limit 2 offset #{offset}  
 	</select>
+	<delete id="deletePost" parameterType="int">
+	delete from post where num=#{num}
+	</delete>
 </mapper>
