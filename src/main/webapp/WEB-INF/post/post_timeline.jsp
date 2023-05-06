@@ -20,6 +20,8 @@
 
 <script type="text/javascript">
 	$(function() {
+		
+		offset=${offset};
 
 		$("#insertbtn").click(function() {
 
@@ -30,7 +32,7 @@
 			//var data=$("#postInsert").serialize();
 
 			var form = new FormData();
-			form.append("photo", $("#pfile")[0].files[0]);
+			form.append("photo", $("#post_file")[0].files[0]);
 			form.append("post_access", post_access);
 			form.append("post_content", post_content);
 			form.append("user_num", user_num);
@@ -74,6 +76,47 @@
 			})
 		})
 
+		//수정버튼 클릭 시 모달에 데이터 넣기
+		$(document).on("click", "#postupdate", function() {
+			updatenum = $(this).attr("post_num");
+
+			$.ajax({
+				type : "get",
+				dataType : "json",
+				url : "updateform",
+				data : {
+					"post_num" : updatenum
+				},
+				success : function(res) {
+					$("#update_access").val(res.post_access);
+					$("#update_content").val(res.post_content);
+
+				}
+			})
+		})
+		
+		 $("#updatetbtn").click(function(){
+			  
+			  
+			  var update_access=$("#update_access").val();
+			  var update_content=$("#update_content").val();
+			  
+			  var data="post_num="+updatenum+"&post_access="+update_access+"&post_content="+update_content;
+			  
+			  
+			  $.ajax({
+				  
+				  type:"post",
+				  dataType:"text",
+				  data:data,
+				  url:"update",
+				  success:function(){
+					  location.reload();
+				  }
+			  });
+		  });
+		
+ 
 	});
 </script>
 
@@ -85,8 +128,9 @@
 }
 
 .divmain {
-	max-width: 650px;
-	min-width: 550px;
+	margin : 0 auto;
+	max-width: 750px;
+	min-width: 650px;
 	height: 700px;
 	border: 1px solid gray;
 }
@@ -224,8 +268,13 @@
 .postdetail:hover {
 	text-decoration: underline;
 }
+
+
 </style>
 </head>
+
+
+
 <body>
 	<div class="allmain">
 		<!-- Trigger the modal with a button -->
@@ -255,7 +304,7 @@
 							</div>
 							<div class="form-group" style="width: 500px;">
 								<input type="file" name="post_file" class="form-control"
-									multiple="multiple" id="pfile">
+									multiple="multiple" id="post_file">
 							</div>
 							<div class="form-group">
 								<textarea style="width: 550px; height: 150px;"
@@ -293,20 +342,21 @@
 
 					<div class="modal-body">
 						<div class="form-group" style="width: 150px;">
-							<select class="form-control" name="post_access" id="post_access">
+							<select class="form-control" name="update_access"
+								id="update_access" required="required">
 								<option value="all">전체공개</option>
 								<option value="follower">팔로워 공개</option>
 								<option value="onlyme">나만보기</option>
 							</select>
 						</div>
 						<div class="form-group" style="width: 500px;">
-							<input type="file" name="post_file" class="form-control"
-								multiple="multiple" id="pfile">
+							<input type="file" name="update_file" class="form-control"
+								required="required" multiple="multiple" id="update_file">
 						</div>
 						<div class="form-group">
 							<textarea style="width: 550px; height: 150px;"
-								name="post_content" class="form-control" required="required"
-								id="post_content" placeholder="내용을 입력해주세요"></textarea>
+								name="update_content" class="form-control" required="required"
+								id="update_content" placeholder="내용을 입력해주세요"></textarea>
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -326,7 +376,7 @@
 
 
 
-
+<section>
 		<!-- 파일이 있을경우0 -->
 		<c:forEach var="dto" items="${list }" varStatus="i">
 			<c:if test="${dto.post_file!='no' }">
@@ -414,12 +464,9 @@
 				<br>
 			</c:if>
 		</c:forEach>
-
+</section>
 
 	</div>
 
-	<button type="button" id="btnbtn">버튼튼</button>
-
-	post_timeline ${total }
 </body>
 </html>
