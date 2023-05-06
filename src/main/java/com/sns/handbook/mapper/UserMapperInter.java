@@ -23,6 +23,7 @@ public interface UserMapperInter {
 	public List<UserDto> getAllUsers();
 	public void updatePhoto(Map<String, String> map);
 	public List<PostDto> getPost(String user_num);
+	public void updateUserInfo(UserDto dto);
 	//우형 끝
 	
 	//이 아래 김희수 구현

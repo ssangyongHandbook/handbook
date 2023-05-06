@@ -79,6 +79,12 @@ public class UserService implements UserServiceInter{
 		// TODO Auto-generated method stub
 		return mapperInter.getPost(user_num);
 	}
+	
+	@Override
+	public void updateUserInfo(UserDto dto) {
+		// TODO Auto-generated method stub
+		mapperInter.updateUserInfo(dto);
+	}
 
 	//우형 끝	
 	
@@ -94,6 +100,8 @@ public class UserService implements UserServiceInter{
 		return mapperInter.getUserDtoById(user_id);
 	}
 	//이 위 김희수
+
+	
 
 
 	

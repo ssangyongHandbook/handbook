@@ -116,6 +116,11 @@
 		$("#btnupdate").click(function(){
 					
 					var num=$(this).attr("num");
+					var addr=$("#uaddr").val();
+					var email=$("#uemail").val();
+					var hp=$("#uhp").val();
+					
+					var data="user_num="+num+"&user_addr="+addr+"&user_email="+email+"&user_hp="+hp;
 					var form=new FormData();
 					form.append("photo",$("#newphoto2")[0].files[0]);
 					form.append("cover",$("#newcover2")[0].files[0]);
@@ -148,6 +153,19 @@
 							location.reload();
 						}
 					});
+					
+					$.ajax({
+						
+						type: "post",
+						dataType: "text",
+						url: "updateinfo",
+						data: data,
+						success: function(){
+							
+							location.reload();
+						}
+						
+					});
 				})
 		
 		//강제 호출
@@ -171,11 +189,13 @@
 		//게시글 작성
 		$("#btnwrite").click(function() {
 
+			var post_access = $("#post_access").val();
 			var post_content = $("#post_content").val();
 			var num=$(this).attr("num");
 			
 			var form = new FormData();
 			form.append("photo", $("#contentphoto")[0].files[0]);
+			form.append("post_access", post_access);
 			form.append("post_content", post_content);
 			form.append("user_num",num);
 
@@ -235,11 +255,10 @@
 		
 		.galary{
 			width: 98%;
-			height: 380px;
+			height: 550px;
 			background-color: white;
 			border-radius: 10px 10px;
-			margin: 10px;
-			
+			margin: 10px;		
 		}
 		
 		.friend{
@@ -252,30 +271,28 @@
 		}
 		
 		 .write{
-			width:96%;
+			width:99%;
 			height: 100px;
 			background-color: white;
 			border-radius: 10px 10px;
 			margin: 10px;
-		
 		}
 		
 		.content{
-			width:96%;
-			height: 200px;
+			width:99%;
+			height: 100%;
 			background-color: white;
 			border-radius: 10px 10px;
 			margin: 10px;
 		}
 		
 		.left{
-			width: 50%;
+			width: 38%;
 			float: left;
-			background-color: 
 		}
 		
 		.right{
-			width:50%;
+			width:62%;
 			float: right;
 		}
 		
@@ -309,6 +326,40 @@
 			background-color: lightblue;
 			color: white;
 			font-weight: 700;
+		}
+		
+		.top-user{
+			display: flex; 
+			align-items: center;				 
+		}
+		
+		.top-writeday{
+			display: flex;
+			flex-direction: column;
+		}
+		
+		.center-up{
+			margin-left: 10px;
+		}
+		
+		.bottom{
+			margin: 2%;
+		}
+		
+		.galary-photo{
+			width: 160px;
+			height: 160px;
+			border-radius: 10px;
+			border: 1px solid gray;
+			margin: 1% 1% 0.25% 1%;
+		}
+		
+		.galary-photoall{
+			display: flex;
+			flex-wrap: wrap;
+		}
+		
+		.modal-intro{
 		}
 		
 </style>
@@ -370,11 +421,11 @@
 		          
 		          <div class="title-intro">
 		          	<span style="font-weight: 700; margin-right: 264px; font-size: 12pt;">회원님을 소개할 항목을 구성해주세요</span> 
-		          	<span style="color:lightblue; cursor: pointer;"><a>수정</a></span>
-		          	
-		          	<div class="modal-intro">
-		          		
-		          	</div>
+			          	<div class="modal-intro">
+			          		<input type="text" id="uaddr" class="form-control" value="${dto.user_addr }"><br>
+			      			<input type="text" id="uemail" class="form-control" value="${dto.user_email }"><br>
+			      			<input type="text" id="uhp" class="form-control" value="${dto.user_hp }">
+			          	</div>
 		          </div>
 		        </div>
 		        
@@ -403,10 +454,15 @@
 		        <div class="modal-body">
 		          <img alt="" src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
 		          <span>${dto.user_name }</span><br>
+		          <select class="form-control" name="post_access" id="post_access" style="width: 25%;">
+					<option value="all">전체공개</option>
+					<option value="follower">팔로워 공개</option>
+					<option value="onlyme">나만보기</option>
+				</select>
 		          <input type="text" id="post_content"  placeholder="무슨 생각을 하고 계신가요?" style="border: none; width: 100%; outline: none;"><br>
 		          
 				  <img id="showimg" style="width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
-				  <input type="file" id="contentphoto" name="contentphoto" style="display: none;">
+				  <input type="file" multiple="multiple" id="contentphoto" name="contentphoto" style="display: none;">
 				  <button type="button" id="btncontentphoto">사진 선택</button>
 
 		        </div>
@@ -496,7 +552,14 @@
 					</div>
 					
 					<div class="galary">
-						사진
+						<b style="font-size: 16pt;">사진</b>
+							<div class="galary-photoall">
+								<c:forEach var="pdto" items="${postlist }" varStatus="i">
+									<c:if test="${i.count <= 9}">
+										<img  class="galary-photo" src="${root }/post_file/${pdto.post_file }">
+									</c:if>
+								</c:forEach>
+							</div>
 					</div>
 					
 					<div class="friend">
@@ -522,30 +585,44 @@
 						</div> 
 					</div>
 					
-					<c:forEach var="dto" items="${postlist }">
+					<c:forEach var="pdto" items="${postlist }">
 						<div class="content">
 								<div class="divmain">
 									<div class="top">
-										<span class="top-left">이름: 지성웅 <span>시간:
-												${dto.post_writeday }</span>
-										</span>
+										<div class="top-user">
+											<img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
+												<div class="top-writeday">
+													<span><b>${dto.user_name }${pdto.post_access }</b></span>
+													<span>${pdto.post_writeday }</span>		
+												</div>
+												<div class="dropdown">
+													<img src="${root }/image/menu.png" data-toggle="dropdown" style="width:30px; height: 30px; cursor: pointer;">
+													
+													<ul class="dropdown-menu">
+												      <li><a href="#">게시글 삭제</a></li>
+												    </ul>
+												</div>
+										</div>
 									</div>
 
 									<div class="center">
-										<div class="center-up">${dto.post_content }</div>
+										<div class="center-up">${pdto.post_content }</div>
 
-										<div class="center-down">
-											<img src="/post_file/${dto.post_file }">
+										<div class="center-down" >
+											<img src="/post_file/${pdto.post_file }" style="width: 100%;height: 500px;">
 										</div>
 									</div>
 
 									<div class="bottom">
-										<span class="bottom-left"><span
-											class="glyphicon glyphicon-heart"
-											style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요</span>
-										<span class="bottom-right"><span
-											class="glyphicon glyphicon-comment"
-											style="font-size: 1.2em; top: 3px; color: gray;"></span>&nbsp;댓글</span>
+									<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
+										<div>
+											<span class="bottom-left"><span
+												class="glyphicon glyphicon-heart"
+												style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요</span>
+											<span class="bottom-right"><span
+												class="glyphicon glyphicon-comment"
+												style="font-size: 1.2em; top: 3px; color: gray;"></span>&nbsp;댓글</span>
+										</div>
 									</div>
 									
 								</div>

@@ -39,8 +39,13 @@
 	
 	<!-- 마이페이지 게시글 가져오기 -->
 	<select id="getPost" parameterType="String" resultType="PostDto">
-		select user_num,post_content,post_file,post_writeday from post where user_num=#{user_num} order by post_num desc
+		select user_num,post_content,post_access,post_file,post_writeday from post where user_num=#{user_num} order by post_num desc
 	</select>
+	
+	<!-- 정보 수정 -->
+	<update id="updateUserInfo" parameterType="UserDto">
+		update user set user_addr=#{user_addr},user_email=#{user_email},user_hp=#{user_hp} where user_num=#{user_num}
+	</update>
 	<!-- 우형 끝 -->
 
 	<!-- 이 아래는 김희수가 구현함. -->

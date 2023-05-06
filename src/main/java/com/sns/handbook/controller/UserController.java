@@ -129,8 +129,14 @@ public class UserController {
 		
 		pservice.insertPost(dto);
 	    }
-}
+	}
 	
+	@ResponseBody
+	@PostMapping("/user/updateinfo")
+	public void updateinfo(UserDto dto)
+	{
+		uservice.updateUserInfo(dto);
+	}
 	
 	@GetMapping("/user/info")
 	public String info()
