@@ -35,6 +35,7 @@ public class PostController {
 	
 	
 	@GetMapping("/post/timeline")
+	@ResponseBody
 	public ModelAndView list(@RequestParam(defaultValue = "0") int offset) {
 		List<PostDto> list = pservice.postList(offset);
         ModelAndView model=new ModelAndView();
@@ -123,8 +124,6 @@ public class PostController {
 		{
 			pservice.updatePost(dto);
 			
-			//세션에 저장된 이름 변경
-			//session.setAttribute("loginname", dto.getName());
 		}
 	
 	
