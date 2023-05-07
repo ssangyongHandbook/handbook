@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTDMapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sns.handbook.mapper.PostlikeMapperInter">
+
+<select id="getTotalLike" resultType="int" >
+		select count(*) from postlike where post_num=#{post_num}
+	</select>
+	
+	<insert id="insertLike" parameterType="PostLikeDto">
+		insert into postlike value(null,null,null)
+	</insert>
+	
+	<delete id="deleteLike" parameterType="String">
+		delete from postlike where plike_num=#{plike_num}
+	</delete>
+
+</mapper>

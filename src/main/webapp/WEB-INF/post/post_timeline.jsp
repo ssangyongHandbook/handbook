@@ -116,6 +116,9 @@
 			  });
 		  });
 		
+		
+		
+
  
 	});
 </script>
@@ -202,8 +205,10 @@
 
 /* 파일 없을 경우  */
 .divmain2 {
-	max-width: 650px;
-	min-width: 550px margin-left: 10%;
+
+	margin : 0 auto;
+	max-width: 750px;
+	min-width: 550px ;
 	height: 400px;
 	border: 1px solid gray;
 	height: 400px;
@@ -412,7 +417,7 @@
 					<div class="bottom">
 						<span class="bottom-left"><span
 							class="glyphicon glyphicon-heart"
-							style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요</span>
+							style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요 ${like }</span>
 						<span class="bottom-right"><span
 							class="glyphicon glyphicon-comment"
 							style="font-size: 1.2em; top: 3px; color: gray;"></span>&nbsp;댓글</span>
@@ -453,7 +458,7 @@
 					<div class="bottom2">
 						<span class="bottom-left2"><span
 							class="glyphicon glyphicon-heart"
-							style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요</span>
+							style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요 ${like } </span>
 						<span class="bottom-right2"><span
 							class="glyphicon glyphicon-comment"
 							style="font-size: 1.2em; top: 3px; color: gray;"></span>&nbsp;댓글</span>
