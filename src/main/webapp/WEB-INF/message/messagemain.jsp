@@ -235,7 +235,11 @@
 				var chatContent="";
 				
 				$.each(res,function(i,ele){
-					chatContent+="<p>" + ele.mess_content + "</p>";
+					if(ele.sender_num=='${user_num}'){
+						chatContent+="<p style='text-align:right'>" + ele.mess_content + "</p>";
+					}else{
+						chatContent+="<p style='text-align:left'>" + ele.mess_content + "</p>";
+					}
 				})
 				
 				$("#chatShow").html(chatContent);
@@ -336,10 +340,17 @@
         
         ws.onmessage = function(data) {
             var msg = data.data;
-            //msg=msg.split(":")[1]; <<----이거 분해 ---------------------------------------------
+            msgArr=msg.split(":"); //<<----이거 분해 ---------------------------------------------
             //msg=msg.substring(1,msg.lenght-1);
-            if(msg != null && msg.trim() != ''){
-                $("#chatShow").append("<p>" + msg + "</p>");
+            var message=msgArr[1]; //메시지 내용
+            var receiver=msgArr[2].trim(); //받는 사람 num
+            var group=msgArr[3].trim(); // 메시지 그룹
+            
+            var nowGroup=$("#chatgroup").val(); //현재 선택된 채팅방 그룹
+            
+            if(msg != null && msg.trim() != '' && '${user_num}'==receiver && group==nowGroup){
+               /*  $("#chatShow").append("<p>" + msg + "</p>"); */
+               	$("#chatShow").append("<p style='text-align:left'>" + message + "</p>");
                 memberListOut();
                 
                 //내 번호
@@ -379,6 +390,7 @@
         var msg = $("#chatting").val();
         ws.send(myid+" : "+msg+" : "+$("#receivernum").val()+" : "+$("#chatgroup").val());
         $('#chatting').val("");
+        $("#chatShow").append("<p style='text-align:right'>" + msg + "</p>");
     }
 </script>
 </head>
