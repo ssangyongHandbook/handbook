@@ -330,7 +330,7 @@
 		
 		.top-user{
 			display: flex; 
-			align-items: center;				 
+			align-items: center;		 
 		}
 		
 		.top-writeday{
@@ -359,7 +359,21 @@
 			flex-wrap: wrap;
 		}
 		
-		.modal-intro{
+		.bottom-up{
+			display: flex; 			
+		}
+		
+		.like{
+			width: 50%;
+		}
+		
+		.comment{
+			width: 50%;
+		}
+		
+		.friend-photoall{
+			display: flex;
+			flex-wrap: wrap;
 		}
 		
 </style>
@@ -531,9 +545,9 @@
 			<div class="menu">
 			<hr style="border: 1px solid lightgray; margin:0px;">
 				<div style="font-weight: bold; font-size: 15pt;">
-					<a href="/user/mypage"><span>게시글</span></a>
-					<a href="#"><span>정보</span></a>
-					<a href="#"><span>친구</span></a>
+					<a href="/user/mypage" style="color: black;"><span>게시글</span></a>
+					<a href="/user/info" style="color: black;"><span>정보</span></a>
+					<a href="/user/friend" style="color: black;"><span>친구</span></a>
 				</div>
 			</div>
 			
@@ -543,7 +557,7 @@
 						<span><b style="font-size: 16pt;">소개</b></span>
 						<div class="intro-info">
 							<span><img src="${root }/image/home.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr }</b>&nbsp;&nbsp;거주</span><br>
-							<span><img src="${root }/image/location.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr }</b>&nbsp;&nbsp;출신</span><br>
+							<span><img src="${root }/image/location.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr.substring(0, 2)}</b>&nbsp;&nbsp;출신</span><br>
 							<span><img src="${root }/image/follow.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${followercount }</b>&nbsp;&nbsp;명이 팔로우함</span><br>
 							<span><img style="width:30px; height: 35px;" src="${root }/image/email.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_email }</b>&nbsp;&nbsp;</span><br>
 							<span><img style="width:30px; height: 35px;" src="${root }/image/hp.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_hp }</b>&nbsp;&nbsp;</span>
@@ -563,7 +577,11 @@
 					</div>
 					
 					<div class="friend">
-						친구
+						<b style="font-size: 16pt;">친구</b><br>
+						${togetherFollowcount}
+							<div class="friend-photoall">
+								
+							</div>
 					</div>
 				 	
 				</div>
@@ -571,7 +589,7 @@
 				<div class="right">
 					<div class="write">
 						<div class = "searcharea">
-							<div style = "width: 600px; display: inline-flex; align-items: center; margin: 3%;">
+							<div style = "width: 700px; display: inline-flex; align-items: center; margin: 3%;">
 							
 							<img alt="" src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
 							&nbsp;&nbsp;&nbsp;
@@ -595,10 +613,10 @@
 													<span><b>${dto.user_name }${pdto.post_access }</b></span>
 													<span>${pdto.post_writeday }</span>		
 												</div>
-												<div class="dropdown">
-													<img src="${root }/image/menu.png" data-toggle="dropdown" style="width:30px; height: 30px; cursor: pointer;">
+												<div class="dropdown" style="margin-left: 70%;">
+													<img src="${root }/image/menu.png" data-toggle="dropdown" style="width:50px; height: 50px; cursor: pointer;">
 													
-													<ul class="dropdown-menu">
+													<ul class="dropdown-menu dropdown-menu-right">
 												      <li><a href="#">게시글 삭제</a></li>
 												    </ul>
 												</div>
@@ -615,13 +633,30 @@
 
 									<div class="bottom">
 									<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
-										<div>
-											<span class="bottom-left"><span
-												class="glyphicon glyphicon-heart"
-												style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요</span>
-											<span class="bottom-right"><span
-												class="glyphicon glyphicon-comment"
-												style="font-size: 1.2em; top: 3px; color: gray;"></span>&nbsp;댓글</span>
+									
+										<div class="bottom-up">
+											<div class="like">
+												<span><img src="${root }/image/like.png" style="width: 20px; height: 20px;">&nbsp;&nbsp;좋아요</span>
+											</div>
+											<div class="comment">
+												<span><img src="${root }/image/comment.png" style="width: 20px; height: 20px;">&nbsp;&nbsp;댓글</span>
+											</div>
+										</div>
+										
+										<div class="bottom-down">
+											<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
+												<div class="searcharea">
+														<div style="width: 700px; display: inline-flex; align-items: center;">
+															<div>
+																<img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
+															</div>
+															<div style="background-color: #F0F2F5; border-radius: 60px; display: inline-flex; align-items: center; padding-left: 2%"> 
+																	<input type="text" name="searchword" style="width: 700px; border: none; background: none; outline: none; font-size: 15pt; padding: 10px;"
+																	placeholder="댓글을 입력하세요...">
+																	<img alt="" src="${root }/image/submit.png" style="width: 30px; height: 30px; margin-right: 3%;">
+															</div>
+														</div>
+												</div>
 										</div>
 									</div>
 									

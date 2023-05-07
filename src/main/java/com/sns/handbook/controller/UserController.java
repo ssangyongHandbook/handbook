@@ -69,7 +69,6 @@ public class UserController {
 	{
 		//업로드 경로
 		String path=session.getServletContext().getRealPath("/photo");
-
 		
 			//파일명 구하기
 			SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
@@ -87,11 +86,12 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/mypage")
-	public ModelAndView mypage(HttpSession session)
+	public ModelAndView mypage(HttpSession session,String to_user,String from_user)
 	{
 		ModelAndView model=new ModelAndView();
 		
 		int followercount=fservice.getTotalFollower((String)session.getAttribute("user_num"));
+		int togetherFollowcount=fservice.togetherFollow(to_user, from_user);
 		
 		List<UserDto> list=uservice.getAllUsers();
 		List<PostDto> postlist=uservice.getPost((String)session.getAttribute("user_num"));
@@ -99,10 +99,12 @@ public class UserController {
 		model.addObject("list", list);
 		model.addObject("postlist",postlist);
 		model.addObject("followercount", followercount);
+		model.addObject("togetherFollowcount", togetherFollowcount);
 		model.setViewName("/sub/user/mypage");
 		
 		return model;
 	}
+	
 	@PostMapping("/user/insertpost")
 	@ResponseBody
 	public void insertPost(@ModelAttribute PostDto dto, @RequestParam(required = false ) MultipartFile photo, HttpSession session) {

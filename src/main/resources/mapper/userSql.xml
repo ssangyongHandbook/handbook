@@ -46,6 +46,7 @@
 	<update id="updateUserInfo" parameterType="UserDto">
 		update user set user_addr=#{user_addr},user_email=#{user_email},user_hp=#{user_hp} where user_num=#{user_num}
 	</update>
+
 	<!-- 우형 끝 -->
 
 	<!-- 이 아래는 김희수가 구현함. -->
