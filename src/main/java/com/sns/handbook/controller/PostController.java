@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.serivce.PostService;
+import com.sns.handbook.serivce.PostlikeService;
 
 
 @Controller
@@ -27,6 +28,9 @@ public class PostController {
 
 	@Autowired
 	PostService pservice;
+
+	@Autowired
+	PostlikeService plservice;
 	
 	@GetMapping("/post/write")
 	public String write() {
@@ -40,10 +44,12 @@ public class PostController {
 		List<PostDto> list = pservice.postList(offset);
         ModelAndView model=new ModelAndView();
         int totalCount=pservice.getTotalCount();
-        
+        int totalLike=plservice.getTotalLike();
         model.addObject("offset",offset);
 		model.addObject("total",totalCount);
 		model.addObject("list",list);
+		model.addObject("like",totalLike);
+		
         model.setViewName("/post/post_timeline");
 		return model;
 	}
