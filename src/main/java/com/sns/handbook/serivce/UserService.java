@@ -73,6 +73,14 @@ public class UserService implements UserServiceInter{
 		// TODO Auto-generated method stub
 		return mapperInter.getUserDtoById(user_id);
 	}
+	
+	@Override
+	public int loginEmailCheck(String user_email) {
+		// TODO Auto-generated method stub
+		return mapperInter.loginEmailCheck(user_email);
+	}
 	//이 위 김희수
+
+	
 	
 }
