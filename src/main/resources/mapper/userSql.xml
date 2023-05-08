@@ -59,6 +59,12 @@
 	<select id="getUserDtoById" parameterType="String" resultType="UserDto">
 		select * from user where user_id=#{user_id}
 	</select>
+	
+	<!-- email넘겨서 이미 등록된 이메일이면 0 없는 이메일이면 1 -->
+	<select id="loginEmailCheck" parameterType="String" resultType="int">
+		select count(*) from user where user_email=#{user_email}
+	</select>
+	
 	<!-- 여기 위까지는 김희수가 구현함. -->
 
 </mapper>
