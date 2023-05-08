@@ -16,4 +16,9 @@
 	<select id="getRecentGroup" resultType="int" parameterType="String">
 		select mess_group from message where sender_num=#{user_num} or receiver_num=#{user_num} order by mess_writeday desc limit 1
 	</select>
+	<select id="getSearchMessage" parameterType="Map" resultType="MessageDto">
+		select distinct sender_num,receiver_num from message where 
+		(sender_num=#{user_num} and receiver_num=any(select user_num from user where user_name=#{other})) or 
+		(receiver_num=#{user_num} and sender_num=any(select user_num from user where user_name=#{other})) order by mess_writeday desc
+	</select>
 </mapper>

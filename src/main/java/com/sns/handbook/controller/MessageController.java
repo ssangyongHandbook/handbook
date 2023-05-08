@@ -80,6 +80,13 @@ public class MessageController {
 	@ResponseBody
 	public List<Map<String, Object>> memberlist(HttpSession session)
 	{
+		try {
+			Thread.sleep(100); //0.1초 기다리기
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		//사용자의 num 받기
 		String myid=(String)session.getAttribute("myid");
 		String user_num=uservice.getUserById(myid).getUser_num();

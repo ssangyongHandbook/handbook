@@ -25,7 +25,6 @@
 		width: 350px;
 		min-width: 0px;
 		height: 100%;
-		background-color: pink;
 		position: fixed;
 		overflow-y:scroll;
 		overflow-x: hidden;
@@ -33,7 +32,6 @@
 	
 	.messagechatlist{
 		height: 100%;
-		background-color: orange;
 		position: fixed;
 		left: 350px;
 		overflow-y:hidden;
@@ -61,7 +59,7 @@
 	.mmlbtn{
 		width: 35px;
 		height: 35px;
-		background-color: lightgray;
+		background-color: #F0F2F5;
 		border-radius: 100px;
 		line-height: 40px;
 		text-align: center;
@@ -70,7 +68,7 @@
 	
 	.messagesearch{
 		margin: 0 auto;
-		background-color: lightgray;
+		background-color: #F0F2F5;
 		border-radius: 100px;
 		width: 95%;
 		height: 35px;
@@ -117,7 +115,7 @@
 	}
 	
 	.messageactive{
-		background-color: skyblue;
+		background-color: #DFEFFF;
 		border-radius: 5px;
 	}
 	
@@ -148,7 +146,7 @@
 		width: 100%;
 		height: 70px;
 		background-color: white;
-		box-shadow: 5px 2px 3px lightgray;
+		box-shadow: 5px 2px 3px #F0F2F5;
 		display: inline-flex;
 		align-items: center;
 		font-weight: bold;
@@ -177,6 +175,9 @@
 		margin-bottom: 55px;
 		overflow:scroll;
 		overflow-x: hidden;
+		display: inline-flex;
+		flex-direction: column;
+		align-items: center;
 	}
 	
 	.messagefooter{
@@ -193,7 +194,7 @@
 		width: 82%;
 		height: 35px;
 		line-height: 35px;
-		background-color: lightgray;
+		background-color: #F0F2F5;
 		border-radius: 60px;
 		text-align: center;
 		margin-left: 10px;
@@ -223,7 +224,7 @@
 	
 	.messageright{
 		align-self: flex-end;
-		background-color: blue;
+		background-color: #3582D3;
 		color: white;
 	}
 	
@@ -235,12 +236,37 @@
 	}
 	
 	.messageleft{
-		background-color: lightgray;
+		background-color: #F0F2F5;
 	}
 	
 	.leftreceiverphoto{
 		height: 40px;
 		border-radius: 100px;
+	}
+	
+	.chatlistinfo{
+		display: inline-flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		margin: 60px 0px 60px 0px;
+	}
+	
+	.chatlistinfo div{
+		width: 60px;
+		height: 60px;
+		border-radius: 100px;
+		overflow: hidden;
+	}
+	
+	.chatlistinfo img{
+		width: 60px;
+	}
+	
+	.chatlistinfoname{
+		font-weight: bold;
+		font-size: 14pt;
+		margin-top: 10px;
 	}
 </style>
 
@@ -257,7 +283,7 @@
 		if('${otherinfo.user_photo}'==null||'${otherinfo.user_photo}'==''){
 			$(".chatinfophoto img").attr("src",'/image/noimg.png');
 		}else{
-			$(".chatinfophoto img").attr("src",'/사진업로드경로/'+'${otherinfo.user_photo}');	
+			$(".chatinfophoto img").attr("src",'/photo/'+'${otherinfo.user_photo}');	
 		}
 		
 		$( window ).resize(function() {
@@ -275,16 +301,20 @@
 			data:{"mess_group":group},
 			success:function(res){
 				var chatContent="";
+				var otherImg="";
 				
 				$.each(res,function(i,ele){
 					if(ele.sender_num=='${user_num}'){
 						chatContent+="<div class='messageright messagebubble'>" + ele.mess_content + "</div>";
 					}else{
 						//현재 선택한 대화 상대의 사진 가져오기
-						var otherImg=$(".chatinfophoto img").attr("src");
+						otherImg=$(".chatinfophoto img").attr("src");
 						chatContent+="<div class='msgleft'><img src='"+otherImg+"' class='leftreceiverphoto'><div class='messageleft messagebubble'>" + ele.mess_content + "</div></div>";
 					}
 				})
+				
+				$(".chatlistinfo img").attr("src",otherImg);
+				$(".chatlistinfoname").text($(".chatinfo span").text());
 				
 				$("#chatShow").html(chatContent);
 				$(".chatlist").scrollTop($(".chatlist")[0].scrollHeight); //스크롤 맨 아래로 내리기
@@ -336,12 +366,13 @@
 						//선택되지 않은 채팅방
 						out+='<div class="onemember" mess_group='+chat.group+' member_num='+chat.member_num+'>';
 					}
+					console.log(chat.group);
 					out+='<div class="messagememberphotobox">';
 					out+='<div class="messagememberphoto">';
-					if(chat.member_photo==null||'${otherinfo.user_photo}'==''){
+					if(chat.member_photo==null||chat.member_photo==''){
 						out+='<img alt="사용자사진(없음)" src="/image/noimg.png">';
 					}else{
-						out+='<img alt="사용자사진" src="/사진업로드경로/'+chat.member_photo+'">';
+						out+='<img alt="사용자사진" src="/photo/'+chat.member_photo+'">';
 					}
 					out+='</div>';
 					out+='</div>';
@@ -397,7 +428,7 @@
         
         ws.onmessage = function(data) {
             var msg = data.data;
-            msgArr=msg.split(":"); //<<----이거 분해 ---------------------------------------------
+            msgArr=msg.split(":"); //분해(보내는사람:내용:받는사람:그룹)
             //msg=msg.substring(1,msg.lenght-1);
             var message=msgArr[1]; //메시지 내용
             var receiver=msgArr[2].trim(); //받는 사람 num
@@ -405,11 +436,16 @@
             
             var nowGroup=$("#chatgroup").val(); //현재 선택된 채팅방 그룹
             
-            if(msg != null && msg.trim() != '' && '${user_num}'==receiver && group==nowGroup){
-               /*  $("#chatShow").append("<p>" + msg + "</p>"); */
-               	$("#chatShow").append("<div class='messageleft messagebubble'>" + message + "</div>");
-                memberListOut();
-                $(".chatlist").scrollTop($(".chatlist")[0].scrollHeight); //스크롤 맨 아래로 내리기
+            if(msg != null && msg.trim() != '' && '${user_num}'==receiver){
+               
+            	if(group==nowGroup){
+               		//현재 선택한 대화 상대의 사진 가져오기
+					var otherImg=$(".chatinfophoto img").attr("src");	
+               		$("#chatShow").append("<div class='msgleft'><img src='"+otherImg+"' class='leftreceiverphoto'><div class='messageleft messagebubble'>" + message + "</div></div>");
+                	$(".chatlist").scrollTop($(".chatlist")[0].scrollHeight); //스크롤 맨 아래로 내리기
+            	}
+            	
+                memberListOut();//멤버 리스트 다시 불러오기
                 
                 //내 번호
                 var user_num="${user_num}";
@@ -450,6 +486,7 @@
         $('#chatting').val("");
         $("#chatShow").append("<div class='messageright messagebubble'>" + msg + "</div>");
         $(".chatlist").scrollTop($(".chatlist")[0].scrollHeight); //스크롤 맨 아래로 내리기
+        memberListOut(); //멤버 리스트 다시 불러오기
     }
 </script>
 </head>
@@ -485,7 +522,13 @@
 			<span>사람이름</span>
 		</div>
 		<div class="chatlist">
-			<h1>채팅</h1>
+			<div class="chatlistinfo">
+				<div>
+					<img alt="상대방 사진" src="">
+				</div>
+				<span class="chatlistinfoname"></span>
+				<p class="chatlistinfofollow"></p>
+			</div>
 		    <div id="chatShow" class="chatShow">
 		    	<!-- 채팅 보이는 구간 -->
 		    </div>
