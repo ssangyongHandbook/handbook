@@ -121,6 +121,83 @@
 
  
 	});
+	</script>
+	
+	<style type="text/css">
+	
+	.divmain{
+	/* 예지가 width값 고침 */
+	max-width: 650px;
+	min-width: 550px;
+	margin-left:10%;
+	height :700px;
+		border : 1px solid gray;
+	}
+	.top{
+	
+	width:100%;
+	height:15%;
+	}
+	
+	
+	.top-left{
+	float:left;
+	width:50%;
+	height:100%;
+	border : 1px solid red;	
+	}
+	
+	.top-right{
+	text-align:right;
+	float:right;
+	width:50%;
+	height:100%;
+		border : 1px solid green;
+	}
+	.center{
+	width:100%;
+	height:80%;
+	border : 1px solid green;
+	}
+	.center-up{
+	width:100%;
+	height:30%;
+	}
+	.center-down{
+	text-align:center;
+	width:100%;
+	height:70%;
+		border : 1px solid green;
+	
+	}
+	.bottom{
+	width:100%;
+	height:5%;
+	
+	}
+	.bottom-left{
+	text-align:center;
+	font-size:1.2em;
+	float:left;
+	width:50%;
+	height:100%;
+	}
+	
+	.bottom-right{
+	text-align:center;
+	font-size:1.2em;
+	float:right;
+	width:50%;
+	height:100%;
+	}
+	
+	.img{
+	text-align:center;
+	width:20%;
+	height:100%;
+	}
+	
+	</style>
 </script>
 
 <style type="text/css">

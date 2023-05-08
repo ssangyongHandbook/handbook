@@ -40,14 +40,15 @@ div.layout div.title {
 div.layout div.menu {
 	position: fixed;
 	margin-top: 80px;
-	width: 350px;
+	/* width값 바꿈 */
+	width: 300px;
 	height: 100%;
 	background-color: #F0F2F5;
 }
 
 div.layout div.main {
-	max-width: 60%;
-	min-width: 400px;
+	max-width: 50%;
+	min-width: 600px;
 	height: 1200px;
 	background-color: white;
 	margin: 0 auto;
@@ -58,7 +59,8 @@ div.layout div.sideinfo {
 	position: fixed;
 	right: 0px;
 	margin-top: 80px;
-	width: 350px;
+	/* width값 바꿈 */
+	width: 300px;
 	height: 100%;
 	background-color: #F0F2F5;
 }
@@ -75,7 +77,7 @@ div.layout div.sideinfo {
 
 	function side_change() {
 		var windowWidth = $(window).width();
-		if (windowWidth < 900) {
+		if (windowWidth < 1200) {
 			$("div.menu").hide();
 			$("div.sideinfo").hide();
 		} else {
