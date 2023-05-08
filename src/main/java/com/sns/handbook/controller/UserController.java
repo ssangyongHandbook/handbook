@@ -86,12 +86,12 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/mypage")
-	public ModelAndView mypage(HttpSession session,String to_user,String from_user)
+	public ModelAndView mypage(HttpSession session,String my_num,String your_num)
 	{
 		ModelAndView model=new ModelAndView();
 		
-		int followercount=fservice.getTotalFollower((String)session.getAttribute("user_num"));
-		int togetherFollowcount=fservice.togetherFollow(to_user, from_user);
+		int followercount=fservice.getTotalFollower(my_num);
+		int togetherFollowcount=fservice.togetherFollow(your_num, my_num);
 		
 		List<UserDto> list=uservice.getAllUsers();
 		List<PostDto> postlist=uservice.getPost((String)session.getAttribute("user_num"));
