@@ -20,8 +20,12 @@
 
 <script type="text/javascript">
 	$(function() {
-		
-		offset=${offset};
+
+		offset = $
+		{
+			offset
+		}
+		;
 
 		$("#insertbtn").click(function() {
 
@@ -52,7 +56,6 @@
 			});
 		});
 
-		$(".postsubmenu").hide();
 		$(document).on("click", ".postmenu", function() {
 
 			var i = $(this).attr("i");
@@ -94,62 +97,94 @@
 				}
 			})
 		})
-		
-		 $("#updatetbtn").click(function(){
-			  
-			  
-			  var update_access=$("#update_access").val();
-			  var update_content=$("#update_content").val();
-			  
-			  var data="post_num="+updatenum+"&post_access="+update_access+"&post_content="+update_content;
-			  
-			  
-			  $.ajax({
-				  
-				  type:"post",
-				  dataType:"text",
-				  data:data,
-				  url:"update",
-				  success:function(){
-					  location.reload();
-				  }
-			  });
-		  });
-		
-		
-		 window.onscroll = function(e) {
-	            if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
-	               
-	               offset=offset+2;
-	               $.ajax({
-	                 type:"get",
-	                 dataType:"json",
-	                 url:"scroll",
-	                 data:{"offset":offset},
-	                 success:function(res){
-	                    $.each(res,function(i,item){
-	                    alert("hello");
-	                       
-	                       setTimeout(function(){
-	                              
-	                                var addTimeline = document.createElement("div");
-	                                addTimeline.classList.add("divmain");
-	                               
-	                                addTimeline.innerHTML ="<p>hello</p>";
-	                                 
-	                                 document.querySelector('section').appendChild(addTimeline);
-	                       }, 1000) 
-	                    })
-	                 }
-	               });
-	               
-	             
-	            }
-	          } 
-		
 
- 
-	
+		$(document).on("click","#updatetbtn",function() {
+
+							var update_access = $("#update_access").val();
+							var update_content = $("#update_content").val();
+
+							var data = "post_num=" + updatenum
+									+ "&post_access=" + update_access
+									+ "&post_content=" + update_content;
+
+							$.ajax({
+
+								type : "post",
+								dataType : "text",
+								data : data,
+								url : "update",
+								success : function() {
+									location.reload();
+								}
+							});
+						});
+
+		$(document).on("click", "#like", function() {
+			var post_num = $(this).attr("post_num");
+			var user_num = $(this).attr("user_num");
+
+			$.ajax({
+				type : "get",
+				dataType : "text",
+				url : "likeinsert",
+				data : {
+					"post_num" : post_num,
+					"user_num" : user_num
+				},
+				success : function() {
+					location.reload();
+				}
+			})
+		})
+
+		$(document).on("click", "#dlike", function() {
+			var post_num = $(this).attr("post_num");
+			var user_num = $(this).attr("user_num");
+
+			$.ajax({
+				type : "get",
+				dataType : "text",
+				url : "likedelete",
+				data : {
+					"post_num" : post_num,
+					"user_num" : user_num
+				},
+				success : function() {
+					location.reload();
+				}
+			})
+		})
+
+		/*  window.onscroll = function(e) {
+		        if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
+		           
+		           offset=offset+2;
+		           $.ajax({
+		             type:"get",
+		             dataType:"json",
+		             url:"scroll",
+		             data:{"offset":offset},
+		             success:function(res){
+		                $.each(res,function(i,item){
+		                alert("hello");
+		                   
+		                   setTimeout(function(){
+		                          
+		                            var addTimeline = document.createElement("div");
+		                            addTimeline.classList.add("divmain");
+		                           
+		                            addTimeline.innerHTML =
+		                             
+		                             document.querySelector('section').appendChild(addTimeline);
+		                   }, 1000) 
+		                })
+		             }
+		           });
+		           
+		         
+		        }
+		      }  */
+
 	});
 </script>
 
@@ -161,7 +196,7 @@
 }
 
 .divmain {
-	margin : 0 auto;
+	margin: 0 auto;
 	max-width: 750px;
 	min-width: 650px;
 	height: 700px;
@@ -235,10 +270,9 @@
 
 /* 파일 없을 경우  */
 .divmain2 {
-
-	margin : 0 auto;
+	margin: 0 auto;
 	max-width: 750px;
-	min-width: 550px ;
+	min-width: 550px;
 	height: 400px;
 	border: 1px solid gray;
 	height: 400px;
@@ -303,14 +337,13 @@
 .postdetail:hover {
 	text-decoration: underline;
 }
-
-
 </style>
 </head>
 
 
 
 <body>
+
 	<div class="allmain">
 		<!-- Trigger the modal with a button -->
 		<button type="button" class="btn btn-info btn-lg" data-toggle="modal"
@@ -331,7 +364,11 @@
 						</div>
 						<div class="modal-body">
 							<div class="form-group" style="width: 150px;">
-								<select class="form-control" name="post_access" id="post_access">
+								<img alt="" src="${root }/photo/${user_photo}"
+									style="width: 40px; height: 40px; border-radius: 20px;">
+								<div>${user_name }</div>
+								<br> <select class="form-control" name="post_access"
+									id="post_access">
 									<option value="all">전체공개</option>
 									<option value="follower">팔로워 공개</option>
 									<option value="onlyme">나만보기</option>
@@ -409,97 +446,130 @@
 
 
 
+		<section>
+			<!-- 파일이 있을경우0 -->
 
 
-<section>
-		<!-- 파일이 있을경우0 -->
-		<c:forEach var="dto" items="${list }" varStatus="i">
-			<c:if test="${dto.post_file!='no' }">
+			<c:forEach var="dto" items="${list }" varStatus="i">
+				<c:if test="${dto.post_file!='no' }">
 
-				<div class="divmain">
-					<div class="top">
-						<span class="top-left">이름: 지성웅<span>게시글범위:${dto.post_access }</span><span>시간:
-								${dto.post_writeday }</span></span> <span class="top-right"> <span
-							class="glyphicon glyphicon-th-list postmenu" i="${i.count}"
-							style="font-size: 1.3em; margin-right: 3%; color: gray;">
-								<ul id="${i.count }" class="postsubmenu"
-									style="font-size: 25pt; line-height: 1.5em;">
-									<li id="postupdate" class="postdetail" data-toggle="modal"
-										data-target="#updatepost" post_num="${dto.post_num }">게시물
-										수정</li>
-									<li id="postdelete" class="postdetail"
-										post_num="${dto.post_num }">게시물 삭제</li>
-									<!--  이부분 팔로일땐 팔로우하기 or 팔로우 하고 있을 땐 팔로우 끊기 -->
-									<li class="postdetail">팔로우 하기</li>
-								</ul>
-						</span>
+					<div class="divmain">
+						<div class="top">
+							<div class="top-left">
+								<img alt="" src="${root }/photo/${dto.user_photo}"
+									style="width: 40px; height: 40px; border-radius: 20px; margin: 10px;">
+								<b>${dto.user_name }${dto.post_access }</b>
 
-						</span>
-					</div>
-					<div class="center">
-						<div class="center-up">${dto.post_content }</div>
+							</div>
+							<span class="top-right"><span>${dto.post_writeday }</span>
+								<span class="glyphicon glyphicon-th-list postmenu"
+								i="${i.count}"
+								style="font-size: 1.3em; margin-right: 3%; color: gray;">
 
-						<div class="center-down">
+									<ul id="${i.count }" class="postsubmenu" 
+										style="font-size: 25pt; line-height: 1.5em; display: none;">
 
-							<img src="/post_file/${dto.post_file }" class="img">
+
+										<li id="postupdate" class="postdetail" data-toggle="modal"
+											data-target="#updatepost" post_num="${dto.post_num }">게시물
+											수정</li>
+										<li id="postdelete" class="postdetail"
+											post_num="${dto.post_num }">게시물 삭제</li>
+										<!--  이부분 팔로일땐 팔로우하기 or 팔로우 하고 있을 땐 팔로우 끊기 -->
+										<li class="postdetail">팔로우 하기</li>
+									</ul>
+							</span> </span>
 						</div>
-					</div>
-					<div class="bottom">
-						<span class="bottom-left"><span
-							class="glyphicon glyphicon-heart"
-							style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요 ${like }</span>
-						<span class="bottom-right"><span
-							class="glyphicon glyphicon-comment"
-							style="font-size: 1.2em; top: 3px; color: gray;"></span>&nbsp;댓글</span>
-					</div>
+						<div class="center">
+							<div class="center-up">${dto.post_content }</div>
 
-				</div>
-				<br>
-				<br>
-			</c:if>
+							<div class="center-down">
 
-			<!-- 파일이 없을 경우 -->
-			<c:if test="${dto.post_file=='no' }">
-				<div class="divmain2">
-					<div class="top2">
-						<span class="top-left">이름: 지성웅<span>게시글범위:${dto.post_access }</span>
-							<span>시간: ${dto.post_writeday }</span>
-						</span> <span class="top-right"> <span
-							class="glyphicon glyphicon-th-list postmenu" i="${i.count }"
-							style="font-size: 1.3em; margin-right: 3%; color: gray;">
-								<ul id="${i.count }" class="postsubmenu"
-									style="font-size: 25pt; line-height: 1.5em;">
-									<li id="postupdate" class="postdetail" data-toggle="modal"
-										data-target="#updatepost" post_num="${dto.post_num }">게시물
-										수정</li>
-									<li id="postdelete" class="postdetail"
-										post_num="${dto.post_num }">게시물 삭제</li>
-									<!--  이부분 팔로일땐 팔로우하기 or 팔로우 하고 있을 땐 팔로우 끊기 -->
-									<li class="postdetail">팔로우 하기</li>
-								</ul>
-						</span>
+								<img src="/post_file/${dto.post_file }" class="img">
+							</div>
+						</div>
+						<div class="bottom">
+							<c:if test="${dto.likecheck ==0 }">
+								<span class="bottom-left" style="cursor: pointer" id="like"
+									user_num="${sessionScope.user_num}" post_num="${dto.post_num }"><span
+									class="glyphicon glyphicon-heart-empty"
+									style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
+									${dto.like_count}</span>
+							</c:if>
 
-						</span>
-					</div>
-					<div class="center2">
-						<div class="center-up2">${dto.post_content }</div>
+							<c:if test="${dto.likecheck !=0 }">
+								<span class="bottom-left" style="cursor: pointer" id="dlike"
+									user_num="${sessionScope.user_num}" post_num="${dto.post_num }"><span
+									class="glyphicon glyphicon-heart"
+									style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
+									${dto.like_count}</span>
+							</c:if>
+							<span class="bottom-right"><span
+								class="glyphicon glyphicon-comment"
+								style="font-size: 1.2em; top: 3px; color: gray;"
+								post_num="${dto.post_num }"></span>&nbsp;댓글</span>
+						</div>
 
 					</div>
-					<div class="bottom2">
-						<span class="bottom-left2"><span
-							class="glyphicon glyphicon-heart"
-							style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요 ${like } </span>
-						<span class="bottom-right2"><span
-							class="glyphicon glyphicon-comment"
-							style="font-size: 1.2em; top: 3px; color: gray;"></span>&nbsp;댓글</span>
-					</div>
+					<br>
+					<br>
+				</c:if>
 
-				</div>
-				<br>
-				<br>
-			</c:if>
-		</c:forEach>
-</section>
+				<!-- 파일이 없을 경우 -->
+				<c:if test="${dto.post_file=='no' }">
+					<div class="divmain2">
+						<div class="top2">
+							<span class="top-left">이름: 지성웅<span>게시글범위:${dto.post_access }</span>
+								<span>시간: ${dto.post_writeday }</span>
+							</span> <span class="top-right"> <span
+								class="glyphicon glyphicon-th-list postmenu" i="${i.count }"
+								style="font-size: 1.3em; margin-right: 3%; color: gray;">
+									<ul id="${i.count }" class="postsubmenu"
+										style="font-size: 25pt; line-height: 1.5em; display: none;">
+										<li id="postupdate" class="postdetail" data-toggle="modal"
+											data-target="#updatepost" post_num="${dto.post_num }">게시물
+											수정</li>
+										<li id="postdelete" class="postdetail"
+											post_num="${dto.post_num }">게시물 삭제</li>
+										<!--  이부분 팔로일땐 팔로우하기 or 팔로우 하고 있을 땐 팔로우 끊기 -->
+										<li class="postdetail">팔로우 하기</li>
+									</ul>
+							</span>
+
+							</span>
+						</div>
+						<div class="center2">
+							<div class="center-up2">${dto.post_content }</div>
+
+						</div>
+						<div class="bottom2">
+							<c:if test="${dto.likecheck ==0 }">
+								<span class="bottom-left2" style="cursor: pointer" id="like"
+									user_num="${sessionScope.user_num}" post_num="${dto.post_num }"><span
+									class="glyphicon glyphicon-heart-empty"
+									style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
+									${dto.like_count}</span>
+							</c:if>
+
+							<c:if test="${dto.likecheck !=0 }">
+								<span class="bottom-left2" style="cursor: pointer" id="dlike"
+									user_num="${sessionScope.user_num}" post_num="${dto.post_num }"><span
+									class="glyphicon glyphicon-heart"
+									style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
+									${dto.like_count}</span>
+							</c:if>
+							<span class="bottom-right2"><span
+								class="glyphicon glyphicon-comment"
+								style="font-size: 1.2em; top: 3px; color: gray;"
+								post_num="${dto.post_num }"></span>&nbsp;댓글</span>
+						</div>
+
+					</div>
+					<br>
+					<br>
+				</c:if>
+			</c:forEach>
+		</section>
 
 	</div>
 
