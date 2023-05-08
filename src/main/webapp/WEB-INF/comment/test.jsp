@@ -12,10 +12,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
+<style type="text/css">
+	.comment{
+		font-size: 2em;
+		background-color: yellow;
+		width: 80%;
+		height:900px;
+	}
+</style>
 </head>
 <script type="text/javascript">
 
 	$(function(){
+		offset=${offset};
+		
 		$("#insertbtn").click(function(){
 			
 			var formdata=$("#form").serialize();
@@ -33,9 +43,53 @@
 			})
 		});
 		
+		
+		window.onscroll = function(e) {
+		      console.log(window.innerHeight , window.scrollY,document.body.offsetHeight,document.body.scrollHeight)
+		      if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
+		    	  
+		    	  
+		    	  offset=offset+1;
+		    	  $.ajax({
+		    		 type:"get",
+		    		 dataType:"json",
+		    		 url:"scroll",
+		    		 data:{"offset":offset,"post_num":"12"},
+		    		 success:function(res){
+		    			 
+		    			 $.each(res,function(i,item){
+		    				 
+		    				 setTimeout(function(){
+		    		        		
+		    		             	var addContent = document.createElement("div");
+		    		                addContent.classList.add("comment");
+		    		                addContent.innerHTML = "<p>회원번호:"+item.user_num+"  댓글: "+item.comment_content+"</p>";
+		    		                document.querySelector('section').appendChild(addContent);
+		    		              	
+		    		              }, 1000)  
+		    			 })
+		    		 }
+		    	  });
+		    	  
+		       
+		      }
+		    }
+		
 	})
 </script>
 <body>
+
+	
+
+	<section>
+		<c:forEach var="dto" items="${list }">
+	    	<div class="comment">
+				<p>회원번호: ${dto.user_num} 댓글: ${dto.comment_content } </p>
+	    	</div>
+		</c:forEach>
+    		
+	</section>
+
 	<form method="post" class="form-inline" id="form">
 		<input type="hidden" name="comment_num" value="${comment_num}">
 		<input type="hidden" name="user_num" value="1">
@@ -47,6 +101,7 @@
 		<input type="text" name="comment_content" placeholder="댓글을 입력하세요"> &nbsp;&nbsp;&nbsp;
 		<button type="button" id="insertbtn" class="btn btn-info">입력</button>
 	</form>
+	
 	
 	
 </body>

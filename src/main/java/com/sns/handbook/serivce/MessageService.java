@@ -96,4 +96,27 @@ public class MessageService implements MessageServiceInter {
 		return mapperInter.selectRecentMessage(map);
 	}
 
+	@Override
+	public List<MessageDto> selectAllByGroup(int mess_group, String user_num) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map=new HashMap<>();
+		
+		map.put("mess_group", mess_group);
+		map.put("user_num", user_num);
+		
+		return mapperInter.selectAllByGroup(map);
+	}
+
+	@Override
+	public void insertMessage(MessageDto dto) {
+		// TODO Auto-generated method stub
+		mapperInter.insertMessage(dto);
+	}
+
+	@Override
+	public int getRecentGroup(String user_num) {
+		// TODO Auto-generated method stub
+		return mapperInter.getRecentGroup(user_num);
+	}
+
 }
