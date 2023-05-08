@@ -39,7 +39,5 @@
 	<select id="getDataByNum" resultType="PostDto" parameterType="String">
 	   select * from post where post_num=#{post_num}
 	</select>
-
-
 	
 </mapper>

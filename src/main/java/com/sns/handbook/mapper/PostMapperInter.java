@@ -17,6 +17,4 @@ public interface PostMapperInter {
 	public void updatePhoto(Map<String, String> map);
 	public void updatePost(PostDto dto);
 	public PostDto getDataByNum(String post_num);
-	
- 
 }

@@ -2,12 +2,18 @@ package com.sns.handbook.handler;
 
 import java.util.HashMap;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import com.sns.handbook.dto.MessageDto;
+import com.sns.handbook.serivce.MessageService;
+import com.sns.handbook.serivce.UserService;
 
 
 
@@ -16,8 +22,11 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 public class SocketHandler extends TextWebSocketHandler{
 	HashMap<String, WebSocketSession> sessionMap = new HashMap<>(); //웹소켓 세션을 담아둘 맵
 	
-	//@Autowired
-	//ChatMapper mapper;
+	@Autowired
+	MessageService mservie;
+	
+	@Autowired
+	UserService uservice;
     
 	//웹소켓 연결이 되면 동작하는 메소드
     @Override
@@ -41,16 +50,25 @@ public class SocketHandler extends TextWebSocketHandler{
         //메시지 발송시
         String msg = message.getPayload();
         //System.out.println(msg);
+        
+        //메시지 구분(보낸사람:내용)
         String[] msgarr=msg.split(":");
         msgarr[0]=msgarr[0].substring(0,msgarr[0].length()-1);
-        msgarr[1]=msgarr[1].substring(1,msgarr[1].length());
+        msgarr[1]=msgarr[1].substring(1,msgarr[1].length()-1);
+        msgarr[2]=msgarr[2].substring(1,msgarr[2].length()-1);
+        msgarr[3]=msgarr[3].substring(1,msgarr[3].length());
         
-		
-		 //ChatDto dto=new ChatDto();
+        //메시지 저장
+        MessageDto dto=new MessageDto();
 		  
-		 //dto.setWriter(msgarr[0]); dto.setMessage(msgarr[1]); dto.setCgroup(0);
+        String myid=msgarr[0];
+        String user_num=uservice.getUserById(myid).getUser_num();
+        dto.setSender_num(user_num);
+        dto.setMess_content(msgarr[1]);
+        dto.setReceiver_num(msgarr[2]);
+        dto.setMess_group(Integer.parseInt(msgarr[3]));
 		  
-		 //mapper.insertChat(dto);
+        mservie.insertMessage(dto);
 		 
         
         for(String key : sessionMap.keySet()) {

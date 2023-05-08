@@ -34,17 +34,18 @@
 
 	<div style="width: 180px;"><a href = "${root }/"><img src="../image/handbooklogo.png" style = "height: 80px; "></a></div>
 	 <div class = "searcharea" style = "width:550px;  margin: 10px;">
-			<form action = "list" class = "form-inline" style = "width:600px;">
+			<form class = "form-inline" style = "width:600px;">
 				
 					<div style = "width: 600px; background-color: white; display: inline-flex; align-items: center;">
-					<select class = "form-control" style ="width:150px;" name = "searchcolumn">
-					<option value = "name">작성자</option>
-					<option value = "content">내용</option>
+					<select class = "form-control searchcolumn" style ="width:150px;" name = "searchcolumn">
+					<option value = "user_name" ${searchcolumn=='user_name'?'selected':'' }>작성자</option>
+					<option value = "post_content" ${searchcolumn=='post_content'?'selected':'' }>내용</option>
 					</select>
 					&nbsp;&nbsp;&nbsp;
 					<div style="background-color: #F0F2F5; border-radius: 60px; display: inline-flex; align-items: center; padding-left: 2%">
 						<span class = "glyphicon glyphicon-search" style = "font-size: 16pt;"></span>
-						<input type = "text" name = "searchword" style = "width:530px; border: none; background: none; outline: none; font-size: 15pt; padding: 10px;" placeholder="Handbook 검색">
+						<input type = "text" name = "searchword" class="searchpost"
+						style = "width:530px; border: none; background: none; outline: none; font-size: 15pt; padding: 10px;" placeholder="Handbook 검색">
 					</div>
 					</div>
 					
@@ -91,9 +92,17 @@
 	$(".titlemenu").hide();
 	$(".titlemenubar").click(function(){
 		$(".titlemenu").toggle();
+	});
+	
+	
+	$(".searchpost").keyup(function(e){
+		if(e.keyCode == 13){
+
+			location.redirect="../post/timeline?searchcolumn="+$(".searchcolumn").val()+"&searchword="+$("searchpost").val();
+			
+		}
 		
 	});
-	하이
 </script>
 </body>
 </html>

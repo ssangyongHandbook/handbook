@@ -159,8 +159,8 @@ public class PostController {
 		
 		
 		return list;
+	}
 
-}
 	@GetMapping("/post/checklike")
 	@ResponseBody
 	public Map<String, Integer> checklike(String user_num,String post_num){
