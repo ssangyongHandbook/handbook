@@ -94,8 +94,8 @@ public class LoginController {
 		String user_photo = "";
 		String user_gender = "";
 
-		System.out.println("callback메서드 호출");
-		System.out.println("code : " + code + "state : " + state);
+		//System.out.println("callback메서드 호출");
+		//System.out.println("code : " + code + "state : " + state);
 		OAuth2AccessToken oauthToken;
 		oauthToken = naverLoginBO.getAccessToken(session, code, state);
 		// 로그인 사용자 정보를 읽어온다.
@@ -119,8 +119,8 @@ public class LoginController {
 		String mobile = (String) response_obj.get("mobile");
 
 		int check = service.loginEmailCheck(email); // 입력한 이메일이 가입되어있는지 아닌지 판단
-		System.out.println("email check : " + check);
-		System.out.println("email : " + email);
+		//System.out.println("email check : " + check);
+		//System.out.println("email : " + email);
 		
 		
 		// 이메일에서 user_id 추출

@@ -47,7 +47,8 @@
 				   	<button class="btn btn-primary btn-block" type="submit">로그인</button>
 				</div><br>
 				<!-- 네이버 로그인 -->
-				<button type ="button" class= "btn" onclick="location.href='${urlNaver}'">네이버</button>
+				<%-- <button type ="button" class= "btn" onclick="location.href='${urlNaver}'">네이버</button> --%>
+				<div ><img width="50%" src="/image/nav_btn.png" onclick="location.href='${urlNaver}'" style="cursor: pointer;"></div>
 				<!-- <div id="naver_id_login" onclick="location.href='/login/naverlogin'"></div> -->
 	      	</form>
 	      

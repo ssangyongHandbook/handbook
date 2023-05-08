@@ -34,7 +34,7 @@ public class MainController {
 		/* 네아로 인증 URL을 생성하기 위하여 naverLoginBO클래스의 getAuthorizationUrl메소드 호출 */
 		String naverAuthUrl = naverLoginBO.getAuthorizationUrl(session);
 		/* 인증요청문 확인 */
-		System.out.println("urlNaver : " + naverAuthUrl);
+		//System.out.println("urlNaver : " + naverAuthUrl);
 		/* 객체 바인딩 */
 		//model.addAttribute("urlNaver", naverAuthUrl);
 		mv.addObject("urlNaver", naverAuthUrl);//loginmain.jsp에서 ${urlNaver}로 쓴다.
@@ -50,10 +50,10 @@ public class MainController {
 		mv.addObject("total", totalCount);
 		// 로그인이 안되어있으면, 로그인 폼으로 이동
 		if (loginok == null) {
-			System.out.println("여기로");
+			//System.out.println("여기로");
 			mv.setViewName("/sub/login/loginmain");
 		} else {
-			System.out.println("로그인이 되어있음!");
+			//System.out.println("로그인이 되어있음!");
 			// 로그인이 되어있으면 타임라인으로 이동
 			mv.setViewName("redirect:/post/timeline");
 		}
