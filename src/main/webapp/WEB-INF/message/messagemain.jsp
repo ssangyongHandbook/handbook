@@ -110,9 +110,15 @@
 	
 	.onemember{
 		display: inline-flex;
-		width: 100%;
+		width: 98%;
 		margin-bottom: 10px;
 		cursor: pointer;
+		padding: 5px;
+	}
+	
+	.messageactive{
+		background-color: skyblue;
+		border-radius: 5px;
 	}
 	
 	.messagememberinfo{
@@ -169,7 +175,7 @@
 		position: fixed;
 		margin-top: 70px;
 		margin-bottom: 55px;
-		overflow-y:scroll;
+		overflow:scroll;
 		overflow-x: hidden;
 	}
 	
@@ -199,6 +205,42 @@
 		background: none;
 		border: none;
 		outline: none;
+	}
+	
+	.chatShow{
+		display: inline-flex;
+		flex-direction: column;
+		width: 98%;
+		align-items: center;
+	}
+	
+	.messagebubble{
+		padding: 10px 15px 10px 15px;
+		margin: 10px;
+		border-radius: 90px;
+		max-width: 400px;
+	}
+	
+	.messageright{
+		align-self: flex-end;
+		background-color: blue;
+		color: white;
+	}
+	
+	.msgleft{
+		align-self:flex-start;
+		display: inline-flex;
+		align-items: center;
+		margin-left: 15px;
+	}
+	
+	.messageleft{
+		background-color: lightgray;
+	}
+	
+	.leftreceiverphoto{
+		height: 40px;
+		border-radius: 100px;
 	}
 </style>
 
@@ -236,13 +278,16 @@
 				
 				$.each(res,function(i,ele){
 					if(ele.sender_num=='${user_num}'){
-						chatContent+="<p style='text-align:right'>" + ele.mess_content + "</p>";
+						chatContent+="<div class='messageright messagebubble'>" + ele.mess_content + "</div>";
 					}else{
-						chatContent+="<p style='text-align:left'>" + ele.mess_content + "</p>";
+						//현재 선택한 대화 상대의 사진 가져오기
+						var otherImg=$(".chatinfophoto img").attr("src");
+						chatContent+="<div class='msgleft'><img src='"+otherImg+"' class='leftreceiverphoto'><div class='messageleft messagebubble'>" + ele.mess_content + "</div></div>";
 					}
 				})
 				
 				$("#chatShow").html(chatContent);
+				$(".chatlist").scrollTop($(".chatlist")[0].scrollHeight); //스크롤 맨 아래로 내리기
 			}
 		})
 	}
@@ -254,7 +299,7 @@
 		
 		var chatlistheight=$(".messagechatlist").css("height");
 		chatlistheight=chatlistheight.substring(0,chatlistheight.length-2);
-		var chatHeight=(chatlistheight-125);
+		var chatHeight=(chatlistheight-205);
 		
 		if(windowWidth<600){
 			$(".messagememberlist").hide();
@@ -284,7 +329,13 @@
 				var out="";
 				
 				$.each(chatMember,function(i,chat){
-					out+='<div class="onemember" mess_group='+chat.group+' member_num='+chat.member_num+'>';
+					if($("#chatgroup").val()==chat.group){
+						//선택된 채팅방이면 messageactive class를 추가한다.
+						out+='<div class="onemember messageactive" mess_group='+chat.group+' member_num='+chat.member_num+'>';
+					}else{
+						//선택되지 않은 채팅방
+						out+='<div class="onemember" mess_group='+chat.group+' member_num='+chat.member_num+'>';
+					}
 					out+='<div class="messagememberphotobox">';
 					out+='<div class="messagememberphoto">';
 					if(chat.member_photo==null||'${otherinfo.user_photo}'==''){
@@ -306,6 +357,12 @@
 				
 				//왼쪽의 채팅방 목록(멤버 목록)을 클릭하면 오른쪽의 채팅화면이 바뀐다.
 				$(".onemember").on("click",function(){
+					//선택된 채팅방 변경
+					$(".onemember").each(function(i,ele){
+						$(ele).removeClass("messageactive");
+					})
+					$(this).addClass("messageactive");
+					
 					var mess_group=$(this).attr("mess_group");
 					var user_name=$(this).find(".membername").text();
 					var user_photo=$(this).find(".messagememberphoto img").attr("src");
@@ -350,8 +407,9 @@
             
             if(msg != null && msg.trim() != '' && '${user_num}'==receiver && group==nowGroup){
                /*  $("#chatShow").append("<p>" + msg + "</p>"); */
-               	$("#chatShow").append("<p style='text-align:left'>" + message + "</p>");
+               	$("#chatShow").append("<div class='messageleft messagebubble'>" + message + "</div>");
                 memberListOut();
+                $(".chatlist").scrollTop($(".chatlist")[0].scrollHeight); //스크롤 맨 아래로 내리기
                 
                 //내 번호
                 var user_num="${user_num}";
@@ -390,7 +448,8 @@
         var msg = $("#chatting").val();
         ws.send(myid+" : "+msg+" : "+$("#receivernum").val()+" : "+$("#chatgroup").val());
         $('#chatting').val("");
-        $("#chatShow").append("<p style='text-align:right'>" + msg + "</p>");
+        $("#chatShow").append("<div class='messageright messagebubble'>" + msg + "</div>");
+        $(".chatlist").scrollTop($(".chatlist")[0].scrollHeight); //스크롤 맨 아래로 내리기
     }
 </script>
 </head>
@@ -428,6 +487,7 @@
 		<div class="chatlist">
 			<h1>채팅</h1>
 		    <div id="chatShow" class="chatShow">
+		    	<!-- 채팅 보이는 구간 -->
 		    </div>
 		</div>
 		
