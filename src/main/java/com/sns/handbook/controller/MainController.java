@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sns.handbook.oauth.KakaoLoginBO;
 import com.sns.handbook.oauth.NaverLoginBO;
 import com.sns.handbook.serivce.UserService;
 
@@ -18,6 +19,11 @@ public class MainController {
 	private NaverLoginBO naverLoginBO;
 	private String apiResult = null;
 
+	
+	/* KakaoLogin */
+	@Autowired
+	private KakaoLoginBO kakaoLoginBO;
+	
 	@Autowired
 	private void setNaverLoginBO(NaverLoginBO naverLoginBO) {
 		this.naverLoginBO = naverLoginBO;
@@ -38,6 +44,13 @@ public class MainController {
 		/* 객체 바인딩 */
 		//model.addAttribute("urlNaver", naverAuthUrl);
 		mv.addObject("urlNaver", naverAuthUrl);//loginmain.jsp에서 ${urlNaver}로 쓴다.
+		
+		
+		/* 카카오 URL */
+		String kakaoAuthUrl = kakaoLoginBO.getAuthorizationUrl(session);
+		//System.out.println("카카오:" + kakaoAuthUrl);
+		mv.addObject("urlKakao", kakaoAuthUrl);
+		
 
 		/* 생성한 인증 URL을 View로 전달 */
 		//return "login";

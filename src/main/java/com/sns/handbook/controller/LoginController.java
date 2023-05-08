@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.sns.handbook.dto.UserDto;
+import com.sns.handbook.oauth.KakaoLoginBO;
 import com.sns.handbook.oauth.NaverLoginBO;
 import com.sns.handbook.serivce.UserService;
 
@@ -29,6 +30,12 @@ public class LoginController {
 		this.naverLoginBO = naverLoginBO;
 	}
 
+
+	/* KakaoLogin */
+	@Autowired
+	private KakaoLoginBO kakaoLoginBO;
+	
+	
 	@Autowired
 	UserService service;
 
@@ -63,36 +70,17 @@ public class LoginController {
 		return "redirect:/";
 	}
 
-//	// 네이버 로그인 클릭시 로그인
-//	@GetMapping("/login/naverlogin")
-//	public String naverLogin(Model model, HttpSession session) {
-//		System.out.println("nav로그인버튼 클릭");
-//		/* 네아로 인증 URL을 생성하기 위하여 naverLoginBO클래스의 getAuthorizationUrl메소드 호출 */
-//		String naverAuthUrl = naverLoginBO.getAuthorizationUrl(session);
-//		System.out.println(naverAuthUrl);
-//		/* 인증요청문 확인 */
-//		System.out.println("네이버:" + naverAuthUrl);
-//		/* 객체 바인딩 */
-//		model.addAttribute("urlNaver", naverAuthUrl);
-//
-//		/* 생성한 인증 URL을 View로 전달 */
-//		 //return "/sub/login/loginmain";
-//		System.out.println(session.getAttribute("loginok"));
-//		//return "redirect:/post/timeline";
-//		return "/";
-//	}
-
 	// 네이버 로그인 callback
 	@GetMapping("/navercallback")
 	public String callbackNaver(Model model, @RequestParam String code, @RequestParam String state, HttpSession session)
 			throws Exception {
-		String user_id = "";
-		String user_birth = "";
-		String user_hp = "";
-		String user_name = "";
-		String user_email = "";
-		String user_photo = "";
-		String user_gender = "";
+		//String user_id = "";
+		//String user_birth = "";
+//		String user_hp = "";
+//		String user_name = "";
+//		String user_email = "";
+//		String user_photo = "";
+//		String user_gender = "";
 
 		//System.out.println("callback메서드 호출");
 		//System.out.println("code : " + code + "state : " + state);
@@ -107,14 +95,14 @@ public class LoginController {
 		jsonObj = (JSONObject) jsonParser.parse(apiResult);
 		JSONObject response_obj = (JSONObject) jsonObj.get("response");
 		// 프로필 조회
-		String id = (String) response_obj.get("id");
-		String nickname = (String) response_obj.get("nickname");
+		//String id = (String) response_obj.get("id");
+		//String nickname = (String) response_obj.get("nickname");
 		String name = (String) response_obj.get("name");
 		String email = (String) response_obj.get("email");
 		String gender = (String) response_obj.get("gender");
-		String age = (String) response_obj.get("age");
+		//String age = (String) response_obj.get("age");
 		String birthday = (String) response_obj.get("birthday");
-		String profile_image = (String) response_obj.get("profile_image");
+		//String profile_image = (String) response_obj.get("profile_image");
 		String birthyear = (String) response_obj.get("birthyear");
 		String mobile = (String) response_obj.get("mobile");
 
@@ -125,6 +113,7 @@ public class LoginController {
 		
 		// 이메일에서 user_id 추출
 		String splitemail[] = email.split("@");
+		String user_id;
 		user_id = splitemail[0];
 		
 		
@@ -159,6 +148,7 @@ public class LoginController {
 
 			UserDto user = new UserDto();
 			// user.setUser_addr(user_addr);//주소는 마이페이지에서 추가
+			String user_birth;
 			user_birth = birthyear + "-" + birthday;
 			user.setUser_birth(user_birth);
 			user.setUser_email(email);
@@ -173,7 +163,86 @@ public class LoginController {
 			user.setUser_id(user_id);
 			// user.setUser_pass(user_pass);
 			user.setUser_name(name);
-			user.setUser_photo(profile_image);
+			//user.setUser_photo(profile_image);
+
+			service.insertUserInfo(user);
+			session.setAttribute("user_num", user.getUser_num()); 	// session에 num값 넣음.
+			session.setAttribute("user_photo", user.getUser_photo());// session에 photo 넣음.
+			
+			// System.out.println("signin session : "+session.getAttribute("signIn"));
+			return "redirect:post/timeline";
+		}
+	}
+	
+	
+	@GetMapping("/kakaocallback")
+	public String callbackKakao(Model model, @RequestParam String code, @RequestParam String state, HttpSession session) throws Exception {
+		OAuth2AccessToken oauthToken;
+		oauthToken = kakaoLoginBO.getAccessToken(session, code, state);	
+		// 로그인 사용자 정보를 읽어온다
+		apiResult = kakaoLoginBO.getUserProfile(oauthToken);
+		
+		JSONParser jsonParser = new JSONParser();
+		JSONObject jsonObj;
+		
+		jsonObj = (JSONObject) jsonParser.parse(apiResult);
+		JSONObject response_obj = (JSONObject) jsonObj.get("kakao_account");	
+		JSONObject response_obj2 = (JSONObject) response_obj.get("profile");
+		
+		// 프로필 조회
+		String email = (String) response_obj.get("email");
+		String name = (String) response_obj2.get("nickname");
+		//id 이메일에서 가져오기
+		String splitemail[] = email.split("@");
+		String user_id;
+		user_id = splitemail[0];
+		//String profile = (String) response_obj2.get("profile_image_url");
+		String gender = (String) response_obj.get("gender");
+		
+		
+		//System.out.println(apiResult);
+		
+		int check = service.loginEmailCheck(email); // 입력한 이메일이 가입되어있는지 아닌지 판단
+		// 이 아래는 아무튼 로그인 한다.
+		// 이미 예전에 로그인한 네이버 계정이면 그냥 로그인
+		// 아니면 db에 회원정보 입력 후 로그인.
+		if (check == 1) { // 계정 있으면
+			UserDto dto = service.getUserDtoById(user_id);
+			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
+
+			// 세션에 사용자 정보 등록
+			// session.setAttribute("islogin_r", "Y");
+			session.setAttribute("signIn", apiResult);
+			session.setAttribute("email", email);
+			session.setAttribute("name", name);
+			session.setAttribute("loginok", "yes");
+			session.setAttribute("myid", user_id);
+			session.setAttribute("user_num", dto.getUser_num()); 	// session에 num값 넣음.
+			session.setAttribute("user_photo", dto.getUser_photo());// session에 photo 넣음.
+
+			return "redirect:post/timeline"; // 로그인 하면 타임라인으로 넘어감.
+		} else {
+			// 계정 로그인 안 되어있으면 db에 넣고(일단회원가입) 로그인 세션 유지
+			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
+			session.setAttribute("signIn", apiResult);
+			session.setAttribute("email", email);
+			session.setAttribute("name", name);
+			session.setAttribute("myid", user_id);
+			session.setAttribute("loginok", "yes");
+
+			UserDto user = new UserDto();
+			// user.setUser_addr(user_addr);//주소는 마이페이지에서 추가
+			user.setUser_email(email);
+			if (gender.equalsIgnoreCase("male")) {
+				user.setUser_gender("남자");
+			} else if (gender.equalsIgnoreCase("female")) {
+				user.setUser_gender("여자");
+			} else {
+				user.setUser_gender("기타");
+			}
+			user.setUser_id(user_id);
+			user.setUser_name(name);
+			//user.setUser_photo(profile);
 
 			service.insertUserInfo(user);
 			session.setAttribute("user_num", user.getUser_num()); 	// session에 num값 넣음.
