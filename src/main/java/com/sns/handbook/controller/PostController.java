@@ -37,11 +37,13 @@ public class PostController {
 		return "/post/post_writeform";
 	}
 	
-	
-	@GetMapping("/post/timeline")
+	@GetMapping("/post/timeline") //파라미터값 변경 모델값 추가
 	@ResponseBody
-	public ModelAndView list(@RequestParam(defaultValue = "0") int offset) {
-		List<PostDto> list = pservice.postList(offset);
+	public ModelAndView list(@RequestParam(defaultValue = "0") int offset,
+			@RequestParam(required = false) String searchcolumn,
+			@RequestParam(required = false) String searchword) {
+		
+		List<PostDto> list = pservice.postList(searchcolumn, searchword, offset);
         ModelAndView model=new ModelAndView();
         int totalCount=pservice.getTotalCount();
         int totalLike=plservice.getTotalLike();
@@ -49,6 +51,7 @@ public class PostController {
 		model.addObject("total",totalCount);
 		model.addObject("list",list);
 		model.addObject("like",totalLike);
+		model.addObject("searchcolumn",searchcolumn);
 		
         model.setViewName("/post/post_timeline");
 		return model;
@@ -131,6 +134,7 @@ public class PostController {
 			pservice.updatePost(dto);
 			
 		}
-	
+		
+		
 	
 }
