@@ -41,6 +41,7 @@ public class PostService implements PostServiceInter {
 		return pmapperInter.postList(map);
 	}
 
+
 	@Override
 	public void deletePost(int post_num) {
 		// TODO Auto-generated method stub
