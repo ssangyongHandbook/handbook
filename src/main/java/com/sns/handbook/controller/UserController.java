@@ -17,8 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.sns.handbook.dto.FollowingDto;
+import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.UserDto;
+import com.sns.handbook.serivce.FollowingService;
+import com.sns.handbook.serivce.PostService;
 import com.sns.handbook.serivce.UserService;
 
 @Controller
@@ -27,15 +32,17 @@ public class UserController {
 	@Autowired
 	UserService uservice;
 	
+	@Autowired
+	FollowingService fservice;
+	
+	@Autowired
+	PostService pservice;
+	
 	@PostMapping("/user/coverupdate")
 	@ResponseBody
 	public void coverupdate(String user_num, MultipartFile cover,
 			HttpSession session,@ModelAttribute UserDto dto)
 	{
-		if(cover.getOriginalFilename().equals(""))
-			dto.setUser_photo("no");
-		else {
-
 			//업로드 경로
 			String path=session.getServletContext().getRealPath("/cover");
 			
@@ -53,7 +60,6 @@ public class UserController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
-		}
 	}
 	
 	@PostMapping("/user/photoupdate")
@@ -63,11 +69,6 @@ public class UserController {
 	{
 		//업로드 경로
 		String path=session.getServletContext().getRealPath("/photo");
-		
-		if(photo.getOriginalFilename().equals(""))
-			dto.setUser_photo("no");
-		else {
-			
 		
 			//파일명 구하기
 			SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
@@ -82,17 +83,61 @@ public class UserController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
 	}
 	
 	@GetMapping("/user/mypage")
-	public String mypage(Model model)
+	public ModelAndView mypage(HttpSession session,String my_num,String your_num)
 	{
+		ModelAndView model=new ModelAndView();
+		
+		int followercount=fservice.getTotalFollower(my_num);
+		int togetherFollowcount=fservice.togetherFollow(your_num, my_num);
+		
 		List<UserDto> list=uservice.getAllUsers();
+		List<PostDto> postlist=uservice.getPost((String)session.getAttribute("user_num"));
 		
-		model.addAttribute("list", list);
+		model.addObject("list", list);
+		model.addObject("postlist",postlist);
+		model.addObject("followercount", followercount);
+		model.addObject("togetherFollowcount", togetherFollowcount);
+		model.setViewName("/sub/user/mypage");
 		
-		return "/sub/user/mypage";
+		return model;
+	}
+	
+	@PostMapping("/user/insertpost")
+	@ResponseBody
+	public void insertPost(@ModelAttribute PostDto dto, @RequestParam(required = false ) MultipartFile photo, HttpSession session) {
+		
+		String path = session.getServletContext().getRealPath("/post_file");
+		
+		if(photo==null) {
+	         dto.setPost_file("no");
+	         pservice.insertPost(dto);
+	         
+	      }else {//upload 한 경우
+
+	  		SimpleDateFormat sdf= new SimpleDateFormat("yyyyMMddHHmm");
+	  		String fileName="f_"+sdf.format(new Date())+photo.getOriginalFilename();
+
+	  		dto.setPost_file(fileName);
+		
+		try {
+			photo.transferTo(new File(path+"\\"+fileName));
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		pservice.insertPost(dto);
+	    }
+	}
+	
+	@ResponseBody
+	@PostMapping("/user/updateinfo")
+	public void updateinfo(UserDto dto)
+	{
+		uservice.updateUserInfo(dto);
 	}
 	
 	@GetMapping("/user/info")

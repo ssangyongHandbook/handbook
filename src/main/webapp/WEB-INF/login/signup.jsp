@@ -16,7 +16,6 @@
 
 </head>
 <body>
-<h3>핸드폰 번호 : ${user_hp }</h3>
 <div>
 	<div style="margin:0px auto; width: 400px; margin-top: 100px;">
 		<p style="font-size: 3em;" align="center">handbook</p>
