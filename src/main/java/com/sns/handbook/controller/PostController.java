@@ -20,13 +20,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.serivce.PostService;
+import com.sns.handbook.serivce.PostlikeService;
 
 
 @Controller
 public class PostController {
 
 	@Autowired
-	PostService pserivce;
+	PostService pservice;
+
+	@Autowired
+	PostlikeService plservice;
 	
 	@GetMapping("/post/write")
 	public String write() {
@@ -35,17 +39,23 @@ public class PostController {
 	
 	
 	@GetMapping("/post/timeline")
+	@ResponseBody
 	public ModelAndView list(@RequestParam(defaultValue = "0") int offset) {
-		List<PostDto> list = pserivce.postList(offset);
+		List<PostDto> list = pservice.postList(offset);
         ModelAndView model=new ModelAndView();
-        int totalCount=pserivce.getTotalCount();
-		
+        int totalCount=pservice.getTotalCount();
+        int totalLike=plservice.getTotalLike();
         model.addObject("offset",offset);
 		model.addObject("total",totalCount);
 		model.addObject("list",list);
+		model.addObject("like",totalLike);
+		
         model.setViewName("/post/post_timeline");
 		return model;
 	}
+	
+
+	
 	
 	@PostMapping("/post/insert")
 	@ResponseBody
@@ -55,7 +65,7 @@ public class PostController {
 		
 		if(photo==null) {
 	         dto.setPost_file("no");
-	         pserivce.insertPost(dto);
+	         pservice.insertPost(dto);
 	         
 	      }else {//upload 한 경우
 
@@ -71,7 +81,56 @@ public class PostController {
 			e.printStackTrace();
 		}
 		
-		pserivce.insertPost(dto);
-	      }
+		pservice.insertPost(dto);
+	    }
 }
+	//delete
+	@GetMapping("/post/delete")
+	public void delete (@RequestParam int post_num) {
+		
+		pservice.deletePost(post_num);
+	}
+	
+	@PostMapping("/post/updatephoto")
+	@ResponseBody
+	public void photoUpload(String post_num,@RequestParam(required = false ) MultipartFile photo,
+			HttpSession session)
+	{
+		//업로드될 경로구하기
+		String path=session.getServletContext().getRealPath("/post_file");
+		
+		//파일명구하기
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
+		String fileName="f_"+sdf.format(new Date())+photo.getOriginalFilename();
+		
+		try {
+			photo.transferTo(new File(path+"\\"+fileName));
+			
+			pservice.updatePhoto(post_num, fileName); //db사진 수정
+			session.setAttribute("post_file", fileName);  //세션의 사진변경
+			
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	@GetMapping("/post/updateform")
+	@ResponseBody
+	public PostDto getData(String post_num) {
+		
+		return pservice.getDataByNum(post_num);
+	}
+	
+	//수정
+		@PostMapping("/post/update")
+		@ResponseBody
+		public void update(PostDto dto,HttpSession session)
+		{
+			pservice.updatePost(dto);
+			
+		}
+	
+	
 }

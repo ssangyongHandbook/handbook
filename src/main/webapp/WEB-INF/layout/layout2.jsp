@@ -32,7 +32,7 @@ div.layout div.title {
 	position: fixed;
 	width: 100%;
 	height: 80px;
-	background-color: yellow;
+	background-color: white;
 	z-index: 1;
 }
 

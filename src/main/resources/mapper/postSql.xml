@@ -11,4 +11,24 @@
 	<select id ="postList" parameterType="int" resultType="PostDto">
 	select * from post order by post_num desc limit 2 offset #{offset}  
 	</select>
+	<delete id="deletePost" parameterType="int">
+	delete from post where post_num=#{post_num}
+	</delete>
+	
+	<!-- 이미지파일 수정 -->
+	<update id="updatePhoto" parameterType="Map">
+	  update post set post_file=#{post_file} where post_num=#{post_num}
+	</update>
+	
+	<!-- 수정 -->
+	<update id="updatePost" parameterType="PostDto">
+	  update post set post_content=#{post_content},post_access=#{post_access} where post_num=#{post_num}
+	</update>
+	
+	<select id="getDataByNum" resultType="PostDto" parameterType="String">
+	   select * from post where post_num=#{post_num}
+	</select>
+
+
+	
 </mapper>
