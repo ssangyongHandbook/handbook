@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.sns.handbook.dto.FollowingDto;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.UserDto;
 
@@ -24,6 +25,7 @@ public interface UserMapperInter {
 	public void updatePhoto(Map<String, String> map);
 	public List<PostDto> getPost(String user_num);
 	public void updateUserInfo(UserDto dto);
+	public List<FollowingDto> getFollowList(Map<String, Object> map);
 	//우형 끝
 	
 	//이 아래 김희수 구현
