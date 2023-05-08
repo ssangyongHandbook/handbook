@@ -78,6 +78,9 @@
 	})
 </script>
 <body>
+
+	
+
 	<section>
 		<c:forEach var="dto" items="${list }">
 	    	<div class="comment">
@@ -98,6 +101,7 @@
 		<input type="text" name="comment_content" placeholder="댓글을 입력하세요"> &nbsp;&nbsp;&nbsp;
 		<button type="button" id="insertbtn" class="btn btn-info">입력</button>
 	</form>
+	
 	
 	
 </body>
