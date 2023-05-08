@@ -29,10 +29,17 @@ public class PostService implements PostServiceInter {
 	}
 
 	@Override
-	public List<PostDto> postList(int offset) {
+	public List<PostDto> postList(String searchcolumn, String searchword,int offset) { //파라미터값 변경
 		// TODO Auto-generated method stub
-		return pmapperInter.postList(offset);
+		Map<String, Object> map=new HashMap<>();
+		
+		map.put("searchcolumn", searchcolumn);
+		map.put("searchword", searchword);
+		map.put("offset", offset);
+		
+		return pmapperInter.postList(map);
 	}
+
 
 	@Override
 	public void deletePost(int post_num) {

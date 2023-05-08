@@ -8,7 +8,7 @@ public interface PostServiceInter {
 
 	public int getTotalCount();
 	public void insertPost(PostDto dto);
-	public List<PostDto> postList(int offset);
+	public List<PostDto> postList(String searchcolumn, String searchword,int offset); //파리미터값 변경
 	public void deletePost(int post_num);
 	public void updatePost(PostDto dto);
 	public PostDto getDataByNum(String post_num);

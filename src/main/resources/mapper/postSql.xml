@@ -8,8 +8,19 @@
 		insert into post(user_num,post_content,post_file,post_access,post_writeday) values (#{user_num},#{post_content},#{post_file},#{post_access},now())
 	</insert>
 	
-	<select id ="postList" parameterType="int" resultType="PostDto">
-	select * from post order by post_num desc limit 2 offset #{offset}  
+	<!-- 검색 기능 추가 파라미터값 변경 -->
+	<select id ="postList" parameterType="Map" resultType="PostDto">
+	select * from post 
+	<if test="searchcolumn!=null and searchword!=null">
+		<if test="searchcolumn=='post_content'">
+			where ${searchcolumn} like concat('%', #{searchword}, '%')
+		</if>
+		<if test="searchcolumn=='user_name'">
+			where user_num = any(select user_num from user where user_name = #{searchword})
+		</if>
+	</if>
+	order by post_num desc limit 2 offset #{offset} 
+	 
 	</select>
 	<delete id="deletePost" parameterType="int">
 	delete from post where post_num=#{post_num}
