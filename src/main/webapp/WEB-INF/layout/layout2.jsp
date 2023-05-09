@@ -47,12 +47,10 @@ div.layout div.title {
 div.layout div.main {
 	max-width: 100%;
 	min-width: 400px;
-
 	height: 100%;
 	background-color: skyblue;
-
 	margin: 0 auto;
-	padding-top: 65px;
+	padding-top: 80px;
 }
 
 /* div.layout div.sideinfo {
@@ -65,26 +63,8 @@ div.layout div.main {
 } */
 </style>
 
-<script type="text/javascript">
-	$(function() {
-		side_change();
+<!-- 사이드 변경해주는 스크립트 필요없어서 삭제함 -->
 
-		$(window).resize(function() {
-			side_change();
-		});
-	})
-
-	/* function side_change() {
-		var windowWidth = $(window).width();
-		if (windowWidth < 900) {
-			$("div.menu").hide();
-			$("div.sideinfo").hide();
-		} else {
-			$("div.menu").show();
-			$("div.sideinfo").show();
-		}
-	} */
-</script>
 </head>
 <body>
 	<div class="layout">

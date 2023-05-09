@@ -69,30 +69,80 @@
 .tf{
 	
 }
+
+.friendmenu{
+	position : relative;
+	width: 300px;
+	height: 80px;
+	top: -20px;
+	border: 4px solid gray;
+	border-radius: 10px;
+	
+}
+
+.followcancel button{
+	border: none;
+	background: none;
+	outline: none;
+}
 </style>
 </head>
 <body>
 	<section>
 		<c:forEach var = "dto" items = "${list }">
-			<div class = "userbox">
-				
+			<div class="userbox">
+
 				<c:if test="${dto.user_photo!=null}">
-					<div class = "up"><img src="/photo/${dto.user_photo }"  style="width:160px;"class="userphoto"></div>				
+					<div class="up">
+						<img src="/photo/${dto.user_photo }" style="width: 160px;"
+							class="userphoto">
+					</div>
 				</c:if>
-				
+
 				<c:if test="${dto.user_photo==null}">
-					<div class = "up"><img src="../image/noimg.png" class="userphoto"></div>				
+					<div class="up">
+						<img src="../image/noimg.png" class="userphoto">
+					</div>
 				</c:if>
-				<div class = "un">
-				<span>${dto.user_name }</span>
-				
-				<span class = "tf" style = "font-size:11px;">함께아는친구: ${dto.tf_count }</span>
+				<div class="un">
+					<span>${dto.user_name }</span> <span class="tf" style="font-size: 11px;">함께아는친구: ${dto.tf_count }</span>
 				</div>
-				<div class="btndiv">
-				<button type = "button" class = "addbtn"><img src = "../image/add.png"></button>
+				<div class="btndiv" style="margin: auto 0;">
+					<button type="button" class="addbtn"><img src="../image/add.png"></button>
+					
+					<ul class="friendmenu" style="float: left; margin: auto 0; padding: 0;">
+						
+								<li class = "followbookmark">
+								<a href = "#"><img src = "../image/bookmark.png" style = "width:35px;">즐겨찾기</a></li>
+								<li class = "followcancel">
+								<button type = "button" to_user = ${dto.to_user }>&nbsp;<img src = "../image/followcancel.png" style = "width:25px;">&nbsp;팔로우 취소</button></li>
+						
+					</ul>
+					
+					</div>
 				</div>
-			</div>
+		
 		</c:forEach>
 	</section>
+	<script type="text/javascript">
+		$(".friendmenu").hide();
+		$(".addbtn").click(function(){
+			$(".friendmenu").toggle();
+		});
+		
+		
+		
+		$(".followcancel button").click(function(){
+			$.ajax({
+				dataType:"text",
+				url:"deletefollowing",
+				type:"get",
+				data:{"to_user":$(this).attr("to_user")},
+				success:function(){
+					location.reload();
+				}
+			});
+		});
+	</script>
 </body>
 </html>
