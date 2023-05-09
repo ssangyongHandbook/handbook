@@ -25,4 +25,5 @@ public class PostDto {
 	private int comment_count;
 	private int like_count;
 	private int likecheck;
+	private String post_time;
 }

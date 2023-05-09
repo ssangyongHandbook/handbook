@@ -8,6 +8,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://kit.fontawesome.com/2663817d27.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -191,10 +192,14 @@
 
 			var post_access = $("#post_access").val();
 			var post_content = $("#post_content").val();
-			var num=$(this).attr("num");
+			var num="${loginnum}";
 			
 			var form = new FormData();
-			form.append("photo", $("#contentphoto")[0].files[0]);
+			
+			for (var i = 0; i < $("#contentphoto")[0].files.length; i++) { 
+				form.append("photo", $("#contentphoto")[0].files[i]);
+		    }
+			
 			form.append("post_access", post_access);
 			form.append("post_content", post_content);
 			form.append("user_num",num);
@@ -231,6 +236,42 @@
 				}
 			});
 		})
+		
+		//좋아요
+		$(".img_like").click(function(){
+			
+			var post_num = $(this).attr("post_num");
+			var user_num = "${loginnum}";
+			
+			$.ajax({
+				type : "get",
+				dataType : "text",
+				url : "likeinsert",
+				data : {"post_num" : post_num,"user_num" : user_num},
+				success : function() {
+					location.reload();
+					
+				}
+			})
+		})
+		
+		//좋아요 취소
+		$(".img_dlike").click(function(){
+			
+			var post_num = $(this).attr("post_num");
+			var user_num = "${loginnum}";
+			
+			$.ajax({
+				type : "get",
+				dataType : "text",
+				url : "likedelete",
+				data : {"post_num" : post_num,"user_num" : user_num},
+				success : function() {
+					location.reload();
+
+						}
+					})
+				})
 
 	})
 </script>
@@ -264,7 +305,7 @@
 		
 		.intro{
 			width: 98%;
-			height: 320px;
+			height: 250px;
 			background-color: white;
 			border-radius: 10px 10px;
 			margin: 10px;
@@ -281,7 +322,7 @@
 		
 		.friend{
 			width: 98%;
-			height: 700px;
+			height: 680px;
 			background-color: white;
 			border-radius: 10px 10px;
 			margin: 10px;
@@ -305,13 +346,13 @@
 		}
 		
 		.left{
-			width: 38%;
+			width: 31%;
 			float: left;
 			
 		}
 		
 		.right{
-			width:62%;
+			width:69%;
 			float: right;
 		}
 		
@@ -331,6 +372,7 @@
     		bottom: 27%;
     		left: 87%;
     		font-weight: bold;
+    		padding: 10px;
 		}
 		
 		#btnupdate{
@@ -533,7 +575,7 @@
 						<!-- 수정 시 호출 -->
 						<c:if test="${sessionScope.user_num==dto.user_num }">
 							<button type="button" id="btnnewcover" >
-								<img style="width: 30px; height: 30px;" alt="" src="${root }/image/camera.png">커버 사진 추가
+								<i class="fa-solid fa-camera fa-xl - 1.5em - 24px"></i>&nbsp;&nbsp;커버 사진 추가
 							</button>
 						</c:if>
 			</div>
@@ -559,7 +601,7 @@
 					    <img data-toggle="dropdown" alt="" src="${root }/image/profile.png" 
 					    style="width: 180px; height: 180px; cursor: pointer; border-radius: 90px; position: relative; bottom: 80%;">
 					    </c:if>
-					    
+					     
 					   <img alt="" src="${root }/image/camera.png" style="width: 50px; height: 50px; cursor: pointer;
 					   position: relative; bottom:125%;">			
 					  
@@ -567,7 +609,7 @@
 				
 				<c:if test="${sessionScope.user_num==dto.user_num }">
 					<button type="button" class="btnprofile" data-toggle="modal" data-target="#infoupdate" style="border-radius: 5px; border: none;">
-						<img alt="" src="${root }/image/pencil.png" style="width: 30px; height: 30px;">프로필 편집
+						<i class="fa-solid fa-pencil fa-xl - 1.5em - 24px"></i>&nbsp;&nbsp;프로필 편집
 					</button>
 				</c:if>
 			</div>
@@ -586,13 +628,12 @@
 					<div class="intro">
 						<span><b style="font-size: 16pt;">소개</b></span>
 						<div class="intro-info">
-							<span><img src="${root }/image/home.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr }</b>&nbsp;&nbsp;거주</span><br>
-							<span><img src="${root }/image/location.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr.substring(0, 2)}</b>&nbsp;&nbsp;출신</span><br>
-							<span><img src="${root }/image/follow.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${followercount }</b>&nbsp;&nbsp;명이 팔로우함</span><br>
-							<span><img style="width:30px; height: 35px;" src="${root }/image/email.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_email }</b>&nbsp;&nbsp;</span><br>
-							<span><img style="width:30px; height: 35px;" src="${root }/image/hp.png">&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_hp }</b>&nbsp;&nbsp;</span>
+							<span><i class="fa-solid fa-house fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr }</b>&nbsp;&nbsp;거주</span><br>
+							<span><i class="fa-solid fa-location-dot  fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr.substring(0, 2)}</b>&nbsp;&nbsp;출신</span><br>
+							<span><i class="fa-solid fa-wifi fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${followercount }</b>&nbsp;&nbsp;명이 팔로우함</span><br>
+							<span><i class="fa-solid fa-envelope fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_email }</b>&nbsp;&nbsp;</span><br>
+							<span><i class="fa-solid fa-mobile-screen-button fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_hp }</b>&nbsp;&nbsp;</span>
 						</div>
-						
 					</div>
 					
 					<div class="galary">
@@ -608,7 +649,7 @@
 					
 					<div class="friend">
 						<b style="font-size: 16pt;">친구</b><br>
-						친구 ${followcount }명
+						<span style="font-size: 12pt;">친구</span> <b>${followcount }</b>명
 							<div class="friend-photoall">
 								<c:forEach var="fdto" items="${tflist }" varStatus="i">
 									<div style="margin: 1% 1% 0.25% 1%;">
@@ -621,7 +662,9 @@
 											</c:if>
 											<div>
 												<span><b>${fdto.user_name }</b></span><br>
-												<span>함께 아는 친구 ${fdto.tf_count }명</span>
+												<c:if test="${fdto.tf_count>0 }">
+													<span>함께 아는 친구 ${fdto.tf_count }명</span>
+												</c:if>
 											</div>
 										</div>
 									</div>
@@ -663,15 +706,27 @@
 										<div class="top-user">
 											<img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
 												<div class="top-writeday">
-													<span><b>${dto.user_name }${pdto.post_access }</b></span>
-													<span>${pdto.post_writeday }</span>		
+													<span><b>${dto.user_name }
+													<c:if test="${pdto.post_access =='follower'}">
+														<i class="fa-solid fa-user-group"></i>
+													</c:if>
+													
+													<c:if test="${pdto.post_access =='all'}">
+														<i class="fa-solid fa-earth-americas"></i>
+													</c:if>
+													
+													<c:if test="${pdto.post_access =='onlyme'}">
+														<i class="fa-solid fa-lock"></i>
+													</c:if>
+													</b></span>
+													<span>${pdto.post_time }</span>		
 												</div>
 												<c:if test="${sessionScope.user_num==dto.user_num }">
 													<div class="dropdown" style="margin-left: 70%;">
-														<img src="${root }/image/menu.png" data-toggle="dropdown" style="width:50px; height: 50px; cursor: pointer;">
-														
+														<i class="fa-solid fa-ellipsis fa-2x - 2em" data-toggle="dropdown" style=" cursor: pointer;"></i>
 														<ul class="dropdown-menu dropdown-menu-right">
 													      <li><a href="#" class="delpost" post_num=${pdto.post_num }>게시글 삭제</a></li>
+													      <li><a href="#" class="modpost" post_num=${pdto.post_num }>게시글 수정</a></li>
 													    </ul>
 													</div>
 												</c:if>
@@ -692,10 +747,18 @@
 									
 										<div class="bottom-up">
 											<div class="like">
-												<span><img src="${root }/image/like.png" style="width: 20px; height: 20px;">&nbsp;&nbsp;좋아요</span>
+												<c:if test="${pdto.likecheck ==0 }">
+													<span><i class=" img_like fa-regular fa-thumbs-up fa-2x - 2em" user_num="${dto.user_num }" post_num=${pdto.post_num }
+													style="cursor: pointer;"></i>&nbsp;&nbsp;좋아요&nbsp;${pdto.like_count}명</span>
+												</c:if>
+												
+												<c:if test="${pdto.likecheck !=0 }">
+													<span><i class="img_dlike fa-solid fa-thumbs-up fa-2x - 2em" style="color: #3578E5; cursor: pointer;" user_num="${dto.user_num }" post_num=${pdto.post_num }
+													></i>&nbsp;&nbsp;좋아요&nbsp;${pdto.like_count}명</span>
+												</c:if>
 											</div>
 											<div class="comment">
-												<span><img src="${root }/image/comment.png" style="width: 20px; height: 20px;">&nbsp;&nbsp;댓글</span>
+												<span><i class="fa-regular fa-comment fa-2x - 2em" id="img_comment"></i>&nbsp;&nbsp;댓글달기</span>
 											</div>
 										</div>
 										
