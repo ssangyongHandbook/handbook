@@ -33,7 +33,8 @@
 <div class = "titlecontainer">
 
 	<div style="width: 180px;"><a href = "${root }/"><img src="../image/handbooklogo.png" style = "height: 80px; "></a></div>
-	 <div class = "searcharea" style = "width:550px;  margin: 10px;">
+	 <c:if test="${sessionScope.loginok != null }">
+	 	<div class = "searcharea" style = "width:550px;  margin: 10px;">
 			<form class = "form-inline" style = "width:600px;">
 				
 					<div style = "width: 600px; background-color: white; display: inline-flex; align-items: center;">
@@ -70,6 +71,7 @@
 		<a href="/user/mypage"><span><img src="../photo/${sessionScope.user_photo }" alt="" style = "width:40px; height: 40px; border-radius: 100px;"></span></a>
 		</c:if>
 	</div>
+	 </c:if>
 
 </div>
 
@@ -92,6 +94,8 @@
 	$(".titlemenu").hide();
 	$(".titlemenubar").click(function(){
 		$(".titlemenu").toggle();
+		
+		
 	});
 	
 	
