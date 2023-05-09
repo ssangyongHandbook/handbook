@@ -2,6 +2,7 @@ package com.sns.handbook.serivce;
 
 import java.util.List;
 
+import com.sns.handbook.dto.FollowingDto;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.UserDto;
 
@@ -20,6 +21,7 @@ public interface UserServiceInter {
 	public void updatePhoto(String user_num,String user_photo);
 	public List<PostDto> getPost(String user_num);
 	public void updateUserInfo(UserDto dto);
+	public List<FollowingDto> getFollowList(String from_user, int offset);
 	//우형 끝	
 
 	//이 아래 김희수 구현
