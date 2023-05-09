@@ -22,8 +22,8 @@
 	order by post_num desc limit 2 offset #{offset} 
 	 
 	</select>
-	<delete id="deletePost" parameterType="int">
-	delete from post where post_num=#{post_num}
+	<delete id="deletePost" parameterType="String">
+	delete from post where post_num=#{post_num} 
 	</delete>
 	
 	<!-- 이미지파일 수정 -->
@@ -38,6 +38,10 @@
 	
 	<select id="getDataByNum" resultType="PostDto" parameterType="String">
 	   select * from post where post_num=#{post_num}
+	</select>
+	
+		<select id="checklogin" resultType="int" parameterType="Map">
+		select count(*) from post where post_num=#{post_num} and user_num=#{user_num}
 	</select>
 	
 </mapper>

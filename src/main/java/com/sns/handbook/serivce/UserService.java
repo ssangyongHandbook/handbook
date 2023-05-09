@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sns.handbook.dto.FollowingDto;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.UserDto;
 import com.sns.handbook.mapper.UserMapperInter;
@@ -86,9 +87,22 @@ public class UserService implements UserServiceInter {
 		mapperInter.updateUserInfo(dto);
 	}
 
-	// 우형 끝
+	
+	@Override
+	public List<FollowingDto> getFollowList(String from_user, int offset) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("from_user", from_user);
+		map.put("offset", offset);
+		
+		
+		return mapperInter.getFollowList(map);
+	}
+	//우형 끝	
+	
+	//이 아래 김희수
 
-	// 이 아래 김희수
 	@Override
 	public void insertUserInfo(UserDto dto) {
 		mapperInter.insertUserInfo(dto);
@@ -100,10 +114,12 @@ public class UserService implements UserServiceInter {
 		return mapperInter.getUserDtoById(user_id);
 	}
 
+
 	@Override
 	public int loginEmailCheck(String user_email) {
 		// TODO Auto-generated method stub
 		return mapperInter.loginEmailCheck(user_email);
 	}
 	// 이 위 김희수
+
 }
