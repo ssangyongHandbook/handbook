@@ -86,22 +86,33 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/mypage")
-	public ModelAndView mypage(HttpSession session,String my_num,String your_num)
+	public ModelAndView mypage(@RequestParam(defaultValue = "0") int offset,String user_num ,HttpSession session)
 	{
 		ModelAndView model=new ModelAndView();
 		
-		int followercount=fservice.getTotalFollower(my_num);
-		int togetherFollowcount=fservice.togetherFollow(your_num, my_num);
+		int followercount=fservice.getTotalFollower(user_num);
+		int followcount=fservice.getTotalFollowing(user_num);
 		
-		List<UserDto> list=uservice.getAllUsers();
-		List<PostDto> postlist=uservice.getPost((String)session.getAttribute("user_num"));
+		UserDto udto=uservice.getUserByNum(user_num);
+		List<PostDto> postlist=uservice.getPost(user_num);
+		List<FollowingDto> tflist=uservice.getFollowList(user_num, offset);
 		
-		model.addObject("list", list);
+		for(int i = 0; i<tflist.size(); i++) {
+			UserDto dto = uservice.getUserByNum(tflist.get(i).getTo_user()); //여러가지 수많은 데이터에서 i번째 데이터만 가져오기, 여기서 필요한 상대방 num을 list에서 뽑아옴
+			tflist.get(i).setUser_name(dto.getUser_name());// 위에서 dto에서 name photo를 뽑아내서 리스트에 set을 해줌
+			tflist.get(i).setUser_photo(dto.getUser_photo());
+			tflist.get(i).setTf_count(fservice.togetherFollow(dto.getUser_num(),(String)session.getAttribute("user_num")));
+		}
+		
+		model.addObject("dto", udto);
+		model.addObject("offset", offset);
+		model.addObject("tflist", tflist);
 		model.addObject("postlist",postlist);
 		model.addObject("followercount", followercount);
-		model.addObject("togetherFollowcount", togetherFollowcount);
+		model.addObject("followcount", followcount);
+	
 		model.setViewName("/sub/user/mypage");
-		
+
 		return model;
 	}
 	
@@ -138,6 +149,13 @@ public class UserController {
 	public void updateinfo(UserDto dto)
 	{
 		uservice.updateUserInfo(dto);
+	}
+	
+	@ResponseBody
+	@GetMapping("/user/deletepost")
+	public void deletepost(int post_num)
+	{
+		pservice.deletePost(post_num);
 	}
 	
 	@GetMapping("/user/info")
