@@ -24,6 +24,12 @@
   			align-items: center; /*새로중앙*/
   			height:100%;
 		}
+		.oauth_box_1 {
+			display: flex;
+			justify-content: center; /* 가로 중앙. */
+  			align-items: center; /*새로중앙*/
+  			margin: 5px;
+		}
 	</style>
 </head>
 <body>
@@ -46,8 +52,15 @@
 				<div class="d-grid gap-2">
 				   	<button class="btn btn-primary btn-block" type="submit">로그인</button>
 				</div><br>
-				<!-- 네이버 로그인 -->
-				<button type ="button" class= "btn" onclick="location.href='${urlNaver}'">네이버</button>
+				
+				<!-- 외부 로그인 -->
+				<%-- <button type ="button" class= "btn" onclick="location.href='${urlNaver}'">네이버</button> --%>
+				<div class="oauth_box_1">
+					<img width="50%"  src="/image/nav_btn.png" onclick="location.href='${urlNaver}'" style="cursor: pointer;">
+					<img width="50%"  src="/image/kakao_btn.png" onclick="location.href='${urlKakao}'" style="cursor: pointer;">
+					<%-- <button type="button" class="btn" onclick="location.href='${urlKakao}'">카카오</button> --%>
+				</div>
+				
 				<!-- <div id="naver_id_login" onclick="location.href='/login/naverlogin'"></div> -->
 	      	</form>
 	      
