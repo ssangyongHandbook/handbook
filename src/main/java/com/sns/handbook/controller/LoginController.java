@@ -30,12 +30,10 @@ public class LoginController {
 		this.naverLoginBO = naverLoginBO;
 	}
 
-
 	/* KakaoLogin */
 	@Autowired
 	private KakaoLoginBO kakaoLoginBO;
-	
-	
+
 	@Autowired
 	UserService service;
 
@@ -55,10 +53,14 @@ public class LoginController {
 			return "/login/passfail";
 		}
 	}
+	
+	@GetMapping("/login/findpass")
+	public String findpass() {
+		return "/sub/login/findpass";
+	}
 
 	@GetMapping("/login/logincenterform")
 	public String logincenter() {
-
 		return "/login/logincenter";
 	}
 
@@ -74,16 +76,7 @@ public class LoginController {
 	@GetMapping("/navercallback")
 	public String callbackNaver(Model model, @RequestParam String code, @RequestParam String state, HttpSession session)
 			throws Exception {
-		//String user_id = "";
-		//String user_birth = "";
-//		String user_hp = "";
-//		String user_name = "";
-//		String user_email = "";
-//		String user_photo = "";
-//		String user_gender = "";
 
-		//System.out.println("callback메서드 호출");
-		//System.out.println("code : " + code + "state : " + state);
 		OAuth2AccessToken oauthToken;
 		oauthToken = naverLoginBO.getAccessToken(session, code, state);
 		// 로그인 사용자 정보를 읽어온다.
@@ -94,29 +87,21 @@ public class LoginController {
 
 		jsonObj = (JSONObject) jsonParser.parse(apiResult);
 		JSONObject response_obj = (JSONObject) jsonObj.get("response");
-		// 프로필 조회
-		//String id = (String) response_obj.get("id");
-		//String nickname = (String) response_obj.get("nickname");
+		// 프로필 조회, 네이버는 나이, 프로필 이미지(가져와야하는데 안가져와짐), 닉네임 안가져오는걸로.
 		String name = (String) response_obj.get("name");
 		String email = (String) response_obj.get("email");
 		String gender = (String) response_obj.get("gender");
-		//String age = (String) response_obj.get("age");
 		String birthday = (String) response_obj.get("birthday");
-		//String profile_image = (String) response_obj.get("profile_image");
 		String birthyear = (String) response_obj.get("birthyear");
 		String mobile = (String) response_obj.get("mobile");
 
 		int check = service.loginEmailCheck(email); // 입력한 이메일이 가입되어있는지 아닌지 판단
-		//System.out.println("email check : " + check);
-		//System.out.println("email : " + email);
-		
-		
+
 		// 이메일에서 user_id 추출
 		String splitemail[] = email.split("@");
 		String user_id;
 		user_id = splitemail[0];
-		
-		
+
 		// 이 아래는 아무튼 로그인 한다.
 		// 이미 예전에 로그인한 네이버 계정이면 그냥 로그인
 		// 아니면 db에 회원정보 입력 후 로그인.
@@ -131,7 +116,7 @@ public class LoginController {
 			session.setAttribute("name", name);
 			session.setAttribute("loginok", "yes");
 			session.setAttribute("myid", user_id);
-			session.setAttribute("user_num", dto.getUser_num()); 	// session에 num값 넣음.
+			session.setAttribute("user_num", dto.getUser_num()); // session에 num값 넣음.
 			session.setAttribute("user_photo", dto.getUser_photo());// session에 photo 넣음.
 
 			return "redirect:post/timeline"; // 로그인 하면 타임라인으로 넘어감.
@@ -143,11 +128,8 @@ public class LoginController {
 			session.setAttribute("name", name);
 			session.setAttribute("myid", user_id);
 			session.setAttribute("loginok", "yes");
-			// session.setAttribute("user_num", dto.getUser_num()); // session에 num값 넣음.
-			// session.setAttribute("user_photo", dto.getUser_photo());// session에 photo 넣음.
 
 			UserDto user = new UserDto();
-			// user.setUser_addr(user_addr);//주소는 마이페이지에서 추가
 			String user_birth;
 			user_birth = birthyear + "-" + birthday;
 			user.setUser_birth(user_birth);
@@ -163,45 +145,41 @@ public class LoginController {
 			user.setUser_id(user_id);
 			// user.setUser_pass(user_pass);
 			user.setUser_name(name);
-			//user.setUser_photo(profile_image);
+			// user.setUser_photo(profile_image);
 
 			service.insertUserInfo(user);
-			session.setAttribute("user_num", user.getUser_num()); 	// session에 num값 넣음.
+			session.setAttribute("user_num", user.getUser_num()); // session에 num값 넣음.
 			session.setAttribute("user_photo", user.getUser_photo());// session에 photo 넣음.
-			
+
 			// System.out.println("signin session : "+session.getAttribute("signIn"));
 			return "redirect:post/timeline";
 		}
 	}
-	
-	
+
 	@GetMapping("/kakaocallback")
-	public String callbackKakao(Model model, @RequestParam String code, @RequestParam String state, HttpSession session) throws Exception {
+	public String callbackKakao(Model model, @RequestParam String code, @RequestParam String state, HttpSession session)
+			throws Exception {
 		OAuth2AccessToken oauthToken;
-		oauthToken = kakaoLoginBO.getAccessToken(session, code, state);	
+		oauthToken = kakaoLoginBO.getAccessToken(session, code, state);
 		// 로그인 사용자 정보를 읽어온다
 		apiResult = kakaoLoginBO.getUserProfile(oauthToken);
-		
+
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObj;
-		
+
 		jsonObj = (JSONObject) jsonParser.parse(apiResult);
-		JSONObject response_obj = (JSONObject) jsonObj.get("kakao_account");	
+		JSONObject response_obj = (JSONObject) jsonObj.get("kakao_account");
 		JSONObject response_obj2 = (JSONObject) response_obj.get("profile");
-		
+
 		// 프로필 조회
 		String email = (String) response_obj.get("email");
 		String name = (String) response_obj2.get("nickname");
-		//id 이메일에서 가져오기
+		// id 이메일에서 가져오기
 		String splitemail[] = email.split("@");
 		String user_id;
 		user_id = splitemail[0];
-		//String profile = (String) response_obj2.get("profile_image_url");
 		String gender = (String) response_obj.get("gender");
-		
-		
-		//System.out.println(apiResult);
-		
+
 		int check = service.loginEmailCheck(email); // 입력한 이메일이 가입되어있는지 아닌지 판단
 		// 이 아래는 아무튼 로그인 한다.
 		// 이미 예전에 로그인한 네이버 계정이면 그냥 로그인
@@ -217,7 +195,7 @@ public class LoginController {
 			session.setAttribute("name", name);
 			session.setAttribute("loginok", "yes");
 			session.setAttribute("myid", user_id);
-			session.setAttribute("user_num", dto.getUser_num()); 	// session에 num값 넣음.
+			session.setAttribute("user_num", dto.getUser_num()); // session에 num값 넣음.
 			session.setAttribute("user_photo", dto.getUser_photo());// session에 photo 넣음.
 
 			return "redirect:post/timeline"; // 로그인 하면 타임라인으로 넘어감.
@@ -231,7 +209,6 @@ public class LoginController {
 			session.setAttribute("loginok", "yes");
 
 			UserDto user = new UserDto();
-			// user.setUser_addr(user_addr);//주소는 마이페이지에서 추가
 			user.setUser_email(email);
 			if (gender.equalsIgnoreCase("male")) {
 				user.setUser_gender("남자");
@@ -242,13 +219,11 @@ public class LoginController {
 			}
 			user.setUser_id(user_id);
 			user.setUser_name(name);
-			//user.setUser_photo(profile);
 
 			service.insertUserInfo(user);
-			session.setAttribute("user_num", user.getUser_num()); 	// session에 num값 넣음.
+			session.setAttribute("user_num", user.getUser_num()); // session에 num값 넣음.
 			session.setAttribute("user_photo", user.getUser_photo());// session에 photo 넣음.
-			
-			// System.out.println("signin session : "+session.getAttribute("signIn"));
+
 			return "redirect:post/timeline";
 		}
 	}
