@@ -18,4 +18,9 @@ public class CommentDto {
 	private int comment_step;
 	private int comment_level;
 	private Timestamp comment_writeday;
+	
+	//이후에 추가한 dto
+	private String user_photo;
+	private String user_name;
+	private String perTime;
 }
