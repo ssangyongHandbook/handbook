@@ -3,6 +3,7 @@ package com.sns.handbook.serivce;
 import java.util.List;
 import java.util.Map;
 
+import com.sns.handbook.dto.FollowingDto;
 import com.sns.handbook.dto.PostDto;
 
 public interface PostServiceInter {
@@ -14,4 +15,9 @@ public interface PostServiceInter {
 	public void updatePost(PostDto dto);
 	public PostDto getDataByNum(String post_num);
 	public void updatePhoto(String post_num,String post_file);
+	
+	//logincheck
+	public int checklogin(String post_num, String user_num);
+	
+
 }

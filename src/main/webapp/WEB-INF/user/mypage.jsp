@@ -20,18 +20,6 @@
 <script type="text/javascript">
 	$(function(){
 		
-		$(document).ready(function() {
-		    $('#slider').slick({
-		        autoplay: false,         // 자동 재생 여부
-		        autoplaySpeed: 0,    // 자동 재생 속도 (단위: ms)
-		        dots: false,             // 점 네비게이션 표시 여부
-		        arrows: true,           // 화살표 네비게이션 표시 여부
-		        infinite: false,         // 무한 슬라이드 여부
-		        slidesToShow: 1,        // 한 화면에 보여줄 슬라이드 수
-		        slidesToScroll: 1       // 한 번에 스크롤할 슬라이드 수
-		    });
-		});
-		
 		//강제 호출
 		$("#btnnewcover").click(function(){
 			
@@ -202,7 +190,7 @@
 			 }
 		});
 		
-		//게시글 작성
+		//게시글 작성(다중 업로드)
 		$("#btnwrite").click(function() {
 
 			var post_access = $("#post_access").val();
@@ -235,6 +223,18 @@
 				}
 			});
 		});
+		
+		//사진 넘기면서 보기
+		 $('#slider').slick({
+			 
+		        autoplay: false,         // 자동 재생 여부
+		        autoplaySpeed: 0,    // 자동 재생 속도 (단위: ms)
+		        dots: false,             // 점 네비게이션 표시 여부
+		        arrows: true,           // 화살표 네비게이션 표시 여부
+		        infinite: false,         // 무한 슬라이드 여부
+		        slidesToShow: 1,        // 한 화면에 보여줄 슬라이드 수
+		        slidesToScroll: 1       // 한 번에 스크롤할 슬라이드 수
+		    });
 		
 		//게시물 삭제
 		$(".delpost").click(function(){
@@ -462,22 +462,22 @@
 		
 		.slick-prev{
 			background-color: white;
+			top: 250px;
+   			position: relative;
+    		z-index: 1;
 		}
 		
 		.slick-next{
 			background-color: white;
 			float: right;
+			bottom: 250px;
+   			position: relative;
 		}
 		
 </style>
 </head>
 <body>
-<c:set var="root" value="<%=request.getContextPath() %>"/>
-
-
-
-	
-	
+	<c:set var="root" value="<%=request.getContextPath() %>"/>	
 		<div class="container">
 		  <!-- Modal -->
 		  <div class="modal fade" id="infoupdate" role="dialog">
@@ -537,8 +537,7 @@
 		        <div class="modal-footer">
 		          <button type="button" class="btn btn-default" data-dismiss="modal" id="btnupdate"  num="${dto.user_num }">정보 수정</button>
 		        </div>
-		      </div>
-		      
+		      </div>  
 		    </div>
 		  </div>
 		</div>

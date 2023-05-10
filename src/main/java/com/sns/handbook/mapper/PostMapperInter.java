@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.sns.handbook.dto.FollowingDto;
 import com.sns.handbook.dto.PostDto;
 
 @Mapper
@@ -17,4 +18,6 @@ public interface PostMapperInter {
 	public void updatePhoto(Map<String, String> map);
 	public void updatePost(PostDto dto);
 	public PostDto getDataByNum(String post_num);
+	public int checklogin(Map<String, String> map);
+	
 }
