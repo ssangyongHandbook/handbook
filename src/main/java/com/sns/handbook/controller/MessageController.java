@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -42,13 +43,28 @@ public class MessageController {
 		String user_num=uservice.getUserById(myid).getUser_num();
 		
 		//로그인한 사용자가 가장 최근한 대화한 채팅방
-		int recentGroup=mservice.getRecentGroup(user_num);
+		int recentGroup=0;
+		try {
+			recentGroup=mservice.getRecentGroup(user_num);
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
 		
 		//가장 최근 대화한 상대 정보 전달
-		List<Map<String, Object>> chatMember=mservice.selectAllChatMemeber(user_num);
+		List<Map<String, Object>> chatMember=null;
+		try{
+			chatMember=mservice.selectAllChatMemeber(user_num,null);
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
 		
 		//최근 상대방의 userDto
-		UserDto otherInfo=uservice.getUserByNum(chatMember.get(0).get("member_num").toString());
+		UserDto otherInfo=new UserDto();
+		try {
+			otherInfo=uservice.getUserByNum(chatMember.get(0).get("member_num").toString());
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
 		
 		//저장
 		model.addObject("recentgroup",recentGroup);
@@ -64,6 +80,13 @@ public class MessageController {
 	@ResponseBody
 	public List<MessageDto> chatting(int mess_group,HttpSession session)
 	{
+		try {
+			Thread.sleep(100); //0.1초 기다리기
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		//사용자의 num 받기
 		String myid=(String)session.getAttribute("myid");
 		String user_num=uservice.getUserById(myid).getUser_num();
@@ -78,8 +101,9 @@ public class MessageController {
 	
 	@GetMapping("/message/memberlist")
 	@ResponseBody
-	public List<Map<String, Object>> memberlist(HttpSession session)
-	{
+	public List<Map<String, Object>> memberlist(HttpSession session,
+			@RequestParam(required = false) String other_name)
+	{	
 		try {
 			Thread.sleep(100); //0.1초 기다리기
 		} catch (InterruptedException e) {
@@ -92,7 +116,7 @@ public class MessageController {
 		String user_num=uservice.getUserById(myid).getUser_num();
 
 		//대화 상대와 메시지 그룹 받아오기
-		List<Map<String, Object>> chatMember=mservice.selectAllChatMemeber(user_num);
+		List<Map<String, Object>> chatMember=mservice.selectAllChatMemeber(user_num,other_name);
 
 		//상대측 아이디,이름,유저사진(프사) 추가하기
 		for(Map<String, Object> map:chatMember)
@@ -152,4 +176,21 @@ public class MessageController {
 
 		return chatMember;	
 	}
+	
+	@GetMapping("/message/delete")
+	@ResponseBody
+	public void messageDel(String mess_num)
+	{
+		mservice.deleteMessage(mess_num);
+	}
+	
+	@GetMapping("/message/searchuser")
+	@ResponseBody
+	public List<UserDto> searchUser(String user_name)
+	{
+		List<UserDto> list=uservice.getUserByName(user_name);
+		
+		return list;
+	}
+	
 }

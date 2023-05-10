@@ -177,4 +177,11 @@ public class UserService implements UserServiceInter {
 		return mapperInter.getUserIdByEmail(user_email);
 	}
 	// 희수 끝
+
+	//예지
+	@Override
+	public List<UserDto> getUserByName(String user_name) {
+		// TODO Auto-generated method stub
+		return mapperInter.getUserByName(user_name);
+	}
 }

@@ -36,4 +36,6 @@ public interface UserMapperInter {
 	public void updatePassword(Map<String, String> map);
 	//희수 끝
 
+	//예지
+	public List<UserDto> getUserByName(String user_name);
 }
