@@ -53,11 +53,6 @@ public class LoginController {
 			return "/login/passfail";
 		}
 	}
-	
-	@GetMapping("/login/findpass")
-	public String findpass() {
-		return "/sub/login/findpass";
-	}
 
 	@GetMapping("/login/logincenterform")
 	public String logincenter() {

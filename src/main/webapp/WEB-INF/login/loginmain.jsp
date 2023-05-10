@@ -70,7 +70,7 @@ html, body {
 				</form>
 
 				<div align="center">
-					<a href="/login/findpass">계정을 잊으셨나요?</a>
+					<a href="/find/findpass">계정을 잊으셨나요?</a>
 				</div>
 				<br>
 				<div align="center">
