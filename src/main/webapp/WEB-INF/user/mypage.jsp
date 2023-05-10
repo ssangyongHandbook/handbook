@@ -202,7 +202,7 @@
 			 }
 		});
 		
-		//게시글 작성
+		//게시글 작성(다중 업로드)
 		$("#btnwrite").click(function() {
 
 			var post_access = $("#post_access").val();
@@ -235,6 +235,57 @@
 				}
 			});
 		});
+		
+		//사진 넘기면서 보기
+		$(document).ready(function() {
+			
+		 $('#slider').slick({
+			 
+			 	prevArrow: '<img src="../image/left.png" id="prev">',
+			 	nextArrow: '<img src="../image/right.png" id="next">',
+		        autoplay: false,         // 자동 재생 여부
+		        autoplaySpeed: 0,    // 자동 재생 속도 (단위: ms)
+		        dots: false,             // 점 네비게이션 표시 여부
+		        arrows: true,           // 화살표 네비게이션 표시 여부
+		        infinite: false,         // 무한 슬라이드 여부
+		        slidesToShow: 1,        // 한 화면에 보여줄 슬라이드 수
+		        slidesToScroll: 1      // 한 번에 스크롤할 슬라이드 수
+	
+		    });
+		 
+		 //마지막,처음 화살표 삭제
+		 $('#slider').on('afterChange', function(event, slick, currentSlide){
+			    if(currentSlide == 0){
+			        $('#prev').hide();
+			    } else {
+			        $('#prev').show();
+			    }
+			    if(currentSlide == slick.slideCount - 1){
+			        $('#next').hide();
+			    } else {
+			        $('#next').show();
+			    }
+			});
+		});
+		
+		//게시물 수정 값 불러오기
+		$(".modpost").click(function(){
+			
+			var updatenum=$(this).attr("post_num");
+
+			$.ajax({
+				type : "get",
+				dataType : "json",
+				url : "updateform",
+				data : {"post_num" : updatenum},		
+				success : function(res) {
+					$("#update_access").val(res.post_access);
+					$("#update_content").val(res.post_content);
+					$("#update_file").val(res.post_file);
+				}
+			})
+		})
+		
 		
 		//게시물 삭제
 		$(".delpost").click(function(){
@@ -459,25 +510,34 @@
 			border-radius: 10px;
 			border: 1px solid gray;
 		}
-		
-		.slick-prev{
-			background-color: white;
+
+		#prev{
+			top: 300px;
+   			position: relative;
+    		z-index: 1;
+    		border: none;
+    		width: 100px; 
+    		height: 100px;
+    		cursor: pointer;
 		}
 		
-		.slick-next{
-			background-color: white;
+		#next{	
 			float: right;
+			bottom: 300px;
+   			position: relative;
+   			border: none;
+   			width: 100px; 
+    		height: 100px;
+    		cursor: pointer;
+
 		}
 		
 </style>
 </head>
 <body>
-<c:set var="root" value="<%=request.getContextPath() %>"/>
-
-
-
+	<c:set var="root" value="<%=request.getContextPath() %>"/>
 	
-	
+	<!-- 프로필 수정 -->
 		<div class="container">
 		  <!-- Modal -->
 		  <div class="modal fade" id="infoupdate" role="dialog">
@@ -537,13 +597,55 @@
 		        <div class="modal-footer">
 		          <button type="button" class="btn btn-default" data-dismiss="modal" id="btnupdate"  num="${dto.user_num }">정보 수정</button>
 		        </div>
-		      </div>
-		      
+		      </div>  
 		    </div>
 		  </div>
 		</div>
-		
-		<div class="container">
+
+<!-- 게시글 수정 -->
+	<div class="modal fade" id="updatepost" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">게시글 수정</h4>
+				</div>
+
+				<div class="modal-body">
+					<div class="form-group" style="width: 150px;">
+						<select class="form-control" name="update_access"
+							id="update_access" required="required" >
+							<option value="all">전체공개</option>
+							<option value="follower">팔로워 공개</option>
+							<option value="onlyme">나만보기</option>
+						</select>
+					</div>
+					
+					<div class="form-group" style="width: 500px;">
+						<input type="file" name="update_file" class="form-control"
+							required="required" multiple="multiple" id="update_file">
+					</div>
+					
+					<div class="form-group">
+						<textarea style="width: 550px; height: 150px;"
+							name="update_content" class="form-control" required="required"
+							id="update_content" placeholder="내용을 입력해주세요"></textarea>
+							
+					</div>
+				</div>
+				
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" id="updatetbtn">수정</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- 게시글 작성 -->
+	<div class="container">
 		  <!-- Modal -->
 		  <div class="modal fade" id="contentwrite" role="dialog" >
 		    <div class="modal-dialog">
@@ -753,7 +855,7 @@
 														<i class="fa-solid fa-ellipsis fa-2x - 2em" data-toggle="dropdown" style=" cursor: pointer;"></i>
 														<ul class="dropdown-menu dropdown-menu-right">
 													      <li><a href="#" class="delpost" post_num=${pdto.post_num }>게시글 삭제</a></li>
-													      <li><a href="#" class="modpost" post_num=${pdto.post_num }>게시글 수정</a></li>
+													      <li><a href="#" class="modpost" id="updatepost" data-toggle="modal" data-target="#updatepost" post_num=${pdto.post_num }>게시글 수정</a></li>
 													    </ul>
 													</div>
 												</c:if>
