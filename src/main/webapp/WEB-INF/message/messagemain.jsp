@@ -315,6 +315,55 @@
 		border: none;
 		background: none;
 	}
+	
+	div.msgsearchuser{
+		position: absolute;
+		z-index: 10;
+		width: 300px;
+		height: 500px;
+		overflow: auto;
+		box-shadow: 0px 0px 10px lightgray;
+		background-color: white;
+		display: none;
+		flex-direction: column;
+	}
+	
+	.msgserachuserone{
+		margin-left: 15px;
+		width: 250px;
+		display: inline-flex;
+		align-items: center;
+		margin-top: 10px;
+		cursor: pointer;
+		padding: 3px;
+		border-radius: 10px;
+	}
+	
+	.msgserachuserone:hover{
+		background-color: #DFEFFF;
+	}
+	
+	.msgserachuserone span{
+		margin-left: 5px;
+	}
+	
+	.searchuid{
+		color: gray;
+		font-size: 8pt;
+	}
+	
+	.searchuphoto{
+		width: 40px;
+		height: 40px;
+		border: none;
+		border-radius: 100px;
+		overflow: hidden;
+		text-align: center;
+	}
+	
+	.searchuphoto img{
+		height: 40px;
+	}
 </style>
 
 <script type="text/javascript">
@@ -385,27 +434,74 @@
 		$(".msgadd").click(function(){
 			s="<span class='msgaddname'>받는 사람:</span><input type='text' class='msgaddname'>"
 			$(".chatinfo").html(s);
+			var position = $('.msgaddname').position();
+			$('.msgsearchuser').css("left",position.left + 60);
+			$('.msgsearchuser').css("top",position.top + 30);
+			$('.msgsearchuser').css("display","inline-flex");
 		})
+		
+		//->창 외부 클릭시 숨기기
+		/* $('html').click(function(e){
+			var container = $(".msgsearchuser");
+		    if (!$(e.target).hasClass('msgsearchuser') && !$(e.target).hasClass('msgadd')) {
+		        container.css("display","none");
+		       	alert($(e.target));
+		    }
+		}) */
 		
 		//->채팅방 추가에서 받는 사람 입력창 이벤트
 		$(document).on('keyup','input.msgaddname',function(e){
-			if(e.keyCode==13){
-				var addName=$(this).val(); //추가할 상대 이름
-				
-				$.ajax({
-					type:"get",
-					dataType:"json",
-					data:{"user_name":addName},
-					url:"searchuser",
-					success:function(res){
-						var test="";
-						$.each(res,function(i,ele){
-							test+="아이디: "+ele.user_id;
-						})
-						alert(test);
-					}
-				})
-			}
+			var addName=$(this).val(); //검색한 (추가할)사람 이름
+			
+			$.ajax({
+				type:"get",
+				dataType:"json",
+				data:{"user_name":addName},
+				url:"searchuser",
+				success:function(res){
+					var users="";
+					$.each(res,function(i,ele){
+						users+="<div class='msgserachuserone'><div class='searchuphoto'>";
+						if(ele.user_photo==null){
+							users+="<img src='/image/noimg.png'>";
+						}else{
+							users+="<img src='/photo/"+ele.user_photo+"'>";	
+						}
+						users+="</div><span class='searchuname'>"+ele.user_name+"</span>";
+						users+="<span class='searchuid'>"+ele.user_id+"</span>"
+						users+="</div>";
+					})
+					$('.msgsearchuser').html(users);
+				}
+			})
+		})
+		
+		//-->검색한 사람 클릭했을 때 받는 사람에 넣기
+		$(document).on("click",".msgserachuserone",function(){
+			var name=$(this).find(".searchuname").text();
+			var id=$(this).find(".searchuid").text();
+			$("input.msgaddname").val(name+"("+id+")");
+			
+			var out="";
+			
+			out+='<div class="onemember messageactive">';
+			out+='<div class="messagememberphotobox">';
+			out+='<div class="messagememberphoto">';
+			out+='<img alt="사용자사진(없음)" src="/image/noimg.png">';
+			out+='</div>';
+			out+='</div>';
+			out+='<div class="messagememberinfo">';
+			out+='<span class="membername">새메시지 입력</span>';
+			out+='<div class="chatdetail">';
+			out+='<span class="recentchat"></span>';
+			out+='<span class="chatdetaildate"></span>';
+			out+='</div></div></div>'
+			
+			var msgmember=$(".messagmember").html();
+			
+			$(".messagmember").html(msgmember+out);
+			$("#chatShow").html("");
+			$(".chatlistinfo").html("");
 		})
 		
 	})
@@ -508,7 +604,6 @@
 						//선택되지 않은 채팅방
 						out+='<div class="onemember" mess_group='+chat.group+' member_num='+chat.member_num+'>';
 					}
-					console.log(chat.group);
 					out+='<div class="messagememberphotobox">';
 					out+='<div class="messagememberphoto">';
 					if(chat.member_photo==null||chat.member_photo==''){
@@ -672,6 +767,11 @@
 			<span member_id="${otherInfo.user_id }">${otherInfo.user_name }</span>
 			</c:if>
 		</div>
+		
+		<div class="msgsearchuser">
+			
+		</div>
+		
 		<div class="chatlist">
 			<div class="chatlistinfo">
 				<c:if test="${recentgroup!=0 }">
