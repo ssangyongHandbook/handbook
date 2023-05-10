@@ -7,6 +7,10 @@ import com.sns.handbook.dto.MessageDto;
 
 public interface MessageServiceInter {
 
-	public List<Map<String, Object>> selectAllChatMemeber(String user_num);
+	public List<Map<String, Object>> selectAllChatMemeber(String user_num,String other_name);
 	public MessageDto selectRecentMessage(String user_num,String other);
+	public List<MessageDto> selectAllByGroup(int mess_group, String user_num);
+	public void insertMessage(MessageDto dto);
+	public int getRecentGroup(String user_num);
+	public void deleteMessage(String mess_num);
 }

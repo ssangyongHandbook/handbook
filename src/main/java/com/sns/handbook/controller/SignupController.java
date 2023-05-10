@@ -19,7 +19,7 @@ public class SignupController {
 
 	@GetMapping("/signupform")
 	public String signupform() {
-		return "/login/signup";
+		return "/sub/login/signup";
 	}
 
 	@PostMapping("/signupprocess")
@@ -36,7 +36,7 @@ public class SignupController {
 			user_addr = addr1 + " " + addr2;
 		}
 		
-		String user_hp = hp1 + hp2 + hp3;
+		String user_hp = hp1 + "-" + hp2 + "-" + hp3;
 		String split_user_emali[] = user_email.split("@");
 
 		UserDto user = new UserDto();
