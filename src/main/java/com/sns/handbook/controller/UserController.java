@@ -105,6 +105,7 @@ public class UserController {
 		int followcount=fservice.getTotalFollowing(user_num);
 		String loginnum=uservice.getUserById((String)session.getAttribute("myid")).getUser_num();
 		
+		PostDto pdto=new PostDto();
 		UserDto udto=uservice.getUserByNum(user_num);
 		List<PostDto> postlist=uservice.getPost(user_num);
 		List<FollowingDto> tflist=uservice.getFollowList(user_num, offset);
@@ -211,11 +212,11 @@ public class UserController {
 	        }
 	        //콤마 제거
 	        uploadName = uploadName.substring(0, uploadName.length() - 1);
+	        
+		    dto.setPost_file(uploadName);
+		    pservice.insertPost(dto);
+		    
 	    }
-	      
-	    dto.setPost_file(uploadName);
-	    pservice.insertPost(dto);
-	    
 	}
 	
 	//프로필 업데이트
@@ -226,6 +227,15 @@ public class UserController {
 		uservice.updateUserInfo(dto);
 	}
 	
+	//게시물 수정 값 불러오기
+	@ResponseBody
+	@GetMapping("/user/updateform")
+	public PostDto updateform(String post_num)
+	{
+		PostDto dto=pservice.getDataByNum(post_num);
+		
+		return dto;
+	}
 	
 	//게시물 삭제
 	@ResponseBody
