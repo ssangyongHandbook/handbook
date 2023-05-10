@@ -20,6 +20,18 @@
 <script type="text/javascript">
 	$(function(){
 		
+		$(document).ready(function() {
+		    $('#slider').slick({
+		        autoplay: false,         // 자동 재생 여부
+		        autoplaySpeed: 0,    // 자동 재생 속도 (단위: ms)
+		        dots: false,             // 점 네비게이션 표시 여부
+		        arrows: true,           // 화살표 네비게이션 표시 여부
+		        infinite: false,         // 무한 슬라이드 여부
+		        slidesToShow: 1,        // 한 화면에 보여줄 슬라이드 수
+		        slidesToScroll: 1       // 한 번에 스크롤할 슬라이드 수
+		    });
+		});
+		
 		//강제 호출
 		$("#btnnewcover").click(function(){
 			
@@ -498,7 +510,7 @@
 			border-radius: 10px;
 			border: 1px solid gray;
 		}
-		
+
 		#prev{
 			top: 300px;
    			position: relative;
@@ -517,6 +529,7 @@
    			width: 100px; 
     		height: 100px;
     		cursor: pointer;
+
 		}
 		
 </style>
