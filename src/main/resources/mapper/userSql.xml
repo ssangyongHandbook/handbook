@@ -66,5 +66,11 @@
 	</select>
 	
 	<!-- 여기 위까지는 김희수가 구현함. -->
+	
+	<!-- 예지 -->
+	<!-- 이름에 해당하는 사용자 출력 -->
+	<select id="getUserByName" parameterType="String" resultType="UserDto">
+		select * from user where user_name like concat('%',#{user_name},'%')
+	</select>
 
 </mapper>

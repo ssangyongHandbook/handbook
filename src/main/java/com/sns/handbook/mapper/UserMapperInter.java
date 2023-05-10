@@ -33,4 +33,6 @@ public interface UserMapperInter {
 	public int loginEmailCheck(String user_email);
 	//이 위 김희수 구현 
 
+	//예지
+	public List<UserDto> getUserByName(String user_name);
 }

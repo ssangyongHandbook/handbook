@@ -184,4 +184,13 @@ public class MessageController {
 		mservice.deleteMessage(mess_num);
 	}
 	
+	@GetMapping("/message/searchuser")
+	@ResponseBody
+	public List<UserDto> searchUser(String user_name)
+	{
+		List<UserDto> list=uservice.getUserByName(user_name);
+		
+		return list;
+	}
+	
 }

@@ -66,6 +66,7 @@
 		line-height: 40px;
 		text-align: center;
 		margin-left: 10px;
+		cursor: pointer;
 	}
 	
 	.messagesearch{
@@ -302,6 +303,18 @@
 	.chatupload span{
 		cursor: pointer;
 	}
+	
+	span.msgaddname{
+		margin-left: 15px;
+	}
+	
+	input.msgaddname{
+		margin-left: 10px;
+		width: 50%;
+		outline: none;
+		border: none;
+		background: none;
+	}
 </style>
 
 <script type="text/javascript">
@@ -368,8 +381,37 @@
 			$(".chatupload input").trigger("click");
 		})
 		
+		//채팅방 추가(받는 사람 입력창 띄우기)
+		$(".msgadd").click(function(){
+			s="<span class='msgaddname'>받는 사람:</span><input type='text' class='msgaddname'>"
+			$(".chatinfo").html(s);
+		})
+		
+		//->채팅방 추가에서 받는 사람 입력창 이벤트
+		$(document).on('keyup','input.msgaddname',function(e){
+			if(e.keyCode==13){
+				var addName=$(this).val(); //추가할 상대 이름
+				
+				$.ajax({
+					type:"get",
+					dataType:"json",
+					data:{"user_name":addName},
+					url:"searchuser",
+					success:function(res){
+						var test="";
+						$.each(res,function(i,ele){
+							test+="아이디: "+ele.user_id;
+						})
+						alert(test);
+					}
+				})
+			}
+		})
+		
 	})
 	
+	
+	//상대방과 해던 채팅 가져오기
 	function getChatting(group,scrollPos) {	
 		
 		if('${recentgroup}'==0){
@@ -412,6 +454,7 @@
 		})
 	}
 	
+	//반응형 웹사이트
 	function listWidthChange() {
 		var windowWidth = $( window ).width();
 		var windowHeight = $( window ).height();
@@ -438,9 +481,9 @@
 		$(".chatlist").css("height",chatHeight+"px");
 	}
 	
-	var other_name='';
+	var other_name=''; //메신저 검색에 입력되는 사용자 이름(저장변수)
 	
-	//chatMember -> [[member_photo,member_name,content,writeday],[...],...]
+	//나와 채팅했던 사용자 목록 출력
 	function memberListOut() {
 		
 		if('${recentgroup}'==0){
@@ -522,6 +565,7 @@
 	
 	var ws;
 	 
+	//웹소켓 오픈
     function wsOpen(){
         ws = new WebSocket("ws://" + location.host + "/chating");
         wsEvt();
@@ -568,6 +612,7 @@
             }
         }
  
+        //채팅 입력창에서 엔터 누르면 채팅 보내짐
         $("#chatting").keyup(function(e){
             if(e.keyCode == 13){ //enter press
             	if($("#chatting").val()!=''){
@@ -577,25 +622,12 @@
         });
     }
  
-    function chatName(){
-        var userName = $("#userName").val();
-        if(userName == null || userName.trim() == ""){
-            alert("사용자 이름을 입력해주세요.");
-            $("#userName").focus();
-        }else{
-            wsOpen();
-            $("#yourName").hide();
-            $("#yourMsg").show();
-        }
-    }
- 
+    //메시지 보내면 동작하는 코드
     function send() {
         var myid = '${sessionScope.myid}';
         var msg = $("#chatting").val();
         ws.send(myid+" : "+msg+" : "+$("#receivernum").val()+" : "+$("#chatgroup").val());
         $('#chatting').val("");
-        /* $("#chatShow").append("<div class='msgright msgone'><div class='msgdel' del="+ele.mess_num+">삭제</div><div class='messageright messagebubble'>" + msg + "</div></div>");
-        $(".chatlist").scrollTop($(".chatlist")[0].scrollHeight); //스크롤 맨 아래로 내리기 */
         var group=$("#chatgroup").val();
         getChatting(group);
         memberListOut(); //멤버 리스트 다시 불러오기
@@ -612,7 +644,7 @@
 					<div class="mmlbtn">
 						<span class="glyphicon glyphicon-option-horizontal"></span>
 					</div>
-					<div class="mmlbtn">
+					<div class="mmlbtn msgadd">
 						<span class="glyphicon glyphicon-edit"></span>
 					</div>
 				</div>
@@ -628,24 +660,28 @@
 	
 	<div class="messagechatlist">
 		<div class="chatinfo">
-			<div class="chatinfophoto">
-				<c:if test="${otherInfo.user_photo==null }">
-					<img alt="" src="/image/noimg.png">
-				</c:if>
-				<c:if test="${otherInfo.user_photo!=null }">
-					<img alt="" src="/photo/${otherInfo.user_photo }">
-				</c:if>
-			</div>
+			<c:if test="${recentgroup!=0 }">
+				<div class="chatinfophoto">
+					<c:if test="${otherInfo.user_photo==null }">
+						<img alt="" src="/image/noimg.png">
+					</c:if>
+					<c:if test="${otherInfo.user_photo!=null }">
+						<img alt="" src="/photo/${otherInfo.user_photo }">
+					</c:if>
+				</div>
 			<span member_id="${otherInfo.user_id }">${otherInfo.user_name }</span>
+			</c:if>
 		</div>
 		<div class="chatlist">
 			<div class="chatlistinfo">
-				<div>
-					<img alt="상대방 사진" src="">
-				</div>
-				<span class="chatlistinfoname"></span>
-				<span class="chatlistinfoid"></span>
-				<p class="chatlistinfofollow"></p>
+				<c:if test="${recentgroup!=0 }">
+					<div>
+						<img alt="상대방 사진" src="">
+					</div>
+					<span class="chatlistinfoname"></span>
+					<span class="chatlistinfoid"></span>
+					<p class="chatlistinfofollow"></p>
+				</c:if>
 			</div>
 		    <div id="chatShow" class="chatShow">
 		    	<!-- 채팅 보이는 구간 -->

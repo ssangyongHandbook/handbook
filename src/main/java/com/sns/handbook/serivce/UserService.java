@@ -106,4 +106,11 @@ public class UserService implements UserServiceInter {
 		return mapperInter.loginEmailCheck(user_email);
 	}
 	// 이 위 김희수
+
+	//예지
+	@Override
+	public List<UserDto> getUserByName(String user_name) {
+		// TODO Auto-generated method stub
+		return mapperInter.getUserByName(user_name);
+	}
 }
