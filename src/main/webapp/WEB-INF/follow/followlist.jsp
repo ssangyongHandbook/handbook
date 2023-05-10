@@ -111,6 +111,11 @@
 </style>
 </head>
 <body>
+	<div style = "border: 1px solid gray; display: inline-flex; justify-content: center; width: 900px; flex-direction: column; margin-top: 15px; ">
+	<div style="display: inline-flex; align-items: center; justify-content: space-between; margin-top: 10px;">
+	<span style="margin-left:30px; margin-bottom: 20px; font-size: 18pt; font-weight: bold;">친구</span>
+	<input type="text" style="height: 30px; margin-right: 15px;">
+	</div>
 	<section class = "section">
 		<c:forEach var = "dto" items = "${list }">
 			<div class="userbox">
@@ -148,6 +153,7 @@
 		
 		
 	</section>
+	</div>
 	<script type="text/javascript">
 		
 		offset = ${offset};
