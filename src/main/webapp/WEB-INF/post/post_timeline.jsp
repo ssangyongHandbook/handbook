@@ -7,16 +7,16 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://kit.fontawesome.com/2663817d27.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
 
 <script type="text/javascript">
 	$(function() {
@@ -80,6 +80,13 @@
 			$("#" + divpost_num).show();
 
 			$("#" + divspost_num).hide();
+
+		});
+
+		$(document).on("click", ".userimg", function() {
+			var num = $(this).attr("user_num");
+
+			location.href = "/user/mypage?user_num=" + num;
 
 		});
 
@@ -245,88 +252,16 @@
 	});
 </script>
 
-<style type="text/css">
-.divmain {
-	/* 예지가 width값 고침 */
-	max-width: 650px;
-	min-width: 550px;
-	margin-left: 10%;
-	height: 700px;
-	border: 1px solid gray;
-}
 
-.top {
-	width: 100%;
-	height: 15%;
-}
-
-.top-left {
-	float: left;
-	width: 50%;
-	height: 100%;
-	border: 1px solid red;
-}
-
-.top-right {
-	text-align: right;
-	float: right;
-	width: 50%;
-	height: 100%;
-	border: 1px solid green;
-}
-
-.center {
-	width: 100%;
-	height: 80%;
-	border: 1px solid green;
-}
-
-.center-up {
-	width: 100%;
-	height: 30%;
-}
-
-.center-down {
-	text-align: center;
-	width: 100%;
-	height: 70%;
-	border: 1px solid green;
-}
-
-.bottom {
-	width: 100%;
-	height: 5%;
-}
-
-.bottom-left {
-	text-align: center;
-	font-size: 1.2em;
-	float: left;
-	width: 50%;
-	height: 100%;
-}
-
-.bottom-right {
-	text-align: center;
-	font-size: 1.2em;
-	float: right;
-	width: 50%;
-	height: 100%;
-}
-
-.img {
-	text-align: center;
-	width: 20%;
-	height: 100%;
-}
-</style>
-</script>
 
 <style type="text/css">
+body {
+	background-color: #F0F2F5;
+}
+
 .allmain {
 	width: 1000px;
-	margin: auto;
-	border: 1px solid yellow;
+	background-color: #F0F2F5;
 }
 
 .divmain {
@@ -334,7 +269,8 @@
 	max-width: 750px;
 	min-width: 650px;
 	height: 700px;
-	border: 1px solid gray;
+	border-radius: 10px 10px;
+	background-color: white;
 }
 
 .top {
@@ -346,7 +282,6 @@
 	float: left;
 	width: 50%;
 	height: 100%;
-	border: 1px solid red;
 }
 
 .top-right {
@@ -354,13 +289,11 @@
 	float: right;
 	width: 50%;
 	height: 100%;
-	border: 1px solid green;
 }
 
 .center {
 	width: 100%;
 	height: 85%;
-	border: 1px solid green;
 }
 
 .center-up {
@@ -372,7 +305,6 @@
 	text-align: center;
 	width: 100%;
 	height: 80%;
-	border: 1px solid green;
 }
 
 .bottom {
@@ -396,7 +328,7 @@
 	height: 100%;
 }
 
-.img {
+.fileimg {
 	text-align: center;
 	width: 20%;
 	height: 100%;
@@ -408,8 +340,8 @@
 	max-width: 750px;
 	min-width: 550px;
 	height: 400px;
-	border: 1px solid gray;
-	height: 400px;
+	border-radius: 10px 10px;
+	background-color: white;
 }
 
 .top2 {
@@ -421,7 +353,6 @@
 	float: left;
 	width: 50%;
 	height: 100%;
-	border: 1px solid red;
 }
 
 .top-right2 {
@@ -429,13 +360,11 @@
 	float: right;
 	width: 50%;
 	height: 100%;
-	border: 1px solid green;
 }
 
 .center2 {
 	width: 100%;
 	height: 77%;
-	border: 1px solid green;
 }
 
 .center-up2 {
@@ -471,6 +400,55 @@
 .postdetail:hover {
 	text-decoration: underline;
 }
+
+.userimg {
+	cursor: pointer;
+	width: 40px;
+	height: 40px;
+	border: 1px solid gray;
+	border-radius: 20px;
+	margin:10px;
+}
+
+.contentmodal {
+	/* background: #F0F2F5; */
+	border-radius: 60px;
+	margin: 0 auto;
+	max-width: 750px;
+	min-width: 550px;
+}
+#writeinput{
+width:100%;
+border-radius: 30px;
+text-align: left;
+outline: none;
+border: none;
+font-size: 15pt;
+}
+
+#coverinput{
+background: white;
+height:65px;
+width:100%;
+border-radius: 10px;
+padding: 1.5%;
+padding-top: 2%;
+}
+
+
+.writeimg{
+width: 35px;
+height: 35px;
+border: 1px solid gray;
+border-radius: 20px;
+}
+.postimg{
+width: 35px;
+height: 35px;
+border: 1px solid gray;
+border-radius: 20px;
+
+}
 </style>
 </head>
 
@@ -481,12 +459,27 @@
 	<c:set var="root" value="<%=request.getContextPath()%>" />
 
 	<div class="allmain">
-		<!-- Trigger the modal with a button -->
-		<button type="button" class="btn btn-info btn-lg" data-toggle="modal"
-			data-target="#myModal">글쓰기</button>
+		<br>
+<!-- writemodal -->
 
+		<div class="contentmodal">
+		<div id="coverinput" >
+		<div >
+		<span style="float: left; width:8%; top:50%;">
+		<img  src="${root }/photo/${user_photo}" class="writeimg">
+		</span>
+<span style="float: right; width:92%">
+		<input type="button" data-toggle="modal" data-target="#contentwrite"
+				name="contentwirte"  id="writeinput"
+				value="무슨 생각을 하고 계신가요?">
+</span>	
+		</div>
+		</div>
+		</div>
+		
+		<br> 
 		<!-- Modal -->
-		<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal fade" id="contentwrite" role="dialog">
 			<div class="modal-dialog">
 
 				<!-- Modal content-->
@@ -598,8 +591,8 @@
 					<div class="divmain" id="div${dto.post_num }">
 						<div class="top">
 							<div class="top-left">
-								<img alt="" src="${root }/photo/${dto.user_photo}"
-									style="width: 40px; height: 40px; border-radius: 20px; margin: 10px;">
+								<img  src="${root }/photo/${dto.user_photo}"  
+									class="userimg" user_num="${dto.user_num }">
 								<b>${dto.user_name }${dto.post_access }</b> <span>${dto.post_time }</span>
 							</div>
 							<span class="top-right"> <span
@@ -640,13 +633,16 @@
 									</c:if>
 							</span>
 							</span>
+							
 						</div>
+						
 						<div class="center">
+						
 							<div class="center-up">${dto.post_content }</div>
 
 							<div class="center-down">
 
-								<img src="/post_file/${dto.post_file }" class="img">
+								<img src="/post_file/${dto.post_file }" class="fileimg">
 							</div>
 						</div>
 						<div class="bottom">
@@ -669,6 +665,7 @@
 								class="glyphicon glyphicon-comment"
 								style="font-size: 1.2em; top: 3px; color: gray;"
 								post_num="${dto.post_num }"></span>&nbsp;댓글</span>
+								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 						</div>
 
 					</div>
@@ -686,8 +683,8 @@
 					<div class="divmain2" id="div${dto.post_num }">
 						<div class="top2">
 							<div class="top-left">
-								<img alt="" src="${root }/photo/${dto.user_photo}"
-									style="width: 40px; height: 40px; border-radius: 20px; margin: 10px;">
+								<img src="${root }/photo/${dto.user_photo}"
+									class="userimg" user_num="${dto.user_num }">
 								<b>${dto.user_name }${dto.post_access }<span>${dto.post_time }</span>
 								</b>
 							</div>
@@ -735,6 +732,7 @@
 							<div class="center-up2">${dto.post_content }</div>
 
 						</div>
+						<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 						<div class="bottom2">
 							<c:if test="${dto.likecheck ==0 }">
 								<span class="bottom-left2" style="cursor: pointer" id="like"
@@ -751,10 +749,12 @@
 									style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
 									${dto.like_count}</span>
 							</c:if>
+							
 							<span class="bottom-right2"><span
 								class="glyphicon glyphicon-comment"
 								style="font-size: 1.2em; top: 3px; color: gray;"
 								post_num="${dto.post_num }"></span>&nbsp;댓글</span>
+								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 						</div>
 
 					</div>
