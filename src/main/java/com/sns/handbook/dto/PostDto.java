@@ -28,4 +28,5 @@ public class PostDto {
 	private String post_time;
 	private int checklogin;
 	private int checkfollowing;
+
 }
