@@ -9,7 +9,6 @@ import lombok.Data;
 @Data
 @Alias("UserDto")
 public class UserDto {
-
 	private String user_num;
 	private String user_id ;
 	private String user_pass;

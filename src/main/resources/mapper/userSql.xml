@@ -69,6 +69,16 @@
 		select count(*) from user where user_email=#{user_email}
 	</select>
 	
+	<!-- user_email 넘기면 user_num 반환 -->
+	<select id="getUserIdByEmail" parameterType="String" resultType="String">
+		select user_num from user where user_email=#{user_email}
+	</select>
+	
+	<!-- 비밀번호 업데이트 -->
+	<update id="updatePassword" parameterType="Map">
+		update user set user_pass = #{user_pass} where user_num=#{user_num}
+	</update>
+	
 	<!-- 여기 위까지는 김희수가 구현함. -->
 
 </mapper>
