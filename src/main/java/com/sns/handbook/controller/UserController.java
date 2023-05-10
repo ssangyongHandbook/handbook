@@ -212,8 +212,10 @@ public class UserController {
 	        //콤마 제거
 	        uploadName = uploadName.substring(0, uploadName.length() - 1);
 	    }
+	      
 	    dto.setPost_file(uploadName);
 	    pservice.insertPost(dto);
+	    
 	}
 	
 	//프로필 업데이트
@@ -228,7 +230,7 @@ public class UserController {
 	//게시물 삭제
 	@ResponseBody
 	@GetMapping("/user/deletepost")
-	public void deletepost(int post_num)
+	public void deletepost(String post_num)
 	{
 		pservice.deletePost(post_num);
 	}

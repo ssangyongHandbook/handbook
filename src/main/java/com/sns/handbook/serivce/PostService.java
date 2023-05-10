@@ -43,7 +43,7 @@ public class PostService implements PostServiceInter {
 
 
 	@Override
-	public void deletePost(int post_num) {
+	public void deletePost(String post_num) {
 		// TODO Auto-generated method stub
 		pmapperInter.deletePost(post_num);
 	}

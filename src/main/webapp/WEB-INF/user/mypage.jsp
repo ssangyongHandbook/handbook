@@ -14,8 +14,23 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
 <script type="text/javascript">
 	$(function(){
+		
+		$(document).ready(function() {
+		    $('#slider').slick({
+		        autoplay: false,         // 자동 재생 여부
+		        autoplaySpeed: 0,    // 자동 재생 속도 (단위: ms)
+		        dots: false,             // 점 네비게이션 표시 여부
+		        arrows: true,           // 화살표 네비게이션 표시 여부
+		        infinite: false,         // 무한 슬라이드 여부
+		        slidesToShow: 1,        // 한 화면에 보여줄 슬라이드 수
+		        slidesToScroll: 1       // 한 번에 스크롤할 슬라이드 수
+		    });
+		});
 		
 		//강제 호출
 		$("#btnnewcover").click(function(){
@@ -193,11 +208,13 @@
 			var post_access = $("#post_access").val();
 			var post_content = $("#post_content").val();
 			var num="${loginnum}";
+			var files = $("#contentphoto")[0].files;
 			
 			var form = new FormData();
 			
-			for (var i = 0; i < $("#contentphoto")[0].files.length; i++) { 
-				form.append("photo", $("#contentphoto")[0].files[i]);
+			
+		    for (var i = 0; i < files.length; i++) {
+		        form.append("photo", files[i]);
 		    }
 			
 			form.append("post_access", post_access);
@@ -223,7 +240,6 @@
 		$(".delpost").click(function(){
 			
 			var post_num=$(this).attr("post_num");
-			
 			$.ajax({
 				
 				type: "get",
@@ -444,6 +460,15 @@
 			border: 1px solid gray;
 		}
 		
+		.slick-prev{
+			background-color: white;
+		}
+		
+		.slick-next{
+			background-color: white;
+			float: right;
+		}
+		
 </style>
 </head>
 <body>
@@ -641,7 +666,9 @@
 							<div class="galary-photoall">
 								<c:forEach var="pdto" items="${postlist }" varStatus="i">
 									<c:if test="${i.count <= 9 && pdto.post_file!='no'}">
-										<img  class="galary-photo" src="${root }/post_file/${pdto.post_file }">
+										<c:forTokens items="${pdto.post_file }" delims="," var="file">
+											<img  class="galary-photo" src="${root }/post_file/${file }">
+										</c:forTokens>
 									</c:if>
 								</c:forEach>
 							</div>
@@ -736,8 +763,10 @@
 									<div class="center">
 										<div class="center-up">${pdto.post_content }</div>
 											<c:if test="${pdto.post_file!='no' }">
-												<div class="center-down" >
-													<img src="/post_file/${pdto.post_file }" style="width: 100%;height: 500px;">
+												<div class="center-down" id="slider">
+													<c:forTokens items="${pdto.post_file }" delims="," var="file">
+														<img src="/post_file/${file }" style="width: 100%;height: 500px;">
+													</c:forTokens>
 												</div>
 											</c:if>
 									</div>
