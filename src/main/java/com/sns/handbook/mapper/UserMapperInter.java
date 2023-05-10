@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.sns.handbook.dto.FollowingDto;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.UserDto;
 
@@ -24,14 +25,16 @@ public interface UserMapperInter {
 	public void updatePhoto(Map<String, String> map);
 	public List<PostDto> getPost(String user_num);
 	public void updateUserInfo(UserDto dto);
+	public List<FollowingDto> getFollowList(Map<String, Object> map);
 	//우형 끝
 	
-	//이 아래 김희수 구현
+	//희수 시작
 	public void insertUserInfo(UserDto dto);
-
 	public UserDto getUserDtoById(String user_id);
 	public int loginEmailCheck(String user_email);
-	//이 위 김희수 구현 
+	public String getUserIdByEmail(String user_email);
+	public void updatePassword(Map<String, String> map);
+	//희수 끝
 
 	//예지
 	public List<UserDto> getUserByName(String user_name);

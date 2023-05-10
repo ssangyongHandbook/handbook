@@ -5,8 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import com.sns.handbook.dto.FollowingDto;
+import com.sns.handbook.dto.MailDto;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.UserDto;
 import com.sns.handbook.mapper.UserMapperInter;
@@ -14,6 +18,9 @@ import com.sns.handbook.mapper.UserMapperInter;
 @Service
 public class UserService implements UserServiceInter {
 
+	@Autowired
+	private JavaMailSender mailSender;
+	
 	@Autowired
 	UserMapperInter mapperInter;
 
@@ -86,9 +93,21 @@ public class UserService implements UserServiceInter {
 		mapperInter.updateUserInfo(dto);
 	}
 
-	// 우형 끝
-
-	// 이 아래 김희수
+	
+	@Override
+	public List<FollowingDto> getFollowList(String from_user, int offset) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("from_user", from_user);
+		map.put("offset", offset);
+		
+		
+		return mapperInter.getFollowList(map);
+	}
+	//우형 끝	
+	
+	//희수 시작
 	@Override
 	public void insertUserInfo(UserDto dto) {
 		mapperInter.insertUserInfo(dto);
@@ -96,16 +115,68 @@ public class UserService implements UserServiceInter {
 
 	@Override
 	public UserDto getUserDtoById(String user_id) {
-		// TODO Auto-generated method stub
 		return mapperInter.getUserDtoById(user_id);
 	}
 
 	@Override
 	public int loginEmailCheck(String user_email) {
-		// TODO Auto-generated method stub
 		return mapperInter.loginEmailCheck(user_email);
+	}	
+	
+	@Override
+	public MailDto createMailAndChangePassword(String memberEmail) {
+		String temporaryPass = getTempPassword();
+        MailDto dto = new MailDto();
+        dto.setAddress(memberEmail);
+        dto.setTitle("Handbook 임시비밀번호 안내 이메일 입니다.");
+        dto.setMessage("안녕하세요. Handbook 임시비밀번호 안내 관련 이메일 입니다." + " 회원님의 임시 비밀번호는 "
+                + temporaryPass + " 입니다." + "로그인 후에 비밀번호를 변경을 해주세요");
+        String user_num = getUserIdByEmail(memberEmail);
+        updatePassword(user_num, temporaryPass);
+        return dto;
 	}
-	// 이 위 김희수
+	
+	@Override
+	public void updatePassword(String user_num, String user_pass) {
+		Map<String, String> map = new HashMap<>();
+        map.put("user_pass", user_pass);
+        map.put("user_num", user_num);
+		mapperInter.updatePassword(map);
+	}
+	
+	@Override
+	public String getTempPassword() {
+		char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+                'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+        String str = "";
+
+        // 문자 배열 길이의 값을 랜덤으로 10개를 뽑아 구문을 작성함
+        int idx = 0;
+        for (int i = 0; i < 10; i++) {
+            idx = (int) (charSet.length * Math.random());
+            str += charSet[idx];
+        }
+        return str;
+	}
+
+	@Override
+	public void mailSend(MailDto mailDto) {
+		//System.out.println("전송 완료!");
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(mailDto.getAddress());
+        message.setSubject(mailDto.getTitle());
+        message.setText(mailDto.getMessage());
+        message.setFrom("handbookspring@gmail.com");
+        message.setReplyTo("handbookspring@gmail.com");
+        //System.out.println("message"+message);
+        mailSender.send(message);
+	}
+
+	@Override
+	public String getUserIdByEmail(String user_email) {
+		return mapperInter.getUserIdByEmail(user_email);
+	}
+	// 희수 끝
 
 	//예지
 	@Override

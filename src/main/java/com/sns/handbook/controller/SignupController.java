@@ -19,7 +19,7 @@ public class SignupController {
 
 	@GetMapping("/signupform")
 	public String signupform() {
-		return "/login/signup";
+		return "/sub/login/signup";
 	}
 
 	@PostMapping("/signupprocess")

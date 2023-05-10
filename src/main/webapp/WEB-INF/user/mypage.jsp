@@ -213,6 +213,24 @@
 				}
 			});
 		});
+		
+		//게시물 삭제
+		$(".delpost").click(function(){
+			
+			var post_num=$(this).attr("post_num");
+			
+			$.ajax({
+				
+				type: "get",
+				dataType: "text",
+				data: {"post_num":post_num},
+				url: "deletepost",
+				success: function(){
+					
+					location.reload();
+				}
+			});
+		})
 
 	})
 </script>
@@ -263,7 +281,7 @@
 		
 		.friend{
 			width: 98%;
-			height: 500px;
+			height: 700px;
 			background-color: white;
 			border-radius: 10px 10px;
 			margin: 10px;
@@ -289,6 +307,7 @@
 		.left{
 			width: 38%;
 			float: left;
+			
 		}
 		
 		.right{
@@ -376,6 +395,13 @@
 			flex-wrap: wrap;
 		}
 		
+		.friend-photo{
+			width: 160px;
+			height: 160px;
+			border-radius: 10px;
+			border: 1px solid gray;
+		}
+		
 </style>
 </head>
 <body>
@@ -383,9 +409,7 @@
 
 
 
-<c:forEach var="dto" items="${list }">
-
-	<c:if test="${sessionScope.loginok!=null && sessionScope.myid==dto.user_id }">
+	
 	
 		<div class="container">
 		  <!-- Modal -->
@@ -507,20 +531,24 @@
 						<input type="file" id="newcover" style="display: none;" num="${dto.user_num }">
 						
 						<!-- 수정 시 호출 -->
-						<button type="button" id="btnnewcover" >
-							<img style="width: 30px; height: 30px;" alt="" src="${root }/image/camera.png">커버 사진 추가
-						</button>
+						<c:if test="${sessionScope.user_num==dto.user_num }">
+							<button type="button" id="btnnewcover" >
+								<img style="width: 30px; height: 30px;" alt="" src="${root }/image/camera.png">커버 사진 추가
+							</button>
+						</c:if>
 			</div>
 			
 			<div class="profile">                         
 				<div class="dropdown" style="width: 0%; height: 82%; position: relative; left: 10%;">
 				
 					<input type="file" id="newphoto" style="display: none;" num="${dto.user_num }">
-					  
-					    <ul class="dropdown-menu">
-					      <li><a href="${root }/photo/${sessionScope.user_photo}">프로필 사진 보기</a></li>
-					      <li><a href="#" id="btnnewphoto">프로필 사진 업데이트</a></li>
-					    </ul>
+								
+						    <ul class="dropdown-menu">
+						      <li><a href="${root }/photo/${sessionScope.user_photo}">프로필 사진 보기</a></li>
+						      <c:if test="${sessionScope.user_num==dto.user_num }">  
+						      	<li><a href="#" id="btnnewphoto">프로필 사진 업데이트</a></li>
+						       </c:if>
+						    </ul>			    
 					     
 						<c:if test="${sessionScope.loginok!=null && dto.user_photo!=null }">
 					    <img data-toggle="dropdown" alt="" src="${root }/photo/${dto.user_photo}" 
@@ -537,9 +565,11 @@
 					  
 				</div>
 				
-				<button type="button" class="btnprofile" data-toggle="modal" data-target="#infoupdate" style="border-radius: 5px; border: none;">
-					<img alt="" src="${root }/image/pencil.png" style="width: 30px; height: 30px;">프로필 편집
-				</button>
+				<c:if test="${sessionScope.user_num==dto.user_num }">
+					<button type="button" class="btnprofile" data-toggle="modal" data-target="#infoupdate" style="border-radius: 5px; border: none;">
+						<img alt="" src="${root }/image/pencil.png" style="width: 30px; height: 30px;">프로필 편집
+					</button>
+				</c:if>
 			</div>
 			
 			<div class="menu">
@@ -569,7 +599,7 @@
 						<b style="font-size: 16pt;">사진</b>
 							<div class="galary-photoall">
 								<c:forEach var="pdto" items="${postlist }" varStatus="i">
-									<c:if test="${i.count <= 9}">
+									<c:if test="${i.count <= 9 && pdto.post_file!='no'}">
 										<img  class="galary-photo" src="${root }/post_file/${pdto.post_file }">
 									</c:if>
 								</c:forEach>
@@ -578,12 +608,26 @@
 					
 					<div class="friend">
 						<b style="font-size: 16pt;">친구</b><br>
-						${togetherFollowcount}
+						친구 ${followcount }명
 							<div class="friend-photoall">
-								
+								<c:forEach var="fdto" items="${tflist }" varStatus="i">
+									<div style="margin: 1% 1% 0.25% 1%;">
+										<div>							
+											<c:if test="${ fdto.user_photo!=null }">
+												<img  class="friend-photo" src="${root }/photo/${fdto.user_photo}">
+											</c:if>
+											<c:if test="${fdto.user_photo==null }">
+												<img  class="friend-photo" src="${root }/image/noprofile.png">
+											</c:if>
+											<div>
+												<span><b>${fdto.user_name }</b></span><br>
+												<span>함께 아는 친구 ${fdto.tf_count }명</span>
+											</div>
+										</div>
+									</div>
+								</c:forEach>
 							</div>
 					</div>
-				 	
 				</div>
 				
 				<div class="right">
@@ -594,10 +638,19 @@
 							<img alt="" src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
 							&nbsp;&nbsp;&nbsp;
 							
-							<div style="background-color: #F0F2F5; border-radius: 60px; padding-left: 2%">
-								<input type = "button" data-toggle="modal" data-target="#contentwrite" name = "searchword" 
-								style = "width:700px; border: none; text-align:left; background: none; outline: none; font-size: 15pt; padding: 10px;" value="무슨 생각을 하고 계신가요?">
-							</div>
+							<c:if test="${sessionScope.user_num==dto.user_num }">  
+								<div style="background-color: #F0F2F5; border-radius: 60px; padding-left: 2%">
+									<input type = "button" data-toggle="modal" data-target="#contentwrite" name = "contentwirte" 
+									style = "width:700px; border: none; text-align:left; background: none; outline: none; font-size: 15pt; padding: 10px;" value="무슨 생각을 하고 계신가요?">
+								</div>
+							</c:if>
+							
+							<c:if test="${sessionScope.user_num!=dto.user_num }">  
+								<div style="background-color: #F0F2F5; border-radius: 60px; padding-left: 2%">
+									<input type = "button" data-toggle="modal" data-target="#contentwrite" name = "contentwirte" 
+									style = "width:700px; border: none; text-align:left; background: none; outline: none; font-size: 15pt; padding: 10px;" value="${dto.user_name } 님에게 글을 남겨보세요...">
+								</div>
+							</c:if>
 							
 							</div>	
 						</div> 
@@ -613,22 +666,25 @@
 													<span><b>${dto.user_name }${pdto.post_access }</b></span>
 													<span>${pdto.post_writeday }</span>		
 												</div>
-												<div class="dropdown" style="margin-left: 70%;">
-													<img src="${root }/image/menu.png" data-toggle="dropdown" style="width:50px; height: 50px; cursor: pointer;">
-													
-													<ul class="dropdown-menu dropdown-menu-right">
-												      <li><a href="#">게시글 삭제</a></li>
-												    </ul>
-												</div>
+												<c:if test="${sessionScope.user_num==dto.user_num }">
+													<div class="dropdown" style="margin-left: 70%;">
+														<img src="${root }/image/menu.png" data-toggle="dropdown" style="width:50px; height: 50px; cursor: pointer;">
+														
+														<ul class="dropdown-menu dropdown-menu-right">
+													      <li><a href="#" class="delpost" post_num=${pdto.post_num }>게시글 삭제</a></li>
+													    </ul>
+													</div>
+												</c:if>
 										</div>
 									</div>
 
 									<div class="center">
 										<div class="center-up">${pdto.post_content }</div>
-
-										<div class="center-down" >
-											<img src="/post_file/${pdto.post_file }" style="width: 100%;height: 500px;">
-										</div>
+											<c:if test="${pdto.post_file!='no' }">
+												<div class="center-down" >
+													<img src="/post_file/${pdto.post_file }" style="width: 100%;height: 500px;">
+												</div>
+											</c:if>
 									</div>
 
 									<div class="bottom">
@@ -651,7 +707,7 @@
 																<img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
 															</div>
 															<div style="background-color: #F0F2F5; border-radius: 60px; display: inline-flex; align-items: center; padding-left: 2%"> 
-																	<input type="text" name="searchword" style="width: 700px; border: none; background: none; outline: none; font-size: 15pt; padding: 10px;"
+																	<input type="text" name="commentwrite" style="width: 700px; border: none; background: none; outline: none; font-size: 15pt; padding: 10px;"
 																	placeholder="댓글을 입력하세요...">
 																	<img alt="" src="${root }/image/submit.png" style="width: 30px; height: 30px; margin-right: 3%;">
 															</div>
@@ -667,7 +723,6 @@
 			</div>
 			
 		</div>
-	</c:if>
-</c:forEach>
+
 </body>
 </html>

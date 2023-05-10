@@ -8,6 +8,7 @@ import org.apache.catalina.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sns.handbook.dto.FollowingDto;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.mapper.PostMapperInter;
 
@@ -30,19 +31,19 @@ public class PostService implements PostServiceInter {
 	}
 
 	@Override
-	public List<PostDto> postList(String searchcolumn, String searchword,int offset) { //파라미터값 변경
+	public List<PostDto> postList(String searchcolumn, String searchword, int offset) { // 파라미터값 변경
 		// TODO Auto-generated method stub
-		Map<String, Object> map=new HashMap<>();
-		
+		Map<String, Object> map = new HashMap<>();
+
 		map.put("searchcolumn", searchcolumn);
 		map.put("searchword", searchword);
 		map.put("offset", offset);
-		
+
 		return pmapperInter.postList(map);
 	}
 
 	@Override
-	public void deletePost(int post_num) {
+	public void deletePost(String post_num) {
 		// TODO Auto-generated method stub
 		pmapperInter.deletePost(post_num);
 	}
@@ -62,15 +63,25 @@ public class PostService implements PostServiceInter {
 	@Override
 	public void updatePhoto(String post_num, String post_file) {
 		// TODO Auto-generated method stub
-		
-		Map<String,String> map= new HashMap<>();
+
+		Map<String, String> map = new HashMap<>();
 		map.put("post_num", post_num);
 		map.put("post_file", post_file);
-		
-		pmapperInter.updatePhoto(map);
-		
-	}
-	
 
-	
+		pmapperInter.updatePhoto(map);
+
+	}
+
+	@Override
+	public int checklogin(String post_num, String user_num) {
+		// TODO Auto-generated method stub
+
+		Map<String, String> map = new HashMap<>();
+		map.put("post_num", post_num);
+		map.put("user_num", user_num);
+
+		return pmapperInter.checklogin(map);
+	}
+
+
 }
