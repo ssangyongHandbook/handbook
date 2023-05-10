@@ -62,32 +62,27 @@
 			$("#" + post_num).toggle();
 
 		});
-		
-		
+
 		$(document).on("click", ".posthide", function() {
-			var divpost_num=$(this).attr("divpost_num");
-			var divspost_num=$(this).attr("divspost_num")
-			
-			$("#"+divpost_num).hide();
-			
-			$("#"+divspost_num).show();
-			
-			
+			var divpost_num = $(this).attr("divpost_num");
+			var divspost_num = $(this).attr("divspost_num")
+
+			$("#" + divpost_num).hide();
+
+			$("#" + divspost_num).show();
+
 		});
-		
+
 		$(document).on("click", ".showbtn", function() {
-			var divpost_num=$(this).attr("divpost_num");
-			var divspost_num=$(this).attr("divspost_num")
-			
-			$("#"+divpost_num).show();
-			
-			$("#"+divspost_num).hide();
-			
-			
+			var divpost_num = $(this).attr("divpost_num");
+			var divspost_num = $(this).attr("divspost_num")
+
+			$("#" + divpost_num).show();
+
+			$("#" + divspost_num).hide();
+
 		});
-		
-		
-		
+
 		$(document).on("click", "#postdelete", function() {
 			delnum = $(this).attr("post_num");
 
@@ -123,7 +118,11 @@
 			})
 		})
 
-		$(document).on("click","#updatetbtn",function() {
+		$(document)
+				.on(
+						"click",
+						"#updatetbtn",
+						function() {
 
 							var update_access = $("#update_access").val();
 							var update_content = $("#update_content").val();
@@ -179,27 +178,25 @@
 				}
 			})
 		});
-		
+
 		$(document).on("click", "#postfollow", function() {
 			var from_user = $(this).attr("from_user");
 			var to_user = $(this).attr("to_user");
 
-			
 			$.ajax({
 				type : "get",
 				dataType : "text",
 				url : "followinginsert",
 				data : {
-					"from_user":from_user,
-					"to_user": to_user
+					"from_user" : from_user,
+					"to_user" : to_user
 				},
 				success : function() {
 					location.reload();
 				}
 			})
 		})
-		
-		
+
 		$(document).on("click", "#postunfollow", function() {
 			var to_user = $(this).attr("to_user");
 			$.ajax({
@@ -481,6 +478,8 @@
 
 <body>
 
+	<c:set var="root" value="<%=request.getContextPath()%>" />
+
 	<div class="allmain">
 		<!-- Trigger the modal with a button -->
 		<button type="button" class="btn btn-info btn-lg" data-toggle="modal"
@@ -493,24 +492,25 @@
 				<!-- Modal content-->
 				<form method="post" enctype="multipart/form-data" id="postInsert">
 
-					<input type="hidden" name="user_num" id="user_num" value="1">
+					<input type="hidden" name="user_num" id="user_num"
+						value="${sessionScope.user_num }">
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal">&times;</button>
 							<h4 class="modal-title">게시글 만들기</h4>
 						</div>
 						<div class="modal-body">
-							<div class="form-group" style="width: 150px;">
+							<div class="form-group" style="width: 500px;">
 								<img alt="" src="${root }/photo/${user_photo}"
 									style="width: 40px; height: 40px; border-radius: 20px;">
-								<div>${user_name }</div>
-								<br> <select class="form-control" name="post_access"
-									id="post_access">
-									<option value="all">전체공개</option>
-									<option value="follower">팔로워 공개</option>
-									<option value="onlyme">나만보기</option>
-								</select>
+								<span>${login_name}</span>
 							</div>
+							<br> <select class="form-control" name="post_access"
+								style="width: 150px;" id="post_access">
+								<option value="all">전체공개</option>
+								<option value="follower">팔로워 공개</option>
+								<option value="onlyme">나만보기</option>
+							</select>
 							<div class="form-group" style="width: 500px;">
 								<input type="file" name="post_file" class="form-control"
 									multiple="multiple" id="post_file">
@@ -591,7 +591,10 @@
 				<c:if test="${dto.post_file!='no' }">
 
 					<div class="shows" id="divs${dto.post_num }" style="display: none;">
-					<button type="button" class="showbtn" divpost_num="div${dto.post_num }"divspost_num="divs${dto.post_num }" >게시물 보기</button></div>
+						<button type="button" class="showbtn"
+							divpost_num="div${dto.post_num }"
+							divspost_num="divs${dto.post_num }">게시물 보기</button>
+					</div>
 					<div class="divmain" id="div${dto.post_num }">
 						<div class="top">
 							<div class="top-left">
@@ -601,7 +604,8 @@
 							</div>
 							<span class="top-right"> <span
 								class="glyphicon glyphicon-th-list postmenu"
-								post_num="${dto.post_num }" user_num="${sessionScope.user_num }" dtouser_num="${dto.user_num}"
+								post_num="${dto.post_num }" user_num="${sessionScope.user_num }"
+								dtouser_num="${dto.user_num}"
 								style="font-size: 1.3em; margin-right: 3%; color: gray;">
 									<c:if test="${dto.checklogin ==1 }">
 
@@ -616,17 +620,21 @@
 												user_num="${dto.user_num }" post_num="${dto.post_num }">게시물
 												삭제</li>
 										</ul>
-									</c:if> 
-									<c:if test="${dto.checklogin !=1 }">
+									</c:if> <c:if test="${dto.checklogin !=1 }">
 										<ul id="${dto.post_num }" class="postsubmenu"
 											style="font-size: 25pt; line-height: 1.5em; display: none;">
-											<li class="postdetail posthide" divpost_num="div${dto.post_num }"divspost_num="divs${dto.post_num }"  >게시물 숨김</li>
+											<li class="postdetail posthide"
+												divpost_num="div${dto.post_num }"
+												divspost_num="divs${dto.post_num }">게시물 숨김</li>
 											<!--  이부분 팔로일땐 팔로우하기 or 팔로우 하고 있을 땐 팔로우 끊기 -->
 											<c:if test="${dto.checkfollowing !=1 }">
-											<li class="postdetail" id="postfollow" from_user="${sessionScope.user_num }" to_user="${dto.user_num }">팔로우 하기</li>
+												<li class="postdetail" id="postfollow"
+													from_user="${sessionScope.user_num }"
+													to_user="${dto.user_num }">팔로우 하기</li>
 											</c:if>
 											<c:if test="${dto.checkfollowing ==1 }">
-											<li class="postdetail" id="postunfollow" to_user="${dto.user_num }">팔로우 끊기</li>
+												<li class="postdetail" id="postunfollow"
+													to_user="${dto.user_num }">팔로우 끊기</li>
 											</c:if>
 										</ul>
 									</c:if>
@@ -670,9 +678,12 @@
 
 				<!-- 파일이 없을 경우 -->
 				<c:if test="${dto.post_file=='no' }">
-					<div class="shows" id="divs${dto.post_num }"style="display: none;">
-					<button type="button" class="showbtn" divpost_num="div${dto.post_num }"divspost_num="divs${dto.post_num }" >게시물 보기</button></div>
-					<div class="divmain2" id="div${dto.post_num }" >
+					<div class="shows" id="divs${dto.post_num }" style="display: none;">
+						<button type="button" class="showbtn"
+							divpost_num="div${dto.post_num }"
+							divspost_num="divs${dto.post_num }">게시물 보기</button>
+					</div>
+					<div class="divmain2" id="div${dto.post_num }">
 						<div class="top2">
 							<div class="top-left">
 								<img alt="" src="${root }/photo/${dto.user_photo}"
@@ -682,7 +693,8 @@
 							</div>
 							<span class="top-right"> <span
 								class="glyphicon glyphicon-th-list postmenu"
-								post_num="${dto.post_num }" user_num="${sessionScope.user_num }"  dtouser_num="${dto.user_num}"
+								post_num="${dto.post_num }" user_num="${sessionScope.user_num }"
+								dtouser_num="${dto.user_num}"
 								style="font-size: 1.3em; margin-right: 3%; color: gray;">
 									<c:if test="${dto.checklogin ==1 }">
 
@@ -700,13 +712,18 @@
 									</c:if> <c:if test="${dto.checklogin !=1 }">
 										<ul id="${dto.post_num }" class="postsubmenu"
 											style="font-size: 25pt; line-height: 1.5em; display: none;">
-											<li class="postdetail posthide" divpost_num="div${dto.post_num }"divspost_num="divs${dto.post_num }"  >게시물 숨김</li>
+											<li class="postdetail posthide"
+												divpost_num="div${dto.post_num }"
+												divspost_num="divs${dto.post_num }">게시물 숨김</li>
 											<!--  이부분 팔로일땐 팔로우하기 or 팔로우 하고 있을 땐 팔로우 끊기 -->
 											<c:if test="${dto.checkfollowing !=1 }">
-											<li class="postdetail" id="postfollow"  from_user="${sessionScope.user_num }" to_user="${dto.user_num }">팔로우 하기</li>
+												<li class="postdetail" id="postfollow"
+													from_user="${sessionScope.user_num }"
+													to_user="${dto.user_num }">팔로우 하기</li>
 											</c:if>
 											<c:if test="${dto.checkfollowing ==1 }">
-											<li class="postdetail" id="postunfollow" to_user="${dto.user_num }">팔로우 끊기</li>
+												<li class="postdetail" id="postunfollow"
+													to_user="${dto.user_num }">팔로우 끊기</li>
 											</c:if>
 										</ul>
 									</c:if>

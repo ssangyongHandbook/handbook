@@ -153,7 +153,7 @@ public class UserController {
 	
 	@ResponseBody
 	@GetMapping("/user/deletepost")
-	public void deletepost(int post_num)
+	public void deletepost(String post_num)
 	{
 		pservice.deletePost(post_num);
 	}
