@@ -7,16 +7,16 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://kit.fontawesome.com/2663817d27.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
 
 <script type="text/javascript">
 	$(function() {
@@ -62,32 +62,34 @@
 			$("#" + post_num).toggle();
 
 		});
-		
-		
+
 		$(document).on("click", ".posthide", function() {
-			var divpost_num=$(this).attr("divpost_num");
-			var divspost_num=$(this).attr("divspost_num")
-			
-			$("#"+divpost_num).hide();
-			
-			$("#"+divspost_num).show();
-			
-			
+			var divpost_num = $(this).attr("divpost_num");
+			var divspost_num = $(this).attr("divspost_num")
+
+			$("#" + divpost_num).hide();
+
+			$("#" + divspost_num).show();
+
 		});
-		
+
 		$(document).on("click", ".showbtn", function() {
-			var divpost_num=$(this).attr("divpost_num");
-			var divspost_num=$(this).attr("divspost_num")
-			
-			$("#"+divpost_num).show();
-			
-			$("#"+divspost_num).hide();
-			
-			
+			var divpost_num = $(this).attr("divpost_num");
+			var divspost_num = $(this).attr("divspost_num")
+
+			$("#" + divpost_num).show();
+
+			$("#" + divspost_num).hide();
+
 		});
-		
-		
-		
+
+		$(document).on("click", ".userimg", function() {
+			var num = $(this).attr("user_num");
+
+			location.href = "/user/mypage?user_num=" + num;
+
+		});
+
 		$(document).on("click", "#postdelete", function() {
 			delnum = $(this).attr("post_num");
 
@@ -123,7 +125,11 @@
 			})
 		})
 
-		$(document).on("click","#updatetbtn",function() {
+		$(document)
+				.on(
+						"click",
+						"#updatetbtn",
+						function() {
 
 							var update_access = $("#update_access").val();
 							var update_content = $("#update_content").val();
@@ -179,27 +185,25 @@
 				}
 			})
 		});
-		
+
 		$(document).on("click", "#postfollow", function() {
 			var from_user = $(this).attr("from_user");
 			var to_user = $(this).attr("to_user");
 
-			
 			$.ajax({
 				type : "get",
 				dataType : "text",
 				url : "followinginsert",
 				data : {
-					"from_user":from_user,
-					"to_user": to_user
+					"from_user" : from_user,
+					"to_user" : to_user
 				},
 				success : function() {
 					location.reload();
 				}
 			})
 		})
-		
-		
+
 		$(document).on("click", "#postunfollow", function() {
 			var to_user = $(this).attr("to_user");
 			$.ajax({
@@ -248,88 +252,16 @@
 	});
 </script>
 
-<style type="text/css">
-.divmain {
-	/* 예지가 width값 고침 */
-	max-width: 650px;
-	min-width: 550px;
-	margin-left: 10%;
-	height: 700px;
-	border: 1px solid gray;
-}
 
-.top {
-	width: 100%;
-	height: 15%;
-}
-
-.top-left {
-	float: left;
-	width: 50%;
-	height: 100%;
-	border: 1px solid red;
-}
-
-.top-right {
-	text-align: right;
-	float: right;
-	width: 50%;
-	height: 100%;
-	border: 1px solid green;
-}
-
-.center {
-	width: 100%;
-	height: 80%;
-	border: 1px solid green;
-}
-
-.center-up {
-	width: 100%;
-	height: 30%;
-}
-
-.center-down {
-	text-align: center;
-	width: 100%;
-	height: 70%;
-	border: 1px solid green;
-}
-
-.bottom {
-	width: 100%;
-	height: 5%;
-}
-
-.bottom-left {
-	text-align: center;
-	font-size: 1.2em;
-	float: left;
-	width: 50%;
-	height: 100%;
-}
-
-.bottom-right {
-	text-align: center;
-	font-size: 1.2em;
-	float: right;
-	width: 50%;
-	height: 100%;
-}
-
-.img {
-	text-align: center;
-	width: 20%;
-	height: 100%;
-}
-</style>
-</script>
 
 <style type="text/css">
+body {
+	background-color: #F0F2F5;
+}
+
 .allmain {
 	width: 1000px;
-	margin: auto;
-	border: 1px solid yellow;
+	background-color: #F0F2F5;
 }
 
 .divmain {
@@ -337,7 +269,8 @@
 	max-width: 750px;
 	min-width: 650px;
 	height: 700px;
-	border: 1px solid gray;
+	border-radius: 10px 10px;
+	background-color: white;
 }
 
 .top {
@@ -349,7 +282,6 @@
 	float: left;
 	width: 50%;
 	height: 100%;
-	border: 1px solid red;
 }
 
 .top-right {
@@ -357,13 +289,11 @@
 	float: right;
 	width: 50%;
 	height: 100%;
-	border: 1px solid green;
 }
 
 .center {
 	width: 100%;
 	height: 85%;
-	border: 1px solid green;
 }
 
 .center-up {
@@ -375,7 +305,6 @@
 	text-align: center;
 	width: 100%;
 	height: 80%;
-	border: 1px solid green;
 }
 
 .bottom {
@@ -399,7 +328,7 @@
 	height: 100%;
 }
 
-.img {
+.fileimg {
 	text-align: center;
 	width: 20%;
 	height: 100%;
@@ -411,8 +340,8 @@
 	max-width: 750px;
 	min-width: 550px;
 	height: 400px;
-	border: 1px solid gray;
-	height: 400px;
+	border-radius: 10px 10px;
+	background-color: white;
 }
 
 .top2 {
@@ -424,7 +353,6 @@
 	float: left;
 	width: 50%;
 	height: 100%;
-	border: 1px solid red;
 }
 
 .top-right2 {
@@ -432,13 +360,11 @@
 	float: right;
 	width: 50%;
 	height: 100%;
-	border: 1px solid green;
 }
 
 .center2 {
 	width: 100%;
 	height: 77%;
-	border: 1px solid green;
 }
 
 .center-up2 {
@@ -474,6 +400,55 @@
 .postdetail:hover {
 	text-decoration: underline;
 }
+
+.userimg {
+	cursor: pointer;
+	width: 40px;
+	height: 40px;
+	border: 1px solid gray;
+	border-radius: 20px;
+	margin:10px;
+}
+
+.contentmodal {
+	/* background: #F0F2F5; */
+	border-radius: 60px;
+	margin: 0 auto;
+	max-width: 750px;
+	min-width: 550px;
+}
+#writeinput{
+width:100%;
+border-radius: 30px;
+text-align: left;
+outline: none;
+border: none;
+font-size: 15pt;
+}
+
+#coverinput{
+background: white;
+height:65px;
+width:100%;
+border-radius: 10px;
+padding: 1.5%;
+padding-top: 2%;
+}
+
+
+.writeimg{
+width: 35px;
+height: 35px;
+border: 1px solid gray;
+border-radius: 20px;
+}
+.postimg{
+width: 35px;
+height: 35px;
+border: 1px solid gray;
+border-radius: 20px;
+
+}
 </style>
 </head>
 
@@ -481,36 +456,54 @@
 
 <body>
 
-	<div class="allmain">
-		<!-- Trigger the modal with a button -->
-		<button type="button" class="btn btn-info btn-lg" data-toggle="modal"
-			data-target="#myModal">글쓰기</button>
+	<c:set var="root" value="<%=request.getContextPath()%>" />
 
+	<div class="allmain">
+		<br>
+<!-- writemodal -->
+
+		<div class="contentmodal">
+		<div id="coverinput" >
+		<div >
+		<span style="float: left; width:8%; top:50%;">
+		<img  src="${root }/photo/${user_photo}" class="writeimg">
+		</span>
+<span style="float: right; width:92%">
+		<input type="button" data-toggle="modal" data-target="#contentwrite"
+				name="contentwirte"  id="writeinput"
+				value="무슨 생각을 하고 계신가요?">
+</span>	
+		</div>
+		</div>
+		</div>
+		
+		<br> 
 		<!-- Modal -->
-		<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal fade" id="contentwrite" role="dialog">
 			<div class="modal-dialog">
 
 				<!-- Modal content-->
 				<form method="post" enctype="multipart/form-data" id="postInsert">
 
-					<input type="hidden" name="user_num" id="user_num" value="1">
+					<input type="hidden" name="user_num" id="user_num"
+						value="${sessionScope.user_num }">
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal">&times;</button>
 							<h4 class="modal-title">게시글 만들기</h4>
 						</div>
 						<div class="modal-body">
-							<div class="form-group" style="width: 150px;">
+							<div class="form-group" style="width: 500px;">
 								<img alt="" src="${root }/photo/${user_photo}"
 									style="width: 40px; height: 40px; border-radius: 20px;">
-								<div>${user_name }</div>
-								<br> <select class="form-control" name="post_access"
-									id="post_access">
-									<option value="all">전체공개</option>
-									<option value="follower">팔로워 공개</option>
-									<option value="onlyme">나만보기</option>
-								</select>
+								<span>${login_name}</span>
 							</div>
+							<br> <select class="form-control" name="post_access"
+								style="width: 150px;" id="post_access">
+								<option value="all">전체공개</option>
+								<option value="follower">팔로워 공개</option>
+								<option value="onlyme">나만보기</option>
+							</select>
 							<div class="form-group" style="width: 500px;">
 								<input type="file" name="post_file" class="form-control"
 									multiple="multiple" id="post_file">
@@ -591,17 +584,21 @@
 				<c:if test="${dto.post_file!='no' }">
 
 					<div class="shows" id="divs${dto.post_num }" style="display: none;">
-					<button type="button" class="showbtn" divpost_num="div${dto.post_num }"divspost_num="divs${dto.post_num }" >게시물 보기</button></div>
+						<button type="button" class="showbtn"
+							divpost_num="div${dto.post_num }"
+							divspost_num="divs${dto.post_num }">게시물 보기</button>
+					</div>
 					<div class="divmain" id="div${dto.post_num }">
 						<div class="top">
 							<div class="top-left">
-								<img alt="" src="${root }/photo/${dto.user_photo}"
-									style="width: 40px; height: 40px; border-radius: 20px; margin: 10px;">
+								<img  src="${root }/photo/${dto.user_photo}"  
+									class="userimg" user_num="${dto.user_num }">
 								<b>${dto.user_name }${dto.post_access }</b> <span>${dto.post_time }</span>
 							</div>
 							<span class="top-right"> <span
 								class="glyphicon glyphicon-th-list postmenu"
-								post_num="${dto.post_num }" user_num="${sessionScope.user_num }" dtouser_num="${dto.user_num}"
+								post_num="${dto.post_num }" user_num="${sessionScope.user_num }"
+								dtouser_num="${dto.user_num}"
 								style="font-size: 1.3em; margin-right: 3%; color: gray;">
 									<c:if test="${dto.checklogin ==1 }">
 
@@ -616,29 +613,36 @@
 												user_num="${dto.user_num }" post_num="${dto.post_num }">게시물
 												삭제</li>
 										</ul>
-									</c:if> 
-									<c:if test="${dto.checklogin !=1 }">
+									</c:if> <c:if test="${dto.checklogin !=1 }">
 										<ul id="${dto.post_num }" class="postsubmenu"
 											style="font-size: 25pt; line-height: 1.5em; display: none;">
-											<li class="postdetail posthide" divpost_num="div${dto.post_num }"divspost_num="divs${dto.post_num }"  >게시물 숨김</li>
+											<li class="postdetail posthide"
+												divpost_num="div${dto.post_num }"
+												divspost_num="divs${dto.post_num }">게시물 숨김</li>
 											<!--  이부분 팔로일땐 팔로우하기 or 팔로우 하고 있을 땐 팔로우 끊기 -->
 											<c:if test="${dto.checkfollowing !=1 }">
-											<li class="postdetail" id="postfollow" from_user="${sessionScope.user_num }" to_user="${dto.user_num }">팔로우 하기</li>
+												<li class="postdetail" id="postfollow"
+													from_user="${sessionScope.user_num }"
+													to_user="${dto.user_num }">팔로우 하기</li>
 											</c:if>
 											<c:if test="${dto.checkfollowing ==1 }">
-											<li class="postdetail" id="postunfollow" to_user="${dto.user_num }">팔로우 끊기</li>
+												<li class="postdetail" id="postunfollow"
+													to_user="${dto.user_num }">팔로우 끊기</li>
 											</c:if>
 										</ul>
 									</c:if>
 							</span>
 							</span>
+							
 						</div>
+						
 						<div class="center">
+						
 							<div class="center-up">${dto.post_content }</div>
 
 							<div class="center-down">
 
-								<img src="/post_file/${dto.post_file }" class="img">
+								<img src="/post_file/${dto.post_file }" class="fileimg">
 							</div>
 						</div>
 						<div class="bottom">
@@ -661,6 +665,7 @@
 								class="glyphicon glyphicon-comment"
 								style="font-size: 1.2em; top: 3px; color: gray;"
 								post_num="${dto.post_num }"></span>&nbsp;댓글</span>
+								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 						</div>
 
 					</div>
@@ -670,19 +675,23 @@
 
 				<!-- 파일이 없을 경우 -->
 				<c:if test="${dto.post_file=='no' }">
-					<div class="shows" id="divs${dto.post_num }"style="display: none;">
-					<button type="button" class="showbtn" divpost_num="div${dto.post_num }"divspost_num="divs${dto.post_num }" >게시물 보기</button></div>
-					<div class="divmain2" id="div${dto.post_num }" >
+					<div class="shows" id="divs${dto.post_num }" style="display: none;">
+						<button type="button" class="showbtn"
+							divpost_num="div${dto.post_num }"
+							divspost_num="divs${dto.post_num }">게시물 보기</button>
+					</div>
+					<div class="divmain2" id="div${dto.post_num }">
 						<div class="top2">
 							<div class="top-left">
-								<img alt="" src="${root }/photo/${dto.user_photo}"
-									style="width: 40px; height: 40px; border-radius: 20px; margin: 10px;">
+								<img src="${root }/photo/${dto.user_photo}"
+									class="userimg" user_num="${dto.user_num }">
 								<b>${dto.user_name }${dto.post_access }<span>${dto.post_time }</span>
 								</b>
 							</div>
 							<span class="top-right"> <span
 								class="glyphicon glyphicon-th-list postmenu"
-								post_num="${dto.post_num }" user_num="${sessionScope.user_num }"  dtouser_num="${dto.user_num}"
+								post_num="${dto.post_num }" user_num="${sessionScope.user_num }"
+								dtouser_num="${dto.user_num}"
 								style="font-size: 1.3em; margin-right: 3%; color: gray;">
 									<c:if test="${dto.checklogin ==1 }">
 
@@ -700,13 +709,18 @@
 									</c:if> <c:if test="${dto.checklogin !=1 }">
 										<ul id="${dto.post_num }" class="postsubmenu"
 											style="font-size: 25pt; line-height: 1.5em; display: none;">
-											<li class="postdetail posthide" divpost_num="div${dto.post_num }"divspost_num="divs${dto.post_num }"  >게시물 숨김</li>
+											<li class="postdetail posthide"
+												divpost_num="div${dto.post_num }"
+												divspost_num="divs${dto.post_num }">게시물 숨김</li>
 											<!--  이부분 팔로일땐 팔로우하기 or 팔로우 하고 있을 땐 팔로우 끊기 -->
 											<c:if test="${dto.checkfollowing !=1 }">
-											<li class="postdetail" id="postfollow"  from_user="${sessionScope.user_num }" to_user="${dto.user_num }">팔로우 하기</li>
+												<li class="postdetail" id="postfollow"
+													from_user="${sessionScope.user_num }"
+													to_user="${dto.user_num }">팔로우 하기</li>
 											</c:if>
 											<c:if test="${dto.checkfollowing ==1 }">
-											<li class="postdetail" id="postunfollow" to_user="${dto.user_num }">팔로우 끊기</li>
+												<li class="postdetail" id="postunfollow"
+													to_user="${dto.user_num }">팔로우 끊기</li>
 											</c:if>
 										</ul>
 									</c:if>
@@ -718,6 +732,7 @@
 							<div class="center-up2">${dto.post_content }</div>
 
 						</div>
+						<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 						<div class="bottom2">
 							<c:if test="${dto.likecheck ==0 }">
 								<span class="bottom-left2" style="cursor: pointer" id="like"
@@ -734,10 +749,12 @@
 									style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
 									${dto.like_count}</span>
 							</c:if>
+							
 							<span class="bottom-right2"><span
 								class="glyphicon glyphicon-comment"
 								style="font-size: 1.2em; top: 3px; color: gray;"
 								post_num="${dto.post_num }"></span>&nbsp;댓글</span>
+								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 						</div>
 
 					</div>
