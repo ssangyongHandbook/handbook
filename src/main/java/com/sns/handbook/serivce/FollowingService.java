@@ -87,4 +87,16 @@ public class FollowingService implements FollowingServiceInter {
 		
 		return mapper.togetherFollow(map);
 	}
+
+	@Override
+	public List<FollowingDto> followSearch(String from_user, String searchword, int offset) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("from_user", from_user);
+		map.put("searchword", searchword);
+		map.put("offset", offset);
+		
+		return mapper.followSearch(map);
+	}
 }

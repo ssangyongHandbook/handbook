@@ -42,16 +42,16 @@ ul{
 		</li>
 		
         <li>
-            <a href="#"><span class="glyphicon glyphicon-search" style="padding:10px; font-size: 20pt;">&nbsp;팔로우 추천</span></a>
+            <a href="#"><span class="glyphicon glyphicon-search" style="padding:10px; font-size: 20pt;">&nbsp;팔로워 추천</span></a>
         </li>
         <li>
-            <a href="${root }/following/followlist?from_user=${sessionScope.user_num}"><span class="glyphicon glyphicon-th-list" style="padding:10px; font-size: 20pt;">&nbsp;팔로우 목록</span></a>
+            <a href="${root }/following/followlist?from_user=${sessionScope.user_num}"><span class="glyphicon glyphicon-th-list" style="padding:10px; font-size: 20pt;">&nbsp;팔로워 목록</span></a>
         </li>
         <li>
             <a href="#"><span class="glyphicon glyphicon-star" style="padding:10px; font-size: 20pt;">&nbsp;즐겨찾기</span></a>
         </li>
         <li>
-            <a href="#"><span class="glyphicon glyphicon-check" style="padding:10px; font-size: 20pt;">&nbsp;게시글</span></a>
+            <a href="#" data-toggle="modal" data-target="#myModal" ><span class="glyphicon glyphicon-check" style="padding:10px; font-size: 20pt;">&nbsp;게시글</span></a>
         </li>
     </ul>
 </div>
