@@ -35,15 +35,15 @@ html, body {
 </head>
 <body>
 	<div class="wrapper">
-		<div style="background-color: green; width: 30%;">
+		<div style="width: 30%;">
 			<div style="margin: 0 auto; width: 90%;">
-				<p style="font-size: 50px;">handbook</p>
+				<p style="font-size: 50px; font-weight: bold;">HANDBOOK</p>
 				<p style="font-size: 20px;">
-					Handbook에서 전세에 있는 친구, 가족 <br>지인들과 함께 이야기를 나눠 보세요.​
+					Handbook에서 전세계에 있는 친구, 가족 <br>지인들과 함께 이야기를 나눠 보세요.​
 				</p>
 			</div>
 		</div>
-		<div style="background-color: red; width: 30%;">
+		<div style="width: 30%;">
 			<div style="width: 60%; margin: 0 auto;">
 				<form action="/login/loginprocess" method="post">
 					<div class="form-floating">
@@ -70,7 +70,8 @@ html, body {
 				</form>
 
 				<div align="center">
-					<a href="/find/findpass">계정을 잊으셨나요?</a>
+					<a href="/find/findemail">이메일 찾기</a> | 
+					<a href="/find/findpass">비밀번호 찾기</a>
 				</div>
 				<br>
 				<div align="center">
@@ -89,31 +90,5 @@ html, body {
 			location.reload();
 		}
 	</script>
-
-	<!-- <script>
-	//네이버 로그인 버튼
-	var naver_id_login = new naver_id_login("9p2j68Qiov9kpjGNrVqL", "http://localhost:7777/login/oauth2/login/naver");
-	var state = naver_id_login.getUniqState();
-	naver_id_login.setButton("green", 2, 40);
-	naver_id_login.setDomain("http://localhost:7777");
-	naver_id_login.setState(state);
-	naver_id_login.setPopup();
-	naver_id_login.init_naver_id_login();
-</script>
-
-네이버아디디로로그인 Callback페이지 처리 Script
-<script type="text/javascript">
-	// 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
-	function naverSignInCallback() {
-		// naver_id_login.getProfileData('프로필항목명');
-		// 프로필 항목은 개발가이드를 참고하시기 바랍니다.
-		alert(naver_id_login.getProfileData('email'));
-		alert(naver_id_login.getProfileData('nickname'));
-		alert(naver_id_login.getProfileData('age'));
-	}
-	// 네이버 사용자 프로필 조회
-	naver_id_login.get_naver_userprofile("naverSignInCallback()");
-</script>
-//네이버아디디로로그인 Callback페이지 처리 Script -->
 </body>
 </html>
