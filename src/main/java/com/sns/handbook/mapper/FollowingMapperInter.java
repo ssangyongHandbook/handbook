@@ -18,7 +18,7 @@ public interface FollowingMapperInter {
 	public void deleteFollowing(String to_user);
 	public List<FollowingDto> getFollowList(Map<String, Object> map);
 	public int togetherFollow(Map<String, String> map);
-	
+	public List<FollowingDto> followSearch(Map<String, Object> map);
 	
 	
 }
