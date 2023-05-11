@@ -18,6 +18,8 @@ public class PostDto {
 	private String post_file;
 	private String post_access;
 	private Timestamp post_writeday;
+	
+	
 	private String user_name;
 	private String user_photo;
 	
@@ -28,4 +30,5 @@ public class PostDto {
 	private String post_time;
 	private int checklogin;
 	private int checkfollowing;
+
 }
