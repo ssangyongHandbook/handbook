@@ -217,6 +217,10 @@ public class UserController {
 		    pservice.insertPost(dto);
 		    
 	    }
+	      
+	    dto.setPost_file(uploadName);
+	    pservice.insertPost(dto);
+	    
 	}
 	
 	//프로필 업데이트
@@ -227,6 +231,7 @@ public class UserController {
 		uservice.updateUserInfo(dto);
 	}
 	
+
 	//게시물 수정 값 불러오기
 	@ResponseBody
 	@GetMapping("/user/updateform")
@@ -236,6 +241,7 @@ public class UserController {
 		
 		return dto;
 	}
+
 	
 	//게시물 삭제
 	@ResponseBody
