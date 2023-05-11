@@ -48,6 +48,7 @@ public class UserController {
 	@Autowired
 	PostlikeService plservice;
 	
+	//커버 사진 업데이트
 	@PostMapping("/user/coverupdate")
 	@ResponseBody
 	public void coverupdate(String user_num, MultipartFile cover,
@@ -72,6 +73,7 @@ public class UserController {
 			}	
 	}
 	
+	//프로필 사진 업데이트
 	@PostMapping("/user/photoupdate")
 	@ResponseBody
 	public void photoupdate(String user_num,MultipartFile photo,
@@ -96,6 +98,7 @@ public class UserController {
 			}
 	}
 	
+	//마이페이지 이동
 	@GetMapping("/user/mypage")
 	public ModelAndView mypage(@RequestParam(defaultValue = "0") int offset,String user_num ,HttpSession session)
 	{
@@ -172,11 +175,14 @@ public class UserController {
 		
 		model.addObject("loginnum", loginnum);
 		model.addObject("dto", udto);
+		model.addObject("pdto", pdto);
 		model.addObject("offset", offset);
 		model.addObject("tflist", tflist);
 		model.addObject("postlist",postlist);
 		model.addObject("followercount", followercount);
 		model.addObject("followcount", followcount);
+		model.addObject("checkfollowing", fservice.checkFollowing((String)session.getAttribute("user_num"), user_num));
+		model.addObject("tf_count", fservice.getTotalFollowing((String)session.getAttribute("user_num")));
 	
 		model.setViewName("/sub/user/mypage");
 
@@ -217,9 +223,6 @@ public class UserController {
 		    pservice.insertPost(dto);
 		    
 	    }
-	      
-	    dto.setPost_file(uploadName);
-	    pservice.insertPost(dto);
 	    
 	}
 	
@@ -241,6 +244,51 @@ public class UserController {
 		
 		return dto;
 	}
+	
+	//게시물 수정
+	@ResponseBody
+	@PostMapping("/user/updatepostphoto")
+	public void updatepostphoto(@ModelAttribute PostDto dto,HttpSession session,@RequestParam(required = false) List<MultipartFile> photo)
+	{
+		
+		String path = session.getServletContext().getRealPath("/post_file");
+	    
+	    int idx = 1;
+	    String uploadName = "";
+	    
+	    
+	    if (photo == null) {
+	        dto.setPost_file("no");
+	        pservice.updatePhoto(dto.getPost_num(), dto.getPost_file());
+	        
+	    } else {
+	    	
+	        for (MultipartFile f : photo) {
+	    	    
+	            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+	            String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
+	            uploadName += fileName + ",";
+	            
+	            try {
+	            	
+	                f.transferTo(new File(path + "\\" + fileName));
+	                
+	            } catch (IllegalStateException | IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	        //콤마 제거
+	        uploadName = uploadName.substring(0, uploadName.length() - 1);
+	        
+		    dto.setPost_file(uploadName);
+		    
+		    pservice.updatePhoto(dto.getPost_num(), uploadName);
+		    
+		    pservice.updatePost(dto);
+		    
+	    }
+	}
+
 
 	
 	//게시물 삭제
@@ -277,6 +325,22 @@ public class UserController {
 	public void deleteFollowing(String post_num,String user_num) {
 		
 		plservice.deleteLike(post_num,user_num);
+	}
+	
+	//팔로우 하기
+	@ResponseBody
+	@GetMapping("/user/insertfollowing")
+	public void insertfollowing(@ModelAttribute FollowingDto dto)
+	{
+		fservice.insertFollowing(dto);
+	}
+	
+	//팔로우 취소
+	@ResponseBody
+	@GetMapping("/user/unfollowing")
+	public void unfollowing(String to_user)
+	{
+		fservice.deleteFollowing(to_user);
 	}
 	
 	@GetMapping("/user/info")
