@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTDMapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sns.handbook.mapper.MessageMapperInter">
+	<select id="selectMaxNum" resultType="int">
+		select max(mess_num) from message
+	</select>
 	<select id="selectAllChatMemeber" parameterType="Map" resultType="MessageDto">
 		select distinct mess_group,sender_num,receiver_num,mess_writeday from message 
 		<if test="other_name==null or other_name==''">

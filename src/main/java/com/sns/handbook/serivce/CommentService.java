@@ -78,8 +78,6 @@ public class CommentService implements CommentServiceInter {
 		dto.setComment_step(comment_step);
 		dto.setComment_level(comment_level);
 		
-		System.out.println(comment_group);
-		
 		mapper.insert(dto);
 	}
 	

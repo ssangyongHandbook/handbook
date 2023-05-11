@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -191,6 +192,17 @@ public class MessageController {
 		List<UserDto> list=uservice.getUserByName(user_name);
 		
 		return list;
+	}
+	
+	@GetMapping("/message/newgroup")
+	@ResponseBody
+	public Map<String, Integer> newGroup()
+	{
+		Map<String, Integer> map=new HashMap<>();
+		
+		map.put("group", mservice.selectMaxNum()+1);
+		
+		return map;
 	}
 	
 }

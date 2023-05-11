@@ -1,6 +1,6 @@
 package com.sns.handbook.controller;
 
-import java.io.File;
+import java.io.File; 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -167,7 +167,7 @@ public class PostController {
 	// delete
 	@GetMapping("/post/delete")
 	@ResponseBody
-	public void delete(@RequestParam String post_num) {
+	public void delete(@RequestParam String post_num ) {
 
 		pservice.deletePost(post_num);
 	}
