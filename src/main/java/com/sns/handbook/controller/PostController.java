@@ -167,7 +167,7 @@ public class PostController {
 	// delete
 	@GetMapping("/post/delete")
 	@ResponseBody
-	public void delete(@RequestParam String post_num) {
+	public void delete(@RequestParam String post_num ) {
 
 		pservice.deletePost(post_num);
 	}
