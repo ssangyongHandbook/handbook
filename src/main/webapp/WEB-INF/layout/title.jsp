@@ -27,6 +27,11 @@
 		
 	}
 	
+	.st{
+		font-size: 10pt;
+		float: left;
+		
+	}
 </style>
 
 <script type="text/javascript">
@@ -81,13 +86,13 @@
 
 	<div style="display: inline-flex; overflow: hidden; align-items: center; justify-content: center; width: 280px;">
 		<c:if test="${sessionScope.loginok!=null }">
-    		<button type ="button" onclick="location.href='/login/logoutprocess'" style="width: 80px; height: 30px;">로그아웃</button>
+    		<button type ="button" onclick="location.href='/login/logoutprocess'" style="width: 80px; height: 30px; margin-right: 5px;">로그아웃</button>
 		</c:if>
 		
 		
-		<a href="#"><span><img src="../image/menuicon.jpg" class = "titlemenubar" alt="" style = "width: 40px; height: 40px;"></span></a>
-		<a href="#"><span><img src="../image/message.png" alt="" style = "width:40px; height: 40px;"></span></a>
-		<a href="#"><span><img src="../image/bell.png" alt="" style = "width:40px; height: 40px;"></span></a>
+		<a href="#"><span><img src="../image/menuicon.jpg" class = "titlemenubar" alt="" style = "width: 40px; height: 40px; margin-right: 5px;"></span></a>
+		<a href="#"><span><img src="../image/message.png" alt="" style = "width:40px; height: 40px; margin-right: 5px;"></span></a>
+		<a href="#"><span><img src="../image/bell.png" alt="" style = "width:40px; height: 40px; margin-right: 5px;"></span></a>
 		<c:if test="${sessionScope.user_photo==null }">
 		<a href="/user/mypage?user_num=${sessionScope.user_num }"><span><img src="../image/noimg.png" alt="" style = "width:40px; height: 40px; border-radius: 100px;"></span></a>
 		</c:if>
@@ -100,19 +105,20 @@
 
 </div>
 
- <ul class = "titlemenu" style = "position: relative; left: 85%; top: 8%; height:500px; background-color: #F7F8FA; width: 300px; border-radius: 10px;">
-		 	<li>
-		 		<br>
-		 		<h1>메뉴</h1>
+ <ul class = "titlemenu" style = "position: relative; left: 83%; height:100px; background-color: #F7F8FA; width: 200px; border-radius: 10px;">
+		 	
 		 		
 		 		<!-- <div style="background-color: white; border-radius: 10px;  height: 300px;"> -->
-		   		<ul class = "subtitlemenu" style = "font-size: 15pt; line-height: 1.5em; background-color: white; padding-bottom: 70px; padding-top: 70px; text-align: center; margin-right: 30px;" >
-					<li class = "titledetail" style="margin-bottom: 10px; align-items: center;"><a href = "#"><img src = "../image/createboard.png" style = "width:50px;">게시물 작성</a></li>
-					<li class = "titledetail" style="margin-bottom: 10px; align-items: center;"><a href = "#"><img src = "../image/findfriend.png" style = "width:50px;">친구 찾기</a></li>
-					<li class = "titledetail" style="margin-bottom: 10px; align-items: center;"><a href = "#"><img src = "../image/star.png" style = "width:50px;">즐겨 찾기</a></li>
-				</ul>
+		   		<!-- <ul class = "subtitlemenu" style = "font-size: 15pt;  background-color: white; height:180px; 
+		   			text-align: center; margin-right: 40px;" > -->
+		   			
+					<li class = "titledetail" style="align-items: center;"><a href = "#" data-toggle="modal" data-target="#myModal"><span class = "glyphicon glyphicon-check st">&nbsp;게시물작성</span></a></li><br>
+					<li class = "titledetail" style="align-items: center;"><a href="${root }/following/followlist?from_user=${sessionScope.user_num}"><span class = "glyphicon glyphicon-th-list st">&nbsp;팔로워목록</span></a></li><br>
+					<li class = "titledetail" style="align-items: center;"><a href = "#"><span class = "glyphicon glyphicon-star st">&nbsp;즐겨찾기</span></a></li><br>
+					
+				<!-- </ul> -->
 				<!-- </div> -->
-			</li>
+			
 </ul> 
 
 <script type="text/javascript">

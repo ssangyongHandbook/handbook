@@ -112,6 +112,35 @@ public class FollowingController {
 		return list;
 	}
 	
+	//친구 목록에서 친구 검색
+	@GetMapping("followsearch")
+	public ModelAndView followsearch(@RequestParam(required = false) String from_user,
+											@RequestParam(required = false) String searchword,
+											@RequestParam(defaultValue = "0") int offset,HttpSession session)
+	{
+		String myid=(String)session.getAttribute("myid");
+		from_user=uservice.getUserById(myid).getUser_num();
+		
+		List<FollowingDto> list = service.followSearch(from_user, searchword, offset);
+		
+		ModelAndView model = new ModelAndView();
+		
+		for(int i = 0; i<list.size(); i++) {
+			UserDto dto = uservice.getUserByNum(list.get(i).getTo_user()); //여러가지 수많은 데이터에서 i번째 데이터만 가져오기, 여기서 필요한 상대방 num을 list에서 뽑아옴
+			list.get(i).setUser_name(dto.getUser_name());// 위에서 dto에서 name photo를 뽑아내서 리스트에 set을 해줌
+			list.get(i).setUser_photo(dto.getUser_photo());
+			list.get(i).setTf_count(service.togetherFollow(dto.getUser_num(),(String)session.getAttribute("user_num")));
+
+		}
+		
+		model.addObject("list", list);
+		model.addObject("offset", offset);
+		model.addObject("from_user",from_user);
+		model.setViewName("/follow/followlist");
+		
+		return model;
+		
+	}
 	
 	
 	
