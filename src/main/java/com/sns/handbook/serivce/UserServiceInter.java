@@ -29,10 +29,14 @@ public interface UserServiceInter {
 	public void insertUserInfo(UserDto dto);
 	public UserDto getUserDtoById(String user_id);
 	public int loginEmailCheck(String user_email);
+
 	public MailDto createMailAndChangePassword(String memberEmail);
 	public void updatePassword(String user_num, String user_pass);
 	public String getTempPassword();
 	public void mailSend(MailDto mailDto);
 	public String getUserIdByEmail(String user_email);
 	//희수 끝
+	
+	//예지
+	public List<UserDto> getUserByName(String user_name);
 }

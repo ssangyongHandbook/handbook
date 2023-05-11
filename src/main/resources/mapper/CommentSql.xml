@@ -27,7 +27,7 @@
 	</update>
 	
 	<select id="selectScroll" parameterType="Map" resultType="CommentDto">
-		select * from comment where post_num=#{post_num} order by comment_num limit 1 offset #{offset}
+		select * from comment where post_num=#{post_num} order by comment_group desc,comment_step asc limit 8 offset #{offset}
 	</select>
 	
 	<select id="getAllDatas"  resultType="CommentDto">
