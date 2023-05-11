@@ -11,6 +11,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
 <script type="text/javascript" src="/messagejscss/emoji_jk.js"></script>
+<script src="https://kit.fontawesome.com/16085d762f.js" crossorigin="anonymous"></script>
 <link href="/messagejscss/emoji_jk.css" type="text/css" rel="stylesheet">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -95,7 +96,7 @@
 	}
 	
 	.messagememberphoto img{
-		width: 65px;
+		height: 65px;
 	}
 	
 	/* 채팅했던 멤버 */
@@ -169,7 +170,7 @@
 	}
 	
 	.chatinfophoto img{
-		width: 45px;
+		height: 45px;
 	}
 	
 	.chatlist{
@@ -274,7 +275,7 @@
 	}
 	
 	.chatlistinfo img{
-		width: 60px;
+		height: 60px;
 	}
 	
 	.chatlistinfoname{
@@ -300,8 +301,9 @@
 		align-items: center;
 	}
 	
-	.chatupload span{
+	.chatuploadicon{
 		cursor: pointer;
+		color: #3582D3; 
 	}
 	
 	span.msgaddname{
@@ -314,6 +316,55 @@
 		outline: none;
 		border: none;
 		background: none;
+	}
+	
+	div.msgsearchuser{
+		position: absolute;
+		z-index: 10;
+		width: 300px;
+		height: 500px;
+		overflow: auto;
+		box-shadow: 0px 0px 10px lightgray;
+		background-color: white;
+		display: none;
+		flex-direction: column;
+	}
+	
+	.msgserachuserone{
+		margin-left: 15px;
+		width: 250px;
+		display: inline-flex;
+		align-items: center;
+		margin-top: 10px;
+		cursor: pointer;
+		padding: 3px;
+		border-radius: 10px;
+	}
+	
+	.msgserachuserone:hover{
+		background-color: #DFEFFF;
+	}
+	
+	.msgserachuserone span{
+		margin-left: 5px;
+	}
+	
+	.searchuid{
+		color: gray;
+		font-size: 8pt;
+	}
+	
+	.searchuphoto{
+		width: 40px;
+		height: 40px;
+		border: none;
+		border-radius: 100px;
+		overflow: hidden;
+		text-align: center;
+	}
+	
+	.searchuphoto img{
+		height: 40px;
 	}
 </style>
 
@@ -353,6 +404,52 @@
 				}, 500);
 		});
 		
+		//왼쪽의 채팅방 목록(멤버 목록)을 클릭하면 오른쪽의 채팅화면이 바뀐다.
+		$(document).on("click",".onemember",function(){
+			//선택된 채팅방 변경
+			$(".onemember").each(function(i,ele){
+				$(ele).removeClass("messageactive");
+			})
+			$(this).addClass("messageactive");
+			
+			var mess_group=$(this).attr("mess_group");
+			var user_name=$(this).find(".membername").text();
+			var user_photo=$(this).find(".messagememberphoto img").attr("src");
+			var member_id=$(this).find(".membername").attr("member_id");
+			
+			if($(this).hasClass("newmsg")){
+				var img=$(this).find("img").attr("src");
+				var name=$(this).find(".membername").attr("uname");
+				var id=$(this).find(".membername").attr("uid");
+				
+				$("#chatShow").html("");
+				$(".chatlistinfo img").attr("src",img);
+				$(".chatlistinfoname").text(name);
+				$(".chatlistinfoid").text(id);
+				
+				setUserInfo(img,id,name);
+				
+				//받는 사람 변경
+				$("#receivernum").val($(this).attr("member_num"));
+				//그룹 변경
+				$("#chatgroup").val(0);
+			}else{
+				//받는 사람 변경
+				$("#receivernum").val($(this).attr("member_num"));
+				//그룹 변경
+				$("#chatgroup").val(mess_group);
+				
+				//상단의 채팅중인 사람 이름 변경
+				$(".chatinfo span").text(user_name);
+				//상단의 채팅중인 사람 아이디 변경
+				$(".chatinfo span").attr("memeber_id",member_id);
+				//상단의 채팅중인 사람 이미지 변경
+				$(".chatinfophoto img").attr("src",user_photo);
+				//우측의 채팅중인 화면 변경(대화내용 변경)
+				getChatting(mess_group);	
+			}
+		})
+		
 		$(document).on('mouseover','.msgone',function(){
 			$(this).find(".msgdel").css("visibility","visible");
 		})
@@ -377,7 +474,7 @@
 		})
 		
 		//사진 업로드
-		$(".chatupload span").click(function(){
+		$(".chatuploadicon").click(function(){
 			$(".chatupload input").trigger("click");
 		})
 		
@@ -385,30 +482,125 @@
 		$(".msgadd").click(function(){
 			s="<span class='msgaddname'>받는 사람:</span><input type='text' class='msgaddname'>"
 			$(".chatinfo").html(s);
+			var position = $('.msgaddname').position();
+			$('.msgsearchuser').css("left",position.left + 60);
+			$('.msgsearchuser').css("top",position.top + 30);
+			$('.msgsearchuser').css("display","inline-flex");
+		})
+		
+		//->창 외부 클릭시 숨기기
+		$('body').click(function(e){
+			var container = $(".msgsearchuser");
+			
+			if(container.css("display")!="none"){
+				if (!$(e.target).hasClass('msgsearchuser') && !$(e.target).hasClass('msgadd') 
+			    		&& !$(e.target).hasClass('msgaddicon') && !$(e.target).hasClass('msgaddname')
+			    		&& !$(e.target).hasClass('msgsearchuser') && !$(e.target).hasClass('msgsearchuserone')) {
+					
+			        container.css("display","none");
+			        
+			        var img=$(".onemember").eq(0).find("img").attr("src");
+			        var id=$(".onemember").eq(0).find(".membername").attr("member_id");
+			        var name=$(".onemember").eq(0).find(".membername").text();
+			        
+			        setUserInfo(img,id,name);
+			    }	
+			}
 		})
 		
 		//->채팅방 추가에서 받는 사람 입력창 이벤트
 		$(document).on('keyup','input.msgaddname',function(e){
-			if(e.keyCode==13){
-				var addName=$(this).val(); //추가할 상대 이름
+			var addName=$(this).val(); //검색한 (추가할)사람 이름
+			
+			$.ajax({
+				type:"get",
+				dataType:"json",
+				data:{"user_name":addName},
+				url:"searchuser",
+				success:function(res){
+					var users="";
+					$.each(res,function(i,ele){
+						users+="<div class='msgserachuserone'><div class='searchuphoto'>";
+						if(ele.user_photo==null){
+							users+="<img src='/image/noimg.png'>";
+						}else{
+							users+="<img src='/photo/"+ele.user_photo+"'>";	
+						}
+						users+="</div><span class='searchuname'>"+ele.user_name+"</span>";
+						users+="<span class='searchuid'>"+ele.user_id+"</span>"
+						users+="<input type='hidden' value="+ele.user_num+">"
+						users+="</div>";
+					})
+					$('.msgsearchuser').html(users);
+				}
+			})
+		})
+		
+		//-->검색한 사람 클릭했을 때 받는 사람에 넣기
+		$(document).on("click",".msgserachuserone",function(){
+			var name=$(this).find(".searchuname").text();
+			var id=$(this).find(".searchuid").text();
+			$("input.msgaddname").val(name+"("+id+")");
+			
+			var img=$(this).find("img").attr("src");
+			var name=$(this).find(".searchuname").text();
+			var id=$(this).find(".searchuid").text();
+			var num=$(this).find("input").val();
+			
+			if(!$(".messagmember").find(".onemember").hasClass("newmsg")){
 				
-				$.ajax({
-					type:"get",
-					dataType:"json",
-					data:{"user_name":addName},
-					url:"searchuser",
-					success:function(res){
-						var test="";
-						$.each(res,function(i,ele){
-							test+="아이디: "+ele.user_id;
-						})
-						alert(test);
-					}
-				})
+				$(".messagmember").find(".messageactive").removeClass("messageactive");
+				
+				var out="";
+				var msgmember=$(".messagmember").html();
+				
+				out+='<div class="onemember messageactive newmsg" member_num='+num+'>';
+				out+='<div class="messagememberphotobox">';
+				out+='<div class="messagememberphoto">';
+				out+='<img alt="사용자사진(없음)" src="'+img+'">';
+				out+='</div>';
+				out+='</div>';
+				out+='<div class="messagememberinfo">';
+				out+='<span class="membername" uname='+name+' uid='+id+'>새메시지 입력</span>';
+				out+='<div class="chatdetail">';
+				out+='<span class="recentchat"></span>';
+				out+='<span class="chatdetaildate"></span>';
+				out+='</div></div></div>'	
+				
+				$(".messagmember").html(out+msgmember);
+			}else{
+				$(".newmsg").find("img").attr("src",img);
+				$(".newmsg").attr("member_num",num);
+				$(".newmsg").find(".membername").attr("uname",name);
+				$(".newmsg").find(".membername").attr("uid",id);
 			}
+			
+			$("#chatShow").html("");
+			$(".chatlistinfo img").attr("src",img);
+			$(".chatlistinfoname").text(name);
+			$(".chatlistinfoid").text(id);
+			
+			setUserInfo(img,id,name);
+			
+			//받는 사람 변경
+			$("#receivernum").val(num);
+			//그룹 변경
+			$("#chatgroup").val(0);
 		})
 		
 	})
+	
+	//상단의 사용자 정보 재출력
+	function setUserInfo(img,id,name){
+		var info=""
+		
+		info+='<div class="chatinfophoto">';
+		info+='<img alt="" src="'+img+'">';
+		info+='</div>';
+		info+='<span member_id="'+id+'">'+name+'</span>';
+		
+		$(".chatinfo").html(info);
+	}
 	
 	
 	//상대방과 해던 채팅 가져오기
@@ -439,8 +631,6 @@
 				$(".chatlistinfo img").attr("src",otherImg);
 				$(".chatlistinfoname").text($(".chatinfo span").text());
 				$(".chatlistinfoid").text($(".chatinfo span").attr("memeber_id"));
-				
-				console.log($(".chatinfo span").attr("member_id"));
 				
 				$("#chatShow").html(chatContent);
 				
@@ -508,7 +698,6 @@
 						//선택되지 않은 채팅방
 						out+='<div class="onemember" mess_group='+chat.group+' member_num='+chat.member_num+'>';
 					}
-					console.log(chat.group);
 					out+='<div class="messagememberphotobox">';
 					out+='<div class="messagememberphoto">';
 					if(chat.member_photo==null||chat.member_photo==''){
@@ -533,32 +722,6 @@
 				$(".messagmember").html(out);
 				
 				//왼쪽의 채팅방 목록(멤버 목록)을 클릭하면 오른쪽의 채팅화면이 바뀐다.
-				$(".onemember").on("click",function(){
-					//선택된 채팅방 변경
-					$(".onemember").each(function(i,ele){
-						$(ele).removeClass("messageactive");
-					})
-					$(this).addClass("messageactive");
-					
-					var mess_group=$(this).attr("mess_group");
-					var user_name=$(this).find(".membername").text();
-					var user_photo=$(this).find(".messagememberphoto img").attr("src");
-					var member_id=$(this).find(".membername").attr("member_id");
-					
-					//받는 사람 변경
-					$("#receivernum").val($(this).attr("member_num"));
-					//그룹 변경
-					$("#chatgroup").val(mess_group);
-					
-					//상단의 채팅중인 사람 이름 변경
-					$(".chatinfo span").text(user_name);
-					//상단의 채팅중인 사람 아이디 변경
-					$(".chatinfo span").attr("memeber_id",member_id);
-					//상단의 채팅중인 사람 이미지 변경
-					$(".chatinfophoto img").attr("src",user_photo);
-					//우측의 채팅중인 화면 변경(대화내용 변경)
-					getChatting(mess_group);
-				})
 			}
 		})
 	}
@@ -627,9 +790,25 @@
         var myid = '${sessionScope.myid}';
         var msg = $("#chatting").val();
         ws.send(myid+" : "+msg+" : "+$("#receivernum").val()+" : "+$("#chatgroup").val());
+        
         $('#chatting').val("");
         var group=$("#chatgroup").val();
-        getChatting(group);
+        
+        if(group==0){
+        	$.ajax({
+        		type:"get",
+        		dataTyep:"json",
+        		url:"newgroup",
+        		success:function(res){
+        			group=res.group;
+        			$("#chatgroup").val(group);
+        			getChatting(group);
+        		}
+        	})
+        }else{
+        	getChatting(group);
+        }
+        
         memberListOut(); //멤버 리스트 다시 불러오기
     }
 </script>
@@ -645,7 +824,7 @@
 						<span class="glyphicon glyphicon-option-horizontal"></span>
 					</div>
 					<div class="mmlbtn msgadd">
-						<span class="glyphicon glyphicon-edit"></span>
+						<span class="glyphicon glyphicon-edit msgaddicon"></span>
 					</div>
 				</div>
 			</div>
@@ -672,6 +851,11 @@
 			<span member_id="${otherInfo.user_id }">${otherInfo.user_name }</span>
 			</c:if>
 		</div>
+		
+		<div class="msgsearchuser">
+			
+		</div>
+		
 		<div class="chatlist">
 			<div class="chatlistinfo">
 				<c:if test="${recentgroup!=0 }">
@@ -742,7 +926,7 @@
 			<!-- 사진 올리기 -->
 			<div class="chatupload">
 				<input type="file" style="display: none;">
-				<span class="glyphicon glyphicon-picture"></span>
+				<i class="fa-regular fa-images chatuploadicon"></i>
 			</div>
 			<div class="chatinputbox">
 				<input type="text" id="chatting" placeholder="채팅 입력">

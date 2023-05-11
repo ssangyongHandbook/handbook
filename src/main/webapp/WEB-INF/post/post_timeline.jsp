@@ -7,16 +7,24 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <script src="https://kit.fontawesome.com/2663817d27.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/2663817d27.js"
+	crossorigin="anonymous"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+<link
+	href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css" />
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript"
+	src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
 
 <script type="text/javascript">
 	$(function() {
@@ -261,6 +269,7 @@ body {
 
 .allmain {
 	width: 1000px;
+	height: 100%;
 	background-color: #F0F2F5;
 }
 
@@ -268,7 +277,7 @@ body {
 	margin: 0 auto;
 	max-width: 750px;
 	min-width: 650px;
-	height: 700px;
+	height: 600px;
 	border-radius: 10px 10px;
 	background-color: white;
 }
@@ -293,7 +302,7 @@ body {
 
 .center {
 	width: 100%;
-	height: 85%;
+	height: 70%;
 }
 
 .center-up {
@@ -309,7 +318,12 @@ body {
 
 .bottom {
 	width: 100%;
-	height: 5%;
+	height: 15%;
+}
+
+.bottom-up {
+	width: 100%;
+	height: 10%;
 }
 
 .bottom-left {
@@ -328,6 +342,11 @@ body {
 	height: 100%;
 }
 
+.bottom-down {
+	width: 100%;
+	height: 10%;
+}
+
 .fileimg {
 	text-align: center;
 	width: 20%;
@@ -339,14 +358,14 @@ body {
 	margin: 0 auto;
 	max-width: 750px;
 	min-width: 550px;
-	height: 400px;
+	height: 300px;
 	border-radius: 10px 10px;
 	background-color: white;
 }
 
 .top2 {
 	width: 100%;
-	height: 15%;
+	height: 20%;
 }
 
 .top-left2 {
@@ -364,7 +383,7 @@ body {
 
 .center2 {
 	width: 100%;
-	height: 77%;
+	height: 40%;
 }
 
 .center-up2 {
@@ -374,7 +393,12 @@ body {
 
 .bottom2 {
 	width: 100%;
-	height: 8%;
+	height: 30%;
+}
+
+.bottom-up2 {
+	width: 100%;
+	height: 10%;
 }
 
 .bottom-left2 {
@@ -393,6 +417,11 @@ body {
 	height: 100%;
 }
 
+.bottom-down2 {
+	width: 100%;
+	height: 90%;
+}
+
 .postmenu {
 	cursor: pointer;
 }
@@ -407,7 +436,7 @@ body {
 	height: 40px;
 	border: 1px solid gray;
 	border-radius: 20px;
-	margin:10px;
+	margin: 10px;
 }
 
 .contentmodal {
@@ -417,37 +446,65 @@ body {
 	max-width: 750px;
 	min-width: 550px;
 }
-#writeinput{
-width:100%;
-border-radius: 30px;
-text-align: left;
-outline: none;
-border: none;
-font-size: 15pt;
+
+#writeinput {
+	width: 100%;
+	border-radius: 30px;
+	text-align: left;
+	outline: none;
+	border: none;
+	font-size: 15pt;
+	background: #F0F2F5;
+	padding: 1.2%;
 }
 
-#coverinput{
-background: white;
-height:65px;
-width:100%;
-border-radius: 10px;
-padding: 1.5%;
-padding-top: 2%;
+#coverinput {
+	background: white;
+	height: 65px;
+	width: 100%;
+	border-radius: 10px;
+	padding: 1.5%;
+	padding-top: 2%;
 }
 
-
-.writeimg{
-width: 35px;
-height: 35px;
-border: 1px solid gray;
-border-radius: 20px;
+.writeimg {
+	width: 35px;
+	height: 35px;
+	border: 1px solid gray;
+	border-radius: 20px;
 }
-.postimg{
-width: 35px;
-height: 35px;
-border: 1px solid gray;
-border-radius: 20px;
 
+.postimg {
+	width: 35px;
+	height: 35px;
+	border: 1px solid gray;
+	border-radius: 20px;
+}
+
+.shows {
+	display: none;
+	background-color: white;
+	margin: 0 auto;
+	max-width: 750px;
+	min-width: 650px;
+	height:50px;
+	border-radius: 10px 10px;
+	padding: 0.6%;
+	font-size: 18px;
+	text-align: center;
+	
+}
+.showtext{
+float:left;
+padding: 1%;
+margin-left: 10%;
+}
+.showbtn{
+	border-radius: 5px 5px;
+		background-color: #F0F2F5;
+		border:0.5px solid gray;
+		float: right;
+		height:37px;
 }
 </style>
 </head>
@@ -460,24 +517,22 @@ border-radius: 20px;
 
 	<div class="allmain">
 		<br>
-<!-- writemodal -->
+		<!-- writemodal -->
 
 		<div class="contentmodal">
-		<div id="coverinput" >
-		<div >
-		<span style="float: left; width:8%; top:50%;">
-		<img  src="${root }/photo/${user_photo}" class="writeimg">
-		</span>
-<span style="float: right; width:92%">
-		<input type="button" data-toggle="modal" data-target="#contentwrite"
-				name="contentwirte"  id="writeinput"
-				value="무슨 생각을 하고 계신가요?">
-</span>	
+			<div id="coverinput">
+				<div>
+					<span style="float: left; width: 8%; top: 50%;"> <img
+						src="${root }/photo/${user_photo}" class="writeimg">
+					</span> <span style="float: right; width: 92%;"> <input
+						type="button" data-toggle="modal" data-target="#contentwrite"
+						name="contentwirte" id="writeinput" value="무슨 생각을 하고 계신가요?">
+					</span>
+				</div>
+			</div>
 		</div>
-		</div>
-		</div>
-		
-		<br> 
+
+		<br>
 		<!-- Modal -->
 		<div class="modal fade" id="contentwrite" role="dialog">
 			<div class="modal-dialog">
@@ -583,7 +638,7 @@ border-radius: 20px;
 			<c:forEach var="dto" items="${list }" varStatus="i">
 				<c:if test="${dto.post_file!='no' }">
 
-					<div class="shows" id="divs${dto.post_num }" style="display: none;">
+					<div class="shows" id="divs${dto.post_num }">  <div class="showtext">게시물을 숨겼습니다. 다시 보려면 게시물 보기를 눌러주세요.</div>
 						<button type="button" class="showbtn"
 							divpost_num="div${dto.post_num }"
 							divspost_num="divs${dto.post_num }">게시물 보기</button>
@@ -591,9 +646,16 @@ border-radius: 20px;
 					<div class="divmain" id="div${dto.post_num }">
 						<div class="top">
 							<div class="top-left">
-								<img  src="${root }/photo/${dto.user_photo}"  
-									class="userimg" user_num="${dto.user_num }">
-								<b>${dto.user_name }${dto.post_access }</b> <span>${dto.post_time }</span>
+								<span style="float: left;"> <img
+									src="${root }/photo/${dto.user_photo}" class="userimg"
+									user_num="${dto.user_num }">
+								</span> <span style="float: left; padding: 3%; margin-right: 5px;">
+									<div>
+										<b>${dto.user_name }${dto.post_access }</b>
+									</div>
+
+									<div>${dto.post_time }</div>
+								</span>
 							</div>
 							<span class="top-right"> <span
 								class="glyphicon glyphicon-th-list postmenu"
@@ -608,7 +670,7 @@ border-radius: 20px;
 
 											<li id="postupdate" class="postdetail" data-toggle="modal"
 												data-target="#updatepost" post_num="${dto.post_num }"
-												user_num="${dto.user_num }">게시물 수정</li>
+												user_num="${dmto.user_num }">게시물 수정</li>
 											<li id="postdelete" class="postdetail"
 												user_num="${dto.user_num }" post_num="${dto.post_num }">게시물
 												삭제</li>
@@ -633,11 +695,10 @@ border-radius: 20px;
 									</c:if>
 							</span>
 							</span>
-							
+
 						</div>
-						
+
 						<div class="center">
-						
 							<div class="center-up">${dto.post_content }</div>
 
 							<div class="center-down">
@@ -646,26 +707,44 @@ border-radius: 20px;
 							</div>
 						</div>
 						<div class="bottom">
-							<c:if test="${dto.likecheck ==0 }">
-								<span class="bottom-left" style="cursor: pointer" id="like"
-									user_num="${sessionScope.user_num}" post_num="${dto.post_num }"><span
-									class="glyphicon glyphicon-heart-empty"
-									style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
-									${dto.like_count}</span>
-							</c:if>
+							<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
+							<div class="bottom-up">
+								<c:if test="${dto.likecheck ==0 }">
+									<span class="bottom-left" style="cursor: pointer" id="like"
+										user_num="${sessionScope.user_num}"
+										post_num="${dto.post_num }"><span
+										class="glyphicon glyphicon-heart-empty"
+										style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
+										${dto.like_count}</span>
+								</c:if>
 
-							<c:if test="${dto.likecheck !=0 }">
-								<span class="bottom-left" style="cursor: pointer" id="dlike"
-									user_num="${sessionScope.user_num}" post_num="${dto.post_num }"><span
-									class="glyphicon glyphicon-heart"
-									style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
-									${dto.like_count}</span>
-							</c:if>
-							<span class="bottom-right"><span
-								class="glyphicon glyphicon-comment"
-								style="font-size: 1.2em; top: 3px; color: gray;"
-								post_num="${dto.post_num }"></span>&nbsp;댓글</span>
+								<c:if test="${dto.likecheck !=0 }">
+									<span class="bottom-left" style="cursor: pointer" id="dlike"
+										user_num="${sessionScope.user_num}"
+										post_num="${dto.post_num }"><span
+										class="glyphicon glyphicon-heart"
+										style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
+										${dto.like_count}</span>
+								</c:if>
+
+								<span class="bottom-right"><span
+									class="glyphicon glyphicon-comment"
+									style="font-size: 1.2em; top: 3px; color: gray;"
+									post_num="${dto.post_num }"></span>&nbsp;댓글</span>
+							</div>
+							<div class="bottom-down">
 								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
+								<span style="float: left; width: 8%; padding-left: 1%;">
+									<img src="${root }/photo/${user_photo}" class="writeimg">
+								</span> <span
+									style="background-color: #F0F2F5; width: 8%; width: 88%; float: left; border-radius: 60px; display: inline-flex; align-items: center;">
+									<input type="text" name="commentwrite"
+									style="width: 600px; border: none; background: none; outline: none; font-size: 15pt; padding: 1%; margin-right: 10px;"
+									placeholder="댓글을 입력하세요..."> <img
+									src="${root }/image/submit.png"
+									style="width: 30px; height: 30px; margin-right: 3%;">
+								</span>
+							</div>
 						</div>
 
 					</div>
@@ -675,20 +754,26 @@ border-radius: 20px;
 
 				<!-- 파일이 없을 경우 -->
 				<c:if test="${dto.post_file=='no' }">
-					<div class="shows" id="divs${dto.post_num }" style="display: none;">
+					<div class="shows" id="divs${dto.post_num }"> <div class="showtext">게시물을 숨겼습니다. 다시 보려면 게시물 보기를 눌러주세요.</div>
 						<button type="button" class="showbtn"
 							divpost_num="div${dto.post_num }"
 							divspost_num="divs${dto.post_num }">게시물 보기</button>
 					</div>
 					<div class="divmain2" id="div${dto.post_num }">
 						<div class="top2">
-							<div class="top-left">
-								<img src="${root }/photo/${dto.user_photo}"
-									class="userimg" user_num="${dto.user_num }">
-								<b>${dto.user_name }${dto.post_access }<span>${dto.post_time }</span>
-								</b>
+							<div class="top-left2">
+								<span style="float: left;"> <img
+									src="${root }/photo/${dto.user_photo}" class="userimg"
+									user_num="${dto.user_num }">
+								</span> <span style="float: left; padding: 3%; margin-right: 5px;">
+									<div>
+										<b>${dto.user_name }${dto.post_access }</b>
+									</div>
+
+									<div>${dto.post_time }</div>
+								</span>
 							</div>
-							<span class="top-right"> <span
+							<span class="top-right2"> <span
 								class="glyphicon glyphicon-th-list postmenu"
 								post_num="${dto.post_num }" user_num="${sessionScope.user_num }"
 								dtouser_num="${dto.user_num}"
@@ -734,30 +819,48 @@ border-radius: 20px;
 						</div>
 						<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 						<div class="bottom2">
-							<c:if test="${dto.likecheck ==0 }">
-								<span class="bottom-left2" style="cursor: pointer" id="like"
-									user_num="${sessionScope.user_num}" post_num="${dto.post_num }"><span
-									class="glyphicon glyphicon-heart-empty"
-									style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
-									${dto.like_count}</span>
-							</c:if>
+							<div class="bottom-up2">
+								<c:if test="${dto.likecheck ==0 }">
+									<span class="bottom-left2" style="cursor: pointer" id="like"
+										user_num="${sessionScope.user_num}"
+										post_num="${dto.post_num }"><span
+										class="glyphicon glyphicon-heart-empty"
+										style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
+										${dto.like_count}</span>
+								</c:if>
 
-							<c:if test="${dto.likecheck !=0 }">
-								<span class="bottom-left2" style="cursor: pointer" id="dlike"
-									user_num="${sessionScope.user_num}" post_num="${dto.post_num }"><span
-									class="glyphicon glyphicon-heart"
-									style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
-									${dto.like_count}</span>
-							</c:if>
-							
-							<span class="bottom-right2"><span
-								class="glyphicon glyphicon-comment"
-								style="font-size: 1.2em; top: 3px; color: gray;"
-								post_num="${dto.post_num }"></span>&nbsp;댓글</span>
+								<c:if test="${dto.likecheck !=0 }">
+									<span class="bottom-left2" style="cursor: pointer" id="dlike"
+										user_num="${sessionScope.user_num}"
+										post_num="${dto.post_num }"><span
+										class="glyphicon glyphicon-heart"
+										style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
+										${dto.like_count}</span>
+								</c:if>
+
+								<span class="bottom-right2"><span
+									class="glyphicon glyphicon-comment"
+									style="font-size: 1.2em; top: 3px; color: gray;"
+									post_num="${dto.post_num }"></span>&nbsp;댓글</span>
+							</div>
+							<div class="bottom-down2">
 								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
+								<span style="float: left; width: 8%; padding-left: 1%;">
+									<img src="${root }/photo/${user_photo}" class="writeimg">
+								</span> <span
+									style="background-color: #F0F2F5; width: 8%; width: 88%; float: left; border-radius: 60px; display: inline-flex; align-items: center;">
+									<input type="text" name="commentwrite"
+									style="width: 600px; border: none; background: none; outline: none; font-size: 15pt; padding: 1%; margin-right: 10px;"
+									placeholder="댓글을 입력하세요..."> <img
+									src="${root }/image/submit.png"
+									style="width: 30px; height: 30px; margin-right: 3%;">
+								</span>
+							</div>
 						</div>
 
+
 					</div>
+
 					<br>
 					<br>
 				</c:if>

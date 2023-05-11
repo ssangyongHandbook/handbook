@@ -16,7 +16,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
 </head>
 <body>
-사이드바
-totalCount: ${total }
+
 </body>
 </html>
