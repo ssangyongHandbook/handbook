@@ -126,8 +126,7 @@
 	
 	$(".searchpost").keyup(function(e){
 		if(e.keyCode == 13){
-
-			location.redirect="../post/timeline?searchcolumn="+$(".searchcolumn").val()+"&searchword="+$("searchpost").val();
+			location.href="../post/timeline?searchcolumn="+$(".searchcolumn").val()+"&searchword="+$(".searchpost").val();
 			
 		}
 		
