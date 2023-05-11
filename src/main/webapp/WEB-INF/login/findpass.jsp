@@ -11,29 +11,41 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
+<style>
+	.wrapper {
+		display: flex;
+		justify-content: center; /* 가로 중앙. */
+		align-items: center; /*새로중앙*/
+	}
+	.submitbtn {
+		margin-top:10px;
+	}
+</style>
 </head>
 <body>
 	<div>
-		<div class="container my-auto">
-			<div class="row">
-				<div>
-					<h4>비밀번호 찾기</h4>
-				</div>
-				<div>
-				 <!-- onsubmit="return check()" -->
-					<form role="form" action="/find/sendEmail" method="post" name="sendEmail">
-						<p>입력한 이메일로 임시 비밀번호가 전송됩니다.</p>
-						
-						<label class="form-label">Email</label>
-						<div class="input-group">
-							<input type="email" id="userEmail" name="memberEmail" class="form-control" required>
-							<!-- <button type="button" class="btn btn-danger" id="btnidcheck">중복체크</button>
-							&nbsp;<span class="emailsuccess" style="width: 60px; color: green;"></span> -->
-						</div>
-						<div class="text-center">
-							<button type="submit" class="btn" id="checkEmail">비밀번호 발송</button>
-						</div>
-					</form>
+		<div class="container" style="border:1px solid black;">
+			<div class="wrapper">
+				<div class="row">
+					<div>
+						<h1 style="text-align: center;">HandBook</h1>
+					</div>
+					<div>
+					 <!-- onsubmit="return check()" -->
+						<form role="form" action="/find/sendEmail" method="post" name="sendEmail">
+							<p style="font-size: 15pt; font-weight: bold;">입력한 이메일로 임시 비밀번호가 전송됩니다.</p>
+							
+							<label class="form-label">Email</label>
+							<div class="input-group">
+								<input type="email" id="userEmail" name="memberEmail" class="form-control" required>
+								<!-- <button type="button" class="btn btn-danger" id="btnidcheck">중복체크</button>
+								&nbsp;<span class="emailsuccess" style="width: 60px; color: green;"></span> -->
+							</div>
+							<div class="text-center submitbtn">
+								<button type="submit" class="btn" id="checkEmail">비밀번호 발송</button>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>

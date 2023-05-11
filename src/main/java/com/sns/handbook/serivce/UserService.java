@@ -176,6 +176,14 @@ public class UserService implements UserServiceInter {
 	public String getUserIdByEmail(String user_email) {
 		return mapperInter.getUserIdByEmail(user_email);
 	}
+	
+	@Override
+	public String getUserEmailBynamehp(String user_name, String user_hp) {
+		Map<String, String> map = new HashMap<>();
+		map.put("user_name", user_name);
+		map.put("user_hp", user_hp);
+		return mapperInter.getUserEmailBynamehp(map);
+	}
 	// 희수 끝
 
 	//예지
