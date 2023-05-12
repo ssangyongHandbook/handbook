@@ -114,6 +114,10 @@ public class MessageService implements MessageServiceInter {
 	@Override
 	public void insertMessage(MessageDto dto) {
 		// TODO Auto-generated method stub
+		if(dto.getMess_group()==0) {
+			dto.setMess_group(selectMaxNum()+1);
+		}
+		
 		mapperInter.insertMessage(dto);
 	}
 
@@ -127,6 +131,12 @@ public class MessageService implements MessageServiceInter {
 	public void deleteMessage(String mess_num) {
 		// TODO Auto-generated method stub
 		mapperInter.deleteMessage(mess_num);
+	}
+
+	@Override
+	public int selectMaxNum() {
+		// TODO Auto-generated method stub
+		return mapperInter.selectMaxNum();
 	}
 
 }

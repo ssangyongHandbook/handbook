@@ -19,7 +19,7 @@
 			where user_num = any(select user_num from user where user_name = #{searchword})
 		</if>
 	</if>
-	order by post_num desc limit 2 offset #{offset} 
+	order by post_num desc limit 4 offset #{offset} 
 	 
 	</select>
 	<delete id="deletePost" parameterType="String">

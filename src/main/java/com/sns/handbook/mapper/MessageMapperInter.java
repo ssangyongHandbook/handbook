@@ -16,4 +16,5 @@ public interface MessageMapperInter {
 	public void insertMessage(MessageDto dto);
 	public int getRecentGroup(String user_num);
 	public void deleteMessage(String mess_num);
+	public int selectMaxNum();
 }

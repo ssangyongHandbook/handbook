@@ -1,6 +1,7 @@
 .emoji_pickup{
   cursor: pointer;
-  margin-left: 20px
+  margin-left: 20px;
+  width: 28px;
 }
 
 #emoji_pickup_before{

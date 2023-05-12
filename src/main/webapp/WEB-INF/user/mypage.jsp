@@ -17,20 +17,35 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">
-	$(function(){
-		
-		$(document).ready(function() {
-		    $('#slider').slick({
-		        autoplay: false,         // 자동 재생 여부
-		        autoplaySpeed: 0,    // 자동 재생 속도 (단위: ms)
-		        dots: false,             // 점 네비게이션 표시 여부
-		        arrows: true,           // 화살표 네비게이션 표시 여부
-		        infinite: false,         // 무한 슬라이드 여부
-		        slidesToShow: 1,        // 한 화면에 보여줄 슬라이드 수
-		        slidesToScroll: 1       // 한 번에 스크롤할 슬라이드 수
-		    });
-		});
+
+//주소 찾기 API
+function findAddr(){
+    new daum.Postcode({
+         oncomplete: function(data) {
+            
+            console.log(data);
+            
+             // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+             // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+             // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+             var roadAddr = data.roadAddress; // 도로명 주소 변수
+             var jibunAddr = data.jibunAddress; // 지번 주소 변수
+             // 우편번호와 주소 정보를 해당 필드에 넣는다.
+            /*  document.getElementById('member_post').value = data.zonecode; */
+             if(roadAddr !== ''){
+                 document.getElementById("member_addr").value = roadAddr;
+             } 
+             else if(jibunAddr !== ''){
+                 document.getElementById("member_addr").value = jibunAddr;
+             }
+         }
+     }).open();
+ }
+
+
+$(function(){
 		
 		//강제 호출
 		$("#btnnewcover").click(function(){
@@ -132,12 +147,16 @@
 		$("#btnupdate").click(function(){
 					
 					var num=$(this).attr("num");
-					var addr=$("#uaddr").val();
+					var addr=$("#member_addr").val()+" "+$("#member_addr2").val();
+					
+					$("#member_addr").val(addr.split(",")[0]);
+					$("#member_addr2").val(addr.split(",")[1]);
 					var email=$("#uemail").val();
 					var hp=$("#uhp").val();
-					
 					var data="user_num="+num+"&user_addr="+addr+"&user_email="+email+"&user_hp="+hp;
+					
 					var form=new FormData();
+					
 					form.append("photo",$("#newphoto2")[0].files[0]);
 					form.append("cover",$("#newcover2")[0].files[0]);
 					form.append("user_num",num);
@@ -183,6 +202,24 @@
 						
 					});
 				})
+				
+		//강제 호출
+		$("#btnmodcontentphoto").click(function(){
+			
+			$("#update_file").trigger("click");
+		});
+		
+		//게시물 수정 시 사진 미리보기
+		$("#update_file").change(function(){
+			
+			 if($(this)[0].files[0]){
+			  var reader=new FileReader();
+			  reader.onload=function(e){
+			   $("#showmodimg").attr("src",e.target.result);
+			  }
+			  reader.readAsDataURL($(this)[0].files[0]);
+			 }
+		});
 		
 		//강제 호출
 		$("#btncontentphoto").click(function(){
@@ -202,7 +239,7 @@
 			 }
 		});
 		
-		//게시글 작성
+		//게시글 작성(다중 업로드)
 		$("#btnwrite").click(function() {
 
 			var post_access = $("#post_access").val();
@@ -235,6 +272,88 @@
 				}
 			});
 		});
+		
+		//사진 넘기면서 보기
+		$(document).ready(function() {
+			
+		 $('#slider').slick({
+			 
+			 	prevArrow: '<img src="../image/left.png" id="prev">',
+			 	nextArrow: '<img src="../image/right.png" id="next">',
+		        autoplay: false,         // 자동 재생 여부
+		        autoplaySpeed: 0,    // 자동 재생 속도 (단위: ms)
+		        dots: false,             // 점 네비게이션 표시 여부
+		        arrows: true,           // 화살표 네비게이션 표시 여부
+		        infinite: false,         // 무한 슬라이드 여부
+		        slidesToShow: 1,        // 한 화면에 보여줄 슬라이드 수
+		        slidesToScroll: 1      // 한 번에 스크롤할 슬라이드 수
+	
+		    });
+		 
+		 //마지막,처음 화살표 삭제
+		 $('#slider').on('afterChange', function(event, slick, currentSlide){
+			    if(currentSlide == 0){
+			        $('#prev').hide();
+			    } else {
+			        $('#prev').show();
+			    }
+			    if(currentSlide == slick.slideCount - 1){
+			        $('#next').hide();
+			    } else {
+			        $('#next').show();
+			    }
+			});
+		});
+		
+		//게시물 수정 값 불러오기
+		$(".modpost").click(function(){
+			
+			updatenum=$(this).attr("post_num");
+
+			$.ajax({
+				type : "get",
+				dataType : "json",
+				url : "updateform",
+				data : {"post_num" : updatenum},		
+				success : function(res) {
+					$("#update_access").val(res.post_access);
+					$("#update_content").val(res.post_content);
+					$("#update_file").val(res.post_file);
+				}
+			})
+		})
+		
+		//게시물 수정		
+		$("#btnupdate2").click(function(){
+			
+			var update_access=$("#update_access").val();
+			var update_content=$("#update_content").val();
+			
+			var form = new FormData();
+
+			var files=$("#update_file")[0].files;
+			
+			for (var i = 0; i < files.length; i++) {
+		        form.append("photo", files[i]);
+		    }
+			
+			form.append("post_num",updatenum);
+			form.append("post_access",update_access);
+			form.append("post_content",update_content);
+			
+			$.ajax({
+				type: "post",
+				dataType: "text",
+				url: "updatepostphoto",
+				processData: false,
+				contentType: false,
+				data: form,
+				success: function(){
+					location.reload();
+				}
+			});
+			
+		})
 		
 		//게시물 삭제
 		$(".delpost").click(function(){
@@ -288,11 +407,49 @@
 						}
 					})
 				})
+				
+		//팔로우 하기
+		$("#btnfollow").click(function(){
+			
+			var from_user=$(this).attr("from_user");
+			var to_user=$(this).attr("to_user");
+			
+			$.ajax({
+				
+				type: "get",
+				dataType: "text",
+				url: "insertfollowing",
+				data:{"from_user":from_user,"to_user":to_user},
+				success: function(){
+					
+					location.reload();
+				}
+			});
+		})
+		
+		//팔로우 취소
+		$("#btnunfollow").click(function(){
+			
+			var to_user=$(this).attr("to_user");
+			
+			$.ajax({
+				
+				type: "get",
+				dataType: "text",
+				url: "unfollowing",
+				data: {"to_user":to_user},
+				success: function(){
+					
+					location.reload();
+				}
+			});
+		})
 
 	})
 </script>
 
 <style type="text/css">
+
 	html{
 		background-color: #F0F2F5;
 	}
@@ -313,8 +470,13 @@
 			width: 100%;
 			height: 50px;
 			background-color: white;
+			
 		}
 		
+		.menu a {
+  			margin: 0 10px;
+		}
+
 		.mypage-main{
 			margin: 0 auto;
 		}
@@ -324,8 +486,12 @@
 			height: 250px;
 			background-color: white;
 			border-radius: 10px 10px;
-			margin: 10px;
-			
+			margin: 10px;	
+		}
+		
+		.intro-info{
+			line-height: 45px;
+			margin-left: 1%;
 		}
 		
 		.galary{
@@ -385,10 +551,12 @@
 		
 		.btnprofile{
 			position: relative;
-    		bottom: 27%;
-    		left: 87%;
+    		bottom: 30%;
+    		left: 65%;
     		font-weight: bold;
     		padding: 10px;
+    		background-color: #F0F2F5;
+    		padding: 8px;
 		}
 		
 		#btnupdate{
@@ -459,25 +627,70 @@
 			border-radius: 10px;
 			border: 1px solid gray;
 		}
-		
-		.slick-prev{
-			background-color: white;
+
+		#prev{
+			top: 300px;
+   			position: relative;
+    		z-index: 1;
+    		border: none;
+    		width: 100px; 
+    		height: 100px;
+    		cursor: pointer;
 		}
 		
-		.slick-next{
-			background-color: white;
+		#next{	
 			float: right;
+			bottom: 300px;
+   			position: relative;
+   			border: none;
+   			width: 100px; 
+    		height: 100px;
+    		cursor: pointer;
+
+		}
+		
+		.btnfollow{
+			color: white;
+			background-color: #3578E5;
+			border: none;
+			border-radius: 5px;
+			font-weight: bold;
+			padding: 8px;
+			position: relative;
+			bottom: 30%;
+			left: 80%;
+		}
+		
+		.btnunfollow{
+			color: white;
+			background-color: #3578E5;
+			border: none;
+			border-radius: 5px;
+			font-weight: bold;
+			padding: 8px;
+			position: relative;
+			bottom: 30%;
+			left: 80%;
+		}
+		
+		.btnmessage{
+			color: black;
+			border: none;
+			border-radius: 5px;
+			font-weight: bold;
+			padding: 8px;
+			background-color: #F0F2F5;
+			position: relative;
+			bottom: 30%;
+			left: 81%;
 		}
 		
 </style>
 </head>
 <body>
-<c:set var="root" value="<%=request.getContextPath() %>"/>
-
-
-
+	<c:set var="root" value="<%=request.getContextPath() %>"/>
 	
-	
+	<!-- 프로필 수정 -->
 		<div class="container">
 		  <!-- Modal -->
 		  <div class="modal fade" id="infoupdate" role="dialog">
@@ -527,9 +740,23 @@
 		          <div class="title-intro">
 		          	<span style="font-weight: 700; margin-right: 264px; font-size: 12pt;">회원님을 소개할 항목을 구성해주세요</span> 
 			          	<div class="modal-intro">
-			          		<input type="text" id="uaddr" class="form-control" value="${dto.user_addr }"><br>
-			      			<input type="text" id="uemail" class="form-control" value="${dto.user_email }"><br>
-			      			<input type="text" id="uhp" class="form-control" value="${dto.user_hp }">
+
+								<div class="form-floating">
+									<p>주소</p>					
+									<!-- <input id="member_post" class="form-control" type="text" placeholder="우편번호" readonly onclick="findAddr()"
+										style="background-color: white;" value=""><br> -->
+										
+										 <input id="member_addr" name="addr1" class="form-control" type="text" placeholder="주소" readonly 
+										 style="background-color: white;" required="required" onclick="findAddr()"><br>
+										  
+										<input type="text" id="member_addr2" name="addr2" class="form-control" placeholder="상세주소">
+								</div><br>
+								
+								<p>전화번호</p>
+								 <input type="text" id="uhp" class="form-control" value="${dto.user_hp }"><br>
+								 
+								 <p>이메일</p>
+								 <input type="text" id="uemail" class="form-control" value="${dto.user_email }">
 			          	</div>
 		          </div>
 		        </div>
@@ -537,13 +764,49 @@
 		        <div class="modal-footer">
 		          <button type="button" class="btn btn-default" data-dismiss="modal" id="btnupdate"  num="${dto.user_num }">정보 수정</button>
 		        </div>
-		      </div>
-		      
+		      </div>  
 		    </div>
 		  </div>
 		</div>
-		
-		<div class="container">
+
+<!-- 게시글 수정 -->
+	<div class="modal fade" id="updatepost" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title" style="font-weight: 700; text-align: center;">게시물 수정</h4>
+				</div>
+
+				<div class="modal-body">
+					<img alt="" src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
+		          	<span>${dto.user_name }</span><br>
+		          	
+						<select class="form-control" name="update_access"
+							id="update_access" required="required" >
+							<option value="all">전체공개</option>
+							<option value="follower">팔로워 공개</option>
+							<option value="onlyme">나만보기</option>
+						</select>
+					
+					<input type="text" id="update_content"  placeholder="무슨 생각을 하고 계신가요?" style="border: none; width: 100%; outline: none;"><br>
+					<img src="${root }/post_file/${pdto.post_file}" id="showmodimg" style="width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
+					<input type="file" name="update_file" class="form-control" required="required" multiple="multiple" id="update_file" style="display: none;">
+					
+					<button type="button" id="btnmodcontentphoto">사진 선택</button>				
+				</div>
+				
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" id="btnupdate2">수정</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- 게시글 작성 -->
+	<div class="container">
 		  <!-- Modal -->
 		  <div class="modal fade" id="contentwrite" role="dialog" >
 		    <div class="modal-dialog">
@@ -606,7 +869,7 @@
 			</div>
 			
 			<div class="profile">                         
-				<div class="dropdown" style="width: 0%; height: 82%; position: relative; left: 10%;">
+				<div class="dropdown" style="width: 0%; height: 100%; position: relative; left: 10%;">
 				
 					<input type="file" id="newphoto" style="display: none;" num="${dto.user_num }">
 								
@@ -619,19 +882,33 @@
 					     
 						<c:if test="${sessionScope.loginok!=null && dto.user_photo!=null }">
 					    <img data-toggle="dropdown" alt="" src="${root }/photo/${dto.user_photo}" 
-					    style="width: 180px; height: 180px; border:3px solid gray; cursor: pointer; border-radius: 90px; position: relative; bottom: 80%;">
+					    style="width: 180px; height: 180px; border:3px solid gray; cursor: pointer; border-radius: 90px; position: relative; bottom: 62%;">
 					    </c:if>
 					    
 					    <c:if test="${sessionScope.loginok!=null && dto.user_photo==null }">
 					    <img data-toggle="dropdown" alt="" src="${root }/image/profile.png" 
-					    style="width: 180px; height: 180px; cursor: pointer; border-radius: 90px; position: relative; bottom: 80%;">
+					    style="width: 180px; height: 180px; cursor: pointer; border-radius: 90px; position: relative; bottom: 62%;">
 					    </c:if>
 					     
 					   <img alt="" src="${root }/image/camera.png" style="width: 50px; height: 50px; cursor: pointer;
-					   position: relative; bottom:125%;">			
-					  
+					   position: relative; bottom:100%;">
+					   
 				</div>
-				
+					   <c:if test="${sessionScope.user_num!=dto.user_num && checkfollowing !=1 }">
+					   	<button type="button" class="btnfollow" id="btnfollow" from_user="${sessionScope.user_num }" to_user="${dto.user_num }">
+					   	<i class="fa-solid fa-user-group"></i>&nbsp;팔로우 추가</button>
+					  </c:if>
+					  
+					  <c:if test="${sessionScope.user_num!=dto.user_num && checkfollowing ==1 }">
+					   	<button type="button" class="btnunfollow" id="btnunfollow" to_user="${dto.user_num }">
+					   	<i class="fa-solid fa-user-group"></i>&nbsp;팔로우 취소</button>
+					  </c:if>
+					  
+					  <button type="button" class="btnmessage"><i class="fa-solid fa-comment"></i>&nbsp;메시지 보내기</button>
+					  
+					  <span style="font-size: 22pt; font-weight: bold; position: relative; bottom: 70%; left: 14%;">${dto.user_name }</span>
+					  <span style="font-size: 13pt; font-weight: bold; color:#65676b;">친구 ${tf_count}명</span>
+					  
 				<c:if test="${sessionScope.user_num==dto.user_num }">
 					<button type="button" class="btnprofile" data-toggle="modal" data-target="#infoupdate" style="border-radius: 5px; border: none;">
 						<i class="fa-solid fa-pencil fa-xl - 1.5em - 24px"></i>&nbsp;&nbsp;프로필 편집
@@ -642,7 +919,7 @@
 			<div class="menu">
 			<hr style="border: 1px solid lightgray; margin:0px;">
 				<div style="font-weight: bold; font-size: 15pt;">
-					<a href="/user/mypage" style="color: black;"><span>게시글</span></a>
+					<a href="/user/mypage?user_num=${dto.user_num }" style="color: black;"><span>게시글</span></a>
 					<a href="/user/info" style="color: black;"><span>정보</span></a>
 					<a href="/user/friend" style="color: black;"><span>친구</span></a>
 				</div>
@@ -653,11 +930,11 @@
 					<div class="intro">
 						<span><b style="font-size: 16pt;">소개</b></span>
 						<div class="intro-info">
-							<span><i class="fa-solid fa-house fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr }</b>&nbsp;&nbsp;거주</span><br>
-							<span><i class="fa-solid fa-location-dot  fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr.substring(0, 2)}</b>&nbsp;&nbsp;출신</span><br>
+							<span>&nbsp;<i class="fa-solid fa-house fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr }</b>&nbsp;&nbsp;</span><br>
+							<span>&nbsp;&nbsp;<i class="fa-solid fa-location-dot  fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr.substring(6, 8)}</b>&nbsp;&nbsp;출신</span><br>
 							<span><i class="fa-solid fa-wifi fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${followercount }</b>&nbsp;&nbsp;명이 팔로우함</span><br>
-							<span><i class="fa-solid fa-envelope fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_email }</b>&nbsp;&nbsp;</span><br>
-							<span><i class="fa-solid fa-mobile-screen-button fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_hp }</b>&nbsp;&nbsp;</span>
+							<span>&nbsp;<i class="fa-solid fa-envelope fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_email }</b>&nbsp;&nbsp;</span><br>
+							<span>&nbsp;&nbsp;<i class="fa-solid fa-mobile-screen-button fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_hp}</b>&nbsp;&nbsp;</span>
 						</div>
 					</div>
 					
@@ -753,7 +1030,7 @@
 														<i class="fa-solid fa-ellipsis fa-2x - 2em" data-toggle="dropdown" style=" cursor: pointer;"></i>
 														<ul class="dropdown-menu dropdown-menu-right">
 													      <li><a href="#" class="delpost" post_num=${pdto.post_num }>게시글 삭제</a></li>
-													      <li><a href="#" class="modpost" post_num=${pdto.post_num }>게시글 수정</a></li>
+													      <li><a href="#" class="modpost" id="updatepost" data-toggle="modal" data-target="#updatepost" post_num=${pdto.post_num }>게시글 수정</a></li>
 													    </ul>
 													</div>
 												</c:if>
@@ -763,7 +1040,7 @@
 									<div class="center">
 										<div class="center-up">${pdto.post_content }</div>
 											<c:if test="${pdto.post_file!='no' }">
-												<div class="center-down" id="slider">
+												<div class="center-down" id="slider" >
 													<c:forTokens items="${pdto.post_file }" delims="," var="file">
 														<img src="/post_file/${file }" style="width: 100%;height: 500px;">
 													</c:forTokens>

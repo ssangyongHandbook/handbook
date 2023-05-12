@@ -18,4 +18,5 @@ public interface FollowingServiceInter {
 	public void deleteFollowing(String to_user);
 	public List<FollowingDto> getFollowList(String from_user, int offset);
 	public int togetherFollow(String to_user, String from_user);
+	public List<FollowingDto> followSearch(String from_user, String searchword, int offset);
 }

@@ -16,6 +16,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
 </head>
 <body>
-메인페이지
+
 </body>
 </html>
