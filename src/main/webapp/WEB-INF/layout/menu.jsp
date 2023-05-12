@@ -42,7 +42,7 @@ ul{
 		</li>
 		
         <li>
-            <a href="#"><span class="glyphicon glyphicon-search" style="padding:10px; font-size: 20pt;">&nbsp;팔로워 추천</span></a>
+            <a href="${root }/following/recommendlist?from_user=${sessionScope.user_num}"><span class="glyphicon glyphicon-search" style="padding:10px; font-size: 20pt;">&nbsp;팔로워 추천</span></a>
         </li>
         <li>
             <a href="${root }/following/followlist?from_user=${sessionScope.user_num}"><span class="glyphicon glyphicon-th-list" style="padding:10px; font-size: 20pt;">&nbsp;팔로워 목록</span></a>
