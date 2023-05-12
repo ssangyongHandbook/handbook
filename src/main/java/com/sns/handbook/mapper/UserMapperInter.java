@@ -34,6 +34,7 @@ public interface UserMapperInter {
 	public int loginEmailCheck(String user_email);
 	public String getUserIdByEmail(String user_email);
 	public void updatePassword(Map<String, String> map);
+	public String getUserEmailBynamehp(Map<String ,String> map);
 	//희수 끝
 
 	//예지

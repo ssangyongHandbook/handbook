@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sns.handbook.dto.CommentDto;
+import com.sns.handbook.dto.CommentlikeDto;
 import com.sns.handbook.mapper.CommentMapperInter;
 
 @Service
@@ -98,4 +99,46 @@ public class CommentService implements CommentServiceInter {
 		// TODO Auto-generated method stub
 		return mapper.getAllDatas();
 	}
+	
+	
+	//댓글 좋아요 부분
+	//댓글 좋아요 부분
+	@Override
+	public void deleteLike(String user_num,String comment_num) {
+		// TODO Auto-generated method stub
+		Map<String, String> map=new HashMap<>();
+		
+		map.put("user_num", user_num);
+		map.put("comment_num", comment_num);
+		
+		mapper.deleteLike(map);
+		
+	}
+	
+	@Override
+	public int getLikeCheck(String user_num,String comment_num) {
+		// TODO Auto-generated method stub
+		
+		Map<String, String> map=new HashMap<>();
+		
+		map.put("user_num", user_num);
+		map.put("comment_num", comment_num);
+		
+		return mapper.getLikeCheck(map);
+	}
+	
+	@Override
+	public int getTotalLikes(String comment_num) {
+		// TODO Auto-generated method stub
+		return mapper.getTotalLikes(comment_num);
+	}
+	
+	@Override
+	public void insertLike(CommentlikeDto dto) {
+		// TODO Auto-generated method stub
+		mapper.insertLike(dto);
+	}
+	
+	
+	
 }

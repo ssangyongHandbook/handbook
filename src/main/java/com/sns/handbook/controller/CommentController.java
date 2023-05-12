@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sns.handbook.dto.CommentDto;
+import com.sns.handbook.dto.CommentlikeDto;
 import com.sns.handbook.dto.UserDto;
 import com.sns.handbook.serivce.CommentService;
+import com.sns.handbook.serivce.PostService;
 import com.sns.handbook.serivce.UserService;
 
 
@@ -30,6 +32,8 @@ public class CommentController {
 	CommentService service;
 	@Autowired
 	UserService uservice;
+	@Autowired
+	PostService pservice;
 	
 	@GetMapping("test/comment")
 	public ModelAndView test(@RequestParam(defaultValue = "0") String comment_num,
@@ -37,7 +41,8 @@ public class CommentController {
 			@RequestParam(defaultValue = "0") int comment_step,
 			@RequestParam(defaultValue = "0") int comment_level,
 			@RequestParam(defaultValue = "0")int offset,
-			@RequestParam(defaultValue = "9") String post_num) {
+			@RequestParam(defaultValue = "9") String post_num,
+			HttpSession session){
 		
 		ModelAndView model=new ModelAndView();
 		
@@ -48,6 +53,8 @@ public class CommentController {
 			UserDto udto=uservice.getUserByNum(list.get(i).getUser_num());
 			list.get(i).setUser_name(udto.getUser_name());
 			list.get(i).setUser_photo(udto.getUser_photo());
+			list.get(i).setLike_count(service.getTotalLikes(list.get(i).getComment_num()));
+			list.get(i).setLike_check(service.getLikeCheck((String)session.getAttribute("user_num"), list.get(i).getComment_num()));
 			
 			
 			// 대화 시간 오늘 날짜에서 빼기(몇 초전... 몇 분 전...)
@@ -113,7 +120,6 @@ public class CommentController {
 	@ResponseBody
 	public void insert(@ModelAttribute CommentDto dto,HttpSession session) {
 	
-		System.out.println(dto.getComment_num());
 		
 		if(!dto.getComment_num().equals("0")) {
 			CommentDto momDto= service.getData(dto.getComment_num());
@@ -121,11 +127,6 @@ public class CommentController {
 			dto.setComment_group(momDto.getComment_group());
 			dto.setComment_step(momDto.getComment_step());
 			dto.setComment_level(momDto.getComment_level());
-		}else {
-			
-			dto.setComment_group(0);
-			dto.setComment_step(0);
-			dto.setComment_level(0);
 		}
 		dto.setUser_num((String)session.getAttribute("user_num"));
 		service.insert(dto);
@@ -135,7 +136,7 @@ public class CommentController {
 	
 	@GetMapping("test/scroll")
 	@ResponseBody
-	public List<CommentDto> scroll (String post_num,int offset) {
+	public List<CommentDto> scroll (String post_num,int offset,HttpSession session) {
 	
 		List<CommentDto> list=service.selectScroll(post_num	, offset);
 		
@@ -144,6 +145,9 @@ public class CommentController {
 			UserDto udto=uservice.getUserByNum(list.get(i).getUser_num());
 			list.get(i).setUser_name(udto.getUser_name());
 			list.get(i).setUser_photo(udto.getUser_photo());
+			list.get(i).setLike_count(service.getTotalLikes(list.get(i).getComment_num()));
+			list.get(i).setLike_check(service.getLikeCheck((String)session.getAttribute("user_num"), list.get(i).getComment_num()));
+			list.get(i).setPost_user_num(pservice.getDataByNum(list.get(i).getPost_num()).getUser_num());
 			
 			// 대화 시간 오늘 날짜에서 빼기(몇 초전... 몇 분 전...)
 	         Date today = new Date();
@@ -194,5 +198,30 @@ public class CommentController {
 		
 		return list;
 
+	}
+	
+	
+	@GetMapping("test/likeinsert")
+	@ResponseBody
+	public void likeinsert(String comment_num,HttpSession session) {
+		
+		CommentlikeDto dto=new CommentlikeDto();
+		
+		dto.setComment_num(comment_num);
+		dto.setUser_num((String)session.getAttribute("user_num"));
+		
+		service.insertLike(dto);
+	}
+	
+	@GetMapping("test/likedelete")
+	@ResponseBody
+	public void likedelete(String comment_num,HttpSession session) {
+		
+		CommentlikeDto dto=new CommentlikeDto();
+		
+		dto.setComment_num(comment_num);
+		dto.setUser_num((String)session.getAttribute("user_num"));
+		
+		service.deleteLike((String)session.getAttribute("user_num"), comment_num);
 	}
 }

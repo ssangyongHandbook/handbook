@@ -35,6 +35,7 @@ public interface UserServiceInter {
 	public String getTempPassword();
 	public void mailSend(MailDto mailDto);
 	public String getUserIdByEmail(String user_email);
+	public String getUserEmailBynamehp(String user_name, String user_hp);
 	//희수 끝
 	
 	//예지

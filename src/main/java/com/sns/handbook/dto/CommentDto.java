@@ -23,4 +23,7 @@ public class CommentDto {
 	private String user_photo;
 	private String user_name;
 	private String perTime;
+	private int like_count;
+	private int like_check;
+	private String post_user_num;
 }
