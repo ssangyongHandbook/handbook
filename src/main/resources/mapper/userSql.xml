@@ -79,6 +79,11 @@
 		update user set user_pass = #{user_pass} where user_num=#{user_num}
 	</update>
 	
+	<!-- 이름, 폰번호 입력해서 email 찾기 -->
+	<select id="getUserEmailBynamehp" resultType="String" parameterType="Map">
+		select user_email from user where user_hp = #{user_hp} and user_name=#{user_name}
+	</select>
+	
 	<!-- 여기 위까지는 김희수가 구현함. -->
 	
 	<!-- 예지 -->

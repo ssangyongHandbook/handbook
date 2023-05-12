@@ -37,19 +37,7 @@ public class MainController {
 		ModelAndView mv = new ModelAndView();
 
  
-		/* 네아로 인증 URL을 생성하기 위하여 naverLoginBO클래스의 getAuthorizationUrl메소드 호출 */
-		String naverAuthUrl = naverLoginBO.getAuthorizationUrl(session);
-		/* 인증요청문 확인 */
-		//System.out.println("urlNaver : " + naverAuthUrl);
-		/* 객체 바인딩 */
-		//model.addAttribute("urlNaver", naverAuthUrl);
-		mv.addObject("urlNaver", naverAuthUrl);//loginmain.jsp에서 ${urlNaver}로 쓴다.
 		
-		
-		/* 카카오 URL */
-		String kakaoAuthUrl = kakaoLoginBO.getAuthorizationUrl(session);
-		//System.out.println("카카오:" + kakaoAuthUrl);
-		mv.addObject("urlKakao", kakaoAuthUrl);
 		
 
 		/* 생성한 인증 URL을 View로 전달 */
@@ -63,6 +51,19 @@ public class MainController {
 		mv.addObject("total", totalCount);
 		// 로그인이 안되어있으면, 로그인 폼으로 이동
 		if (loginok == null) {
+			/* 네아로 인증 URL을 생성하기 위하여 naverLoginBO클래스의 getAuthorizationUrl메소드 호출 */
+			String naverAuthUrl = naverLoginBO.getAuthorizationUrl(session);
+			/* 인증요청문 확인 */
+			//System.out.println("urlNaver : " + naverAuthUrl);
+			/* 객체 바인딩 */
+			//model.addAttribute("urlNaver", naverAuthUrl);
+			mv.addObject("urlNaver", naverAuthUrl);//loginmain.jsp에서 ${urlNaver}로 쓴다.
+			
+			
+			/* 카카오 URL */
+			String kakaoAuthUrl = kakaoLoginBO.getAuthorizationUrl(session);
+			//System.out.println("카카오:" + kakaoAuthUrl);
+			mv.addObject("urlKakao", kakaoAuthUrl);
 			//System.out.println("여기로");
 			mv.setViewName("/sub/login/loginmain");
 		} else {
