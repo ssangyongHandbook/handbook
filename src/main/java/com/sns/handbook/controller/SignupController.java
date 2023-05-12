@@ -33,7 +33,7 @@ public class SignupController {
 			user_addr = addr1;
 		}
 		else {
-			user_addr = addr1 + " " + addr2;
+			user_addr = addr1 + "," + addr2;
 		}
 		
 		String user_hp = hp1 + "-" + hp2 + "-" + hp3;
