@@ -107,8 +107,7 @@ public class UserController {
 		int followercount=fservice.getTotalFollower(user_num);
 		int followcount=fservice.getTotalFollowing(user_num);
 		String loginnum=uservice.getUserById((String)session.getAttribute("myid")).getUser_num();
-		
-		PostDto pdto=new PostDto();
+	
 		UserDto udto=uservice.getUserByNum(user_num);
 		List<PostDto> postlist=uservice.getPost(user_num);
 		List<FollowingDto> tflist=uservice.getFollowList(user_num, offset);
@@ -175,7 +174,6 @@ public class UserController {
 		
 		model.addObject("loginnum", loginnum);
 		model.addObject("dto", udto);
-		model.addObject("pdto", pdto);
 		model.addObject("offset", offset);
 		model.addObject("tflist", tflist);
 		model.addObject("postlist",postlist);
@@ -247,8 +245,8 @@ public class UserController {
 	
 	//게시물 수정
 	@ResponseBody
-	@PostMapping("/user/updatepostphoto")
-	public void updatepostphoto(@ModelAttribute PostDto dto,HttpSession session,@RequestParam(required = false) List<MultipartFile> photo)
+	@PostMapping("/user/updatepost")
+	public void updatepost(@ModelAttribute PostDto dto,HttpSession session,@RequestParam(required = false) List<MultipartFile> photo)
 	{
 		
 		String path = session.getServletContext().getRealPath("/post_file");
@@ -257,12 +255,8 @@ public class UserController {
 	    String uploadName = "";
 	    
 	    
-	    if (photo == null) {
-	        dto.setPost_file("no");
-	        pservice.updatePhoto(dto.getPost_num(), dto.getPost_file());
-	        
-	    } else {
-	    	
+	    if (photo != null) {
+	      
 	        for (MultipartFile f : photo) {
 	    	    
 	            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
@@ -284,9 +278,11 @@ public class UserController {
 		    
 		    pservice.updatePhoto(dto.getPost_num(), uploadName);
 		    
-		    pservice.updatePost(dto);
-		    
 	    }
+	    
+	    pservice.updatePost(dto);
+	    
+	    
 	}
 
 
