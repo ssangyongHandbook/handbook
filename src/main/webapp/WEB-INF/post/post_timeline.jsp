@@ -83,7 +83,6 @@
 
 		});
 
-
 		$(document).on("click", ".showbtn", function() {
 			var divpost_num = $(this).attr("divpost_num");
 			var divspost_num = $(this).attr("divspost_num")
@@ -93,18 +92,40 @@
 			$("#" + divspost_num).hide();
 
 		});
-		
+
 		$(document).on("click", ".liketoggle", function() {
 
-			$(".likeshow1").toggle();
-			$(".likehide1").toggle();
+			var likeshow1_num = $(this).attr("likeshow1_num");
+			var likehide1_num = $(this).attr("likehide1_num");
+
+
+			$("#" + likeshow1_num).show();
+			$("#" + likehide1_num).hide();
+
+		});
+		
+		$(document).on("click", ".liketoggle3", function() {
+
+			var likeshow1_num = $(this).attr("likeshow1_num");
+			var likehide1_num = $(this).attr("likehide1_num");
+
+
+			$("#" + likeshow1_num).hide();
+			$("#" + likehide1_num).show();
 
 		});
 
 		$(document).on("click", ".liketoggle2", function() {
 
-			$(".likeshow2").toggle();
-			$(".likehide2").toggle();
+			var likeshow2_num = $(this).attr("likeshow2_num");
+			var likehide2_num = $(this).attr("likehide2_num");
+
+			/* 		
+					$(".likeshow2").toggle();
+					$(".likehide2").toggle(); */
+
+			$("#" + likeshow2_num).toggle();
+			$("#" + likehide2_num).toggle();
 
 		});
 
@@ -207,7 +228,7 @@
 				success : function() {
 				}
 			})
-		});
+		}); 
 
 		$(document).on("click", "#postfollow", function() {
 			var from_user = $(this).attr("from_user");
@@ -714,7 +735,7 @@ body {
 
 											<li id="postupdate" class="postdetail" data-toggle="modal"
 												data-target="#updatepost" post_num="${dto.post_num }"
-												user_num="${dmto.user_num }">게시물 수정</li>
+												user_num="${dto.user_num }">게시물 수정</li>
 											<li id="postdelete" class="postdetail"
 												user_num="${dto.user_num }" post_num="${dto.post_num }">게시물
 												삭제</li>
@@ -763,41 +784,53 @@ body {
 
 
 
-
-
 								<!-- 체크 안했으면 보이는거 -->
 								<c:if test="${dto.likecheck ==0 }">
-									<span class="bottom-left2 liketoggle " style="cursor: pointer"   id="${dto.post_num }"
-										id="like" user_num="${sessionScope.user_num}"
-										post_num="${dto.post_num }"> <span class="likehide1">
-											<span style="font-size: 1.2em; top: 3px; color: gray;">
-												<i class="fa-regular fa-thumbs-up"></i>
-										</span>&nbsp;좋아요 ${dto.like_count}
-									</span> <span class="likeshow1" id="dlike"
+								
+									<span class="bottom-left liketoggle" style="cursor: pointer"
+										likehide1_num="likehide1${dto.post_num}"
+										likeshow1_num="likeshow1${dto.post_num}" 
 										user_num="${sessionScope.user_num}"
-										post_num="${dto.post_num }" style="display: none;"> <span
+										post_num="${dto.post_num }" id="like"> <span 
+										id="likehide1${dto.post_num}" > <span 
+											style="font-size: 1.2em; top: 3px; color: gray;"> <i
+												class="fa-regular fa-thumbs-up"></i>
+										</span>&nbsp;좋아요 ${dto.like_count}
+									</span> 
+									
+									
+									<span class="bottom-left liketoggle3" 
+									user_num="${sessionScope.user_num}"  id="dlike"
+									post_num="${dto.post_num }"
+										likehide1_num="likehide1${dto.post_num}"
+										likeshow1_num="likeshow1${dto.post_num}">
+									
+									<span  
+										id="likeshow1${dto.post_num}"style="display: none;"> <span
 											style="font-size: 1.2em; top: 3px; color: blue;"> <i
 												class="fa-solid fa-thumbs-up"></i>
 										</span>&nbsp;좋아요 회원님 외${dto.like_count}명
 									</span>
-
 									</span>
-
+									</span>
 								</c:if>
-
 
 								<!-- 처음부터 체크되어있으면 보이는거  -->
 								<c:if test="${dto.likecheck !=0 }">
-									<span class="bottom-left2 liketoggle2" style="cursor: pointer"
-										id="dlike" user_num="${sessionScope.user_num}"
-										post_num="${dto.post_num }"> <span class="likehide2">
-											<span style="font-size: 1.2em; top: 3px; color: blue;">
-												<i class="fa-solid fa-thumbs-up"></i>
+									<span class="bottom-left liketoggle2" style="cursor: pointer"
+										likehide2_num="likehide2${dto.post_num}"
+										likeshow2_num="likeshow2${dto.post_num}" id="dlike"
+										user_num="${sessionScope.user_num}"
+										post_num="${dto.post_num }"> <span
+										id="likehide2${dto.post_num}"> <span
+											style="font-size: 1.2em; top: 3px; color: blue;"> <i
+												class="fa-solid fa-thumbs-up"></i>
 										</span>&nbsp;좋아요 회원님 외${dto.like_count}명
-									</span> <span class="likeshow2" user_num="${sessionScope.user_num}"
-										id="like" post_num="${dto.post_num }" style="display: none;">
-											<span style="font-size: 1.2em; top: 3px; color: gray;">
-												<i class="fa-regular fa-thumbs-up"></i>&nbsp;좋아요
+									</span> <span user_num="${sessionScope.user_num}"
+										id="likeshow2${dto.post_num}" 
+										post_num="${dto.post_num }" style="display: none;"> <span
+											style="font-size: 1.2em; top: 3px; color: gray;"> <i
+												class="fa-regular fa-thumbs-up"></i>&nbsp;좋아요
 												${dto.like_count}
 										</span>
 									</span>
@@ -924,13 +957,20 @@ body {
 
 								<!-- 체크 안했으면 보이는거 -->
 								<c:if test="${dto.likecheck ==0 }">
-									<span class="bottom-left2 liketoggle " style="cursor: pointer"
+									<span class="bottom-left2 liketoggle" style="cursor: pointer"
 										id="like" user_num="${sessionScope.user_num}"
-										post_num="${dto.post_num }"> <span class="likehide1">
-											<span style="font-size: 1.2em; top: 3px; color: gray;">
-												<i class="fa-regular fa-thumbs-up"></i>
+										likehide1_num="likehide1${dto.post_num}"
+										likeshow1_num="likeshow1${dto.post_num}"
+										post_num="${dto.post_num }"> <span class="likehide1"
+										id="likehide1${dto.post_num}"> <span
+											style="font-size: 1.2em; top: 3px; color: gray;"> <i
+												class="fa-regular fa-thumbs-up"></i>
 										</span>&nbsp;좋아요 ${dto.like_count}
-									</span> <span class="likeshow1" id="dlike"
+									</span> <span class="likeshow1"
+									likehide1_num="likehide1${dto.post_num}"
+										likeshow1_num="likeshow1${dto.post_num}"
+									
+										id="likeshow1${dto.post_num}"  class="dlike"
 										user_num="${sessionScope.user_num}"
 										post_num="${dto.post_num }" style="display: none;"> <span
 											style="font-size: 1.2em; top: 3px; color: blue;"> <i
@@ -947,14 +987,18 @@ body {
 								<c:if test="${dto.likecheck !=0 }">
 									<span class="bottom-left2 liketoggle2" style="cursor: pointer"
 										id="dlike" user_num="${sessionScope.user_num}"
-										post_num="${dto.post_num }"> <span class="likehide2">
-											<span style="font-size: 1.2em; top: 3px; color: blue;">
-												<i class="fa-solid fa-thumbs-up"></i>
+										likehide2_num="likehide2${dto.post_num}"
+										likeshow2_num="likeshow2${dto.post_num}"
+										post_num="${dto.post_num }"> <span class="likehide2"
+										id="likeshow2${dto.post_num}"> <span
+											style="font-size: 1.2em; top: 3px; color: blue;"> <i
+												class="fa-solid fa-thumbs-up"></i>
 										</span>&nbsp;좋아요 회원님 외${dto.like_count}명
 									</span> <span class="likeshow2" user_num="${sessionScope.user_num}"
-										id="like" post_num="${dto.post_num }" style="display: none;">
-											<span style="font-size: 1.2em; top: 3px; color: gray;">
-												<i class="fa-regular fa-thumbs-up"></i>&nbsp;좋아요
+										id="likehide2${dto.post_num}" id="like"
+										post_num="${dto.post_num }" style="display: none;"> <span
+											style="font-size: 1.2em; top: 3px; color: gray;"> <i
+												class="fa-regular fa-thumbs-up"></i>&nbsp;좋아요
 												${dto.like_count}
 										</span>
 									</span>
