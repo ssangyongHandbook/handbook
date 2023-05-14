@@ -326,7 +326,13 @@ span{
 			    				</div>
 			    			</c:if>
 			    			<c:if test="${dto.post_user_num.equals(sessionScope.user_num) or dto.user_num.equals(sessionScope.user_num) }">
-			    				안녕
+			    				<div style="height: 0; width:450px; position: relative; left: -30px; top: 30px;">
+				    				<img src="../image/add.png" style="width: 20px; float: right;">
+				    				<ul class="commentul" id="ul${dto.comment_num}" style="float: right; display: ">
+										<li>수정</li>
+										<li>삭제</li>
+									</ul>
+			    				</div>
 			    			</c:if>
 			    		<div class="comment">
 							<img src="/photo/${dto.user_photo }" class="profile">
