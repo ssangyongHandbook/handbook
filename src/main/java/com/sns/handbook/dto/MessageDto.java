@@ -16,4 +16,6 @@ public class MessageDto {
 	private int mess_group;
 	private String mess_content;
 	private Timestamp mess_writeday;
+	
+	private String mess_time;
 }
