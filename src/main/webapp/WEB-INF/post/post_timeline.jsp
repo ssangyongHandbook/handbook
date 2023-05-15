@@ -22,11 +22,7 @@
 <script type="text/javascript">
 	$(function() {
 
-		offset = $
-		{
-			offset
-		}
-		;
+		offset = ${offset};
 
 		$("#insertbtn").click(function() {
 
@@ -50,7 +46,7 @@
 				processData : false,
 				contentType : false,
 				data : form,
-				url : "insert",
+				url : "insertpost",
 				success : function() {
 					location.reload();
 				}
@@ -328,7 +324,7 @@ body {
 
 .center {
 	width: 100%;
-	height: 70%;
+	height: 78.5%;
 }
 
 .center-up {
@@ -344,7 +340,7 @@ body {
 
 .bottom {
 	width: 100%;
-	height: 15%;
+	height: 6.5%;
 }
 
 .bottom-up {
@@ -409,7 +405,7 @@ body {
 
 .center2 {
 	width: 100%;
-	height: 40%;
+	height: 57%;
 }
 
 .center-up2 {
@@ -419,7 +415,7 @@ body {
 
 .bottom2 {
 	width: 100%;
-	height: 30%;
+	height: 13%;
 }
 
 .bottom-up2 {
@@ -671,7 +667,7 @@ body {
 
 		<section>
 			<!-- 파일이 있을경우0 -->
-
+							<!--  동영상일 경우와 사진이 1장만 있을 경우도 .해주어야함   -->
 
 			<c:forEach var="dto" items="${list }" varStatus="i">
 				<c:if test="${dto.post_file!='no' }">
@@ -764,7 +760,7 @@ body {
 
 								<!-- 체크 안했으면 보이는거 -->
 								<c:if test="${dto.likecheck ==0 }">
-									<span class="bottom-left2 liketoggle" style="cursor: pointer"
+									<span class="bottom-left liketoggle" style="cursor: pointer"
 										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
 										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }">
 										<span class="like" id="likehide1${dto.post_num}" 
@@ -773,14 +769,24 @@ body {
 											<span style="font-size: 1.2em; top: 3px; color: gray;">
 												<i class="fa-regular fa-thumbs-up"></i>
 											</span>
+											<c:if test="${dto.like_count==0 }">
 											&nbsp;좋아요 ${dto.like_count}
+											</c:if> 
+											<c:if test="${dto.like_count !=0 }">
+											&nbsp;좋아요 ${dto.like_count}명
+											</c:if>
 										</span>
 										<span class="dlike" id="likeshow1${dto.post_num}" user_num="${sessionScope.user_num}"
 											post_num="${dto.post_num }" style="display: none;">
 											<span style="font-size: 1.2em; top: 3px; color: blue;">
 												<i class="fa-solid fa-thumbs-up"></i>
 											</span>
+											<c:if test="${dto.like_count==0 }">
+											&nbsp;좋아요 회원님 
+											</c:if>
+											<c:if test="${dto.like_count !=0 }">
 											&nbsp;좋아요 회원님 외${dto.like_count}명
+											</c:if>
 										</span>
 
 									</span>
@@ -800,27 +806,31 @@ body {
 											<span style="font-size: 1.2em; top: 3px; color: blue;">
 												<i class="fa-solid fa-thumbs-up"></i>
 											</span>
-											&nbsp;좋아요 회원님 외${dto.like_count}명
+											
+											<c:if test="${dto.like_count!= 1}">
+											&nbsp;좋아요 회원님 외 ${dto.like_count-1}명
+											</c:if>
+											<c:if test="${dto.like_count ==1 }">
+											&nbsp;좋아요 회원님 
+											</c:if>
 										</span>
 										<span user_num="${sessionScope.user_num}" id="likeshow2${dto.post_num}" class="like"
 											post_num="${dto.post_num }" style="display: none;">
 											<span style="font-size: 1.2em; top: 3px; color: gray;">
 												<i class="fa-regular fa-thumbs-up"></i>
-												&nbsp;좋아요 ${dto.like_count}
+												<c:if test="${dto.like_count== 1}">
+											&nbsp;좋아요 0
+											</c:if>
+											<c:if test="${dto.like_count!= 1}">
+											&nbsp;좋아요 ${dto.like_count -1 }
+											</c:if>
+											
 											</span>
 										</span>
 
 
 									</span>
 								</c:if>
-
-
-
-
-
-
-
-
 
 
 								
@@ -833,19 +843,8 @@ body {
 									&nbsp;댓글
 								</span>
 							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
 							</div>
-							<div class="bottom-down">
+							<%-- <div class="bottom-down">
 								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 								<span style="float: left; width: 8%; padding-left: 1%;">
 									<img src="${root }/photo/${user_photo}" class="writeimg">
@@ -857,7 +856,7 @@ body {
 										placeholder="댓글을 입력하세요...">
 									<img class="commentarrow" src="${root }/image/submit.png">
 								</span>
-							</div>
+							</div> --%>
 						</div>
 
 					</div>
@@ -953,48 +952,68 @@ body {
 											<span style="font-size: 1.2em; top: 3px; color: gray;">
 												<i class="fa-regular fa-thumbs-up"></i>
 											</span>
+											<c:if test="${dto.like_count==0 }">
 											&nbsp;좋아요 ${dto.like_count}
+											</c:if> 
+											<c:if test="${dto.like_count !=0 }">
+											&nbsp;좋아요 ${dto.like_count}명
+											</c:if>
 										</span>
 										<span class="dlike" id="likeshow1${dto.post_num}" user_num="${sessionScope.user_num}"
 											post_num="${dto.post_num }" style="display: none;">
 											<span style="font-size: 1.2em; top: 3px; color: blue;">
 												<i class="fa-solid fa-thumbs-up"></i>
 											</span>
+											<c:if test="${dto.like_count==0 }">
+											&nbsp;좋아요 회원님 
+											</c:if>
+											<c:if test="${dto.like_count !=0 }">
 											&nbsp;좋아요 회원님 외${dto.like_count}명
+											</c:if>
 										</span>
 
 									</span>
 
 
 								</c:if>
-
 
 								<!-- 처음부터 체크되어있으면 보이는거  -->
 								<c:if test="${dto.likecheck !=0 }">
 									<span class="bottom-left2 liketoggle2" style="cursor: pointer"
-										user_num="${sessionScope.user_num}" likehide2_num="likehide2${dto.post_num}"
-										likeshow2_num="likeshow2${dto.post_num}" post_num="${dto.post_num }">
-										<span class="likehide2 dlike" id="likeshow2${dto.post_num}"
+										likehide2_num="likehide2${dto.post_num}" likeshow2_num="likeshow2${dto.post_num}"
+										user_num="${sessionScope.user_num}" post_num="${dto.post_num }">
+										<span id="likehide2${dto.post_num}" class="dlike"
 										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
-										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }">
+										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }"
+										>
 											<span style="font-size: 1.2em; top: 3px; color: blue;">
 												<i class="fa-solid fa-thumbs-up"></i>
 											</span>
-											&nbsp;좋아요 회원님 외${dto.like_count}명
+											
+											<c:if test="${dto.like_count!= 1}">
+											&nbsp;좋아요 회원님 외 ${dto.like_count-1}명
+											</c:if>
+											<c:if test="${dto.like_count ==1 }">
+											&nbsp;좋아요 회원님 
+											</c:if>
 										</span>
-										<span class="likeshow2" user_num="${sessionScope.user_num}" id="likehide2${dto.post_num}"
-											class="like" post_num="${dto.post_num }" style="display: none;">
+										<span user_num="${sessionScope.user_num}" id="likeshow2${dto.post_num}" class="like"
+											post_num="${dto.post_num }" style="display: none;">
 											<span style="font-size: 1.2em; top: 3px; color: gray;">
 												<i class="fa-regular fa-thumbs-up"></i>
-												&nbsp;좋아요 ${dto.like_count}
+												<c:if test="${dto.like_count== 1}">
+											&nbsp;좋아요 0
+											</c:if>
+											<c:if test="${dto.like_count!= 1}">
+											&nbsp;좋아요 ${dto.like_count -1 }
+											</c:if>
+											
 											</span>
 										</span>
 
 
 									</span>
 								</c:if>
-
-
 
 
 
@@ -1013,17 +1032,12 @@ body {
 									&nbsp;댓글
 								</span>
 							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
 							</div>
+							
+							
+							
+							
+							<%-- 
 							<div class="bottom-down2">
 								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 								<span style="float: left; width: 8%; padding-left: 1%;">
@@ -1036,7 +1050,7 @@ body {
 										placeholder="댓글을 입력하세요...">
 									<img class="commentarrow" src="${root }/image/submit.png">
 								</span>
-							</div>
+							</div> --%>
 						</div>
 
 
