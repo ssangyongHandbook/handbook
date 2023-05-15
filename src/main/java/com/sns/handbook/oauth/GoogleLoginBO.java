@@ -21,7 +21,7 @@ public class GoogleLoginBO {
 	// 구글 로그인 정보
 	private final static String GOOGLE_CLIENT_ID = "606007311099-ndg9fvd658k02pa5vqaege0evsvcj8kh.apps.googleusercontent.com";
 	private final static String GOOGLE_CLIENT_SECRET = "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";
-	private final static String GOOGLE_REDIRECT_URI = "http://localhost:7777/googlecallback"; //Redirect URL
+	private final static String GOOGLE_REDIRECT_URI = "http://localhost:7777/googlecallback";
 	private final static String SESSION_STATE = "google_session_state";
 	private final static String PROFILE_API_URL = "https://www.googleapis.com/oauth2/v1/userinfo";
 
@@ -65,13 +65,7 @@ public class GoogleLoginBO {
 		OAuthRequest request = new OAuthRequest(Verb.GET, PROFILE_API_URL, oauthService);
 		oauthService.signRequest(oauthToken, request);
 		Response response = request.send();
-		
-		System.out.println("response : "+response);
-		
 		String responseBody = response.getBody();
-		JSONObject json = new JSONObject(responseBody);
-		//String name = json.getString("name");
-		//System.out.println("Name: " + name);
 		
 		return responseBody;
 	}

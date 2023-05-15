@@ -236,7 +236,7 @@ public class LoginController {
 		oauthToken = googleLoginBO.getAccessToken(session, code, state);
 		// 로그인 사용자 정보를 읽어온다
 		apiResult = googleLoginBO.getUserProfile(oauthToken);
-		System.out.println("apiResult : " + apiResult);
+		//System.out.println("apiResult : " + apiResult);
 
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObj;
@@ -248,35 +248,31 @@ public class LoginController {
 		String email = (String) response_obj.get("email");
 		String name = (String) response_obj.get("name");
 		String photo = (String) response_obj.get("picture");
+		
 		// id 이메일에서 가져오기
 		String splitemail[] = email.split("@");
 		String user_id;
 		user_id = splitemail[0];
-		System.out.println("name+email+photo : " + name + "//" + email + "//" + photo);
+		// System.out.println("name+email+photo : " + name + "//" + email + "//" +
+		// photo);
 
 		int check = service.loginEmailCheck(email); // 입력한 이메일이 가입되어있는지 아닌지 판단
 
-		// 이 아래는 아무튼 로그인 한다.
-		// 이미 예전에 로그인한 구글 계정이면 로그인
-		// 아니면 db에 회원정보 입력 후 로그인.
-		if (check == 1) { // 계정 있으면
+		if (check == 1) {
 			UserDto dto = service.getUserDtoById(user_id);
-			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
+			session.setMaxInactiveInterval(60 * 60 * 8);
 
 			// 세션에 사용자 정보 등록
-			// session.setAttribute("islogin_r", "Y");
 			session.setAttribute("signIn", apiResult);
 			session.setAttribute("email", email);
 			session.setAttribute("name", name);
 			session.setAttribute("loginok", "yes");
 			session.setAttribute("myid", user_id);
-			session.setAttribute("user_num", dto.getUser_num()); // session에 num값 넣음.
-			session.setAttribute("user_photo", dto.getUser_photo());// session에 photo 넣음.
-
-			return "redirect:post/timeline"; // 로그인 하면 타임라인으로 넘어감.
+			session.setAttribute("user_num", dto.getUser_num());
+			session.setAttribute("user_photo", dto.getUser_photo());
+			return "redirect:post/timeline";
 		} else {
-			// 계정 로그인 안 되어있으면 db에 넣고(일단회원가입) 로그인 세션 유지
-			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
+			session.setMaxInactiveInterval(60 * 60 * 8);
 			session.setAttribute("signIn", apiResult);
 			session.setAttribute("email", email);
 			session.setAttribute("name", name);
@@ -288,10 +284,11 @@ public class LoginController {
 			user.setUser_gender("기타");
 			user.setUser_id(user_id);
 			user.setUser_name(name);
+			
 
 			service.insertUserInfo(user);
-			session.setAttribute("user_num", user.getUser_num()); // session에 num값 넣음.
-			session.setAttribute("user_photo", user.getUser_photo());// session에 photo 넣음.
+			session.setAttribute("user_num", user.getUser_num());
+			session.setAttribute("user_photo", user.getUser_photo());
 
 			return "redirect:post/timeline";
 		}

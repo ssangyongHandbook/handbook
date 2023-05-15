@@ -17,18 +17,25 @@
 html, body {
 	height: 100%;
 }
-
 .wrapper {
 	display: flex;
 	justify-content: center; /* 가로 중앙. */
 	align-items: center; /*새로중앙*/
 	height: 100%;
 }
-
 .oauth_box_1 {
 	display: flex;
-	justify-content: center; /* 가로 중앙. */
-	align-items: center; /*새로중앙*/
+	justify-content: space-around; /* 간격 */
+	align-items: center;
+}
+
+.oauth_box_1 img {
+	width: 40px;
+}
+.oauth_box_2 {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 </style>
 </head>
@@ -58,12 +65,21 @@ html, body {
 					</div>
 					<br>
 
-					<!-- 외부 로그인 -->
+					<%-- <!-- 외부 로그인 -->
 					<div class="oauth_box_1">
 						<img width="50%" src="/image/nav_btn.png" onclick="location.href='${urlNaver}'" style="cursor: pointer;">
 						<img width="50%" src="/image/kakao_btn.png" onclick="location.href='${urlKakao}'" style="cursor: pointer;">
-						<button type="button" onclick="location.href='${urlGoogle}'">구글로그인</button>
 					</div>
+					<div class="oauth_box_2">
+						<img src="/image/google_btn.png" onclick="location.href='${urlGoogle}'" style="cursor: pointer;">
+					</div><br> --%>
+					
+					<!-- 외부 로그인 -->
+					<div class="oauth_box_1">
+						<img src="/image/logobtn/naver.png" onclick="location.href='${urlNaver}'" style="cursor: pointer;">
+						<img src="/image/logobtn/kakaotalk.png" onclick="location.href='${urlKakao}'" style="cursor: pointer;">
+						<img src="/image/logobtn/google.png" onclick="location.href='${urlGoogle}'" style="cursor: pointer;">
+					</div><br>
 				</form>
 
 				<div align="center">
