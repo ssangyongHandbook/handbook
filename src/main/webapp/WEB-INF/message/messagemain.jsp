@@ -261,7 +261,6 @@
 	align-self: flex-start;
 	display: inline-flex;
 	align-items: center;
-	margin-left: 15px;
 }
 
 .messageleft {
@@ -276,6 +275,19 @@
 	font-size: 10pt;
 	color: gray;
 	margin-top: 10%;
+	cursor: pointer;
+}
+
+.msgtime{
+	font-size: 8pt;
+}
+
+.msgsubmenu{
+	color: gray;
+	display: inline-flex;
+	flex-direction: column;
+	visibility: hidden;
+	align-self: flex-end;
 }
 
 .leftreceiverphoto {
@@ -312,11 +324,6 @@
 	font-size: 13pt;
 	margin-top: 5px;
 	color: lightgray;
-}
-
-.msgdel {
-	visibility: hidden;
-	cursor: pointer;
 }
 
 .chatupload {
@@ -525,10 +532,10 @@ div.msgsearchuser {
 			})
 
 		$(document).on('mouseover', '.msgone', function() {
-			$(this).find(".msgdel").css("visibility", "visible");
+			$(this).find(".msgsubmenu").css("visibility", "visible");
 		})
 		$(document).on('mouseout', '.msgone', function() {
-			$(this).find(".msgdel").css("visibility", "hidden");
+			$(this).find(".msgsubmenu").css("visibility", "hidden");
 		})
 
 		//채팅 삭제
@@ -732,15 +739,20 @@ div.msgsearchuser {
 				var otherImg = $(".chatinfophoto img").attr("src");
 				$.each(res,function(i, ele) {
 					if (ele.sender_num == '${user_num}') {
-						chatContent += "<div class='msgright msgone'><div class='msgdel' del="+ele.mess_num+">삭제</div><div class='messageright messagebubble'>"
-														+ ele.mess_content
-														+ "</div></div>";
-						chatContent+="<div class='msgright'>"+ele.mess_time+"</div>"
+						chatContent += "<div class='msgright msgone'>";
+						chatContent += "<div class='msgsubmenu'>";
+						chatContent+="<div class='msgright msgtime'>"+ele.mess_time+"</div>";
+						chatContent += "<div class='msgdel' del="+ele.mess_num+">삭제</div>";
+						chatContent += "</div>";
+						chatContent += "<div class='messageright messagebubble'>"+ ele.mess_content+ "</div></div>";
 					} else {
-						chatContent += "<div class='msgleft msgone'><img src='"+otherImg+"' class='leftreceiverphoto'><div class='messageleft messagebubble'>"
-														+ ele.mess_content
-														+ "</div><div class='msgdel' del="+ele.mess_num+">삭제</div></div>";
-						chatContent+="<div class='msgleft'>"+ele.mess_time+"</div>"
+						chatContent += "<div class='msgleft msgone'>";
+						chatContent += "<img src='"+otherImg+"' class='leftreceiverphoto'>";
+						chatContent += "<div class='messageleft messagebubble'>"+ ele.mess_content+"</div>";
+						chatContent += "<div class='msgsubmenu'>";
+						chatContent+="<div class='msgleft msgtime'>"+ele.mess_time+"</div>";
+						chatContent += "<div>&nbsp</div>";
+						chatContent += "</div></div>";
 					}
 				})
 				

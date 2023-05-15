@@ -86,7 +86,7 @@
 		
 		
 		<a href="#"><span><img src="../image/menuicon.jpg" class = "titlemenubar" alt="" style = "width: 40px; height: 40px;"></span></a>
-		<a href="#"><span><img src="../image/message.png" alt="" style = "width:40px; height: 40px;"></span></a>
+		<a href="../message/main"><span><img src="../image/message.png" alt="" style = "width:40px; height: 40px;"></span></a>
 		<a href="#"><span><img src="../image/bell.png" alt="" style = "width:40px; height: 40px;"></span></a>
 		<c:if test="${sessionScope.user_photo=='no' }">
 		<a href="/user/mypage?user_num=${sessionScope.user_num }"><span><img src="../image/noimg.png" alt="" style = "width:40px; height: 40px; border-radius: 100px;"></span></a>

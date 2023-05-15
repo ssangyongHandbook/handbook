@@ -143,7 +143,7 @@ public class MessageController {
 						preTime=""+minute+"분 전";
 					}else {
 						//1분 미만 초만 표시
-						preTime=""+second+"초 전";
+						preTime="방금전";
 					}
 				}
 			}
