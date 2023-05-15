@@ -62,6 +62,7 @@ html, body {
 					<div class="oauth_box_1">
 						<img width="50%" src="/image/nav_btn.png" onclick="location.href='${urlNaver}'" style="cursor: pointer;">
 						<img width="50%" src="/image/kakao_btn.png" onclick="location.href='${urlKakao}'" style="cursor: pointer;">
+						<button type="button" onclick="location.href='${urlGoogle}'">구글로그인</button>
 					</div>
 				</form>
 

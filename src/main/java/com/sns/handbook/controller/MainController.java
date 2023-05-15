@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sns.handbook.oauth.GoogleLoginBO;
 import com.sns.handbook.oauth.KakaoLoginBO;
 import com.sns.handbook.oauth.NaverLoginBO;
 import com.sns.handbook.serivce.UserService;
@@ -27,6 +28,15 @@ public class MainController {
 	@Autowired
 	private void setNaverLoginBO(NaverLoginBO naverLoginBO) {
 		this.naverLoginBO = naverLoginBO;
+	}
+	
+	/* GoogleLogin */
+	@Autowired
+	private GoogleLoginBO googleLoginBO;
+	
+	@Autowired
+	private void setGoogleLoginBO(GoogleLoginBO googleLoginBO) {
+		this.googleLoginBO = googleLoginBO;
 	}
 	
 	@Autowired
@@ -66,6 +76,16 @@ public class MainController {
 			mv.addObject("urlKakao", kakaoAuthUrl);
 			//System.out.println("여기로");
 			mv.setViewName("/sub/login/loginmain");
+			
+			
+			
+			
+			/* 구글 로그인 url */
+			String googleAuthUrl = googleLoginBO.getAuthorizationUrl(session);
+			System.out.println("googleAuthUrl : "+googleAuthUrl);
+			mv.addObject("urlGoogle", googleAuthUrl);
+			mv.setViewName("/sub/login/loginmain");
+			
 		} else {
 			//System.out.println("로그인이 되어있음!");
 			// 로그인이 되어있으면 타임라인으로 이동
