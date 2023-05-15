@@ -33,4 +33,22 @@
 	<select id="getAllDatas"  resultType="CommentDto">
 		select * from comment 
 	</select>
+	
+	
+	<!-- 댓글 좋아요 sql문 -->
+	<insert id="insertLike" parameterType="CommentlikeDto">
+		insert into commentlike value(null,#{user_num},#{comment_num})
+	</insert>
+	
+	<delete id="deleteLike" parameterType="Map">
+		delete from commentlike where user_num=#{user_num} and comment_num=#{comment_num}
+	</delete>
+	
+	<select id="getTotalLikes" resultType="int" parameterType="String">
+		select count(*) from commentlike where comment_num=#{comment_num}
+	</select>
+	
+	<select id="getLikeCheck" resultType="int" parameterType="Map">
+		select count(*) from commentlike where user_num=#{user_num} and comment_num=#{comment_num} 
+	</select>
 </mapper>

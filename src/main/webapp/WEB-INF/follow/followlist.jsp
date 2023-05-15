@@ -106,15 +106,23 @@
 .section{
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: center;
+	justify-content: space-between;
+	width: 820px;
+	margin: 0 auto;
 }
 </style>
 </head>
 <body>
 	<div style = "border: 1px solid gray; display: inline-flex; justify-content: center; width: 900px; flex-direction: column; margin-top: 15px; ">
-	<div style="display: inline-flex; align-items: center; justify-content: space-between; margin-top: 10px;">
-	<span style="margin-left:30px; margin-bottom: 20px; font-size: 18pt; font-weight: bold;">친구</span>
-	<input type="text" style="height: 30px; margin-right: 15px;">
+	<div style="display: inline-flex; align-items: center; justify-content: space-between; margin-top: 20px;">
+	<span style="margin-left:35px; margin-bottom: 20px; font-size: 20pt; font-weight: bold;">친구</span>
+	
+	<div style=" margin-right:60px; background-color: #F0F2F5; border-radius: 60px; display: inline-flex; align-items: center; padding-left: 2%">
+						<span class = "glyphicon glyphicon-search" style = "font-size: 16pt;"></span>
+						<input type = "text" name = "searchword" class="followsearchbox"
+						style = " width:150px; height:30px; border: none; background: none; outline: none; font-size: 13pt;
+						padding: 10px;" placeholder="검색">
+	</div>
 	</div>
 	<section class = "section">
 		<c:forEach var = "dto" items = "${list }">
@@ -133,7 +141,9 @@
 				</c:if>
 				<div class="un">
 					<span>${dto.user_name }</span> 
-					<span class="tf" style="font-size: 11px;">함께아는친구: ${dto.tf_count }</span>
+					<c:if test="${dto.tf_count>0 }">
+						<span class="tf" style="font-size: 11px;">함께아는친구: ${dto.tf_count }</span>
+					</c:if>
 				</div>
 				<div class="btndiv" style="margin: auto 0;">
 					<button type="button" class="addbtn" fing_num = ${dto.fing_num }><img src="../image/add.png"></button>
@@ -141,9 +151,9 @@
 					<ul class="friendmenu" id="${dto.fing_num }" style="float: left; margin: auto 0; padding: 0; display: none;">
 						
 								<li class = "followbookmark">
-								<button><span class="glyphicon glyphicon-star-empty" style="font-size: 15pt;">&nbsp;즐겨찾기</span></button></li>
+								<button><span class="glyphicon glyphicon-star-empty" style="font-size: 15pt;"><b style="color: black;">&nbsp;즐겨찾기</b></span></button></li>
 								<li class = "followcancel">
-								<button type = "button" to_user = ${dto.to_user }><span class="glyphicon glyphicon-remove" style="font-size: 15pt;">&nbsp;팔로우취소</span></button></li>
+								<button type = "button" to_user = ${dto.to_user }><span class="glyphicon glyphicon-remove" style="font-size: 15pt; color:red;"><b style="color: black;">&nbsp;팔로우취소</b></span></button></li>
 					</ul>
 					</div>
 				</div>
@@ -204,7 +214,11 @@
 		    		        			s += "<div class='up'><img src='../image/noimg.png' class='userphoto'></div>";
 		    		        		}
 		    		        		s += "<div class='un'><span>"+item.user_name+"</span>";
-		    		        		s += "<span class='tf' style='font-size: 11px;'>함께아는친구: "+item.tf_count+"</span></div>";
+		    		        		
+		    		        		if(item.tf_count > 0)
+		    		        			s += "<span class='tf' style='font-size: 11px;'>함께아는친구: "+item.tf_count+"</span>";
+		    		        		
+		    		        		s += "</div>";
 		    		        		s += "<div class='btndiv' style='margin: auto 0;'><button type='button' class='addbtn' fing_num = "+item.fing_num+"><img src='../image/add.png'></button></div>";
 		    		        		s += "<ul class='friendmenu' id="+item.fing_num+" style='float: left; margin: auto 0; padding: 0; display:none;'>";
 		    		        		s += "<li class = 'followbookmark'><button><span class='glyphicon glyphicon-star-empty' style='font-size: 17pt;'>&nbsp;즐겨찾기</span></button></li>"
@@ -224,7 +238,14 @@
 		       
 		      }
 		    }
+			
 		
+			$(".followsearchbox").keyup(function(e){
+				if(e.keyCode == 13){
+					alert("넘어감");
+					location.href = "followsearch?searchword="+$(".followsearchbox").val();
+				}
+			})
 	</script>
 </body>
 </html>

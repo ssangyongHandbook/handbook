@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 
 import com.sns.handbook.dto.FollowingDto;
+import com.sns.handbook.dto.UserDto;
 import com.sns.handbook.mapper.FollowingMapperInter;
 
 @Service
@@ -86,5 +87,39 @@ public class FollowingService implements FollowingServiceInter {
 		map.put("from_user", from_user);
 		
 		return mapper.togetherFollow(map);
+	}
+
+	@Override
+	public List<FollowingDto> followSearch(String from_user, String searchword, int offset) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("from_user", from_user);
+		map.put("searchword", searchword);
+		map.put("offset", offset);
+		
+		return mapper.followSearch(map);
+	}
+
+	@Override
+	public List<FollowingDto> followRecommend(String from_user, int offset) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("from_user", from_user);
+		map.put("offset", offset);
+		return mapper.followRecommend(map);
+	}
+
+	@Override
+	public List<UserDto> followRandom(String from_user, int offset) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("from_user", from_user);
+		map.put("offset", offset);
+		
+		
+		return mapper.followRandom(map);
 	}
 }

@@ -40,4 +40,35 @@
 	<delete id="deleteFollowing" parameterType="String">
 		delete from following where to_user=#{to_user}
 	</delete>
+	
+	<!-- 친구 검색 기능 -->
+	<select id="followSearch" resultType="FollowingDto" parameterType="Map">
+		select * from following 
+		where to_user = any(select user_num from user where user_name like concat('%', #{searchword}, '%')) <!-- 상대 이름 --> 
+		and from_user = #{from_user} <!-- 내 번호 -->
+		order by fing_num desc limit 8 offset #{offset} 
+	</select>
+	
+	<!-- 팔로워 추천 -->
+	<select id="followRecommend" resultType="FollowingDto" parameterType="Map">
+		select to_user from following
+		where from_user=any(select to_user from following
+		where from_user=#{from_user}) and from_user!=#{from_user} and to_user!=#{from_user}
+		and to_user not in(select to_user from following
+		where from_user=#{from_user})
+		group by to_user
+		order by count(to_user) desc
+		limit 1 offset #{offset}
+	</select>
+	
+	<!-- 내가 팔로우를 안했고 내 친구들도 팔로우를 안한 사람들의 to_user를 뽑는다 -->
+	<select id="followRandom" resultType="UserDto" parameterType="Map">
+		select * from user
+		where user_num NOT IN(select to_user from following where from_user=#{from_user})
+		and user_num NOT IN(select to_user from following where from_user in(select to_user from following where from_user=#{from_user}))
+		and user_num != #{from_user}
+		limit 1 offset #{offset}
+	
+	</select>
+	
 </mapper>
