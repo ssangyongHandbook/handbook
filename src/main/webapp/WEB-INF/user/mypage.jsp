@@ -17,8 +17,35 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">
-	$(function(){
+
+//주소 찾기 API
+function findAddr(){
+    new daum.Postcode({
+         oncomplete: function(data) {
+            
+            console.log(data);
+            
+             // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+             // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+             // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+             var roadAddr = data.roadAddress; // 도로명 주소 변수
+             var jibunAddr = data.jibunAddress; // 지번 주소 변수
+             // 우편번호와 주소 정보를 해당 필드에 넣는다.
+            /*  document.getElementById('member_post').value = data.zonecode; */
+             if(roadAddr !== ''){
+                 document.getElementById("member_addr").value = roadAddr;
+             } 
+             else if(jibunAddr !== ''){
+                 document.getElementById("member_addr").value = jibunAddr;
+             }
+         }
+     }).open();
+ }
+
+
+$(function(){
 		
 		//강제 호출
 		$("#btnnewcover").click(function(){
@@ -120,12 +147,16 @@
 		$("#btnupdate").click(function(){
 					
 					var num=$(this).attr("num");
-					var addr=$("#uaddr").val();
+					var addr=$("#member_addr").val()+" "+$("#member_addr2").val();
+					
+					$("#member_addr").val(addr.split(",")[0]);
+					$("#member_addr2").val(addr.split(",")[1]);
 					var email=$("#uemail").val();
 					var hp=$("#uhp").val();
-					
 					var data="user_num="+num+"&user_addr="+addr+"&user_email="+email+"&user_hp="+hp;
+					
 					var form=new FormData();
+					
 					form.append("photo",$("#newphoto2")[0].files[0]);
 					form.append("cover",$("#newcover2")[0].files[0]);
 					form.append("user_num",num);
@@ -439,8 +470,13 @@
 			width: 100%;
 			height: 50px;
 			background-color: white;
+			
 		}
 		
+		.menu a {
+  			margin: 0 10px;
+		}
+
 		.mypage-main{
 			margin: 0 auto;
 		}
@@ -450,8 +486,12 @@
 			height: 250px;
 			background-color: white;
 			border-radius: 10px 10px;
-			margin: 10px;
-			
+			margin: 10px;	
+		}
+		
+		.intro-info{
+			line-height: 45px;
+			margin-left: 1%;
 		}
 		
 		.galary{
@@ -700,9 +740,23 @@
 		          <div class="title-intro">
 		          	<span style="font-weight: 700; margin-right: 264px; font-size: 12pt;">회원님을 소개할 항목을 구성해주세요</span> 
 			          	<div class="modal-intro">
-			          		<input type="text" id="uaddr" class="form-control" value="${dto.user_addr }"><br>
-			      			<input type="text" id="uemail" class="form-control" value="${dto.user_email }"><br>
-			      			<input type="text" id="uhp" class="form-control" value="${dto.user_hp }">
+
+								<div class="form-floating">
+									<p>주소</p>					
+									<!-- <input id="member_post" class="form-control" type="text" placeholder="우편번호" readonly onclick="findAddr()"
+										style="background-color: white;" value=""><br> -->
+										
+										 <input id="member_addr" name="addr1" class="form-control" type="text" placeholder="주소" readonly 
+										 style="background-color: white;" required="required" onclick="findAddr()"><br>
+										  
+										<input type="text" id="member_addr2" name="addr2" class="form-control" placeholder="상세주소">
+								</div><br>
+								
+								<p>전화번호</p>
+								 <input type="text" id="uhp" class="form-control" value="${dto.user_hp }"><br>
+								 
+								 <p>이메일</p>
+								 <input type="text" id="uemail" class="form-control" value="${dto.user_email }">
 			          	</div>
 		          </div>
 		        </div>
@@ -865,7 +919,7 @@
 			<div class="menu">
 			<hr style="border: 1px solid lightgray; margin:0px;">
 				<div style="font-weight: bold; font-size: 15pt;">
-					<a href="/user/mypage" style="color: black;"><span>게시글</span></a>
+					<a href="/user/mypage?user_num=${dto.user_num }" style="color: black;"><span>게시글</span></a>
 					<a href="/user/info" style="color: black;"><span>정보</span></a>
 					<a href="/user/friend" style="color: black;"><span>친구</span></a>
 				</div>
@@ -876,11 +930,11 @@
 					<div class="intro">
 						<span><b style="font-size: 16pt;">소개</b></span>
 						<div class="intro-info">
-							<span><i class="fa-solid fa-house fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr }</b>&nbsp;&nbsp;거주</span><br>
-							<span><i class="fa-solid fa-location-dot  fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr.substring(0, 2)}</b>&nbsp;&nbsp;출신</span><br>
+							<span>&nbsp;<i class="fa-solid fa-house fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr }</b>&nbsp;&nbsp;</span><br>
+							<span>&nbsp;&nbsp;<i class="fa-solid fa-location-dot  fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr.substring(6, 8)}</b>&nbsp;&nbsp;출신</span><br>
 							<span><i class="fa-solid fa-wifi fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${followercount }</b>&nbsp;&nbsp;명이 팔로우함</span><br>
-							<span><i class="fa-solid fa-envelope fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_email }</b>&nbsp;&nbsp;</span><br>
-							<span><i class="fa-solid fa-mobile-screen-button fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_hp }</b>&nbsp;&nbsp;</span>
+							<span>&nbsp;<i class="fa-solid fa-envelope fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_email }</b>&nbsp;&nbsp;</span><br>
+							<span>&nbsp;&nbsp;<i class="fa-solid fa-mobile-screen-button fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_hp}</b>&nbsp;&nbsp;</span>
 						</div>
 					</div>
 					

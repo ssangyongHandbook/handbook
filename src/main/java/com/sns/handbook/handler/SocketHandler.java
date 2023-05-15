@@ -47,16 +47,18 @@ public class SocketHandler extends TextWebSocketHandler{
     //메시지를 발송하면 동작하는 메소드
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
+    	
         //메시지 발송시
         String msg = message.getPayload();
         //System.out.println(msg);
         
         //메시지 구분(보낸사람:내용)
         String[] msgarr=msg.split(":");
-        msgarr[0]=msgarr[0].substring(0,msgarr[0].length()-1);
-        msgarr[1]=msgarr[1].substring(1,msgarr[1].length()-1);
-        msgarr[2]=msgarr[2].substring(1,msgarr[2].length()-1);
-        msgarr[3]=msgarr[3].substring(1,msgarr[3].length());
+        msgarr[0]=msgarr[0].substring(0,msgarr[0].length()-1); //보낸사람
+        msgarr[1]=msgarr[1].substring(1,msgarr[1].length()-1); //메시지내용
+        msgarr[2]=msgarr[2].substring(1,msgarr[2].length()-1); //받는사람num
+        msgarr[3]=msgarr[3].substring(1,msgarr[3].length()-1); //그룹
+        msgarr[4]=msgarr[4].substring(1,msgarr[4].length()); //그룹
         
         //메시지 저장
         MessageDto dto=new MessageDto();
@@ -64,8 +66,17 @@ public class SocketHandler extends TextWebSocketHandler{
         String myid=msgarr[0];
         String user_num=uservice.getUserById(myid).getUser_num();
         dto.setSender_num(user_num);
-        dto.setMess_content(msgarr[1]);
+        
+        if(msgarr[4].equals("chat")) {
+        	//사진을 선택 안했다면
+        	msgarr[1]="<div class='bubblecontent'>"+msgarr[1]+"</div>";
+        	dto.setMess_content(msgarr[1]);
+        }else {
+        	msgarr[1]="<img src='/messagephoto/"+msgarr[1]+"'>";
+        	dto.setMess_content(msgarr[1]);
+        }
         dto.setReceiver_num(msgarr[2]);
+        
         dto.setMess_group(Integer.parseInt(msgarr[3]));
 		  
         mservie.insertMessage(dto);

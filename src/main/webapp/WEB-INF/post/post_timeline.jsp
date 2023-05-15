@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
@@ -7,25 +6,19 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<script src="https://kit.fontawesome.com/2663817d27.js"
-	crossorigin="anonymous"></script>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/2663817d27.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
 	href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap"
 	rel="stylesheet">
-<link rel="stylesheet" type="text/css"
-	href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css" />
-<script type="text/javascript"
-	src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script type="text/javascript"
-	src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
-
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+<script src="https://kit.fontawesome.com/2663817d27.js" crossorigin="anonymous"></script>
 <script type="text/javascript">
 	$(function() {
 
@@ -67,6 +60,7 @@
 		$(document).on("click", ".postmenu", function() {
 			var user_num = $(this).attr("user_num");
 			var post_num = $(this).attr("post_num");
+
 			$("#" + post_num).toggle();
 
 		});
@@ -88,6 +82,40 @@
 			$("#" + divpost_num).show();
 
 			$("#" + divspost_num).hide();
+
+		});
+
+		$(document).on("click", ".liketoggle", function() {
+
+			var likeshow1_num = $(this).attr("likeshow1_num");
+			var likehide1_num = $(this).attr("likehide1_num");
+
+			$("#" + likeshow1_num).toggle();
+			$("#" + likehide1_num).toggle();
+
+		});
+
+		/* $(document).on("click", ".liketoggle3", function() {
+
+			var likeshow1_num = $(this).attr("likeshow1_num");
+			var likehide1_num = $(this).attr("likehide1_num");
+
+			$("#" + likeshow1_num).toggle();
+			$("#" + likehide1_num).toggle();
+
+		}); */
+
+		$(document).on("click", ".liketoggle2", function() {
+
+			var likeshow2_num = $(this).attr("likeshow2_num");
+			var likehide2_num = $(this).attr("likehide2_num");
+
+			/* 		
+					$(".likeshow2").toggle();
+					$(".likehide2").toggle(); */
+
+			$("#" + likeshow2_num).toggle();
+			$("#" + likehide2_num).toggle();
 
 		});
 
@@ -158,7 +186,7 @@
 							});
 						});
 
-		$(document).on("click", "#like", function() {
+		$(document).on("click", ".like", function() {
 			var post_num = $(this).attr("post_num");
 			var user_num = $(this).attr("user_num");
 
@@ -171,12 +199,11 @@
 					"user_num" : user_num
 				},
 				success : function() {
-					location.reload();
 				}
 			})
 		})
 
-		$(document).on("click", "#dlike", function() {
+		$(document).on("click", ".dlike", function() {
 			var post_num = $(this).attr("post_num");
 			var user_num = $(this).attr("user_num");
 
@@ -189,7 +216,6 @@
 					"user_num" : user_num
 				},
 				success : function() {
-					location.reload();
 				}
 			})
 		});
@@ -424,10 +450,22 @@ body {
 
 .postmenu {
 	cursor: pointer;
+	font-size: 2.5em;
+	margin-right: 3%;
+	color: gray;
+}
+
+.postsubmenu {
+	font-size: 1.5em;
 }
 
 .postdetail:hover {
 	text-decoration: underline;
+}
+
+.postdetail {
+	font-size: 0.8em;
+	color: black;
 }
 
 .userimg {
@@ -487,24 +525,32 @@ body {
 	margin: 0 auto;
 	max-width: 750px;
 	min-width: 650px;
-	height:50px;
+	height: 50px;
 	border-radius: 10px 10px;
 	padding: 0.6%;
 	font-size: 18px;
 	text-align: center;
-	
 }
-.showtext{
-float:left;
-padding: 1%;
-margin-left: 10%;
+
+.showtext {
+	float: left;
+	padding: 1%;
+	margin-left: 10%;
 }
-.showbtn{
+
+.showbtn {
 	border-radius: 5px 5px;
-		background-color: #F0F2F5;
-		border:0.5px solid gray;
-		float: right;
-		height:37px;
+	background-color: #F0F2F5;
+	border: 0.5px solid gray;
+	float: right;
+	height: 37px;
+}
+
+.commentarrow {
+	width: 30px;
+	height: 30px;
+	margin-right: 3%;
+	cursor: pointer;
 }
 </style>
 </head>
@@ -522,11 +568,12 @@ margin-left: 10%;
 		<div class="contentmodal">
 			<div id="coverinput">
 				<div>
-					<span style="float: left; width: 8%; top: 50%;"> <img
-						src="${root }/photo/${user_photo}" class="writeimg">
-					</span> <span style="float: right; width: 92%;"> <input
-						type="button" data-toggle="modal" data-target="#contentwrite"
-						name="contentwirte" id="writeinput" value="무슨 생각을 하고 계신가요?">
+					<span style="float: left; width: 8%; top: 50%;">
+						<img src="${root }/photo/${user_photo}" class="writeimg">
+					</span>
+					<span style="float: right; width: 92%;">
+						<input type="button" data-toggle="modal" data-target="#contentwrite" name="contentwirte"
+							id="writeinput" value="무슨 생각을 하고 계신가요?">
 					</span>
 				</div>
 			</div>
@@ -540,8 +587,7 @@ margin-left: 10%;
 				<!-- Modal content-->
 				<form method="post" enctype="multipart/form-data" id="postInsert">
 
-					<input type="hidden" name="user_num" id="user_num"
-						value="${sessionScope.user_num }">
+					<input type="hidden" name="user_num" id="user_num" value="${sessionScope.user_num }">
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -553,28 +599,23 @@ margin-left: 10%;
 									style="width: 40px; height: 40px; border-radius: 20px;">
 								<span>${login_name}</span>
 							</div>
-							<br> <select class="form-control" name="post_access"
-								style="width: 150px;" id="post_access">
+							<br> <select class="form-control" name="post_access" style="width: 150px;"
+								id="post_access">
 								<option value="all">전체공개</option>
 								<option value="follower">팔로워 공개</option>
 								<option value="onlyme">나만보기</option>
 							</select>
 							<div class="form-group" style="width: 500px;">
-								<input type="file" name="post_file" class="form-control"
-									multiple="multiple" id="post_file">
+								<input type="file" name="post_file" class="form-control" multiple="multiple" id="post_file">
 							</div>
 							<div class="form-group">
-								<textarea style="width: 550px; height: 150px;"
-									name="post_content" class="form-control" required="required"
-									id="post_content" placeholder="내용을 입력해주세요"></textarea>
+								<textarea style="width: 550px; height: 150px;" name="post_content" class="form-control"
+									required="required" id="post_content" placeholder="내용을 입력해주세요"></textarea>
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-default"
-								data-dismiss="modal" id="insertbtn">게시</button>
-							<button type="button" class="btn btn-default"
-								data-dismiss="modal">Close</button>
-
+							<button type="button" class="btn btn-default" data-dismiss="modal" id="insertbtn">게시</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 						</div>
 					</div>
 				</form>
@@ -599,26 +640,23 @@ margin-left: 10%;
 
 					<div class="modal-body">
 						<div class="form-group" style="width: 150px;">
-							<select class="form-control" name="update_access"
-								id="update_access" required="required">
+							<select class="form-control" name="update_access" id="update_access" required="required">
 								<option value="all">전체공개</option>
 								<option value="follower">팔로워 공개</option>
 								<option value="onlyme">나만보기</option>
 							</select>
 						</div>
 						<div class="form-group" style="width: 500px;">
-							<input type="file" name="update_file" class="form-control"
-								required="required" multiple="multiple" id="update_file">
+							<input type="file" name="update_file" class="form-control" required="required"
+								multiple="multiple" id="update_file">
 						</div>
 						<div class="form-group">
-							<textarea style="width: 550px; height: 150px;"
-								name="update_content" class="form-control" required="required"
-								id="update_content" placeholder="내용을 입력해주세요"></textarea>
+							<textarea style="width: 550px; height: 150px;" name="update_content" class="form-control"
+								required="required" id="update_content" placeholder="내용을 입력해주세요"></textarea>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal"
-							id="updatetbtn">수정</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="updatetbtn">수정</button>
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
 					</div>
@@ -638,62 +676,68 @@ margin-left: 10%;
 			<c:forEach var="dto" items="${list }" varStatus="i">
 				<c:if test="${dto.post_file!='no' }">
 
-					<div class="shows" id="divs${dto.post_num }">  <div class="showtext">게시물을 숨겼습니다. 다시 보려면 게시물 보기를 눌러주세요.</div>
-						<button type="button" class="showbtn"
-							divpost_num="div${dto.post_num }"
+					<div class="shows" id="divs${dto.post_num }">
+						<div class="showtext">게시물을 숨겼습니다. 다시 보려면 게시물 보기를 눌러주세요.</div>
+						<button type="button" class="showbtn" divpost_num="div${dto.post_num }"
 							divspost_num="divs${dto.post_num }">게시물 보기</button>
 					</div>
 					<div class="divmain" id="div${dto.post_num }">
 						<div class="top">
 							<div class="top-left">
-								<span style="float: left;"> <img
-									src="${root }/photo/${dto.user_photo}" class="userimg"
-									user_num="${dto.user_num }">
-								</span> <span style="float: left; padding: 3%; margin-right: 5px;">
+								<span style="float: left;">
+									<img src="${root }/photo/${dto.user_photo}" class="userimg" user_num="${dto.user_num }">
+								</span>
+								<span style="float: left; padding: 3%; margin-right: 5px;">
 									<div>
-										<b>${dto.user_name }${dto.post_access }</b>
+										<b>${dto.user_name }
+											<c:if test="${dto.post_access =='follower'}">
+												<i class="fa-solid fa-user-group"></i>
+											</c:if>
+											<c:if test="${dto.post_access =='all'}">
+												<i class="fa-solid fa-earth-americas"></i>
+											</c:if>
+											<c:if test="${dto.post_access =='onlyme'}">
+												<i class="fa-solid fa-lock"></i>
+											</c:if>
+
+										</b>
 									</div>
 
 									<div>${dto.post_time }</div>
 								</span>
 							</div>
-							<span class="top-right"> <span
-								class="glyphicon glyphicon-th-list postmenu"
-								post_num="${dto.post_num }" user_num="${sessionScope.user_num }"
-								dtouser_num="${dto.user_num}"
-								style="font-size: 1.3em; margin-right: 3%; color: gray;">
+							<span class="top-right">
+								<span class="postmenu dropdown" post_num="${dto.post_num }"
+									user_num="${sessionScope.user_num }" dtouser_num="${dto.user_num}">
+									<i class="fa-solid fa-ellipsis"></i>
 									<c:if test="${dto.checklogin ==1 }">
 
-										<ul id="${dto.post_num }" class="postsubmenu"
-											style="font-size: 25pt; line-height: 1.5em; display: none;">
+										<ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu "
+											style="font-size: 20pt; line-height: 1.5em; display: none;">
 
 
-											<li id="postupdate" class="postdetail" data-toggle="modal"
-												data-target="#updatepost" post_num="${dto.post_num }"
-												user_num="${dmto.user_num }">게시물 수정</li>
-											<li id="postdelete" class="postdetail"
-												user_num="${dto.user_num }" post_num="${dto.post_num }">게시물
-												삭제</li>
+											<li id="postupdate" class="postdetail" data-toggle="modal" data-target="#updatepost"
+												post_num="${dto.post_num }" user_num="${dto.user_num }">게시물 수정</li>
+											<li id="postdelete" class="postdetail" user_num="${dto.user_num }"
+												post_num="${dto.post_num }">게시물 삭제</li>
 										</ul>
-									</c:if> <c:if test="${dto.checklogin !=1 }">
-										<ul id="${dto.post_num }" class="postsubmenu"
+									</c:if>
+									<c:if test="${dto.checklogin !=1 }">
+										<ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu"
 											style="font-size: 25pt; line-height: 1.5em; display: none;">
-											<li class="postdetail posthide"
-												divpost_num="div${dto.post_num }"
+											<li class="postdetail posthide" divpost_num="div${dto.post_num }"
 												divspost_num="divs${dto.post_num }">게시물 숨김</li>
 											<!--  이부분 팔로일땐 팔로우하기 or 팔로우 하고 있을 땐 팔로우 끊기 -->
 											<c:if test="${dto.checkfollowing !=1 }">
-												<li class="postdetail" id="postfollow"
-													from_user="${sessionScope.user_num }"
+												<li class="postdetail" id="postfollow" from_user="${sessionScope.user_num }"
 													to_user="${dto.user_num }">팔로우 하기</li>
 											</c:if>
 											<c:if test="${dto.checkfollowing ==1 }">
-												<li class="postdetail" id="postunfollow"
-													to_user="${dto.user_num }">팔로우 끊기</li>
+												<li class="postdetail" id="postunfollow" to_user="${dto.user_num }">팔로우 끊기</li>
 											</c:if>
 										</ul>
 									</c:if>
-							</span>
+								</span>
 							</span>
 
 						</div>
@@ -709,40 +753,109 @@ margin-left: 10%;
 						<div class="bottom">
 							<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 							<div class="bottom-up">
+
+
+
+
+
+
+
+
+
+								<!-- 체크 안했으면 보이는거 -->
 								<c:if test="${dto.likecheck ==0 }">
-									<span class="bottom-left" style="cursor: pointer" id="like"
-										user_num="${sessionScope.user_num}"
-										post_num="${dto.post_num }"><span
-										class="glyphicon glyphicon-heart-empty"
-										style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
-										${dto.like_count}</span>
+									<span class="bottom-left2 liketoggle" style="cursor: pointer"
+										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
+										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }">
+										<span class="like" id="likehide1${dto.post_num}" 
+										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
+										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }">
+											<span style="font-size: 1.2em; top: 3px; color: gray;">
+												<i class="fa-regular fa-thumbs-up"></i>
+											</span>
+											&nbsp;좋아요 ${dto.like_count}
+										</span>
+										<span class="dlike" id="likeshow1${dto.post_num}" user_num="${sessionScope.user_num}"
+											post_num="${dto.post_num }" style="display: none;">
+											<span style="font-size: 1.2em; top: 3px; color: blue;">
+												<i class="fa-solid fa-thumbs-up"></i>
+											</span>
+											&nbsp;좋아요 회원님 외${dto.like_count}명
+										</span>
+
+									</span>
+
+
 								</c:if>
 
+								<!-- 처음부터 체크되어있으면 보이는거  -->
 								<c:if test="${dto.likecheck !=0 }">
-									<span class="bottom-left" style="cursor: pointer" id="dlike"
-										user_num="${sessionScope.user_num}"
-										post_num="${dto.post_num }"><span
-										class="glyphicon glyphicon-heart"
-										style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
-										${dto.like_count}</span>
+									<span class="bottom-left liketoggle2" style="cursor: pointer"
+										likehide2_num="likehide2${dto.post_num}" likeshow2_num="likeshow2${dto.post_num}"
+										user_num="${sessionScope.user_num}" post_num="${dto.post_num }">
+										<span id="likehide2${dto.post_num}" class="dlike"
+										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
+										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }"
+										>
+											<span style="font-size: 1.2em; top: 3px; color: blue;">
+												<i class="fa-solid fa-thumbs-up"></i>
+											</span>
+											&nbsp;좋아요 회원님 외${dto.like_count}명
+										</span>
+										<span user_num="${sessionScope.user_num}" id="likeshow2${dto.post_num}" class="like"
+											post_num="${dto.post_num }" style="display: none;">
+											<span style="font-size: 1.2em; top: 3px; color: gray;">
+												<i class="fa-regular fa-thumbs-up"></i>
+												&nbsp;좋아요 ${dto.like_count}
+											</span>
+										</span>
+
+
+									</span>
 								</c:if>
 
-								<span class="bottom-right"><span
-									class="glyphicon glyphicon-comment"
-									style="font-size: 1.2em; top: 3px; color: gray;"
-									post_num="${dto.post_num }"></span>&nbsp;댓글</span>
+
+
+
+
+
+
+
+
+
+								
+									<!-- comment -->	
+								<span class="bottom-right"  id="commentmodal"
+								style="cursor: pointer;">
+									<span style="font-size: 1.3em; color: gray;" post_num="${dto.post_num }">
+										<i class="fa-regular fa-comment"></i>
+									</span>
+									&nbsp;댓글
+								</span>
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
 							</div>
 							<div class="bottom-down">
 								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 								<span style="float: left; width: 8%; padding-left: 1%;">
 									<img src="${root }/photo/${user_photo}" class="writeimg">
-								</span> <span
+								</span>
+								<span
 									style="background-color: #F0F2F5; width: 8%; width: 88%; float: left; border-radius: 60px; display: inline-flex; align-items: center;">
 									<input type="text" name="commentwrite"
-									style="width: 600px; border: none; background: none; outline: none; font-size: 15pt; padding: 1%; margin-right: 10px;"
-									placeholder="댓글을 입력하세요..."> <img
-									src="${root }/image/submit.png"
-									style="width: 30px; height: 30px; margin-right: 3%;">
+										style="width: 600px; border: none; background: none; outline: none; font-size: 15pt; padding: 1%; margin-right: 10px;"
+										placeholder="댓글을 입력하세요...">
+									<img class="commentarrow" src="${root }/image/submit.png">
 								</span>
 							</div>
 						</div>
@@ -754,62 +867,68 @@ margin-left: 10%;
 
 				<!-- 파일이 없을 경우 -->
 				<c:if test="${dto.post_file=='no' }">
-					<div class="shows" id="divs${dto.post_num }"> <div class="showtext">게시물을 숨겼습니다. 다시 보려면 게시물 보기를 눌러주세요.</div>
-						<button type="button" class="showbtn"
-							divpost_num="div${dto.post_num }"
+					<div class="shows" id="divs${dto.post_num }">
+						<div class="showtext">게시물을 숨겼습니다. 다시 보려면 게시물 보기를 눌러주세요.</div>
+						<button type="button" class="showbtn" divpost_num="div${dto.post_num }"
 							divspost_num="divs${dto.post_num }">게시물 보기</button>
 					</div>
 					<div class="divmain2" id="div${dto.post_num }">
 						<div class="top2">
 							<div class="top-left2">
-								<span style="float: left;"> <img
-									src="${root }/photo/${dto.user_photo}" class="userimg"
-									user_num="${dto.user_num }">
-								</span> <span style="float: left; padding: 3%; margin-right: 5px;">
+								<span style="float: left;">
+									<img src="${root }/photo/${dto.user_photo}" class="userimg" user_num="${dto.user_num }">
+								</span>
+								<span style="float: left; padding: 3%; margin-right: 5px;">
 									<div>
-										<b>${dto.user_name }${dto.post_access }</b>
+										<b>${dto.user_name }
+											<c:if test="${dto.post_access =='follower'}">
+												<i class="fa-solid fa-user-group"></i>
+											</c:if>
+											<c:if test="${dto.post_access =='all'}">
+												<i class="fa-solid fa-earth-americas"></i>
+											</c:if>
+											<c:if test="${dto.post_access =='onlyme'}">
+												<i class="fa-solid fa-lock"></i>
+											</c:if>
+
+
+										</b>
 									</div>
 
 									<div>${dto.post_time }</div>
 								</span>
 							</div>
-							<span class="top-right2"> <span
-								class="glyphicon glyphicon-th-list postmenu"
-								post_num="${dto.post_num }" user_num="${sessionScope.user_num }"
-								dtouser_num="${dto.user_num}"
-								style="font-size: 1.3em; margin-right: 3%; color: gray;">
+							<span class="top-right2">
+								<span class="postmenu dropdown" post_num="${dto.post_num }"
+									user_num="${sessionScope.user_num }" dtouser_num="${dto.user_num}">
+									<i class="fa-solid fa-ellipsis"></i>
 									<c:if test="${dto.checklogin ==1 }">
 
-										<ul id="${dto.post_num }" class="postsubmenu"
-											style="font-size: 25pt; line-height: 1.5em; display: none;">
+										<ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu"
+											style="font-size: 20pt; line-height: 1.5em; display: none;">
 
 
-											<li id="postupdate" class="postdetail" data-toggle="modal"
-												data-target="#updatepost" post_num="${dto.post_num }"
-												user_num="${dto.user_num }">게시물 수정</li>
-											<li id="postdelete" class="postdetail"
-												user_num="${dto.user_num }" post_num="${dto.post_num }">게시물
-												삭제</li>
+											<li id="postupdate" class="postdetail" data-toggle="modal" data-target="#updatepost"
+												post_num="${dto.post_num }" user_num="${dto.user_num }">게시물 수정</li>
+											<li id="postdelete" class="postdetail" user_num="${dto.user_num }"
+												post_num="${dto.post_num }">게시물 삭제</li>
 										</ul>
-									</c:if> <c:if test="${dto.checklogin !=1 }">
-										<ul id="${dto.post_num }" class="postsubmenu"
+									</c:if>
+									<c:if test="${dto.checklogin !=1 }">
+										<ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu"
 											style="font-size: 25pt; line-height: 1.5em; display: none;">
-											<li class="postdetail posthide"
-												divpost_num="div${dto.post_num }"
+											<li class="postdetail posthide" divpost_num="div${dto.post_num }"
 												divspost_num="divs${dto.post_num }">게시물 숨김</li>
-											<!--  이부분 팔로일땐 팔로우하기 or 팔로우 하고 있을 땐 팔로우 끊기 -->
 											<c:if test="${dto.checkfollowing !=1 }">
-												<li class="postdetail" id="postfollow"
-													from_user="${sessionScope.user_num }"
+												<li class="postdetail" id="postfollow" from_user="${sessionScope.user_num }"
 													to_user="${dto.user_num }">팔로우 하기</li>
 											</c:if>
 											<c:if test="${dto.checkfollowing ==1 }">
-												<li class="postdetail" id="postunfollow"
-													to_user="${dto.user_num }">팔로우 끊기</li>
+												<li class="postdetail" id="postunfollow" to_user="${dto.user_num }">팔로우 끊기</li>
 											</c:if>
 										</ul>
 									</c:if>
-							</span>
+								</span>
 
 							</span>
 						</div>
@@ -820,40 +939,102 @@ margin-left: 10%;
 						<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 						<div class="bottom2">
 							<div class="bottom-up2">
+
+
+
+								<!-- 체크 안했으면 보이는거 -->
 								<c:if test="${dto.likecheck ==0 }">
-									<span class="bottom-left2" style="cursor: pointer" id="like"
-										user_num="${sessionScope.user_num}"
-										post_num="${dto.post_num }"><span
-										class="glyphicon glyphicon-heart-empty"
-										style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
-										${dto.like_count}</span>
+									<span class="bottom-left2 liketoggle" style="cursor: pointer"
+										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
+										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }">
+										<span class="like" id="likehide1${dto.post_num}" 
+										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
+										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }">
+											<span style="font-size: 1.2em; top: 3px; color: gray;">
+												<i class="fa-regular fa-thumbs-up"></i>
+											</span>
+											&nbsp;좋아요 ${dto.like_count}
+										</span>
+										<span class="dlike" id="likeshow1${dto.post_num}" user_num="${sessionScope.user_num}"
+											post_num="${dto.post_num }" style="display: none;">
+											<span style="font-size: 1.2em; top: 3px; color: blue;">
+												<i class="fa-solid fa-thumbs-up"></i>
+											</span>
+											&nbsp;좋아요 회원님 외${dto.like_count}명
+										</span>
+
+									</span>
+
+
 								</c:if>
 
+
+								<!-- 처음부터 체크되어있으면 보이는거  -->
 								<c:if test="${dto.likecheck !=0 }">
-									<span class="bottom-left2" style="cursor: pointer" id="dlike"
-										user_num="${sessionScope.user_num}"
-										post_num="${dto.post_num }"><span
-										class="glyphicon glyphicon-heart"
-										style="font-size: 1.2em; top: 3px; color: red;"></span>&nbsp;좋아요
-										${dto.like_count}</span>
+									<span class="bottom-left2 liketoggle2" style="cursor: pointer"
+										user_num="${sessionScope.user_num}" likehide2_num="likehide2${dto.post_num}"
+										likeshow2_num="likeshow2${dto.post_num}" post_num="${dto.post_num }">
+										<span class="likehide2 dlike" id="likeshow2${dto.post_num}"
+										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
+										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }">
+											<span style="font-size: 1.2em; top: 3px; color: blue;">
+												<i class="fa-solid fa-thumbs-up"></i>
+											</span>
+											&nbsp;좋아요 회원님 외${dto.like_count}명
+										</span>
+										<span class="likeshow2" user_num="${sessionScope.user_num}" id="likehide2${dto.post_num}"
+											class="like" post_num="${dto.post_num }" style="display: none;">
+											<span style="font-size: 1.2em; top: 3px; color: gray;">
+												<i class="fa-regular fa-thumbs-up"></i>
+												&nbsp;좋아요 ${dto.like_count}
+											</span>
+										</span>
+
+
+									</span>
 								</c:if>
 
-								<span class="bottom-right2"><span
-									class="glyphicon glyphicon-comment"
-									style="font-size: 1.2em; top: 3px; color: gray;"
-									post_num="${dto.post_num }"></span>&nbsp;댓글</span>
+
+
+
+
+
+
+
+
+
+
+									<!-- comment -->
+								<span class="bottom-right2"  id="commentmodal"
+								style="cursor: pointer;" >
+									<span style="font-size: 1.2em; top: 3px; color: gray;" post_num="${dto.post_num }">
+										<i class="fa-regular fa-comment"></i>
+									</span>
+									&nbsp;댓글
+								</span>
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
 							</div>
 							<div class="bottom-down2">
 								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 								<span style="float: left; width: 8%; padding-left: 1%;">
 									<img src="${root }/photo/${user_photo}" class="writeimg">
-								</span> <span
+								</span>
+								<span
 									style="background-color: #F0F2F5; width: 8%; width: 88%; float: left; border-radius: 60px; display: inline-flex; align-items: center;">
 									<input type="text" name="commentwrite"
-									style="width: 600px; border: none; background: none; outline: none; font-size: 15pt; padding: 1%; margin-right: 10px;"
-									placeholder="댓글을 입력하세요..."> <img
-									src="${root }/image/submit.png"
-									style="width: 30px; height: 30px; margin-right: 3%;">
+										style="width: 600px; border: none; background: none; outline: none; font-size: 15pt; padding: 1%; margin-right: 10px;"
+										placeholder="댓글을 입력하세요...">
+									<img class="commentarrow" src="${root }/image/submit.png">
 								</span>
 							</div>
 						</div>

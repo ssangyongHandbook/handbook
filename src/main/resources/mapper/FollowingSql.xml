@@ -50,11 +50,25 @@
 	</select>
 	
 	<!-- 팔로워 추천 -->
-	<select id="followRecommend" resultType="int" parameterType="Map">
-		select to_user,count(to_user) tocount from following
+	<select id="followRecommend" resultType="FollowingDto" parameterType="Map">
+		select to_user from following
 		where from_user=any(select to_user from following
-		where from_user=2) and from_user!=2 and to_user!=2 and to_user not in(select to_user from following where from_user=2)
+		where from_user=#{from_user}) and from_user!=#{from_user} and to_user!=#{from_user}
+		and to_user not in(select to_user from following
+		where from_user=#{from_user})
 		group by to_user
-		order by tocount desc
+		order by count(to_user) desc
+		limit 1 offset #{offset}
 	</select>
+	
+	<!-- 내가 팔로우를 안했고 내 친구들도 팔로우를 안한 사람들의 to_user를 뽑는다 -->
+	<select id="followRandom" resultType="UserDto" parameterType="Map">
+		select * from user
+		where user_num NOT IN(select to_user from following where from_user=#{from_user})
+		and user_num NOT IN(select to_user from following where from_user in(select to_user from following where from_user=#{from_user}))
+		and user_num != #{from_user}
+		limit 1 offset #{offset}
+	
+	</select>
+	
 </mapper>
