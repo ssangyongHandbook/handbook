@@ -17,19 +17,25 @@
 html, body {
 	height: 100%;
 }
-
 .wrapper {
 	display: flex;
 	justify-content: center; /* 가로 중앙. */
 	align-items: center; /*새로중앙*/
 	height: 100%;
 }
-
 .oauth_box_1 {
 	display: flex;
-	justify-content: center; /* 가로 중앙. */
-	align-items: center; /*새로중앙*/
-	margin: 5px;
+	justify-content: space-around; /* 간격 */
+	align-items: center;
+}
+
+.oauth_box_1 img {
+	width: 40px;
+}
+.oauth_box_2 {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 </style>
 </head>
@@ -47,11 +53,11 @@ html, body {
 			<div style="width: 60%; margin: 0 auto;">
 				<form action="/login/loginprocess" method="post">
 					<div class="form-floating">
-						<input type="text" class="form-control" id="user_id" name="user_id" placeholder="아이디 입력">
+						<input type="text" class="form-control" id="user_id" name="user_id" placeholder="아이디 입력" required="required">
 					</div>
 					<br>
 					<div class="form-floating">
-						<input type="password" class="form-control" id="user_pass" name="user_pass" placeholder="비밀번호 입력">
+						<input type="password" class="form-control" id="user_pass" name="user_pass" placeholder="비밀번호 입력" required="required">
 					</div>
 					<br>
 					<div class="d-grid gap-2">
@@ -59,14 +65,21 @@ html, body {
 					</div>
 					<br>
 
-					<!-- 외부 로그인 -->
-					<%-- <button type ="button" class= "btn" onclick="location.href='${urlNaver}'">네이버</button> --%>
+					<%-- <!-- 외부 로그인 -->
 					<div class="oauth_box_1">
-						<img width="50%" src="/image/nav_btn.png" onclick="location.href='${urlNaver}'" style="cursor: pointer;"> <img width="50%" src="/image/kakao_btn.png" onclick="location.href='${urlKakao}'" style="cursor: pointer;">
-						<%-- <button type="button" class="btn" onclick="location.href='${urlKakao}'">카카오</button> --%>
+						<img width="50%" src="/image/nav_btn.png" onclick="location.href='${urlNaver}'" style="cursor: pointer;">
+						<img width="50%" src="/image/kakao_btn.png" onclick="location.href='${urlKakao}'" style="cursor: pointer;">
 					</div>
-
-					<!-- <div id="naver_id_login" onclick="location.href='/login/naverlogin'"></div> -->
+					<div class="oauth_box_2">
+						<img src="/image/google_btn.png" onclick="location.href='${urlGoogle}'" style="cursor: pointer;">
+					</div><br> --%>
+					
+					<!-- 외부 로그인 -->
+					<div class="oauth_box_1">
+						<img src="/image/logobtn/naver.png" onclick="location.href='${urlNaver}'" style="cursor: pointer;">
+						<img src="/image/logobtn/kakaotalk.png" onclick="location.href='${urlKakao}'" style="cursor: pointer;">
+						<img src="/image/logobtn/google.png" onclick="location.href='${urlGoogle}'" style="cursor: pointer;">
+					</div><br>
 				</form>
 
 				<div align="center">
