@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.sns.handbook.dto.UserDto;
+import com.sns.handbook.oauth.GoogleLoginBO;
 import com.sns.handbook.oauth.KakaoLoginBO;
 import com.sns.handbook.oauth.NaverLoginBO;
 import com.sns.handbook.serivce.UserService;
@@ -23,7 +24,6 @@ public class LoginController {
 	/* NaverLoginBO */
 	@Autowired
 	private NaverLoginBO naverLoginBO;
-	private String apiResult = null;
 
 	@Autowired
 	private void setNaverLoginBO(NaverLoginBO naverLoginBO) {
@@ -33,6 +33,12 @@ public class LoginController {
 	/* KakaoLogin */
 	@Autowired
 	private KakaoLoginBO kakaoLoginBO;
+
+	// googleLogin
+	@Autowired
+	private GoogleLoginBO googleLoginBO;
+
+	private String apiResult = null;
 
 	@Autowired
 	UserService service;
@@ -45,6 +51,8 @@ public class LoginController {
 			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
 			session.setAttribute("myid", user_id);
 			session.setAttribute("loginok", "yes");
+			session.setAttribute("email", dto.getUser_email());
+			session.setAttribute("name", dto.getUser_name());
 			session.setAttribute("user_num", dto.getUser_num()); // session에 num값 넣음.
 			session.setAttribute("user_photo", dto.getUser_photo());// session에 photo 넣음.
 
@@ -218,6 +226,71 @@ public class LoginController {
 			service.insertUserInfo(user);
 			session.setAttribute("user_num", user.getUser_num()); // session에 num값 넣음.
 			session.setAttribute("user_photo", user.getUser_photo());// session에 photo 넣음.
+
+			return "redirect:post/timeline";
+		}
+	}
+
+	@GetMapping("/googlecallback")
+	public String googlecallback(Model model, @RequestParam String code, @RequestParam String state,
+			HttpSession session) throws Exception {
+		OAuth2AccessToken oauthToken;
+		oauthToken = googleLoginBO.getAccessToken(session, code, state);
+		// 로그인 사용자 정보를 읽어온다
+		apiResult = googleLoginBO.getUserProfile(oauthToken);
+		//System.out.println("apiResult : " + apiResult);
+
+		JSONParser jsonParser = new JSONParser();
+		JSONObject jsonObj;
+
+		jsonObj = (JSONObject) jsonParser.parse(apiResult);
+		JSONObject response_obj = (JSONObject) jsonObj;
+
+		// 프로필 조회
+		String email = (String) response_obj.get("email");
+		String name = (String) response_obj.get("name");
+		String photo = (String) response_obj.get("picture");
+		
+		// id 이메일에서 가져오기
+		String splitemail[] = email.split("@");
+		String user_id;
+		user_id = splitemail[0];
+		// System.out.println("name+email+photo : " + name + "//" + email + "//" +
+		// photo);
+
+		int check = service.loginEmailCheck(email); // 입력한 이메일이 가입되어있는지 아닌지 판단
+
+		if (check == 1) {
+			UserDto dto = service.getUserDtoById(user_id);
+			session.setMaxInactiveInterval(60 * 60 * 8);
+
+			// 세션에 사용자 정보 등록
+			session.setAttribute("signIn", apiResult);
+			session.setAttribute("email", email);
+			session.setAttribute("name", name);
+			session.setAttribute("loginok", "yes");
+			session.setAttribute("myid", user_id);
+			session.setAttribute("user_num", dto.getUser_num());
+			session.setAttribute("user_photo", dto.getUser_photo());
+			return "redirect:post/timeline";
+		} else {
+			session.setMaxInactiveInterval(60 * 60 * 8);
+			session.setAttribute("signIn", apiResult);
+			session.setAttribute("email", email);
+			session.setAttribute("name", name);
+			session.setAttribute("myid", user_id);
+			session.setAttribute("loginok", "yes");
+
+			UserDto user = new UserDto();
+			user.setUser_email(email);
+			user.setUser_gender("기타");
+			user.setUser_id(user_id);
+			user.setUser_name(name);
+			
+
+			service.insertUserInfo(user);
+			session.setAttribute("user_num", user.getUser_num());
+			session.setAttribute("user_photo", user.getUser_photo());
 
 			return "redirect:post/timeline";
 		}

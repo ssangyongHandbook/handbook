@@ -24,8 +24,8 @@
 </head>
 <body>
 <div>
-	<div class="wrapper" style="margin:0px auto; width: 400px;">
-		<div class="row">
+	<div class="wrapper">
+		<div>
 			<p style="font-size: 3em; font-weight: bold;" align="center">HandBook</p>
 			<div>
 				<form action="signupprocess" method="post">
@@ -59,21 +59,21 @@
 					</div>
 	
 					
-					<div class="form-floating">
+					<div class="addrform">
 						<p>주소</p>
-						<div class="row">
-							<div class="col">
-								<div class="input-group">
-									<input id="member_post" class="form-control" type="text" placeholder="우편번호" readonly onclick="findAddr()" style="background-color: white;">
-									<button type="button" class="btn btn-primary" onclick="findAddr()">검색</button>
-								</div>
+						<div class="row" >
+							<div class="col-md-9" style="padding-right: 5px;">
+								<input id="member_post" style=" background-color: white;" class="form-control" type="text" placeholder="우편번호" readonly>
 							</div>
-
-						</div>
+							
+							<div class="col-md-3">
+								<button type="button" style="" class="btn btn-primary btn-block" onclick="findAddr()">검색</button>
+							</div>
+						</div><br>
 						<input id="member_addr" name="addr1" class="form-control"type="text" placeholder="주소" readonly style="background-color: white;" required="required"><br>
 						<input type="text" name="addr2" class="form-control" placeholder="상세주소">
 	  				</div><br>
-	  				
+	  					
 					<div class="form-floating">
 						<p>생일</p>
 						<input type="date" class="form-control" name="user_birth" value="1990-01-01">

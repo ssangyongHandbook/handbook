@@ -3,6 +3,7 @@ package com.sns.handbook.serivce;
 import java.util.List;
 
 import com.sns.handbook.dto.CommentDto;
+import com.sns.handbook.dto.CommentlikeDto;
 
 public interface CommentServiceInter {
 
@@ -14,4 +15,10 @@ public interface CommentServiceInter {
 	public void update(CommentDto dto);
 	public List<CommentDto> selectScroll(String post_num,int offset);
 	public List<CommentDto> getAllDatas();
+	
+	//댓글 좋아요 부분
+	public void insertLike(CommentlikeDto dto);
+	public void deleteLike(String user_num,String comment_num);
+	public int getTotalLikes(String comment_num);
+	public int getLikeCheck(String user_num,String comment_num);	
 }
