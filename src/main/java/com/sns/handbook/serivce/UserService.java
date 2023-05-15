@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.sns.handbook.dto.FollowingDto;
+import com.sns.handbook.dto.GuestbookDto;
 import com.sns.handbook.dto.MailDto;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.UserDto;
@@ -105,6 +106,20 @@ public class UserService implements UserServiceInter {
 		
 		return mapperInter.getFollowList(map);
 	}
+	
+	@Override
+	public void insertGuestBook(GuestbookDto dto) {
+		// TODO Auto-generated method stub
+		mapperInter.insertGuestBook(dto);
+	}
+	
+	@Override
+	public List<GuestbookDto> getGuestPost(String owner_num) {
+		// TODO Auto-generated method stub
+		return mapperInter.getGuestPost(owner_num);
+	}
+
+	
 	//우형 끝	
 	
 	//희수 시작
@@ -192,4 +207,7 @@ public class UserService implements UserServiceInter {
 		// TODO Auto-generated method stub
 		return mapperInter.getUserByName(user_name);
 	}
+
+	
+	
 }

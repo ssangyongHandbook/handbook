@@ -213,6 +213,7 @@ $(function(){
 			  var reader=new FileReader();
 			  reader.onload=function(e){
 			   $("#showmodimg").attr("src",e.target.result);
+			   $("#showtext").hide();
 			  }
 			  reader.readAsDataURL($(this)[0].files[0]);
 			 }
@@ -231,43 +232,73 @@ $(function(){
 			  var reader=new FileReader();
 			  reader.onload=function(e){
 			   $("#showimg").attr("src",e.target.result);
+			   $("#showtext").hide();
 			  }
 			  reader.readAsDataURL($(this)[0].files[0]);
 			 }
 		});
 		
-		//게시글 작성(다중 업로드)
+		//게시글,방명록 작성(다중 업로드)
 		$("#btnwrite").click(function() {
 
+			var owner_num=$(this).attr("num");
+			var write_num="${loginnum}";
+			var guest_content= $("#post_content").val();
+			var guest_file= $("#contentphoto")[0].files;
+			var guest_access= $("#post_access").val();
 			var post_access = $("#post_access").val();
 			var post_content = $("#post_content").val();
-			var num="${loginnum}";
 			var files = $("#contentphoto")[0].files;
 			
 			var form = new FormData();
 			
-			
 		    for (var i = 0; i < files.length; i++) {
 		        form.append("photo", files[i]);
 		    }
+		    
+		    if(write_num==owner_num){
+		    	
+				form.append("post_access", post_access);
+				form.append("post_content", post_content);
+				form.append("user_num",owner_num);
+
+				$.ajax({
+
+					type : "post",
+					dataType : "text",
+					processData : false,
+					contentType : false,
+					data : form,
+					url : "insertpost",
+					success : function() {
+						
+						location.reload();
+					}
+				});
+		    }
+		    
+		    else{
+		    	
+		    	form.append("guest_content",guest_content);
+		    	form.append("write_num",write_num);
+		    	form.append("owner_num",owner_num);
+		    	
+		    	$.ajax({
+		    		
+		    		type: "post",
+		    		dataType: "text",
+		    		processData: false,
+		    		contentType: false,
+		    		data: form,
+		    		url: "insertguestbook",
+		    		success: function() {
+		    			
+		    			location.reload();
+		    		}
+		    	});
+		    }
 			
-			form.append("post_access", post_access);
-			form.append("post_content", post_content);
-			form.append("user_num",num);
 
-			$.ajax({
-
-				type : "post",
-				dataType : "text",
-				processData : false,
-				contentType : false,
-				data : form,
-				url : "insertpost",
-				success : function() {
-					
-					location.reload();
-				}
-			});
 		});
 		
 		//사진 넘기면서 보기
@@ -306,7 +337,6 @@ $(function(){
 		$(".modpost").click(function(){
 			
 			updatenum=$(this).attr("post_num");
-			var showmodimg=$("#showmodimg").attr()
 
 			$.ajax({
 				type : "get",
@@ -763,7 +793,9 @@ $(function(){
 							<span><b>주소</b></span>
 								<div class="addr">
 									<input id="member_addr" style="width: 250px; margin-bottom: 1%;" name="addr1"  type="text" placeholder="주소" readonly required="required"
-										onclick="findAddr()" value="${dto.user_addr.split(',')[0]}">&nbsp;&nbsp;<br>
+										 value="${dto.user_addr.split(',')[0]}">&nbsp;&nbsp;
+									<button type="button" onclick="findAddr()" style="border: none; border-radius: 5px; width: 55px; padding: 4px; font-weight: bold;">검색</button><br>
+									
 										
 										<input type="text" id="member_addr2" name="addr2" style="width: 250px; margin-bottom: 2%;" placeholder="상세주소" value="${dto.user_addr.split(',')[1]}">
 								</div>
@@ -822,9 +854,9 @@ $(function(){
 						</div>
 						</div>
 					<textarea id="update_content" placeholder="무슨 생각을 하고 계신가요?" style="width: 100%; height:100%; border: none; outline: none;  resize: none;"></textarea>
-					<c:if test="">			
+								
 						<img src="" id="showmodimg" style="width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
-					</c:if>
+					
 					<input type="file" name="update_file" class="form-control" required="required" multiple="multiple" id="update_file" style="display: none;">
 					
 					<button type="button" id="btnmodcontentphoto">사진 선택</button>				
@@ -1026,9 +1058,15 @@ $(function(){
 					<div class="write">
 						<div class = "searcharea">
 							<div style = "width: 700px; display: inline-flex; align-items: center; margin: 3%;">
+							<c:if test="${sessionScope.user_num!=dto.user_num }">  
+								<img alt="" src="${root }/photo/${sessionScope.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
+								&nbsp;&nbsp;&nbsp;
+							</c:if>
 							
-							<img alt="" src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
-							&nbsp;&nbsp;&nbsp;
+							<c:if test="${sessionScope.user_num==dto.user_num }">  
+								<img alt="" src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
+								&nbsp;&nbsp;&nbsp;
+							</c:if>
 							
 							<c:if test="${sessionScope.user_num==dto.user_num }">  
 								<div style="background-color: #F0F2F5; border-radius: 60px; padding-left: 2%">
@@ -1037,7 +1075,7 @@ $(function(){
 								</div>
 							</c:if>
 							
-							<c:if test="${sessionScope.user_num!=dto.user_num }">  
+							<c:if test="${sessionScope.user_num!=dto.user_num }">
 								<div style="background-color: #F0F2F5; border-radius: 60px; padding-left: 2%">
 									<input type = "button" data-toggle="modal" data-target="#contentwrite" name = "contentwirte" 
 									style = "width:700px; border: none; text-align:left; background: none; outline: none; font-size: 15pt; padding: 10px;" value="${dto.user_name } 님에게 글을 남겨보세요...">
@@ -1048,7 +1086,7 @@ $(function(){
 						</div> 
 					</div>
 					
-					<c:forEach var="pdto" items="${postlist }">
+					<c:forEach var="adto" items="${alllist }">
 						<div class="content">
 								<div class="divmain">
 									<div class="top">
@@ -1056,56 +1094,56 @@ $(function(){
 											<img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
 												<div class="top-writeday">
 													<span><b>${dto.user_name }
-													<c:if test="${pdto.post_access =='follower'}">
+													<c:if test="${adto.post_access =='follower'}">
 														<i class="fa-solid fa-user-group"></i>
 													</c:if>
 													
-													<c:if test="${pdto.post_access =='all'}">
+													<c:if test="${adto.post_access =='all'}">
 														<i class="fa-solid fa-earth-americas"></i>
 													</c:if>
 													
-													<c:if test="${pdto.post_access =='onlyme'}">
+													<c:if test="${adto.post_access =='onlyme'}">
 														<i class="fa-solid fa-lock"></i>
 													</c:if>
 													</b></span>
-													<span>${pdto.post_time }</span>		
+													<span>${adto.post_time }</span>		
 												</div>
 												<c:if test="${sessionScope.user_num==dto.user_num }">
 													<div class="dropdown" style="margin-left: 70%;">
 														<i class="fa-solid fa-ellipsis fa-2x - 2em" data-toggle="dropdown" style=" cursor: pointer;"></i>
 														<ul class="dropdown-menu dropdown-menu-right">
-													      <li><a href="#" class="delpost" post_num=${pdto.post_num }>게시글 삭제</a></li>
-													      <li><a href="#" class="modpost" id="updatepost" data-toggle="modal" data-target="#updatepost" post_num=${pdto.post_num }>게시글 수정</a></li>
+													      <li><a href="#" class="delpost" post_num=${adto.post_num }>게시글 삭제</a></li>
+													      <li><a href="#" class="modpost" id="updatepost" data-toggle="modal" data-target="#updatepost" post_num=${adto.post_num }>게시글 수정</a></li>
 													    </ul>
 													</div>
 												</c:if>
 										</div>
 									</div>
-
+									
 									<div class="center">
-										<div class="center-up">${pdto.post_content }</div>
-											<c:if test="${pdto.post_file!='no' }">
+										<div class="center-up">${adto.post_content }</div>
+											<c:if test="${adto.post_file!='no' }">
 												<div class="center-down" id="slider" >
-													<c:forTokens items="${pdto.post_file }" delims="," var="file">
+													<c:forTokens items="${adto.post_file }" delims="," var="file">
 														<img src="/post_file/${file }" style="width: 100%;height: 500px;">
 													</c:forTokens>
 												</div>
 											</c:if>
-									</div>
+									</div>	
 
 									<div class="bottom">
 									<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 									
 										<div class="bottom-up">
 											<div class="like">
-												<c:if test="${pdto.likecheck ==0 }">
-													<span><i class=" img_like fa-regular fa-thumbs-up fa-2x - 2em" user_num="${dto.user_num }" post_num=${pdto.post_num }
-													style="cursor: pointer;"></i>&nbsp;&nbsp;좋아요&nbsp;${pdto.like_count}명</span>
+												<c:if test="${adto.likecheck ==0 }">
+													<span><i class=" img_like fa-regular fa-thumbs-up fa-2x - 2em" user_num="${dto.user_num }" post_num=${adto.post_num }
+													style="cursor: pointer;"></i>&nbsp;&nbsp;좋아요&nbsp;${adto.like_count}명</span>
 												</c:if>
 												
-												<c:if test="${pdto.likecheck !=0 }">
-													<span><i class="img_dlike fa-solid fa-thumbs-up fa-2x - 2em" style="color: #3578E5; cursor: pointer;" user_num="${dto.user_num }" post_num=${pdto.post_num }
-													></i>&nbsp;&nbsp;좋아요&nbsp;${pdto.like_count}명</span>
+												<c:if test="${adto.likecheck !=0 }">
+													<span><i class="img_dlike fa-solid fa-thumbs-up fa-2x - 2em" style="color: #3578E5; cursor: pointer;" user_num="${dto.user_num }" post_num=${adto.post_num }
+													></i>&nbsp;&nbsp;좋아요&nbsp;${adto.like_count}명</span>
 												</c:if>
 											</div>
 											<div class="comment">
@@ -1132,7 +1170,7 @@ $(function(){
 									
 								</div>
 							</div>
-					</c:forEach>	
+					</c:forEach>
 				</div>
 			</div>
 			
