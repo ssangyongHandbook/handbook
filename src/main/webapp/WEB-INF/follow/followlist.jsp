@@ -141,7 +141,9 @@
 				</c:if>
 				<div class="un">
 					<span>${dto.user_name }</span> 
-					<span class="tf" style="font-size: 11px;">함께아는친구: ${dto.tf_count }</span>
+					<c:if test="${dto.tf_count>0 }">
+						<span class="tf" style="font-size: 11px;">함께아는친구: ${dto.tf_count }</span>
+					</c:if>
 				</div>
 				<div class="btndiv" style="margin: auto 0;">
 					<button type="button" class="addbtn" fing_num = ${dto.fing_num }><img src="../image/add.png"></button>
@@ -212,7 +214,11 @@
 		    		        			s += "<div class='up'><img src='../image/noimg.png' class='userphoto'></div>";
 		    		        		}
 		    		        		s += "<div class='un'><span>"+item.user_name+"</span>";
-		    		        		s += "<span class='tf' style='font-size: 11px;'>함께아는친구: "+item.tf_count+"</span></div>";
+		    		        		
+		    		        		if(item.tf_count > 0)
+		    		        			s += "<span class='tf' style='font-size: 11px;'>함께아는친구: "+item.tf_count+"</span>";
+		    		        		
+		    		        		s += "</div>";
 		    		        		s += "<div class='btndiv' style='margin: auto 0;'><button type='button' class='addbtn' fing_num = "+item.fing_num+"><img src='../image/add.png'></button></div>";
 		    		        		s += "<ul class='friendmenu' id="+item.fing_num+" style='float: left; margin: auto 0; padding: 0; display:none;'>";
 		    		        		s += "<li class = 'followbookmark'><button><span class='glyphicon glyphicon-star-empty' style='font-size: 17pt;'>&nbsp;즐겨찾기</span></button></li>"
