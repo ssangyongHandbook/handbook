@@ -79,24 +79,24 @@
          <!-- </form> -->
    </div> 
 
-   <div style="display: inline-flex; overflow: hidden; align-items: center; justify-content: center; width: 280px;">
-      <c:if test="${sessionScope.loginok!=null }">
-          <button type ="button" onclick="location.href='/login/logoutprocess'" style="width: 80px; height: 30px;">로그아웃</button>
-      </c:if>
-      
-      
-      <a href="#"><span><img src="../image/menuicon.jpg" class = "titlemenubar" alt="" style = "width: 40px; height: 40px;"></span></a>
-      <a href="#"><span><img src="../image/message.png" alt="" style = "width:40px; height: 40px;"></span></a>
-      <a href="#"><span><img src="../image/bell.png" alt="" style = "width:40px; height: 40px;"></span></a>
-      <c:if test="${sessionScope.user_photo=='no' }">
-      <a href="/user/mypage?user_num=${sessionScope.user_num }"><span><img src="../image/noimg.png" alt="" style = "width:40px; height: 40px; border-radius: 100px;"></span></a>
-      </c:if>
-      
-      <c:if test="${sessionScope.user_photo!='no' }">
-      <a href="/user/mypage?user_num=${sessionScope.user_num }"><span><img src="../photo/${sessionScope.user_photo }" alt="" style = "width:40px; height: 40px; border-radius: 100px;"></span></a>
-      </c:if>
-   </div>
-    </c:if>
+	<div style="display: inline-flex; overflow: hidden; align-items: center; justify-content: center; width: 280px;">
+		<c:if test="${sessionScope.loginok!=null }">
+    		<button type ="button" onclick="location.href='/login/logoutprocess'" style="width: 80px; height: 30px;">로그아웃</button>
+		</c:if>
+		
+		
+		<a href="#"><span><img src="../image/menuicon.jpg" class = "titlemenubar" alt="" style = "width: 40px; height: 40px;"></span></a>
+		<a href="../message/main"><span><img src="../image/message.png" alt="" style = "width:40px; height: 40px;"></span></a>
+		<a href="#"><span><img src="../image/bell.png" alt="" style = "width:40px; height: 40px;"></span></a>
+		<c:if test="${sessionScope.user_photo=='no' }">
+		<a href="/user/mypage?user_num=${sessionScope.user_num }"><span><img src="../image/noimg.png" alt="" style = "width:40px; height: 40px; border-radius: 100px;"></span></a>
+		</c:if>
+		
+		<c:if test="${sessionScope.user_photo!='no' }">
+		<a href="/user/mypage?user_num=${sessionScope.user_num }"><span><img src="../photo/${sessionScope.user_photo }" alt="" style = "width:40px; height: 40px; border-radius: 100px;"></span></a>
+		</c:if>
+	</div>
+	 </c:if>
 
 </div>
 
