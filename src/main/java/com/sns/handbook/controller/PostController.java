@@ -135,7 +135,7 @@ public class PostController {
 		return model;
 	}
 
-	@PostMapping("/post/insert")
+	@PostMapping("/post/insertpost")
 	@ResponseBody
 	public void insertPost(@ModelAttribute PostDto dto, @RequestParam(required = false) MultipartFile photo,
 			HttpSession session) {
