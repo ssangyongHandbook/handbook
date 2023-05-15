@@ -51,6 +51,8 @@ public class LoginController {
 			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
 			session.setAttribute("myid", user_id);
 			session.setAttribute("loginok", "yes");
+			session.setAttribute("email", dto.getUser_email());
+			session.setAttribute("name", dto.getUser_name());
 			session.setAttribute("user_num", dto.getUser_num()); // session에 num값 넣음.
 			session.setAttribute("user_photo", dto.getUser_photo());// session에 photo 넣음.
 
