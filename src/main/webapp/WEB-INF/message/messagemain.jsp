@@ -97,10 +97,13 @@
 	height: 65px;
 	overflow: hidden;
 	border-radius: 100px;
+	text-align: center;
 }
 
 .messagememberphoto img {
-	height: 65px;
+	height: 100%;
+	width: 100%;
+	object-fit:cover; /* 상위 div 안에 꽉차게 */
 }
 
 /* 채팅했던 멤버 */
@@ -176,13 +179,16 @@
 
 .chatinfophoto img {
 	height: 45px;
+	height: 100%;
+	width: 100%;
+	object-fit:cover; /* 상위 div 안에 꽉차게 */
 }
 
 .chatlist {
 	position: fixed;
 	margin-top: 70px;
 	margin-bottom: 55px;
-	overflow: scroll;
+	overflow-y: scroll;
 	overflow-x: hidden;
 	display: inline-flex;
 	flex-direction: column;
@@ -242,7 +248,7 @@
 .messagebubble img{
 	width: 100%;
 	height: 100%;
-	text-align: center;
+	object-fit:cover;
 	cursor: pointer;
 }
 
@@ -301,9 +307,19 @@
 	visibility: hidden;
 }
 
-.leftreceiverphoto {
-	height: 40px;
+.leftreceiverphoto{
+	width: 45px;
+	height: 45px;
+	min-width: 45px;
+	min-height: 45px;
 	border-radius: 100px;
+	overflow: hidden;
+}
+
+.leftreceiverphoto img {
+	height: 100%;
+	width: 100%;
+	object-fit:cover; /* 상위 div 안에 꽉차게 */
 }
 
 .chatlistinfo {
@@ -322,7 +338,9 @@
 }
 
 .chatlistinfo img {
-	height: 60px;
+	height: 100%;
+	width: 100%;
+	object-fit:cover;
 	cursor: pointer;
 }
 
@@ -694,16 +712,19 @@ div.msgsearchuser {
 			var num = $(this).find("input").val();
 			var group=0;
 			
-			//새그룹 받아오기
+			//새그룹 받아오기 << 이미 채팅을 한 사람이라면 그 채팅에 그대로 추가됨!
 			$.ajax({
 				type : "get",
 				dataTyep : "json",
+				data : {"other":num},
 				url : "newgroup",
 				success : function(res) {
-					group = res.group;
-					$("#chatgroup").val(group);
+					group = res.group; //새그룹 or 기존 그룹
+					$("#chatgroup").val(group); //그룹 변경
 				
 				if (!$(".messagmember").find(".onemember").hasClass("newmsg")) {
+					//새로운 채팅을 이미 선택했는지 확인 
+					// 1.이미 선택했다면: 교체, 2.선택된 게 없다면 새로 생성(이 if문 안은 2번의 경우)
 					$(".messagmember").find(".messageactive").removeClass("messageactive");
 	
 					var out = "";
@@ -724,7 +745,7 @@ div.msgsearchuser {
 					out += '</div></div></div>'
 					
 					$(".messagmember").html(out + msgmember);
-					} else {
+					} else { //1번의 경우(선택된 게 있을 경우 값만 변경)
 						$(".newmsg").find("img").attr("src", img);
 						$(".newmsg").attr("member_num", num);
 						$(".newmsg").find(".membername").attr("uname",name);
@@ -784,7 +805,7 @@ div.msgsearchuser {
 						chatContent += "<div class='messageright messagebubble'>"+ ele.mess_content+ "</div></div>";
 					} else {
 						chatContent += "<div class='msgleft msgone'>";
-						chatContent += "<img src='"+otherImg+"' class='leftreceiverphoto'>";
+						chatContent += "<div class='leftreceiverphoto'><img src='"+otherImg+"'></div>";
 						chatContent += "<div class='messageleft messagebubble'>"+ ele.mess_content+"</div>";
 						chatContent += "<div class='msgsubmenu'>";
 						chatContent+="<div class='msgleft msgtime'>"+ele.mess_time+"</div>";
