@@ -94,6 +94,11 @@
 		select user_email from user where user_hp = #{user_hp} and user_name=#{user_name}
 	</select>
 	
+	<!-- 입력한 아이디 있는지 체크 -->
+	<select id="loginIdCheck" parameterType="String" resultType="int">
+		select count(*) from user where user_id=#{user_id}
+	</select>
+	
 	<!-- 여기 위까지는 김희수가 구현함. -->
 	
 	<!-- 예지 -->

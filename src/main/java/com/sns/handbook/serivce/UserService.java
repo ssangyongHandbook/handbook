@@ -199,6 +199,11 @@ public class UserService implements UserServiceInter {
 		map.put("user_hp", user_hp);
 		return mapperInter.getUserEmailBynamehp(map);
 	}
+	
+	@Override
+	public int loginIdCheck(String user_id) {
+		return mapperInter.loginIdCheck(user_id);
+	}
 	// 희수 끝
 
 	//예지
@@ -207,7 +212,5 @@ public class UserService implements UserServiceInter {
 		// TODO Auto-generated method stub
 		return mapperInter.getUserByName(user_name);
 	}
-
-	
 	
 }

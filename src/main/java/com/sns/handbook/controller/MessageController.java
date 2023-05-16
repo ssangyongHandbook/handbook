@@ -177,6 +177,15 @@ public class MessageController {
 		//상대측 아이디,이름,유저사진(프사) 추가하기
 		for(Map<String, Object> map:chatMember)
 		{
+			String contnet=map.get("content").toString();
+			
+			if(contnet.contains("http")) {
+				map.put("content", "링크를 보냈습니다.");
+			}
+			else if(contnet.contains("<img") && contnet.contains("src=") && contnet.contains("/messagephoto/")) {
+				map.put("content", "사진을 보냈습니다.");
+			}
+			
 			UserDto udto=uservice.getUserByNum(map.get("member_num").toString()); //상대방의 userDto
 
 			map.put("member_id", udto.getUser_id());
@@ -251,11 +260,23 @@ public class MessageController {
 	
 	@GetMapping("/message/newgroup")
 	@ResponseBody
-	public Map<String, Integer> newGroup()
+	public Map<String, Integer> newGroup(@RequestParam String other,HttpSession session)
 	{
 		Map<String, Integer> map=new HashMap<>();
 		
-		map.put("group", mservice.selectMaxNum()+1);
+		//내 num
+		String user_num=(String)session.getAttribute("user_num");
+		
+		//상대와 나의 메시지가 이미 있는지 확인
+		int msgCount=mservice.getCountOfMessage(user_num, other);
+		
+		//메시지가 존재한다면 기존의 그룹을 받아옴
+		if(msgCount!=0) {
+			MessageDto mdto=mservice.selectRecentMessage(user_num, other);
+			map.put("group", mdto.getMess_group());
+		}else {
+			map.put("group", mservice.selectMaxNum()+1);
+		}
 		
 		return map;
 	}
