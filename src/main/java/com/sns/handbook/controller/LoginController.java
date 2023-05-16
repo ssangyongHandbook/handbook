@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,10 +44,38 @@ public class LoginController {
 	@Autowired
 	UserService service;
 
+	@Autowired
+	PasswordEncoder passwordEncoder;
+
 	@PostMapping("/login/loginprocess")
 	public String loginproc(@RequestParam String user_id, @RequestParam String user_pass, HttpSession session) {
-		int check = service.loginIdPassCheck(user_id, user_pass); // 입력한 아이디 비번에 맞는 계정 있는지 없는지 확인
-		if (check == 1) { // 계정 있으면
+		int idCheck = service.loginIdCheck(user_id);
+
+		if (idCheck == 0) {
+			System.out.println("id틀림");
+			return "/login/passfail";
+		}
+
+		UserDto user = service.getUserById(user_id); // 암호화된 유저의 비밀번호 가져오기 위함.
+		int inputIdPassCheck = service.loginIdPassCheck(user_id, user_pass); // 입력한 아이디 비번에 맞는 계정 있는지 없는지 확인
+		// PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		boolean matches = passwordEncoder.matches(user_pass, user.getUser_pass()); // 유저가 적은 비밀번호와, 저장되어있는 암호화된 비밀번호가
+																					// 같은지
+
+		if (matches == true) {// 암호화 비번 비교
+			System.out.println("암호화 password login");
+			UserDto dto = service.getUserDtoById(user_id);
+			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
+			session.setAttribute("myid", user_id);
+			session.setAttribute("loginok", "yes");
+			session.setAttribute("email", dto.getUser_email());
+			session.setAttribute("name", dto.getUser_name());
+			session.setAttribute("user_num", dto.getUser_num());
+			session.setAttribute("user_photo", dto.getUser_photo());
+
+			return "redirect:../post/timeline";
+		} else if (inputIdPassCheck == 1) { // 계정 있으면(기존), 암호화 안됨.
+			System.out.println("기존 login");
 			UserDto dto = service.getUserDtoById(user_id);
 			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
 			session.setAttribute("myid", user_id);
@@ -58,6 +87,8 @@ public class LoginController {
 
 			return "redirect:../post/timeline"; // 로그인 하면 타임라인으로 넘어감.
 		} else { // 로그인 실패시
+			System.out.println("login failed, 로그인 실패");
+			System.out.println("store password : " + user.getUser_pass() + "\ninput pass : " + user_pass);
 			return "/login/passfail";
 		}
 	}
@@ -238,7 +269,7 @@ public class LoginController {
 		oauthToken = googleLoginBO.getAccessToken(session, code, state);
 		// 로그인 사용자 정보를 읽어온다
 		apiResult = googleLoginBO.getUserProfile(oauthToken);
-		//System.out.println("apiResult : " + apiResult);
+		// System.out.println("apiResult : " + apiResult);
 
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObj;
@@ -250,7 +281,7 @@ public class LoginController {
 		String email = (String) response_obj.get("email");
 		String name = (String) response_obj.get("name");
 		String photo = (String) response_obj.get("picture");
-		
+
 		// id 이메일에서 가져오기
 		String splitemail[] = email.split("@");
 		String user_id;
@@ -286,7 +317,6 @@ public class LoginController {
 			user.setUser_gender("기타");
 			user.setUser_id(user_id);
 			user.setUser_name(name);
-			
 
 			service.insertUserInfo(user);
 			session.setAttribute("user_num", user.getUser_num());
