@@ -425,7 +425,9 @@ div.msgsearchuser {
 }
 
 .searchuphoto img {
-	height: 40px;
+	height: 100%;
+	width: 100%;
+	object-fit:cover;
 }
 
 #sendBtn {
@@ -821,7 +823,8 @@ div.msgsearchuser {
 				$("#chatShow").html(chatContent);
 
 				if (scrollPos == null) {
-					$(".chatlist").scrollTop($(".chatlist")[0].scrollHeight); //스크롤 맨 아래로 내리기	
+					$(".chatlist").scrollTop($(".chatlist").prop('scrollHeight'));
+					//$(".chatlist").scrollTop($(".chatlist")[0].scrollHeight); //스크롤 맨 아래로 내리기	
 				} else {
 					$(".chatlist").scrollTop(scrollPos);
 				}
@@ -954,13 +957,13 @@ div.msgsearchuser {
 
 	//메시지 보내면 동작하는 코드
 	function send() {
-		var myid = '${sessionScope.myid}';
+		var mynum = '${sessionScope.user_num}';
 		var msg = $("#chatting").val();
 		var group = $("#chatgroup").val();
 		
 		//만약 사진을 선택하지 않았다면
 		if(!$("#msgfileupload").val()){
-			ws.send("{\"myid\":\""+myid+"\",\"upload\":\""+msg+"\",\"receiver\":\""+$("#receivernum").val()
+			ws.send("{\"mynum\":\""+mynum+"\",\"upload\":\""+msg+"\",\"receiver\":\""+$("#receivernum").val()
 					+"\",\"group\":\""+group+"\",\"type\":\"chat\"}");
 		}else{
 			//사진부터 업로드...
@@ -975,7 +978,7 @@ div.msgsearchuser {
 				contentType:false,
 				data:form,
 				success:function(res){
-					ws.send("{\"myid\":\""+myid+"\",\"upload\":\""+res.upload+"\",\"receiver\":\""+$("#receivernum").val()
+					ws.send("{\"mynum\":\""+mynum+"\",\"upload\":\""+res.upload+"\",\"receiver\":\""+$("#receivernum").val()
 						+"\",\"group\":\""+group+"\",\"type\":\"img\"}");
 					
 					/* ws.send(myid + " : " + res.upload + " : " + $("#receivernum").val() + " : " 
@@ -987,10 +990,21 @@ div.msgsearchuser {
 			
 			//메시지도 적었다면 한 번 더 전송
 			if(msg!=""){
-				ws.send("{\"myid\":\""+myid+"\",\"upload\":\""+msg+"\",\"receiver\":\""+$("#receivernum").val()
+				ws.send("{\"mynum\":\""+mynum+"\",\"upload\":\""+msg+"\",\"receiver\":\""+$("#receivernum").val()
 						+"\",\"group\":\""+group+"\",\"type\":\"chat\"}");
 			}
 		}
+		
+		//알림전송
+		$.ajax({
+			type:"get",
+			dataType:"text",
+			data:{"other":$("#receivernum").val(),"group":group},
+			url:"../messagealaramadd",
+			success:function(){
+				
+			}
+		})
 
 		$('#chatting').val("");
 

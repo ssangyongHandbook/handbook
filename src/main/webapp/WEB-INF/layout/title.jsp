@@ -108,21 +108,98 @@
 	background: none;
 }
 
+.msgalarmcircle{
+	width: 13px;
+	height: 13px;
+	border: 2px solid white;
+	background-color: red;
+	border-radius: 100px;
+	position: absolute;
+	right: 0px;
+	margin-right: 115px;
+	margin-bottom: 20px;
+	visibility: hidden;
+}
+
+.msgalarmlist{
+	width: 280px;
+	height: 100%;
+	margin: 0 auto;
+	display: inline-flex;
+	flex-direction: column;
+}
+
+.msgalarmone{
+	display: inline-flex;
+	align-items: center;
+	width: 260px;
+	margin: 10px;
+	margin: 0 auto;
+	margin-top: 15px;
+}
+
+.msgalarmphoto{
+	width: 60px;
+	height: 60px;
+	overflow: hidden;
+	border-radius: 100px;
+	margin-right: 15px;
+}
+
+.msgalarmphoto img{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.msgalarmdetail{
+	display: inline-flex;
+	flex-direction: column;
+}
+
+.msgalarcontent{
+	display: inline-flex;
+	align-items: center;
+	justify-content: flex-start;
+	color: gray;
+	font-size: 10pt;
+}
+
+.msgalarmname{
+	font-weight: bold;
+	font-size: 12pt;
+	margin-bottom: 2px;
+}
+
+.msgalarwrite{
+	margin-right: 5px;
+}
+
 </style>
 
 <script type="text/javascript">
 	$(function() {
+		$(".msgalarmshow").hide();
+		
+		wsOpen(); //웹소켓 열기
+		
+		getMsgAlarm();
+		
 		searchWidhtChange();
 
 		$(window).resize(function() {
 			searchWidhtChange();
+		})
+		
+		$(".ttimsg").click(function(){
+			$(".msgalarmshow").toggle();
 		})
 	})
 
 	function searchWidhtChange() {
 		var windowWidth = $(window).width();
 
-		if (windowWidth < 800) {
+		if (windowWidth < 1000) {
 			$(".searchpost").css("width", (windowWidth / 10));
 			$(".searcharea").css("width", (windowWidth / 10) + 100);
 			$(".titlelogo").hide();
@@ -130,6 +207,67 @@
 			$(".searchpost").css("width", (windowWidth / 3));
 			$(".searcharea").css("width", (windowWidth / 3) + 100);
 			$(".titlelogo").show();
+		}
+	}
+	
+	function getMsgAlarm(){
+		var totalCount=0;
+		
+		$.ajax({
+			type:"get",
+			dataType:"json",
+			url:"../messagealarmget",
+			success:function(res){
+				totalCount=res.totalCount;
+				
+				if(totalCount>0){
+					//알람이 있으면
+					$(".msgalarmcircle").css("visibility","visible");
+					
+					var msgalist="";
+					
+					//메시지 알림 목록
+					$.each(res.list,function(i,ele){
+						msgalist+='<div class="msgalarmone">';
+						msgalist+='<div class="msgalarmphoto">';
+						if(ele.sender_photo==null){
+							msgalist+='<img alt="" src="/image/noimg.png">';
+						}else{
+							msgalist+='<img alt="" src="/photo/'+ele.sender_photo+'">';
+						}
+						msgalist+='</div>';
+						msgalist+='<div class="msgalarmdetail">';
+						msgalist+='<span class="msgalarmname">'+ele.sender_name+'</span>';
+						msgalist+='<div class="msgalarcontent">';
+						msgalist+='<span class="msgalarwrite">'+ele.mess_content+'</span>';
+						msgalist+='<span class="msgalartime">시간</span>';
+						msgalist+='</div>';
+						msgalist+='</div>';
+						msgalist+='</div>';
+					})
+					
+					$(".msgalarmlist").html(msgalist);
+				}
+			}
+		})
+	}
+	
+	var ws;
+
+	//웹소켓 오픈(메시지 알림)
+	function wsOpen() {
+		ws = new WebSocket("ws://" + location.host + "/chating");
+		wsEvt();
+	}
+
+	function wsEvt() {
+		ws.onopen = function(data) {
+			//소켓이 열리면 초기화 세팅하기
+		}
+	
+		//메시지 잘 들어왔을 때 실행하는 내용
+		ws.onmessage = function(data) {
+			getMsgAlarm(); //메시지 개수 확인->알림표시
 		}
 	}
 </script>
@@ -164,10 +302,14 @@
     		<div class="titlecircle tti"><button type ="button" onclick="location.href='/login/logoutprocess'" class = "btntti"><img alt="" src="../image/logout.png" style="width: 23px; margin-bottom: 5px;"></button></div>
 		</c:if>
 		
-		
 		<div class="titlecircle tti"><a href="#"><span class = "glyphicon glyphicon-th titlemenubar" style="font-size: 15pt; color: black;"></span></a></div>
-		<div class="titlecircle tti"><a href="../message/main"><span style="font-size: 15pt; color: black;"><i class="fa-regular fa-comment-dots"></i></span></a></div>
+		<div class="titlecircle tti ttimsg"><a href="#"><span style="font-size: 15pt; color: black;"><i class="fa-regular fa-comment-dots"></i></span></a></div>
+		<!-- 메시지 알림 개수 표시 시작 -->
+		<div class="msgalarmcircle"></div>
+		<!-- 메시지 알림 개수 표시 끝 -->
+		
 		<div class="titlecircle tti"><a href="#"><span style="font-size: 15pt; color: black;"><i class="fa-solid fa-bell"></i></span></a></div>
+		
 		<c:if test="${sessionScope.user_photo=='no' }">
 		<div class="titlecircle tti"><a href="/user/mypage?user_num=${sessionScope.user_num }"><span><img src="../image/noimg.png" alt="" style = "width:40px; height: 40px; border-radius: 100px; color: black;"></span></a></div>
 		</c:if>
@@ -179,8 +321,8 @@
 	 </c:if>
 
 </div>
- <div class = "stitle">
- <div class = "titlemenu" style = "height:300px; width: 200px; border-radius: 10px;"> 
+<div class = "stitle">
+ 	<div class = "titlemenu allmenu" style = "height:300px; width: 200px; border-radius: 10px;"> 
             <div class = "subtitlemenu">
             	<span>메뉴</span>
                <div class = "titledetail"><a href = "#" data-toggle="modal" data-target="#contentwrite"><div class="titlecircle"><span class = "glyphicon glyphicon-check"></span></div><span>게시물 작성</span></a></div>
@@ -188,12 +330,20 @@
                <div class = "titledetail"><a href = "#"><div class="titlecircle"><span class = "glyphicon glyphicon-star"></span></div><span>즐겨 찾기</span></a></div>
             </div>
             
-</div> 
+	</div> 
 </div>
+
+<div class = "stitle">
+ 	<div class = "titlemenu msgalarmshow" style = "height:300px; width: 300px; border-radius: 10px;"> 
+            <div class = "msgalarmlist">
+            </div>
+	</div> 
+</div>
+
 <script type="text/javascript">
-   $(".titlemenu").hide();
+   $(".allmenu").hide();
    $(".titlemenubar").click(function(){
-      $(".titlemenu").toggle();
+      $(".allmenu").toggle();
       
       
    });
