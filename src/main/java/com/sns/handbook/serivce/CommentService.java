@@ -22,11 +22,28 @@ public class CommentService implements CommentServiceInter {
 		// TODO Auto-generated method stub
 		mapper.delete(comment_num);
 	}
+
+	@Override
+	public void deleteGroup(int comment_num) {
+		// TODO Auto-generated method stub
+		mapper.deleteGroup(comment_num);
+	}
 	
 	@Override
 	public CommentDto getData(String comment_num) {
 		// TODO Auto-generated method stub
 		return mapper.getData(comment_num);
+	}
+	
+	@Override
+	public List<CommentDto> getDataGroupStep(int comment_group, int comment_step) {
+		// TODO Auto-generated method stub
+		Map<String, Integer> map=new HashMap<>();
+		
+		map.put("comment_group", comment_group);
+		map.put("comment_step", comment_step);
+
+		return mapper.getDataGroupStep(map);
 	}
 	
 	@Override

@@ -97,10 +97,13 @@
 	height: 65px;
 	overflow: hidden;
 	border-radius: 100px;
+	text-align: center;
 }
 
 .messagememberphoto img {
-	height: 65px;
+	height: 100%;
+	width: 100%;
+	object-fit:cover; /* 상위 div 안에 꽉차게 */
 }
 
 /* 채팅했던 멤버 */
@@ -176,13 +179,16 @@
 
 .chatinfophoto img {
 	height: 45px;
+	height: 100%;
+	width: 100%;
+	object-fit:cover; /* 상위 div 안에 꽉차게 */
 }
 
 .chatlist {
 	position: fixed;
 	margin-top: 70px;
 	margin-bottom: 55px;
-	overflow: scroll;
+	overflow-y: scroll;
 	overflow-x: hidden;
 	display: inline-flex;
 	flex-direction: column;
@@ -242,7 +248,7 @@
 .messagebubble img{
 	width: 100%;
 	height: 100%;
-	text-align: center;
+	object-fit:cover;
 	cursor: pointer;
 }
 
@@ -301,9 +307,19 @@
 	visibility: hidden;
 }
 
-.leftreceiverphoto {
-	height: 40px;
+.leftreceiverphoto{
+	width: 45px;
+	height: 45px;
+	min-width: 45px;
+	min-height: 45px;
 	border-radius: 100px;
+	overflow: hidden;
+}
+
+.leftreceiverphoto img {
+	height: 100%;
+	width: 100%;
+	object-fit:cover; /* 상위 div 안에 꽉차게 */
 }
 
 .chatlistinfo {
@@ -322,7 +338,9 @@
 }
 
 .chatlistinfo img {
-	height: 60px;
+	height: 100%;
+	width: 100%;
+	object-fit:cover;
 	cursor: pointer;
 }
 
@@ -489,7 +507,7 @@ div.msgsearchuser {
 		});
 		
 		//이미지 클릭시 해당 유저의 마이페이지로 이동
-		$(".chatinfophoto").click(function(){
+		$(document).on("click",".chatinfophoto",function(){
 			location.href='../user/mypage?user_num='+$(this).attr("memeber_num");
 		})
 		
@@ -543,7 +561,7 @@ div.msgsearchuser {
 					$(".chatlistinfoname").text(name);
 					$(".chatlistinfoid").text(id);
 
-					setUserInfo(img, id, name);
+					setUserInfo(img, id, name, member_num);
 
 					//받는 사람 변경
 					$("#receivernum").val($(this).attr("member_num"));
@@ -648,13 +666,14 @@ div.msgsearchuser {
 				{
 					container.css("display", "none");
 
-					var img = $(".onemember").eq(0).find("img").attr("src");
-					var id = $(".onemember").eq(0).find(".membername").attr("member_id");
-					var name = $(".onemember").eq(0).find(".membername").text();
-					setUserInfo(img, id, name);
-					}
+					var img = $(".messageactive").find("img").attr("src");
+					var id = $(".messageactive").find(".membername").attr("member_id");
+					var name = $(".messageactive").find(".membername").attr("uname");
+					var num = $(".messageactive").attr("member_num");
+					setUserInfo(img, id, name, num);
 				}
-			})
+			}
+		})
 
 		//->채팅방 추가에서 받는 사람 입력창 이벤트
 		$(document).on('keyup','input.msgaddname',function(e) {
@@ -694,16 +713,19 @@ div.msgsearchuser {
 			var num = $(this).find("input").val();
 			var group=0;
 			
-			//새그룹 받아오기
+			//새그룹 받아오기 << 이미 채팅을 한 사람이라면 그 채팅에 그대로 추가됨!
 			$.ajax({
 				type : "get",
 				dataTyep : "json",
+				data : {"other":num},
 				url : "newgroup",
 				success : function(res) {
-					group = res.group;
-					$("#chatgroup").val(group);
+					group = res.group; //새그룹 or 기존 그룹
+					$("#chatgroup").val(group); //그룹 변경
 				
 				if (!$(".messagmember").find(".onemember").hasClass("newmsg")) {
+					//새로운 채팅을 이미 선택했는지 확인 
+					// 1.이미 선택했다면: 교체, 2.선택된 게 없다면 새로 생성(이 if문 안은 2번의 경우)
 					$(".messagmember").find(".messageactive").removeClass("messageactive");
 	
 					var out = "";
@@ -724,7 +746,7 @@ div.msgsearchuser {
 					out += '</div></div></div>'
 					
 					$(".messagmember").html(out + msgmember);
-					} else {
+					} else { //1번의 경우(선택된 게 있을 경우 값만 변경)
 						$(".newmsg").find("img").attr("src", img);
 						$(".newmsg").attr("member_num", num);
 						$(".newmsg").find(".membername").attr("uname",name);
@@ -736,7 +758,7 @@ div.msgsearchuser {
 					$(".chatlistinfoname").text(name);
 					$(".chatlistinfoid").text(id);
 					
-					setUserInfo(img, id, name);
+					setUserInfo(img, id, name, num);
 		
 					//받는 사람 변경
 					$("#receivernum").val(num);
@@ -747,10 +769,10 @@ div.msgsearchuser {
 	})
 
 	//상단의 사용자 정보 재출력
-	function setUserInfo(img, id, name) {
+	function setUserInfo(img, id, name, num) {
 		var info = ""
 
-		info += '<div class="chatinfophoto">';
+		info += '<div class="chatinfophoto" memeber_num='+num+'>';
 		info += '<img alt="" src="'+img+'">';
 		info += '</div>';
 		info += '<span member_id="'+id+'">' + name + '</span>';
@@ -784,7 +806,7 @@ div.msgsearchuser {
 						chatContent += "<div class='messageright messagebubble'>"+ ele.mess_content+ "</div></div>";
 					} else {
 						chatContent += "<div class='msgleft msgone'>";
-						chatContent += "<img src='"+otherImg+"' class='leftreceiverphoto'>";
+						chatContent += "<div class='leftreceiverphoto'><img src='"+otherImg+"'></div>";
 						chatContent += "<div class='messageleft messagebubble'>"+ ele.mess_content+"</div>";
 						chatContent += "<div class='msgsubmenu'>";
 						chatContent+="<div class='msgleft msgtime'>"+ele.mess_time+"</div>";
@@ -871,7 +893,7 @@ div.msgsearchuser {
 					out += '</div>';
 					out += '</div>';
 					out += '<div class="messagememberinfo">';
-					out += '<span class="membername" member_id='+chat.member_id+'>'
+					out += '<span class="membername" member_id='+chat.member_id+' uname='+chat.member_name+'>'
 						+ chat.member_name
 						+ '</span>';
 					out += '<div class="chatdetail">';
@@ -902,7 +924,7 @@ div.msgsearchuser {
 		ws.onopen = function(data) {
 			//소켓이 열리면 초기화 세팅하기
 		}
-
+	
 		//메시지 잘 들어왔을 때 실행하는 내용
 		ws.onmessage = function(data) {
 			var msg = data.data;

@@ -39,6 +39,7 @@ public interface UserServiceInter {
 	public void mailSend(MailDto mailDto);
 	public String getUserIdByEmail(String user_email);
 	public String getUserEmailBynamehp(String user_name, String user_hp);
+	public int loginIdCheck(String user_id);
 	//희수 끝
 	
 	//예지

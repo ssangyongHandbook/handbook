@@ -16,7 +16,7 @@ public interface FollowingMapperInter {
 	public int getTotalFollowing(String from_user);
 	public int getTotalFollower(String to_user);
 	public void insertFollowing(FollowingDto dto);
-	public void deleteFollowing(String to_user);
+	public void deleteFollowing(Map<String, String> map);
 	public List<FollowingDto> getFollowList(Map<String, Object> map);
 	public int togetherFollow(Map<String, String> map);
 	public List<FollowingDto> followSearch(Map<String, Object> map);

@@ -139,4 +139,15 @@ public class MessageService implements MessageServiceInter {
 		return mapperInter.selectMaxNum();
 	}
 
+	@Override
+	public int getCountOfMessage(String user_num, String other) {
+		// TODO Auto-generated method stub
+		Map<String, String> map=new HashMap<>();
+		
+		map.put("user_num", user_num);
+		map.put("other", other);
+		
+		return mapperInter.getCountOfMessage(map);
+	}
+
 }
