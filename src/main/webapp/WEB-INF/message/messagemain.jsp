@@ -507,7 +507,7 @@ div.msgsearchuser {
 		});
 		
 		//이미지 클릭시 해당 유저의 마이페이지로 이동
-		$(".chatinfophoto").click(function(){
+		$(document).on("click",".chatinfophoto",function(){
 			location.href='../user/mypage?user_num='+$(this).attr("memeber_num");
 		})
 		
@@ -561,7 +561,7 @@ div.msgsearchuser {
 					$(".chatlistinfoname").text(name);
 					$(".chatlistinfoid").text(id);
 
-					setUserInfo(img, id, name);
+					setUserInfo(img, id, name, member_num);
 
 					//받는 사람 변경
 					$("#receivernum").val($(this).attr("member_num"));
@@ -666,13 +666,14 @@ div.msgsearchuser {
 				{
 					container.css("display", "none");
 
-					var img = $(".onemember").eq(0).find("img").attr("src");
-					var id = $(".onemember").eq(0).find(".membername").attr("member_id");
-					var name = $(".onemember").eq(0).find(".membername").text();
-					setUserInfo(img, id, name);
-					}
+					var img = $(".messageactive").find("img").attr("src");
+					var id = $(".messageactive").find(".membername").attr("member_id");
+					var name = $(".messageactive").find(".membername").attr("uname");
+					var num = $(".messageactive").attr("member_num");
+					setUserInfo(img, id, name, num);
 				}
-			})
+			}
+		})
 
 		//->채팅방 추가에서 받는 사람 입력창 이벤트
 		$(document).on('keyup','input.msgaddname',function(e) {
@@ -757,7 +758,7 @@ div.msgsearchuser {
 					$(".chatlistinfoname").text(name);
 					$(".chatlistinfoid").text(id);
 					
-					setUserInfo(img, id, name);
+					setUserInfo(img, id, name, num);
 		
 					//받는 사람 변경
 					$("#receivernum").val(num);
@@ -768,10 +769,10 @@ div.msgsearchuser {
 	})
 
 	//상단의 사용자 정보 재출력
-	function setUserInfo(img, id, name) {
+	function setUserInfo(img, id, name, num) {
 		var info = ""
 
-		info += '<div class="chatinfophoto">';
+		info += '<div class="chatinfophoto" memeber_num='+num+'>';
 		info += '<img alt="" src="'+img+'">';
 		info += '</div>';
 		info += '<span member_id="'+id+'">' + name + '</span>';
@@ -892,7 +893,7 @@ div.msgsearchuser {
 					out += '</div>';
 					out += '</div>';
 					out += '<div class="messagememberinfo">';
-					out += '<span class="membername" member_id='+chat.member_id+'>'
+					out += '<span class="membername" member_id='+chat.member_id+' uname='+chat.member_name+'>'
 						+ chat.member_name
 						+ '</span>';
 					out += '<div class="chatdetail">';
@@ -923,7 +924,7 @@ div.msgsearchuser {
 		ws.onopen = function(data) {
 			//소켓이 열리면 초기화 세팅하기
 		}
-
+	
 		//메시지 잘 들어왔을 때 실행하는 내용
 		ws.onmessage = function(data) {
 			var msg = data.data;
