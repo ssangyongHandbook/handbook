@@ -22,6 +22,7 @@
 body {
 	font-size: 1.3em;
 	font-family: 'Jua';
+	padding-right: 0 !important;
 }
 
 div.layout div {

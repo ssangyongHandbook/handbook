@@ -10,9 +10,9 @@ import lombok.Data;
 @Alias("GuestbookDto")
 public class GuestbookDto {
 
-	private int guest_num;
-	private int write_num;
-	private int owner_num;
+	private String guest_num;
+	private String write_num;
+	private String owner_num;
 	private String guest_content;
 	private String guest_file;
 	private String guest_access;

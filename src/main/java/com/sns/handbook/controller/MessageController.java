@@ -260,11 +260,23 @@ public class MessageController {
 	
 	@GetMapping("/message/newgroup")
 	@ResponseBody
-	public Map<String, Integer> newGroup()
+	public Map<String, Integer> newGroup(@RequestParam String other,HttpSession session)
 	{
 		Map<String, Integer> map=new HashMap<>();
 		
-		map.put("group", mservice.selectMaxNum()+1);
+		//내 num
+		String user_num=(String)session.getAttribute("user_num");
+		
+		//상대와 나의 메시지가 이미 있는지 확인
+		int msgCount=mservice.getCountOfMessage(user_num, other);
+		
+		//메시지가 존재한다면 기존의 그룹을 받아옴
+		if(msgCount!=0) {
+			MessageDto mdto=mservice.selectRecentMessage(user_num, other);
+			map.put("group", mdto.getMess_group());
+		}else {
+			map.put("group", mservice.selectMaxNum()+1);
+		}
 		
 		return map;
 	}
