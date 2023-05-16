@@ -15,7 +15,9 @@ public interface CommentMapperInter {
 	public void updateStep(Map<String, Integer> map);
 	public void insert(CommentDto dto);
 	public void delete(String comment_num);
+	public void deleteGroup(int comment_num);
 	public CommentDto getData(String comment_num);
+	public List<CommentDto> getDataGroupStep(Map<String, Integer> map);
 	public void update(CommentDto dto);
 	public List<CommentDto> selectScroll(Map<String, Object> map);
 	public List<CommentDto> getAllDatas();

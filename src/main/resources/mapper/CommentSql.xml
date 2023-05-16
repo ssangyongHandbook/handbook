@@ -18,8 +18,16 @@
 		delete from comment where comment_num=#{comment_num}
 	</delete>
 	
+	<delete id="deleteGroup" parameterType="int">
+		delete from comment where comment_group=#{comment_group}
+	</delete>
+	
 	<select id="getData" parameterType="String" resultType="CommentDto">
 		select * from comment where comment_num=#{comment_num}
+	</select>
+	
+	<select id="getDataGroupStep" parameterType="Map" resultType="CommentDto">
+		select * from comment where comment_group=#{comment_group} and comment_step>#{comment_step} order by comment_step
 	</select>
 	
 	<update id="update" parameterType="CommentDto">
