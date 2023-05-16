@@ -451,10 +451,6 @@ $(function(){
          var likeshow2_num = $(this).attr("likeshow2_num");
          var likehide2_num = $(this).attr("likehide2_num");
 
-         /*       
-               $(".likeshow2").toggle();
-               $(".likehide2").toggle(); */
-
          $("#" + likeshow2_num).toggle();
          $("#" + likehide2_num).toggle();
 
@@ -535,7 +531,7 @@ $(function(){
       .menu a {
            margin: 0 10px;
       }
-
+      
       .mypage-main{
          margin: 0 auto;
       }
@@ -702,7 +698,6 @@ $(function(){
             width: 100px; 
           height: 100px;
           cursor: pointer;
-
       }
       
       .btnfollow{
@@ -750,7 +745,7 @@ $(function(){
       .dropdown{
          height: 0px;
       }
-      
+
 </style>
 </head>
 <body>
@@ -1196,7 +1191,7 @@ $(function(){
                                        <span   style="cursor: pointer;"> <i class="img_like fa-regular fa-thumbs-up fa-2x - 2em"></i></span>
                                      
                                           <c:if test="${adto.like_count==0 }">
-                                             &nbsp;좋아요 ${adto.like_count}
+                                             &nbsp;좋아요 
                                           </c:if>
                                            
                                           <c:if test="${adto.like_count !=0 }">
@@ -1205,7 +1200,7 @@ $(function(){
                                        </span>
                                  
                                         <span class="dlike" id="likeshow1${adto.post_num}" user_num="${sessionScope.user_num}" post_num="${adto.post_num }" style="display: none;"> 
-                                       <span style="font-size: 1.2em; top: 3px; color: blue;"> <i class="fa-solid fa-thumbs-up"></i></span> 
+                                       <span style="cursor: pointer; color: #3578E5;"> <i class="img_dlike fa-solid fa-thumbs-up fa-2x - 2em"></i></span> 
                                        <c:if test="${adto.like_count==0 }">
                                           &nbsp;좋아요 회원님 
                                        </c:if>
@@ -1234,10 +1229,10 @@ $(function(){
                                     
                                     
                                  
-                                 <span user_num="${sessionScope.user_num}" id="likeshow2${adto.post_num}" class="like" post_num="${adto.post_num }" style="display: none;"> <span> 
-                                 <i class="img_like fa-solid fa-thumbs-up fa-2x - 2em"></i> 
+                                 <span user_num="${sessionScope.user_num}" id="likeshow2${adto.post_num}" class="like" post_num="${adto.post_num }" style="display: none; color: #3578E5;"> <span> 
+                                 <i class="img_dlike fa-solid fa-thumbs-up fa-2x - 2em"></i> 
                                  <c:if test="${adto.like_count== 1}">
-                                    &nbsp;좋아요 0
+                                    &nbsp;좋아요 
                                  </c:if> 
                                  <c:if test="${adto.like_count!= 1}">
                                     &nbsp;좋아요 ${adto.like_count -1 }
@@ -1281,4 +1276,4 @@ $(function(){
       </div>
 
 </body>
-</
+</html>
