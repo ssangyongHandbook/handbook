@@ -57,8 +57,6 @@ public class SocketHandler extends TextWebSocketHandler{
         
         JSONObject ob=new JSONObject(msg);
         
-        System.out.println(ob.toString());
-        
         //메시지 구분(보낸사람:내용)
         String myid=ob.getString("myid"); //보낸사람
         String upload=ob.getString("upload"); //메시지내용
