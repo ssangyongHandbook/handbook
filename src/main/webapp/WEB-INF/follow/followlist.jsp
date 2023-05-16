@@ -124,6 +124,7 @@
 </style>
 </head>
 <body>
+
 	<div class = "followlist">
 	<div style="display: inline-flex; align-items: center; justify-content: space-between; margin-top: 20px;">
 	<span style="margin-left:35px; margin-bottom: 20px; font-size: 20pt; font-weight: bold;">친구</span>
@@ -171,12 +172,12 @@
 					</div>
 					</div>
 				</div>
-		
 		</c:forEach>
 		
 		
 		
 	</section>
+	
 	</div>
 	<script type="text/javascript">
 		

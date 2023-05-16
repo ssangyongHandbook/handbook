@@ -13,76 +13,213 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
 <style type="text/css">
+.recommendlist{
+	border: 1px solid gray; 
+	display: flex; 
+	justify-content: center; 
+	width: 900px; 
+	flex-direction: column; 
+	margin-top: 30px;
+	margin: 0 auto;
+}
+.followsearchbox{
+	width:150px; 
+	height:30px; 
+	border: none; 
+	background: none; 
+	outline: none; 
+	font-size: 13pt;
+	padding: 10px;"
+}
 
+.userbox {
+	width: 400px;
+	height: 200px;
+	border: 1px solid gray;
+	border-radius: 5px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+.up{
+	border: none;
+	border-radius: 100px;
+	margin-left: 15px;
+	margin-right: 10px;
+	width: 80px;
+	height: 80px;
+	overflow: hidden;
+	text-align: center;
+}
+
+.addbtn {
+	width: 20px;
+	background-color:#fff;
+	border:none;
+	z-index: 1;
+}
+
+.btndiv {
+	width: 50px;
+	float:right;
+	
+	margin: 0 auto;
+}
+
+.section{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	width: 820px;
+	margin: 0 auto;
+}
 </style>
 </head>
 <script type="text/javascript">
 	$(function(){
+		offset=${offset};
 			$(document).on("click",".addbtn",function(){
-				var to_user = $(this).attr("user_num");
-				$.ajax({
-					type:"get",
-					dataType:"text",
-					url:"insertfollowing",
-					data:{"from_user":"${sessionScope.user_num}", "to_user":to_user},
-					success:function(){
-						location.reload();
-					}
-				})
+				
+				var user_num=$(this).attr("user_num");
+				const btn=document.getElementById('btn'+user_num);
+				var text=$(this).text();
+				$(this).innerText='안녕';
+				 if(text=="팔로워하기"){
+					$.ajax({
+						type:"get",
+						dataType:"text",
+						url:"insertfollowing",
+						data:{"from_user":"${sessionScope.user_num}", "to_user":user_num},
+						success:function(){
+							btn.innerText="팔로워취소";
+						}
+					}) 
+				}else{
+					
+					$.ajax({
+						type:"get",
+						dataType:"text",
+						url:"deletefollowing",
+						data:{"to_user":user_num},
+						success:function(){
+							btn.innerText="팔로워하기";
+						}
+					}) 
+				} 
+				
 			});
 		});
-	
+	window.onscroll = function(e) {
+
+	      if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
+
+	    	  offset=offset+1;
+	    	  $.ajax({
+	    		 type:"get",
+	    		 dataType:"json",
+	    		 url:"recommendlistscroll",
+	    		 data:{"offset":offset,"from_user":${sessionScope.user_num}},
+	    		 success:function(res){
+	    			 $.each(res,function(i,item){
+	    				 setTimeout(function(){
+	    					
+	    		        		var s = "";
+
+	    		        		if(item.user_photo != null){
+	    		        			s += '<div class="up">';
+    		    					s += '<img src="/photo/'+item.user_photo+'" class="userphoto">';
+    		    					s += '</div>';
+	    		        			
+	    		        		}else{
+	    		        			s += '<div class="up">';
+    		    					s += '<img src="../image/noimg.png" class="userphoto">';
+    		    					s += '</div>';		
+	    		        		}
+	    		    			s += '<div class="un">';
+	    		    			s += '<span>'+item.user_name+'</span>';
+	    		    			if(item.tf_count>0){
+	    		    				s += '<span class="tf" style="font-size: 11px;">함께아는친구:'+item.tf_count+'</span>';
+	    		    			}
+	    		    			s += '</div>';
+	    		    			s += '<div class="btndiv" style="margin: auto 0;">';
+	    		    			if(item.to_user != null){
+	    		    				s += '<button type="button" class="addbtn" id="btn'+item.user_num+'" user_num = "'+item.to_user+'">팔로워하기</button>';
+	    		    			}else{
+	    		    				s += '<button type="button" class="addbtn" id="btn'+item.user_num+'" user_num = "'+item.user_num+'">팔로워하기</button>';
+	    		    			}
+	    		    			s += '</div>';	
+
+	    		    					
+	    		             	console.log(s);
+	    		             	var addContent = document.createElement("div");
+	    		                addContent.classList.add("userbox");
+	    		                addContent.innerHTML = s;
+	    		                document.querySelector('section').appendChild(addContent);
+	    		              	
+	    		         }, 1000)  
+	    			 })
+	    		 }
+	    	  });
+	    	  
+	       
+	      }
+	    }
 
 </script>
 
 <body>
-<section class = "section">
-	<div style = "border: 1px solid gray; display: inline-flex; justify-content: center; width: 900px; flex-direction: column; margin-top: 15px; ">
-	  	<div style="display: inline-flex; align-items: center; justify-content: space-between; margin-top: 20px;">	
-		<span style="margin-left:35px; margin-bottom: 20px; font-size: 20pt; font-weight: bold;">친구</span>	
-		<div style=" margin-right:60px; background-color: #F0F2F5; border-radius: 60px; display: inline-flex; align-items: center; padding-left: 2%">
-						<span class = "glyphicon glyphicon-search" style = "font-size: 16pt;"></span>
-						<input type = "text" name = "searchword" class="followsearchbox"
-						style = " width:150px; height:30px; border: none; background: none; outline: none; font-size: 13pt;
-						padding: 10px;" placeholder="검색">
-		</div>
-		</div>
-		<c:forEach var = "dto" items = "${list }">
-			<div class="userbox">
-
-				<c:if test="${dto.user_photo!=null}">
-					<div class="up">
-						<img src="/photo/${dto.user_photo }" class="userphoto">
-					</div>
-				</c:if>
-
-				<c:if test="${dto.user_photo==null}">
-					<div class="up">
-						<img src="../image/noimg.png" class="userphoto">
-					</div>
-				</c:if>
-				<div class="un">
-					<span>${dto.user_name }</span> 
-					<c:if test="${dto.tf_count>0 }">
-					<span class="tf" style="font-size: 11px;">함께아는친구: ${dto.tf_count }</span>
-					</c:if>
-				</div>
-				<div class="btndiv" style="margin: auto 0;">
-					<c:if test="${dto.to_user != null }">				
-						<button type="button" class="addbtn" user_num = ${dto.to_user }>팔로워하기</button>
-					</c:if>
-					<c:if test="${dto.to_user == null }">				
-						<button type="button" class="addbtn" user_num = ${dto.user_num }>팔로워하기</button>
-					</c:if>
-					
-				</div>
-			</div>
-		
-		</c:forEach>
-	</div>
+	<div class = "recommendlist">
 	
+		<div style="display: inline-flex; align-items: center; justify-content: space-between; margin-top: 20px;">
 		
-		
-	</section>
+			<span style="margin-left: 35px; margin-bottom: 20px; font-size: 20pt; font-weight: bold;">친구</span>
+			
+			<div style="margin-right: 60px; background-color: #F0F2F5; border-radius: 60px; display: inline-flex; align-items: center; padding-left: 2%">
+			
+				<span class="glyphicon glyphicon-search" style="font-size: 16pt;"></span>
+				
+				<input type = "text" name = "searchword" class="followsearchbox" placeholder="검색">
+			
+			</div>
+		</div>
+		<section class="section">
+			<c:forEach var="dto" items="${list }">
+				<div class="userbox">
+					<c:if test="${dto.user_photo!=null}">
+						<div class="up">
+							<img src="/photo/${dto.user_photo }" class="userphoto">
+						</div>
+					</c:if>
+
+					<c:if test="${dto.user_photo==null}">
+						<div class="up">
+							<img src="../image/noimg.png" class="userphoto">
+						</div>
+					</c:if>
+					<div class="un">
+						<span>${dto.user_name }</span>
+						<c:if test="${dto.tf_count>0 }">
+							<span class="tf" style="font-size: 11px;">함께아는친구:
+								${dto.tf_count }</span>
+						</c:if>
+					</div>
+					<div class="btndiv">
+						<c:if test="${dto.to_user != null }">
+							<button type="button" class="addbtn" id="btn${dto.to_user}"
+								user_num="${dto.to_user }">팔로워하기</button>
+						</c:if>
+						<c:if test="${dto.to_user == null }">
+							<button type="button" class="addbtn" id="btn${dto.user_num }"
+								user_num="${dto.user_num }">팔로워하기</button>
+						</c:if>
+
+					</div>
+				</div>
+
+			</c:forEach>
+		</section>
+	</div>
 </body>
 </html>

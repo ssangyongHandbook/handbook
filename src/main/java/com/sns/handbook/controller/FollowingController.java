@@ -66,9 +66,9 @@ public class FollowingController {
 	
 	@GetMapping("deletefollowing")
 	@ResponseBody
-	public void deleteFollowing(String to_user) {
+	public void deleteFollowing(String to_user, HttpSession session) {
 		
-		service.deleteFollowing(to_user);
+		service.deleteFollowing((String)session.getAttribute("user_num"),to_user);
 	}
 	
 	@GetMapping("followlist")
@@ -114,6 +114,8 @@ public class FollowingController {
 		
 		return list;
 	}
+	
+	
 	
 	//친구 목록에서 친구 검색
 	@GetMapping("followsearch")
@@ -182,6 +184,36 @@ public class FollowingController {
 	
 		
 		return model;
+	}
+	
+	
+	@GetMapping("recommendlistscroll")
+	@ResponseBody
+	public List<Object> recommemdlistscroll(String from_user,HttpSession session, @RequestParam(defaultValue = "0") int offset){
+		
+		List<FollowingDto> list1 = service.followRecommend(from_user,offset); //내가 팔로워 하지 않는 사람들 중에서 내 팔로워들이 그 사람을 팔로워를 많이 한 순서대로 리스트 뽑는다
+		List<UserDto> list2 = service.followRandom(from_user,offset);
+		
+		for(int i = 0; i<list1.size(); i++) {
+			UserDto dto = uservice.getUserByNum(list1.get(i).getTo_user()); //여러가지 수많은 데이터에서 i번째 데이터만 가져오기, 여기서 필요한 상대방 num을 list에서 뽑아옴
+			list1.get(i).setUser_name(dto.getUser_name());// 위에서 dto에서 name photo를 뽑아내서 리스트에 set을 해줌
+			list1.get(i).setUser_photo(dto.getUser_photo());
+			list1.get(i).setTf_count(service.togetherFollow(dto.getUser_num(),(String)session.getAttribute("user_num")));
+		}		
+		
+		for(int i = 0; i<list2.size(); i++) {
+			UserDto dto = uservice.getUserByNum(list2.get(i).getUser_num()); //여러가지 수많은 데이터에서 i번째 데이터만 가져오기, 여기서 필요한 상대방 num을 list에서 뽑아옴
+			list2.get(i).setTf_count(service.togetherFollow(dto.getUser_num(),(String)session.getAttribute("user_num")));
+		}		
+		
+		List<Object> mergedlist = new ArrayList<>();
+		
+		
+		mergedlist.addAll(list1);
+		
+		mergedlist.addAll(list2);
+		
+		return mergedlist;
 	}
 	
 }

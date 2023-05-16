@@ -367,9 +367,10 @@ public class UserController {
 	//팔로우 취소
 	@ResponseBody
 	@GetMapping("/user/unfollowing")
-	public void unfollowing(String to_user)
-	{
-		fservice.deleteFollowing(to_user);
+	public void followingdelete(String to_user, HttpSession session) {
+
+		fservice.deleteFollowing((String)session.getAttribute("user_num"),to_user);
+
 	}
 	
 	//방명록 작성

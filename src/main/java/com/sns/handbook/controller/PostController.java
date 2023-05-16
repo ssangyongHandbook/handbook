@@ -253,9 +253,9 @@ public class PostController {
 
 	@GetMapping("/post/followingdelete")
 	@ResponseBody
-	public void followingdelete(String to_user) {
+	public void followingdelete(String to_user, HttpSession session) {
 
-		fservice.deleteFollowing(to_user);
+		fservice.deleteFollowing((String)session.getAttribute("user_num"),to_user);
 
 	}
 

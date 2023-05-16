@@ -19,6 +19,11 @@ ul{
    list-style:none;
    line-height: 30px;
   }
+ 
+menu{
+   padding:10px; 
+   font-size: 30pt;
+} 
 </style>
 </head>
 <body>
@@ -42,16 +47,16 @@ ul{
 		</li>
 		
         <li>
-            <a href="${root }/following/recommendlist?from_user=${sessionScope.user_num}"><span class="glyphicon glyphicon-search" style="padding:10px; font-size: 20pt;">&nbsp;팔로워 추천</span></a>
+            <a href="${root }/following/recommendlist?from_user=${sessionScope.user_num}" ><span class="glyphicon glyphicon-search"><b style="font-size: 15pt;">&nbsp;<span>팔로워</span><span style="margin-left: 3px;">추천</span></b></span></a>
         </li>
         <li>
-            <a href="${root }/following/followlist?from_user=${sessionScope.user_num}"><span class="glyphicon glyphicon-th-list" style="padding:10px; font-size: 20pt;">&nbsp;팔로워 목록</span></a>
+            <a href="${root }/following/followlist?from_user=${sessionScope.user_num}" ><span class="glyphicon glyphicon-th-list"><b style="font-size: 15pt;">&nbsp;<span>팔로워</span><span style="margin-left: 3px;">목록</span></b></span></a>
         </li>
         <li>
-            <a href="#"><span class="glyphicon glyphicon-star" style="padding:10px; font-size: 20pt;">&nbsp;즐겨찾기</span></a>
+            <a href="#"><span class="glyphicon glyphicon-star" ><b style="font-size: 15pt;">&nbsp;즐겨찾기</b></span></a>
         </li>
         <li>
-            <a href="#" data-toggle="modal" data-target="#contentwrite" ><span class="glyphicon glyphicon-check" style="padding:10px; font-size: 20pt;">&nbsp;게시글</span></a>
+            <a href="#" data-toggle="modal" data-target="#contentwrite"><span class="glyphicon glyphicon-check"><b style="font-size: 15pt;">&nbsp;게시글</b></span></a>
         </li>
     </ul>
 </div>
