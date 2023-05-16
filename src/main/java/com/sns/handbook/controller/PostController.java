@@ -137,31 +137,38 @@ public class PostController {
 
 	@PostMapping("/post/insertpost")
 	@ResponseBody
-	public void insertPost(@ModelAttribute PostDto dto, @RequestParam(required = false) MultipartFile photo,
-			HttpSession session) {
-
-		String path = session.getServletContext().getRealPath("/post_file");
-
-		if (photo == null) {
-			dto.setPost_file("no");
-			pservice.insertPost(dto);
-
-		} else {// upload 한 경우
-
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
-			String fileName = "f_" + sdf.format(new Date()) + photo.getOriginalFilename();
-
-			dto.setPost_file(fileName);
-
-			try {
-				photo.transferTo(new File(path + "\\" + fileName));
-			} catch (IllegalStateException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			pservice.insertPost(dto);
-		}
+	public void insertPost(@ModelAttribute PostDto dto, @RequestParam(required = false) List<MultipartFile> photo, HttpSession session) {
+		
+	    String path = session.getServletContext().getRealPath("/post_file");
+	    
+	    int idx = 1;
+	    String uploadName = "";
+	    
+	    if (photo == null) {
+	        dto.setPost_file("no");
+	        pservice.insertPost(dto);
+	        
+	    } else {
+	    	
+	        for (MultipartFile f : photo) {
+	            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+	            String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
+	            uploadName += fileName + ",";
+	            
+	            try {
+	                f.transferTo(new File(path + "\\" + fileName));
+	            } catch (IllegalStateException | IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	        //콤마 제거
+	        uploadName = uploadName.substring(0, uploadName.length() - 1);
+	        
+		    dto.setPost_file(uploadName);
+		    pservice.insertPost(dto);
+		    
+	    }
+	    
 	}
 
 	// delete
