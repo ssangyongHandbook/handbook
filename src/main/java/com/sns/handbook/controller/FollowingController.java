@@ -41,7 +41,7 @@ public class FollowingController {
 		model.addAttribute("totalCount", service.getTotalFollowing("1"));
 		model.addAttribute("totalCount2", service.getTotalFollowing("2"));
 		
-		return "/follow/following";
+		return "/sub/follow/following";
 	}
 	
 	@GetMapping("insertfollowing")
@@ -91,7 +91,7 @@ public class FollowingController {
 		model.addObject("list", list);
 		model.addObject("offset", offset);
 		model.addObject("from_user",from_user);
-		model.setViewName("/follow/followlist");
+		model.setViewName("/sub/follow/followlist");
 
 		
 		return model;
@@ -139,7 +139,7 @@ public class FollowingController {
 		model.addObject("list", list);
 		model.addObject("offset", offset);
 		model.addObject("from_user",from_user);
-		model.setViewName("/follow/followlist");
+		model.setViewName("/sub/follow/followlist");
 		
 		return model;
 		
@@ -178,7 +178,7 @@ public class FollowingController {
 		ModelAndView model = new ModelAndView();
 		model.addObject("list", mergedlist);
 		model.addObject("offset", offset);
-		model.setViewName("/follow/recommendlist");
+		model.setViewName("/sub/follow/recommendlist");
 	
 		
 		return model;
