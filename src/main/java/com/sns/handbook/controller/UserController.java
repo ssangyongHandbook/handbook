@@ -109,7 +109,7 @@ public class UserController {
 		
 		int followercount=fservice.getTotalFollower(user_num);
 		int followcount=fservice.getTotalFollowing(user_num);
-		String loginnum=uservice.getUserById((String)session.getAttribute("myid")).getUser_num();
+		String loginnum=uservice.getUserById((String)session.getAttribute("myid")).getUser_num();	
 	
 		UserDto udto=uservice.getUserByNum(user_num);
 		List<GuestbookDto> guestlist=uservice.getGuestPost(user_num);
@@ -129,6 +129,7 @@ public class UserController {
 			map.put("post_time", p.getPost_time());
 			map.put("like_count", plservice.getTotalLike(p.getPost_num()));
 			map.put("likecheck", plservice.checklike((String)session.getAttribute("user_num"),p.getPost_num()));
+			map.put("type", "post");
 
 			alllist.add(map);
 		}
@@ -143,6 +144,10 @@ public class UserController {
 			map.put("post_file", g.getGuest_file());
 			map.put("post_access", g.getGuest_access());
 			map.put("post_writeday", g.getGuest_writeday());
+			map.put("type", "guest");
+			
+			UserDto dto=uservice.getUserByNum(g.getWrite_num());
+			map.put("dto", dto);
 			
 			alllist.add(map);
 		}
