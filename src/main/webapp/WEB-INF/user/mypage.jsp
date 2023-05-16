@@ -18,6 +18,7 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 
 //주소 찾기 API
@@ -411,11 +412,21 @@ $(function(){
 				url : "likeinsert",
 				data : {"post_num" : post_num,"user_num" : user_num},
 				success : function() {
-					location.reload();
+					
 					
 				}
 			})
 		})
+		
+		$(document).on("click", ".liketoggle", function() {
+
+			var likeshow1_num = $(this).attr("likeshow1_num");
+			var likehide1_num = $(this).attr("likehide1_num");
+
+			$("#" + likeshow1_num).toggle();
+			$("#" + likehide1_num).toggle();
+
+		});
 		
 		//좋아요 취소
 		$(".img_dlike").click(function(){
@@ -429,11 +440,25 @@ $(function(){
 				url : "likedelete",
 				data : {"post_num" : post_num,"user_num" : user_num},
 				success : function() {
-					location.reload();
+
 
 						}
 					})
 				})
+				
+		$(document).on("click", ".liketoggle2", function() {
+
+			var likeshow2_num = $(this).attr("likeshow2_num");
+			var likehide2_num = $(this).attr("likehide2_num");
+
+			/* 		
+					$(".likeshow2").toggle();
+					$(".likehide2").toggle(); */
+
+			$("#" + likeshow2_num).toggle();
+			$("#" + likehide2_num).toggle();
+
+		});
 				
 		//팔로우 하기
 		$("#btnfollow").click(function(){
@@ -584,9 +609,6 @@ $(function(){
 		}
 		
 		.btnprofile{
-			position: relative;
-    		bottom: 30%;
-    		left: 65%;
     		font-weight: bold;
     		padding: 10px;
     		background-color: #F0F2F5;
@@ -690,9 +712,6 @@ $(function(){
 			border-radius: 5px;
 			font-weight: bold;
 			padding: 8px;
-			position: relative;
-			bottom: 30%;
-			left: 80%;
 		}
 		
 		.btnunfollow{
@@ -702,9 +721,6 @@ $(function(){
 			border-radius: 5px;
 			font-weight: bold;
 			padding: 8px;
-			position: relative;
-			bottom: 30%;
-			left: 80%;
 		}
 		
 		.btnmessage{
@@ -714,9 +730,6 @@ $(function(){
 			font-weight: bold;
 			padding: 8px;
 			background-color: #F0F2F5;
-			position: relative;
-			bottom: 30%;
-			left: 81%;
 		}
 		
 		.hp{
@@ -733,7 +746,11 @@ $(function(){
 		textarea::placeholder {
  			 font-size: 1.2em;
 		}
-		
+
+		.dropdown{
+			height: 0px;
+		}
+
 </style>
 </head>
 <body>
@@ -964,31 +981,38 @@ $(function(){
 			</div>
 			
 			<div class="profile">                         
-				<div class="dropdown" style="width: 0%; height: 100%; position: relative; left: 10%;">
+				<div class="dropdown">
 				
 					<input type="file" id="newphoto" style="display: none;" num="${dto.user_num }">
-								
-						    <ul class="dropdown-menu">
-						      <li><a href="${root }/photo/${sessionScope.user_photo}">프로필 사진 보기</a></li>
-						      <c:if test="${sessionScope.user_num==dto.user_num }">  
-						      	<li><a href="#" id="btnnewphoto">프로필 사진 업데이트</a></li>
-						       </c:if>
-						    </ul>			    
-					     
+					
 						<c:if test="${sessionScope.loginok!=null && dto.user_photo!=null }">
-					    <img data-toggle="dropdown" alt="" src="${root }/photo/${dto.user_photo}" 
-					    style="width: 180px; height: 180px; border:3px solid gray; cursor: pointer; border-radius: 90px; position: relative; bottom: 62%;">
-					    </c:if>
-					    
-					    <c:if test="${sessionScope.loginok!=null && dto.user_photo==null }">
-					    <img data-toggle="dropdown" alt="" src="${root }/image/profile.png" 
-					    style="width: 180px; height: 180px; cursor: pointer; border-radius: 90px; position: relative; bottom: 62%;">
-					    </c:if>
-					     
-					   <img alt="" src="${root }/image/camera.png" style="width: 50px; height: 50px; cursor: pointer;
-					   position: relative; bottom:100%;">
-					   
+							<img data-toggle="dropdown" alt=""
+								src="${root }/photo/${dto.user_photo}"
+								style="width: 180px; height: 180px; border: 3px solid gray; cursor: pointer; border-radius: 90px;
+								position: relative; left: 250px; bottom: 80px;">
+						</c:if>
+		
+						<c:if test="${sessionScope.loginok!=null && dto.user_photo==null }">
+							<img data-toggle="dropdown" alt="" src="${root }/image/profile.png"
+								style="width: 180px; height: 180px; cursor: pointer; border-radius: 90px;
+								position: relative; left: 250px; bottom: 80px;">
+						</c:if>
+						<img alt="" src="${root }/image/camera.png" style="width: 50px; height: 50px; cursor: pointer;
+						position: relative; left: 180px; bottom: 7px;">
+						
+							<span style="font-size: 22pt; font-weight: bold; position: relative; left: 200px; bottom: 60px;">${dto.user_name }</span>
+							<span style="font-size: 13pt; font-weight: bold; color:#65676b; position: relative; left: 108px; bottom: 33px;">친구 ${tf_count}명</span>
+						
+						<ul class="dropdown-menu">
+							<li><a href="${root }/photo/${sessionScope.user_photo}">프로필
+									사진 보기</a></li>
+							<c:if test="${sessionScope.user_num==dto.user_num }">
+								<li><a href="#" id="btnnewphoto">프로필 사진 업데이트</a></li>
+							</c:if>
+						</ul>
 				</div>
+		
+			<div style="float:right; margin-right: 3%; margin-top: 2%;">
 					   <c:if test="${sessionScope.user_num!=dto.user_num && checkfollowing !=1 }">
 					   	<button type="button" class="btnfollow" id="btnfollow" from_user="${sessionScope.user_num }" to_user="${dto.user_num }">
 					   	<i class="fa-solid fa-user-group"></i>&nbsp;팔로우 추가</button>
@@ -1001,14 +1025,12 @@ $(function(){
 					  
 					  <button type="button" class="btnmessage"><i class="fa-solid fa-comment"></i>&nbsp;메시지 보내기</button>
 					  
-					  <span style="font-size: 22pt; font-weight: bold; position: relative; bottom: 70%; left: 14%;">${dto.user_name }</span>
-					  <span style="font-size: 13pt; font-weight: bold; color:#65676b;">친구 ${tf_count}명</span>
-					  
 				<c:if test="${sessionScope.user_num==dto.user_num }">
 					<button type="button" class="btnprofile" data-toggle="modal" data-target="#infoupdate" style="border-radius: 5px; border: none;">
 						<i class="fa-solid fa-pencil fa-xl - 1.5em - 24px"></i>&nbsp;&nbsp;프로필 편집
 					</button>
 				</c:if>
+			</div>
 			</div>
 			
 			<div class="menu">
@@ -1115,9 +1137,12 @@ $(function(){
 											
 											<c:if test="${adto.type=='guest' }">
 												<img alt="" src="${root }/photo/${adto.dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
+												
 											</c:if>
 												<div class="top-writeday">
-													<span><b>${dto.user_name }
+													<span><b>${adto.dto.user_name }<c:if test="${adto.type=='guest' }"><i class="fa-solid fa-caret-right"></i></c:if>${dto.user_name }<br></b>
+													${adto.post_time }
+													<b>
 													<c:if test="${adto.post_access =='follower'}">
 														<i class="fa-solid fa-user-group"></i>
 													</c:if>
@@ -1129,8 +1154,9 @@ $(function(){
 													<c:if test="${adto.post_access =='onlyme'}">
 														<i class="fa-solid fa-lock"></i>
 													</c:if>
+													
 													</b></span>
-													<span>${adto.post_time }</span>		
+															
 												</div>
 												<c:if test="${sessionScope.user_num==dto.user_num }">
 													<div class="dropdown" style="margin-left: 70%;">
@@ -1158,18 +1184,88 @@ $(function(){
 									<div class="bottom">
 									<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 									
-										<div class="bottom-up">
+										<div class="bottom-up">			
 											<div class="like">
 												<c:if test="${adto.likecheck ==0 }">
-													<span><i class=" img_like fa-regular fa-thumbs-up fa-2x - 2em" user_num="${dto.user_num }" post_num=${adto.post_num }
-													style="cursor: pointer;"></i>&nbsp;&nbsp;좋아요&nbsp;${adto.like_count}명</span>
+													<span class="bottom-left liketoggle" user_num="${sessionScope.user_num}" likehide1_num="likehide1${adto.post_num}"
+														likeshow1_num="likeshow1${adto.post_num}" post_num="${adto.post_num }">
+														
+														<span class="like" id="likehide1${adto.post_num}" user_num="${sessionScope.user_num}" likehide1_num="likehide1${adto.post_num}"
+														likeshow1_num="likeshow1${adto.post_num}" post_num="${adto.post_num }">
+														
+															<span style="cursor: pointer;">
+																<i class="img_dlike fa-regular fa-thumbs-up fa-2x - 2em"></i>
+															</span>
+															
+															<c:if test="${adto.like_count==0 }">
+																&nbsp;좋아요
+															</c:if> 
+															
+															<c:if test="${adto.like_count !=0 }">
+																&nbsp;좋아요 ${adto.like_count}명
+															</c:if>
+															
+														</span>
+														
+														<span class="dlike" id="likeshow1${adto.post_num}" user_num="${sessionScope.user_num}"
+															post_num="${adto.post_num }" style="display: none;">
+															
+															<span style="color: #3578E5; cursor: pointer;">
+																<i class="img_dlike fa-solid fa-thumbs-up fa-2x - 2em"></i>
+															</span>
+															
+															<c:if test="${adto.like_count==0 }">
+																&nbsp;좋아요 회원님 
+															</c:if>
+															
+															<c:if test="${adto.like_count !=0 }">
+																&nbsp;좋아요 회원님 외${adto.like_count}명
+															</c:if>
+															
+														</span>
+													</span>
 												</c:if>
-												
+																			
 												<c:if test="${adto.likecheck !=0 }">
-													<span><i class="img_dlike fa-solid fa-thumbs-up fa-2x - 2em" style="color: #3578E5; cursor: pointer;" user_num="${dto.user_num }" post_num=${adto.post_num }
-													></i>&nbsp;&nbsp;좋아요&nbsp;${adto.like_count}명</span>
+													<span class="bottom-left liketoggle2" likehide2_num="likehide2${adto.post_num}" likeshow2_num="likeshow2${adto.post_num}"
+														user_num="${sessionScope.user_num}" post_num="${adto.post_num }">
+														
+														<span id="likehide2${adto.post_num}" class="dlike" user_num="${sessionScope.user_num}" likehide1_num="likehide1${adto.post_num}"
+														likeshow1_num="likeshow1${adto.post_num}" post_num="${adto.post_num }">
+														
+															<span style="color: #3578E5; cursor: pointer;">
+																<i class="img_dlike fa-solid fa-thumbs-up fa-2x - 2em"></i>
+															</span>
+															
+															<c:if test="${adto.like_count!= 1}">
+																&nbsp;좋아요 회원님 외 ${adto.like_count-1}명
+															</c:if>
+															
+															<c:if test="${adto.like_count ==1 }">
+																&nbsp;좋아요 회원님 
+															</c:if>
+															
+														</span>
+														
+														<span user_num="${sessionScope.user_num}" id="likeshow2${adto.post_num}" class="like"
+															post_num="${adto.post_num }" style="display: none;">
+															<span style="cursor: pointer;">
+																<i class="img_like fa-regular fa-thumbs-up fa-2x - 2em"></i>
+																
+																<c:if test="${adto.like_count== 1}">
+																	&nbsp;좋아요 0
+																</c:if>
+																
+																<c:if test="${adto.like_count!= 1}">
+																	&nbsp;좋아요 ${adto.like_count -1 }
+																</c:if>
+																												
+															</span>
+														</span>			
+													</span>
 												</c:if>
-											</div>
+												</div>
+											
 											<div class="comment">
 												<span><i class="fa-regular fa-comment fa-2x - 2em" id="img_comment"></i>&nbsp;&nbsp;댓글달기</span>
 											</div>
