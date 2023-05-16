@@ -51,7 +51,7 @@ ul{
             <a href="#"><span class="glyphicon glyphicon-star" style="padding:10px; font-size: 20pt;">&nbsp;즐겨찾기</span></a>
         </li>
         <li>
-            <a href="#" data-toggle="modal" data-target="#myModal" ><span class="glyphicon glyphicon-check" style="padding:10px; font-size: 20pt;">&nbsp;게시글</span></a>
+            <a href="#" data-toggle="modal" data-target="#contentwrite" ><span class="glyphicon glyphicon-check" style="padding:10px; font-size: 20pt;">&nbsp;게시글</span></a>
         </li>
     </ul>
 </div>

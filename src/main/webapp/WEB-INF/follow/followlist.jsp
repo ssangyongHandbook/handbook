@@ -63,14 +63,16 @@
 .btndiv {
 	width: 10%;
 	float:right;
-	align-self: flex-end;
-	line-height:140px;
+	margin: 0 auto;
 }
 
 .addbtn {
-	width: 30px;
+	width: 10px;
+	height: 10px;
 	background-color:#fff;
 	border:none;
+	z-index: 1;
+	
 }
 
 .tf{
@@ -78,30 +80,30 @@
 }
 
 .friendmenu{
-	position : relative;
-	width: 200px;
-	height: 60px;
-	top: -20px;
+	position : absolute;
+	width: 220px;
+	height: 80px;
 	border: 4px solid gray;
 	border-radius: 10px;
 	border : none;
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 	background-color: white;
+	padding-top: 15px;
 	
 }
 
-.followcancel button{
+.detailbtn button{
 	border: none;
 	background: none;
 	outline: none;
-	font-size: 9px;
+	font-size: 3px;
 }
 
-.followbookmark button{
+.detailbtn button{
 	border: none;
 	background: none;
 	outline: none;
-	font-size: 9px;
+	font-size: 3px;
 }
 .section{
 	display: flex;
@@ -110,10 +112,19 @@
 	width: 820px;
 	margin: 0 auto;
 }
+.followlist{
+	border: 1px solid gray; 
+	display: flex; 
+	justify-content: center; 
+	width: 900px; 
+	flex-direction: column; 
+	margin-top: 30px;
+	margin: 0 auto;
+}
 </style>
 </head>
 <body>
-	<div style = "border: 1px solid gray; display: inline-flex; justify-content: center; width: 900px; flex-direction: column; margin-top: 15px; ">
+	<div class = "followlist">
 	<div style="display: inline-flex; align-items: center; justify-content: space-between; margin-top: 20px;">
 	<span style="margin-left:35px; margin-bottom: 20px; font-size: 20pt; font-weight: bold;">친구</span>
 	
@@ -145,16 +156,19 @@
 						<span class="tf" style="font-size: 11px;">함께아는친구: ${dto.tf_count }</span>
 					</c:if>
 				</div>
-				<div class="btndiv" style="margin: auto 0;">
+				<div class="btndiv">
 					<button type="button" class="addbtn" fing_num = ${dto.fing_num }><img src="../image/add.png"></button>
 					
-					<ul class="friendmenu" id="${dto.fing_num }" style="float: left; margin: auto 0; padding: 0; display: none;">
-						
-								<li class = "followbookmark">
-								<button><span class="glyphicon glyphicon-star-empty" style="font-size: 15pt;"><b style="color: black;">&nbsp;즐겨찾기</b></span></button></li>
-								<li class = "followcancel">
-								<button type = "button" to_user = ${dto.to_user }><span class="glyphicon glyphicon-remove" style="font-size: 15pt; color:red;"><b style="color: black;">&nbsp;팔로우취소</b></span></button></li>
-					</ul>
+					<div class="friendmenu" id="${dto.fing_num }">
+								
+								<div class = "detailbtn">
+								<button><span class="glyphicon glyphicon-star-empty" style="font-size: 15pt;">
+								<b style="color: black;">즐겨찾기</b></span></button></div>
+								<div class = "detailbtn">
+								<button type = "button" class="fldelete"  to_user = ${dto.to_user }><span class="glyphicon glyphicon-remove" style="font-size: 15pt; color:red;">
+								<b style="color: black;">팔로우취소</b></span></button>
+								</div>
+					</div>
 					</div>
 				</div>
 		
@@ -179,7 +193,8 @@
 		
 		
 		
-		$(".followcancel button").click(function(){
+		$(document).on("click",".fldelete",function(){
+			
 			$.ajax({
 				dataType:"text",
 				url:"deletefollowing",
@@ -192,7 +207,7 @@
 		});
 		
 		window.onscroll = function(e) {
-			 console.log(window.innerHeight , window.scrollY,document.body.offsetHeight,document.body.scrollHeight);
+
 		      if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
 		    	  
 		    	  
