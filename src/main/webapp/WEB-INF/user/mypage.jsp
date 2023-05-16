@@ -885,20 +885,38 @@ $(function(){
 		        </div>
 		        
 		        <div class="modal-body">
-		        
-		        <div style="margin-bottom: 2%; display: flex; align-items: center;">
-		          	<img src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
-		          	
-		         <div style="margin-left: 2%;">
-		          <span style="font-size: 11pt;"><b>${dto.user_name }</b></span><br>
-		          
-		          <select class="form-control" name="post_access" id="post_access" style="background-color: #F0F2F5;">
-					<option value="all">전체공개</option>
-					<option value="follower">팔로워 공개</option>
-					<option value="onlyme">나만보기</option>
-				 </select>
-				</div>
-				</div>
+			        <c:if test="${sessionScope.user_num==dto.user_num }">
+				        <div style="margin-bottom: 2%; display: flex; align-items: center;">
+				        	
+				          		<img src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
+				        	
+				         <div style="margin-left: 2%;">
+				          <span style="font-size: 11pt;"><b>${dto.user_name }</b></span><br>
+				          
+					          <select class="form-control" name="post_access" id="post_access" style="background-color: #F0F2F5;">
+								<option value="all">전체공개</option>
+								<option value="follower">팔로워 공개</option>
+								<option value="onlyme">나만보기</option>
+							 </select>
+		
+						</div>
+						</div>
+					</c:if>
+					
+					<c:if test="${sessionScope.user_num!=dto.user_num }">
+				        <div style="margin-bottom: 2%; display: flex; align-items: center;">
+				        	
+				          		<img src="${root }/photo/${sessionScope.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
+				        	
+				         <div style="margin-left: 2%;">
+				          <span style="font-size: 11pt;"><b>${dto.user_name }</b></span><br>
+				          
+					      <span style="border-radius: 5px; padding: 4px; background-color: #F0F2F5;"><b><i class="fa-solid fa-user-group"></i>팔로워 공개</b></span>
+		
+						</div>
+						</div>
+					</c:if>
+				
 				  <div style="height: 150px;">
 		          	<textarea id="post_content" placeholder="무슨 생각을 하고 계신가요?" style="width: 100%; height:100%; border: none; outline: none;  resize: none;"></textarea>
 		          </div>
@@ -1091,7 +1109,13 @@ $(function(){
 								<div class="divmain">
 									<div class="top">
 										<div class="top-user">
-											<img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
+											<c:if test="${adto.type=='post' }">
+												<img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
+											</c:if>
+											
+											<c:if test="${adto.type=='guest' }">
+												<img alt="" src="${root }/photo/${adto.dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
+											</c:if>
 												<div class="top-writeday">
 													<span><b>${dto.user_name }
 													<c:if test="${adto.post_access =='follower'}">
