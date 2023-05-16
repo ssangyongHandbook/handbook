@@ -36,6 +36,7 @@
 </script>
 
 <body>
+<section class = "section">
 	<div style = "border: 1px solid gray; display: inline-flex; justify-content: center; width: 900px; flex-direction: column; margin-top: 15px; ">
 	  	<div style="display: inline-flex; align-items: center; justify-content: space-between; margin-top: 20px;">	
 		<span style="margin-left:35px; margin-bottom: 20px; font-size: 20pt; font-weight: bold;">친구</span>	
@@ -46,9 +47,6 @@
 						padding: 10px;" placeholder="검색">
 		</div>
 		</div>
-	</div>
-	
-	<section class = "section">
 		<c:forEach var = "dto" items = "${list }">
 			<div class="userbox">
 
@@ -81,7 +79,8 @@
 			</div>
 		
 		</c:forEach>
-		
+	</div>
+	
 		
 		
 	</section>

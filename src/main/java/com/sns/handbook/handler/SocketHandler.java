@@ -1,9 +1,13 @@
 package com.sns.handbook.handler;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
+import javax.websocket.OnMessage;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -47,37 +51,55 @@ public class SocketHandler extends TextWebSocketHandler{
     //메시지를 발송하면 동작하는 메소드
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
-    	
+
         //메시지 발송시
         String msg = message.getPayload();
-        //System.out.println(msg);
+        
+        JSONObject ob=new JSONObject(msg);
+        
+        System.out.println(ob.toString());
         
         //메시지 구분(보낸사람:내용)
-        String[] msgarr=msg.split(":");
-        msgarr[0]=msgarr[0].substring(0,msgarr[0].length()-1); //보낸사람
-        msgarr[1]=msgarr[1].substring(1,msgarr[1].length()-1); //메시지내용
-        msgarr[2]=msgarr[2].substring(1,msgarr[2].length()-1); //받는사람num
-        msgarr[3]=msgarr[3].substring(1,msgarr[3].length()-1); //그룹
-        msgarr[4]=msgarr[4].substring(1,msgarr[4].length()); //그룹
+        String myid=ob.getString("myid"); //보낸사람
+        String upload=ob.getString("upload"); //메시지내용
+        String reciever=""+ob.getInt("receiver"); //받는사람num
+        String group=""+ob.getInt("group"); //그룹
+        String type=ob.getString("type"); //그룹
         
         //메시지 저장
         MessageDto dto=new MessageDto();
 		  
-        String myid=msgarr[0];
         String user_num=uservice.getUserById(myid).getUser_num();
         dto.setSender_num(user_num);
         
-        if(msgarr[4].equals("chat")) {
+        if(type.equals("chat")) {
         	//사진을 선택 안했다면
-        	msgarr[1]="<div class='bubblecontent'>"+msgarr[1]+"</div>";
-        	dto.setMess_content(msgarr[1]);
+        	if(upload.contains("http")) {
+        		String checkContent="<div class='bubblecontent'>";
+				
+        		String[] linkArr=upload.split(" ");
+        		for(String s:linkArr) {
+        			if(s.contains("http")) {
+        				checkContent+="<a href='"+s+"' target='_new' rel=\"nofollow noopener\" role=\"link\">"+s+"</a>"+" ";
+        			}else {
+        				checkContent+=s+" ";
+        			}
+        		}
+        		
+        		checkContent+="</div>";
+        		upload=checkContent;
+        		
+        	}else {
+        		upload="<div class='bubblecontent'>"+upload+"</div>";
+        	}
+        	dto.setMess_content(upload);
         }else {
-        	msgarr[1]="<img src='/messagephoto/"+msgarr[1]+"'>";
-        	dto.setMess_content(msgarr[1]);
+        	upload="<img src='/messagephoto/"+upload+"'>";
+        	dto.setMess_content(upload);
         }
-        dto.setReceiver_num(msgarr[2]);
+        dto.setReceiver_num(reciever);
         
-        dto.setMess_group(Integer.parseInt(msgarr[3]));
+        dto.setMess_group(Integer.parseInt(group));
 		  
         mservie.insertMessage(dto);
 		 

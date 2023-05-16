@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sns.handbook.dto.FollowingDto;
+import com.sns.handbook.dto.GuestbookDto;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.PostlikeDto;
 import com.sns.handbook.dto.UserDto;
@@ -100,32 +102,52 @@ public class UserController {
 	
 	//마이페이지 이동
 	@GetMapping("/user/mypage")
-	public ModelAndView mypage(@RequestParam(defaultValue = "0") int offset,String user_num ,HttpSession session)
+	public ModelAndView mypage(@RequestParam(defaultValue = "0") int offset,String user_num,HttpSession session)
 	{
+		
 		ModelAndView model=new ModelAndView();
 		
 		int followercount=fservice.getTotalFollower(user_num);
 		int followcount=fservice.getTotalFollowing(user_num);
 		String loginnum=uservice.getUserById((String)session.getAttribute("myid")).getUser_num();
-		
-		PostDto pdto=new PostDto();
+	
 		UserDto udto=uservice.getUserByNum(user_num);
+		List<GuestbookDto> guestlist=uservice.getGuestPost(user_num);
 		List<PostDto> postlist=uservice.getPost(user_num);
-		List<FollowingDto> tflist=uservice.getFollowList(user_num, offset);
+		List<Map<String, Object>> alllist=new ArrayList<>();
 		
-		for(int i = 0; i<tflist.size(); i++) {
-			UserDto dto = uservice.getUserByNum(tflist.get(i).getTo_user()); //여러가지 수많은 데이터에서 i번째 데이터만 가져오기, 여기서 필요한 상대방 num을 list에서 뽑아옴
-			tflist.get(i).setUser_name(dto.getUser_name());// 위에서 dto에서 name photo를 뽑아내서 리스트에 set을 해줌
-			tflist.get(i).setUser_photo(dto.getUser_photo());
-			tflist.get(i).setTf_count(fservice.togetherFollow(dto.getUser_num(),(String)session.getAttribute("user_num")));
+		for(PostDto p:postlist) {
+			Map<String, Object> map=new HashMap<>();
+			
+			map.put("post_num", p.getPost_num());
+			map.put("user_num", p.getUser_num());
+			map.put("owner_num", null);
+			map.put("post_content", p.getPost_content());
+			map.put("post_file", p.getPost_file());
+			map.put("post_access", p.getPost_access());
+			map.put("post_writeday", p.getPost_writeday());
+			map.put("post_time", p.getPost_time());
+			map.put("like_count", plservice.getTotalLike(p.getPost_num()));
+			map.put("likecheck", plservice.checklike((String)session.getAttribute("user_num"),p.getPost_num()));
+
+			alllist.add(map);
 		}
 		
-		
-		
-		for(int i = 0; i<postlist.size(); i++) {
-			postlist.get(i).setLike_count(plservice.getTotalLike(postlist.get(i).getPost_num()));
-			postlist.get(i).setLikecheck(plservice.checklike((String)session.getAttribute("user_num"),postlist.get(i).getPost_num() ));
+		for(GuestbookDto g:guestlist) {
+			Map<String, Object> map=new HashMap<>();
 			
+			map.put("post_num", g.getGuest_num());
+			map.put("user_num", g.getWrite_num());
+			map.put("owner_num", g.getOwner_num());
+			map.put("post_content", g.getGuest_content());
+			map.put("post_file", g.getGuest_file());
+			map.put("post_access", g.getGuest_access());
+			map.put("post_writeday", g.getGuest_writeday());
+			
+			alllist.add(map);
+		}
+		
+		for(int i = 0; i<alllist.size(); i++) {
 			//대화 시간 오늘 날짜에서 빼기(몇 초전... 몇 분 전...)
 	         Date today=new Date();
 	         /* System.out.println(today); */
@@ -133,7 +155,7 @@ public class UserController {
 	         sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
 	         Date writeday=new Date();
 	         try {
-	            writeday=sdf.parse(postlist.get(i).getPost_writeday().toString());
+	        	 writeday=sdf.parse(alllist.get(i).get("post_writeday").toString());
 	            /* System.out.println(writeday); */
 	         } catch (ParseException e) {
 	            // TODO Auto-generated catch block
@@ -170,12 +192,21 @@ public class UserController {
 	            }
 	         }
 
-	         postlist.get(i).setPost_time(preTime);
+	         alllist.get(i).put("post_time", preTime);
 		}
 		
+		List<FollowingDto> tflist=uservice.getFollowList(user_num, offset);
+
+		for(int i = 0; i<tflist.size(); i++) {
+			UserDto dto = uservice.getUserByNum(tflist.get(i).getTo_user()); //여러가지 수많은 데이터에서 i번째 데이터만 가져오기, 여기서 필요한 상대방 num을 list에서 뽑아옴
+			tflist.get(i).setUser_name(dto.getUser_name());// 위에서 dto에서 name photo를 뽑아내서 리스트에 set을 해줌
+			tflist.get(i).setUser_photo(dto.getUser_photo());
+			tflist.get(i).setTf_count(fservice.togetherFollow(dto.getUser_num(),(String)session.getAttribute("user_num")));
+		}
+		
+		model.addObject("alllist", alllist);
 		model.addObject("loginnum", loginnum);
 		model.addObject("dto", udto);
-		model.addObject("pdto", pdto);
 		model.addObject("offset", offset);
 		model.addObject("tflist", tflist);
 		model.addObject("postlist",postlist);
@@ -247,8 +278,8 @@ public class UserController {
 	
 	//게시물 수정
 	@ResponseBody
-	@PostMapping("/user/updatepostphoto")
-	public void updatepostphoto(@ModelAttribute PostDto dto,HttpSession session,@RequestParam(required = false) List<MultipartFile> photo)
+	@PostMapping("/user/updatepost")
+	public void updatepost(@ModelAttribute PostDto dto,HttpSession session,@RequestParam(required = false) List<MultipartFile> photo)
 	{
 		
 		String path = session.getServletContext().getRealPath("/post_file");
@@ -257,12 +288,8 @@ public class UserController {
 	    String uploadName = "";
 	    
 	    
-	    if (photo == null) {
-	        dto.setPost_file("no");
-	        pservice.updatePhoto(dto.getPost_num(), dto.getPost_file());
-	        
-	    } else {
-	    	
+	    if (photo != null) {
+	      
 	        for (MultipartFile f : photo) {
 	    	    
 	            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
@@ -284,9 +311,11 @@ public class UserController {
 		    
 		    pservice.updatePhoto(dto.getPost_num(), uploadName);
 		    
-		    pservice.updatePost(dto);
-		    
 	    }
+	    
+	    pservice.updatePost(dto);
+	    
+	    
 	}
 
 
@@ -343,12 +372,51 @@ public class UserController {
 		fservice.deleteFollowing(to_user);
 	}
 	
+	//방명록 작성
+	@ResponseBody
+	@PostMapping("/user/insertguestbook")
+	public void insertguestbook(@ModelAttribute GuestbookDto dto, @RequestParam(required = false) List<MultipartFile> photo, HttpSession session) {
+			
+		    String path = session.getServletContext().getRealPath("/guest_file");
+		    
+		    int idx = 1;
+		    String uploadName = "";
+		    
+		    if (photo == null) {
+		        dto.setGuest_file("no");
+		        uservice.insertGuestBook(dto);
+		        
+		    } else {
+		    	
+		        for (MultipartFile f : photo) {
+		            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+		            String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
+		            uploadName += fileName + ",";
+		            
+		            try {
+		                f.transferTo(new File(path + "\\" + fileName));
+		            } catch (IllegalStateException | IOException e) {
+		                e.printStackTrace();
+		            }
+		        }
+		        //콤마 제거
+		        uploadName = uploadName.substring(0, uploadName.length() - 1);
+		        
+			    dto.setGuest_file(uploadName);
+			    uservice.insertGuestBook(dto);
+			    
+		    }
+		    
+		}
+	
+	//정보 페이지 이동
 	@GetMapping("/user/info")
 	public String info()
 	{
 		return "/sub/user/info";
 	}
 	
+	//친구 목록 이동
 	@GetMapping("/user/friend")
 	public String friend()
 	{

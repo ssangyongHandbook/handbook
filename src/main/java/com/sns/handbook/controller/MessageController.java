@@ -177,6 +177,15 @@ public class MessageController {
 		//상대측 아이디,이름,유저사진(프사) 추가하기
 		for(Map<String, Object> map:chatMember)
 		{
+			String contnet=map.get("content").toString();
+			
+			if(contnet.contains("http")) {
+				map.put("content", "링크를 보냈습니다.");
+			}
+			else if(contnet.contains("<img") && contnet.contains("src=") && contnet.contains("/messagephoto/")) {
+				map.put("content", "사진을 보냈습니다.");
+			}
+			
 			UserDto udto=uservice.getUserByNum(map.get("member_num").toString()); //상대방의 userDto
 
 			map.put("member_id", udto.getUser_id());

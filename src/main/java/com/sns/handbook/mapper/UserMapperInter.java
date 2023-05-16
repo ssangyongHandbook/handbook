@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.sns.handbook.dto.FollowingDto;
+import com.sns.handbook.dto.GuestbookDto;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.UserDto;
 
@@ -26,6 +27,8 @@ public interface UserMapperInter {
 	public List<PostDto> getPost(String user_num);
 	public void updateUserInfo(UserDto dto);
 	public List<FollowingDto> getFollowList(Map<String, Object> map);
+	public void insertGuestBook(GuestbookDto dto);
+	public List<GuestbookDto> getGuestPost(String owner_num);
 	//우형 끝
 	
 	//희수 시작
