@@ -22,10 +22,12 @@
 body {
 	font-size: 1.3em;
 	font-family: 'Jua';
+	width: 100%;
+	padding-right: 0 !important;
 }
 
-div.layout div {
-	
+div.layout{
+	width: 100%;
 }
 
 div.layout div.title {
