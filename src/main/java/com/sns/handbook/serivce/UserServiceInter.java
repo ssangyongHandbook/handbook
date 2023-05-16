@@ -3,6 +3,7 @@ package com.sns.handbook.serivce;
 import java.util.List;
 
 import com.sns.handbook.dto.FollowingDto;
+import com.sns.handbook.dto.GuestbookDto;
 import com.sns.handbook.dto.MailDto;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.UserDto;
@@ -23,6 +24,8 @@ public interface UserServiceInter {
 	public List<PostDto> getPost(String user_num);
 	public void updateUserInfo(UserDto dto);
 	public List<FollowingDto> getFollowList(String from_user, int offset);
+	public void insertGuestBook(GuestbookDto dto);
+	public List<GuestbookDto> getGuestPost(String owner_num);
 	//우형 끝	
 
 	//희수 시작

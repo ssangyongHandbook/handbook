@@ -32,4 +32,8 @@
 	<delete id="deleteMessage" parameterType="String">
 		delete from message where mess_num=#{mess_num}
 	</delete>
+	<select id="getCountOfMessage" parameterType="Map" resultType="int">
+		select count(*) from message
+		where (sender_num=#{user_num} and receiver_num=#{other}) or (sender_num=#{other} and receiver_num=#{user_num})
+	</select>
 </mapper>
