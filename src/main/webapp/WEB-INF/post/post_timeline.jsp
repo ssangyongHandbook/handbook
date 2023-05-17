@@ -18,26 +18,41 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css" />
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+
 <script src="https://kit.fontawesome.com/2663817d27.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="post_css.css">
+
+
 <script type="text/javascript">
 	$(function() {
 
-		offset = ${offset};
+		offset = $
+		{
+			offset
+		}
+		;
 
 		$("#insertbtn").click(function() {
 
 			var post_access = $("#post_access").val();
 			var post_content = $("#post_content").val();
 			var user_num = $("#user_num").val();
+			var files = $("#post_file")[0].files;
 			//var data="num="+updatenum+"&name="+updatename+"&hp="+updatehp+"&email="+updateemail+"&addr="+updateaddr;
 			//var data=$("#postInsert").serialize();
 
+			/* 		 var form = new FormData();
+					form.append("photo", $("#post_file")[0].files[0]);  */
+
 			var form = new FormData();
-			form.append("photo", $("#post_file")[0].files[0]);
+
+			for (var i = 0; i < files.length; i++) {
+				form.append("photo", files[i]);
+			}
+
 			form.append("post_access", post_access);
 			form.append("post_content", post_content);
 			form.append("user_num", user_num);
-			console.dir(form);
 
 			$.ajax({
 
@@ -90,16 +105,6 @@
 			$("#" + likehide1_num).toggle();
 
 		});
-
-		/* $(document).on("click", ".liketoggle3", function() {
-
-			var likeshow1_num = $(this).attr("likeshow1_num");
-			var likehide1_num = $(this).attr("likehide1_num");
-
-			$("#" + likeshow1_num).toggle();
-			$("#" + likehide1_num).toggle();
-
-		}); */
 
 		$(document).on("click", ".liketoggle2", function() {
 
@@ -249,6 +254,52 @@
 			})
 		})
 
+		//사진 넘기면서 보기
+		$(document).ready(
+				function() {
+
+					$('#slider').slick({
+
+						prevArrow : '<img src="../image/left.png" id="prev">',
+						nextArrow : '<img src="../image/right.png" id="next">',
+						autoplay : false, // 자동 재생 여부
+						autoplaySpeed : 0, // 자동 재생 속도 (단위: ms)
+						dots : false, // 점 네비게이션 표시 여부
+						arrows : true, // 화살표 네비게이션 표시 여부
+						infinite : false, // 무한 슬라이드 여부
+						slidesToShow : 1, // 한 화면에 보여줄 슬라이드 수
+						slidesToScroll : 1
+					// 한 번에 스크롤할 슬라이드 수
+
+					});
+
+					//마지막,처음 화살표 삭제
+					$('#slider').on('afterChange',
+							function(event, slick, currentSlide) {
+								if (currentSlide == 0) {
+									$('#prev').css("visibility", "hidden");
+								} else {
+									$('#prev').css("visibility", "visible");
+								}
+								if (currentSlide == slick.slideCount - 1) {
+									$('#next').css("visibility", "hidden");
+								} else {
+									$('#next').css("visibility", "visible");
+								}
+							});
+				});
+		
+		 $("#btncontentphoto").click(function(){
+	         
+	         $("#post_file").trigger("click");
+	      });
+		
+		
+		
+		
+		
+		
+
 		/*  window.onscroll = function(e) {
 		        if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
 		           
@@ -336,6 +387,7 @@ body {
 	text-align: center;
 	width: 100%;
 	height: 80%;
+	overflow: hidden;
 }
 
 .bottom {
@@ -367,12 +419,6 @@ body {
 .bottom-down {
 	width: 100%;
 	height: 10%;
-}
-
-.fileimg {
-	text-align: center;
-	width: 20%;
-	height: 100%;
 }
 
 /* 파일 없을 경우  */
@@ -548,6 +594,52 @@ body {
 	margin-right: 3%;
 	cursor: pointer;
 }
+
+#prev {
+	float: left;
+	position: relative;
+	z-index: 1;
+	border: none;
+	width: 10%;
+	height: 10%;
+	cursor: pointer;
+	visibility: hidden;
+}
+
+#next {
+	float: right;
+	border: none;
+	position: relative;
+	z-index: 1;
+	width: 10%;
+	height: 10%;
+	cursor: pointer;
+}
+
+.fileimg {
+	text-align: center;
+	width: 60%;
+	height: 350px;
+}
+
+.fileimg img {
+	width: 100%;
+	height: 100%;
+	obejct-fit: cover;
+}
+
+#slider {
+	width: 100%;
+	margin: 0 auto;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.slick-list {
+	float: left;
+	width: 500px;
+}
 </style>
 </head>
 
@@ -595,7 +687,7 @@ body {
 									style="width: 40px; height: 40px; border-radius: 20px;">
 								<span>${login_name}</span>
 							</div>
-							<br> <select class="form-control" name="post_access" style="width: 150px;"
+							 <select class="form-control" name="post_access" style="width: 150px;"
 								id="post_access">
 								<option value="all">전체공개</option>
 								<option value="follower">팔로워 공개</option>
@@ -607,8 +699,14 @@ body {
 							<div class="form-group">
 								<textarea style="width: 550px; height: 150px;" name="post_content" class="form-control"
 									required="required" id="post_content" placeholder="내용을 입력해주세요"></textarea>
+									
 							</div>
+							
+							
+							<input type="file" multiple="multiple" id="post_file" name="post_file"  style="display: none;">
+              <button type="button" id="btncontentphoto"style="margin-top: 1%;">사진 선택</button>
 						</div>
+						
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal" id="insertbtn">게시</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -662,12 +760,9 @@ body {
 		</div>
 
 
-
-
-
 		<section>
 			<!-- 파일이 있을경우0 -->
-							<!--  동영상일 경우와 사진이 1장만 있을 경우도 .해주어야함   -->
+			<!--  동영상일 경우와 사진이 1장만 있을 경우도 .해주어야함   -->
 
 			<c:forEach var="dto" items="${list }" varStatus="i">
 				<c:if test="${dto.post_file!='no' }">
@@ -738,40 +833,43 @@ body {
 
 						</div>
 
+
+
+
 						<div class="center">
 							<div class="center-up">${dto.post_content }</div>
 
-							<div class="center-down">
+							<div class="center-down" id="slider">
+								<c:forTokens items="${dto.post_file }" delims="," var="file">
+									<div class="fileimg">
+										<img src="/post_file/${file }">
+									</div>
+								</c:forTokens>
 
-								<img src="/post_file/${dto.post_file }" class="fileimg">
+								<%-- <img src="/post_file/${dto.post_file }" class="fileimg"> --%>
+
 							</div>
 						</div>
+
+
 						<div class="bottom">
 							<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 							<div class="bottom-up">
-
-
-
-
-
-
-
-
 
 								<!-- 체크 안했으면 보이는거 -->
 								<c:if test="${dto.likecheck ==0 }">
 									<span class="bottom-left liketoggle" style="cursor: pointer"
 										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
 										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }">
-										<span class="like" id="likehide1${dto.post_num}" 
-										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
-										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }">
+										<span class="like" id="likehide1${dto.post_num}" user_num="${sessionScope.user_num}"
+											likehide1_num="likehide1${dto.post_num}" likeshow1_num="likeshow1${dto.post_num}"
+											post_num="${dto.post_num }">
 											<span style="font-size: 1.2em; top: 3px; color: gray;">
 												<i class="fa-regular fa-thumbs-up"></i>
 											</span>
 											<c:if test="${dto.like_count==0 }">
 											&nbsp;좋아요 ${dto.like_count}
-											</c:if> 
+											</c:if>
 											<c:if test="${dto.like_count !=0 }">
 											&nbsp;좋아요 ${dto.like_count}명
 											</c:if>
@@ -799,14 +897,13 @@ body {
 									<span class="bottom-left liketoggle2" style="cursor: pointer"
 										likehide2_num="likehide2${dto.post_num}" likeshow2_num="likeshow2${dto.post_num}"
 										user_num="${sessionScope.user_num}" post_num="${dto.post_num }">
-										<span id="likehide2${dto.post_num}" class="dlike"
-										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
-										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }"
-										>
+										<span id="likehide2${dto.post_num}" class="dlike" user_num="${sessionScope.user_num}"
+											likehide1_num="likehide1${dto.post_num}" likeshow1_num="likeshow1${dto.post_num}"
+											post_num="${dto.post_num }">
 											<span style="font-size: 1.2em; top: 3px; color: blue;">
 												<i class="fa-solid fa-thumbs-up"></i>
 											</span>
-											
+
 											<c:if test="${dto.like_count!= 1}">
 											&nbsp;좋아요 회원님 외 ${dto.like_count-1}명
 											</c:if>
@@ -821,10 +918,10 @@ body {
 												<c:if test="${dto.like_count== 1}">
 											&nbsp;좋아요 0
 											</c:if>
-											<c:if test="${dto.like_count!= 1}">
+												<c:if test="${dto.like_count!= 1}">
 											&nbsp;좋아요 ${dto.like_count -1 }
 											</c:if>
-											
+
 											</span>
 										</span>
 
@@ -833,30 +930,17 @@ body {
 								</c:if>
 
 
-								
-									<!-- comment -->	
-								<span class="bottom-right"  id="commentmodal"
-								style="cursor: pointer;">
+
+								<!-- comment -->
+								<span class="bottom-right" id="commentmodal" style="cursor: pointer;">
 									<span style="font-size: 1.3em; color: gray;" post_num="${dto.post_num }">
 										<i class="fa-regular fa-comment"></i>
 									</span>
 									&nbsp;댓글
 								</span>
-							
+
 							</div>
-							<%-- <div class="bottom-down">
-								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
-								<span style="float: left; width: 8%; padding-left: 1%;">
-									<img src="${root }/photo/${user_photo}" class="writeimg">
-								</span>
-								<span
-									style="background-color: #F0F2F5; width: 8%; width: 88%; float: left; border-radius: 60px; display: inline-flex; align-items: center;">
-									<input type="text" name="commentwrite"
-										style="width: 600px; border: none; background: none; outline: none; font-size: 15pt; padding: 1%; margin-right: 10px;"
-										placeholder="댓글을 입력하세요...">
-									<img class="commentarrow" src="${root }/image/submit.png">
-								</span>
-							</div> --%>
+
 						</div>
 
 					</div>
@@ -946,15 +1030,15 @@ body {
 									<span class="bottom-left2 liketoggle" style="cursor: pointer"
 										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
 										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }">
-										<span class="like" id="likehide1${dto.post_num}" 
-										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
-										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }">
+										<span class="like" id="likehide1${dto.post_num}" user_num="${sessionScope.user_num}"
+											likehide1_num="likehide1${dto.post_num}" likeshow1_num="likeshow1${dto.post_num}"
+											post_num="${dto.post_num }">
 											<span style="font-size: 1.2em; top: 3px; color: gray;">
 												<i class="fa-regular fa-thumbs-up"></i>
 											</span>
 											<c:if test="${dto.like_count==0 }">
 											&nbsp;좋아요 ${dto.like_count}
-											</c:if> 
+											</c:if>
 											<c:if test="${dto.like_count !=0 }">
 											&nbsp;좋아요 ${dto.like_count}명
 											</c:if>
@@ -982,14 +1066,13 @@ body {
 									<span class="bottom-left2 liketoggle2" style="cursor: pointer"
 										likehide2_num="likehide2${dto.post_num}" likeshow2_num="likeshow2${dto.post_num}"
 										user_num="${sessionScope.user_num}" post_num="${dto.post_num }">
-										<span id="likehide2${dto.post_num}" class="dlike"
-										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
-										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }"
-										>
+										<span id="likehide2${dto.post_num}" class="dlike" user_num="${sessionScope.user_num}"
+											likehide1_num="likehide1${dto.post_num}" likeshow1_num="likeshow1${dto.post_num}"
+											post_num="${dto.post_num }">
 											<span style="font-size: 1.2em; top: 3px; color: blue;">
 												<i class="fa-solid fa-thumbs-up"></i>
 											</span>
-											
+
 											<c:if test="${dto.like_count!= 1}">
 											&nbsp;좋아요 회원님 외 ${dto.like_count-1}명
 											</c:if>
@@ -1004,10 +1087,10 @@ body {
 												<c:if test="${dto.like_count== 1}">
 											&nbsp;좋아요 0
 											</c:if>
-											<c:if test="${dto.like_count!= 1}">
+												<c:if test="${dto.like_count!= 1}">
 											&nbsp;좋아요 ${dto.like_count -1 }
 											</c:if>
-											
+
 											</span>
 										</span>
 
@@ -1018,39 +1101,17 @@ body {
 
 
 
-
-
-
-
-
-									<!-- comment -->
-								<span class="bottom-right2"  id="commentmodal"
-								style="cursor: pointer;" >
+								<!-- comment -->
+								<span class="bottom-right2" id="commentmodal" style="cursor: pointer;">
 									<span style="font-size: 1.2em; top: 3px; color: gray;" post_num="${dto.post_num }">
 										<i class="fa-regular fa-comment"></i>
 									</span>
 									&nbsp;댓글
 								</span>
-							
+
 							</div>
-							
-							
-							
-							
-							<%-- 
-							<div class="bottom-down2">
-								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
-								<span style="float: left; width: 8%; padding-left: 1%;">
-									<img src="${root }/photo/${user_photo}" class="writeimg">
-								</span>
-								<span
-									style="background-color: #F0F2F5; width: 8%; width: 88%; float: left; border-radius: 60px; display: inline-flex; align-items: center;">
-									<input type="text" name="commentwrite"
-										style="width: 600px; border: none; background: none; outline: none; font-size: 15pt; padding: 1%; margin-right: 10px;"
-										placeholder="댓글을 입력하세요...">
-									<img class="commentarrow" src="${root }/image/submit.png">
-								</span>
-							</div> --%>
+
+
 						</div>
 
 
