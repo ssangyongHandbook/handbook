@@ -81,6 +81,7 @@
 	padding-bottom: 3px;
 	line-height: 45px;
 	font-size: 15pt;
+	overflow: hidden;
 }
 
 .tti{
@@ -89,12 +90,9 @@
 	border-radius: 100px;
 	background-color: #F0F2F5;
 	text-align: center;
-	padding-left: 2px;
-	padding-bottom: 3px;
-	line-height: 45px;
 	font-size: 15pt;
 	margin-left: 5px;
-	
+	overflow: hidden;
 }
 
 .subtitlemenu>span{
@@ -122,20 +120,27 @@
 }
 
 .msgalarmlist{
-	width: 280px;
+	width: 290px;
 	height: 100%;
 	margin: 0 auto;
 	display: inline-flex;
 	flex-direction: column;
+	overflow: auto;
 }
 
 .msgalarmone{
 	display: inline-flex;
 	align-items: center;
 	width: 260px;
-	margin: 10px;
+	padding: 10px;
 	margin: 0 auto;
 	margin-top: 15px;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+.msgalarmone:hover{
+	background-color: #F0F2F5;
 }
 
 .msgalarmphoto{
@@ -172,7 +177,31 @@
 }
 
 .msgalarwrite{
-	margin-right: 5px;
+	margin-right: 10px;
+	width: 110px;
+	overflow: hidden;
+}
+
+.msgalarmheader{
+	width: 100%;
+	height: 60px;
+	box-shadow: 0px 1px 3px lightgray;
+	margin-bottom: 3px;
+	text-align: center;
+	line-height: 60px;
+}
+
+.msgalarmheader a{
+	color: black;
+	font-size: 12pt;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.ttiuphoto img{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 </style>
@@ -193,6 +222,11 @@
 		
 		$(".ttimsg").click(function(){
 			$(".msgalarmshow").toggle();
+			$(".allmenu").hide();
+		})
+		
+		$(document).on("click",".msgalarmone",function(){
+			location.href="../message/main?selgroup="+$(this).attr("group");
 		})
 	})
 
@@ -228,7 +262,7 @@
 					
 					//메시지 알림 목록
 					$.each(res.list,function(i,ele){
-						msgalist+='<div class="msgalarmone">';
+						msgalist+='<div class="msgalarmone" group='+ele.mess_group+'>';
 						msgalist+='<div class="msgalarmphoto">';
 						if(ele.sender_photo==null){
 							msgalist+='<img alt="" src="/image/noimg.png">';
@@ -240,7 +274,7 @@
 						msgalist+='<span class="msgalarmname">'+ele.sender_name+'</span>';
 						msgalist+='<div class="msgalarcontent">';
 						msgalist+='<span class="msgalarwrite">'+ele.mess_content+'</span>';
-						msgalist+='<span class="msgalartime">시간</span>';
+						msgalist+='<span class="msgalartime">'+ele.mess_time+'</span>';
 						msgalist+='</div>';
 						msgalist+='</div>';
 						msgalist+='</div>';
@@ -263,6 +297,7 @@
 	function wsEvt() {
 		ws.onopen = function(data) {
 			//소켓이 열리면 초기화 세팅하기
+			getMsgAlarm();
 		}
 	
 		//메시지 잘 들어왔을 때 실행하는 내용
@@ -311,11 +346,11 @@
 		<div class="titlecircle tti"><a href="#"><span style="font-size: 15pt; color: black;"><i class="fa-solid fa-bell"></i></span></a></div>
 		
 		<c:if test="${sessionScope.user_photo=='no' }">
-		<div class="titlecircle tti"><a href="/user/mypage?user_num=${sessionScope.user_num }"><span><img src="../image/noimg.png" alt="" style = "width:40px; height: 40px; border-radius: 100px; color: black;"></span></a></div>
+		<div class="tti ttiuphoto"><a href="/user/mypage?user_num=${sessionScope.user_num }"><img src="../image/noimg.png" alt=""></a></div>
 		</c:if>
 		
 		<c:if test="${sessionScope.user_photo!='no' }">
-		<div class="titlecircle tti"><a href="/user/mypage?user_num=${sessionScope.user_num }"><span><img src="../photo/${sessionScope.user_photo }" alt="" style = "width:40px; height: 40px; border-radius: 100px; color: black;"></span></a></div>
+		<div class="tti ttiuphoto"><a href="/user/mypage?user_num=${sessionScope.user_num }"><img src="../photo/${sessionScope.user_photo }" alt=""></a></div>
 		</c:if>
 	</div>
 	 </c:if>
@@ -335,6 +370,9 @@
 
 <div class = "stitle">
  	<div class = "titlemenu msgalarmshow" style = "height:300px; width: 300px; border-radius: 10px;"> 
+            <div class="msgalarmheader">
+            	<a href="../message/main">메신저 보기</a>
+            </div>
             <div class = "msgalarmlist">
             </div>
 	</div> 
@@ -344,8 +382,7 @@
    $(".allmenu").hide();
    $(".titlemenubar").click(function(){
       $(".allmenu").toggle();
-      
-      
+      $(".msgalarmshow").hide();
    });
    
    

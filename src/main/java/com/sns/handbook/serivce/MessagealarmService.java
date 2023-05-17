@@ -89,6 +89,21 @@ public class MessagealarmService implements MessagealarmServiceInter {
 			list.add(mdto);
 		}
 		
+		//최신순으로 정렬
+		for(int i=0;i<list.size()-1;i++) {
+			for(int j=i+1;j<list.size();j++) {
+				int inum=Integer.parseInt(list.get(i).getMess_num());
+				int jnum=Integer.parseInt(list.get(j).getMess_num());
+
+				//뒤에 데이터가 더 최신 거면 앞으로 옮기기(자리 바꾸기)
+				if(inum<jnum) {
+					MessageDto temp=list.get(j);
+					list.set(j, list.get(i));
+					list.set(i, temp);
+				}
+			}
+		}
+		
 		///////////////////////
 		
 		for(MessageDto m:list) {
@@ -137,8 +152,6 @@ public class MessagealarmService implements MessagealarmServiceInter {
 			}
 
 			m.setMess_time(preTime);
-			
-			System.out.println(preTime);
 		}
 		
 		////////////////////////

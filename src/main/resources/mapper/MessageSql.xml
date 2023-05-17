@@ -36,4 +36,7 @@
 		select count(*) from message
 		where (sender_num=#{user_num} and receiver_num=#{other}) or (sender_num=#{other} and receiver_num=#{user_num})
 	</select>
+	<delete id="deleteMessageGroup" parameterType="int">
+		delete from message where mess_group=#{mess_group}
+	</delete>
 </mapper>

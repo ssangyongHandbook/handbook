@@ -141,6 +141,8 @@
 .membername {
 	font-size: 13pt;
 	margin-bottom: 5px;
+	width: 90%;
+	overflow: hidden;
 }
 
 .chatdetail {
@@ -478,6 +480,37 @@ div.msgsearchuser {
 .recentchat img{
 	height: 80px;
 }
+
+.mmiheader{
+	display: inline-flex;
+	justify-content: space-between;
+	width: 95%;
+}
+
+.memberlistmenu{
+	cursor: pointer;
+}
+
+.messgroupdel{
+	width: 150px;
+	height: 60px;
+	background-color: white;
+	box-shadow: 0px 0px 3px lightgray;
+	position: inherit;
+	left: 170px;
+	margin-top: -130px;
+	z-index: 5;
+	line-height: 60px;
+	padding-left: 15px;
+	border-radius: 10px;
+}
+
+.messgroupdelicon{
+	width: 120px;
+	cursor: pointer;
+	font-size: 12pt;
+	z-index: 10;
+}
 </style>
 
 <script type="text/javascript">
@@ -487,7 +520,9 @@ div.msgsearchuser {
 		memberListOut();
 		getChatting('${recentgroup}');
 		$(".messagefilepreview").hide();
-
+		$(".ttimsg").hide();
+		$(".msgalarmcircle").hide();
+		
 		//상단의 채팅중인 사람 num 변경
 		$(".chatinfophoto").attr("memeber_num", "${otherinfo.user_num}");
 		//상단의 채팅중인 사람 이름 변경
@@ -522,6 +557,49 @@ div.msgsearchuser {
 		$(document).on("click",".messagebubble img",function(){
 			window.open($(this).attr("src"));
 		})
+		
+		$(document).on("click",".memberlistmenu",function(){
+			var group=$(this).parents(".onemember").attr("mess_group");
+			//var isdel=confirm("해당 대화를 삭제하겠습니까?");
+			
+			//삭제 메뉴창 열기
+			$(".messgroupdel").each(function(i,ele){
+				if($(".messgroupdelicon").eq(i).attr("mess_group")==group){
+					$(ele).toggle();
+				}else{
+					$(ele).hide();
+				}
+			})
+			
+			/*
+			if(isdel){
+				$.ajax({
+					type:"get",
+					dataType:"text",
+					url:"deletegroup",
+					data:{"mess_group":group},
+					success:function(){
+						location.reload();
+					}
+				})
+			} */
+		})
+		
+		$(document).on("click",".messgroupdelicon",function(){
+			var isdel=confirm("해당 대화를 삭제하겠습니까?");
+			
+			if(isdel){
+				$.ajax({
+					type:"get",
+					dataType:"text",
+					url:"deletegroup",
+					data:{"mess_group":$(this).attr("mess_group")},
+					success:function(){
+						location.reload();
+					}
+				})
+			}
+		})
 
 		//메신저 검색
 		$(".messagesearch input").keyup(
@@ -540,7 +618,11 @@ div.msgsearchuser {
 				});
 
 		//왼쪽의 채팅방 목록(멤버 목록)을 클릭하면 오른쪽의 채팅화면이 바뀐다.
-		$(document).on("click",".onemember",function() {
+		$(document).on("click",".onemember",function(e) {
+				if($(e.target).hasClass("memberlistmenu")){
+					return
+				}
+			
 				//선택된 채팅방 변경
 				$(".onemember").each(function(i, ele) {
 					$(ele).removeClass("messageactive");
@@ -646,12 +728,24 @@ div.msgsearchuser {
 
 		//채팅방 추가(받는 사람 입력창 띄우기)
 		$(".msgadd").click(function(){
-			s = "<span class='msgaddname'>받는 사람:</span><input type='text' class='msgaddname'>";
-			$(".chatinfo").html(s);
-			var position = $('.msgaddname').position();
-			$('.msgsearchuser').css("left", position.left + 60);
-			$('.msgsearchuser').css("top", position.top + 30);
-			$('.msgsearchuser').css("display", "inline-flex");
+			if($(".msgsearchuser").css("display")!="none"){
+				//이미 검색창이 열려있다면 닫기
+				$(".msgsearchuser").css("display", "none");
+
+				var img = $(".messageactive").find("img").attr("src");
+				var id = $(".messageactive").find(".membername").attr("member_id");
+				var name = $(".messageactive").find(".membername").attr("uname");
+				var num = $(".messageactive").attr("member_num");
+				setUserInfo(img, id, name, num);
+			}else{
+				//검색창이 안 열려있다면 띄우기
+				s = "<span class='msgaddname'>받는 사람:</span><input type='text' class='msgaddname'>";
+				$(".chatinfo").html(s);
+				var position = $('.msgaddname').position();
+				$('.msgsearchuser').css("left", position.left + 60);
+				$('.msgsearchuser').css("top", position.top + 30);
+				$('.msgsearchuser').css("display", "inline-flex");
+			}
 		})
 
 		//->창 외부 클릭시 숨기기
@@ -896,13 +990,23 @@ div.msgsearchuser {
 					out += '</div>';
 					out += '</div>';
 					out += '<div class="messagememberinfo">';
+					out += '<div class="mmiheader">';
 					out += '<span class="membername" member_id='+chat.member_id+' uname='+chat.member_name+'>'
 						+ chat.member_name
 						+ '</span>';
+					out += "<div class='memberlistmenucircle'>"
+					out += '<span class="glyphicon glyphicon-option-horizontal memberlistmenu"></span>'
+					out += '</div>';
+					out += '</div>';
 					out += '<div class="chatdetail">';
 					out += '<span class="recentchat">'+ chat.content + '</span>';
 					out += '<span class="chatdetaildate">'+ chat.writeday + '</span>';
-					out += '</div></div></div>'
+					out += '</div></div></div>'		
+					
+					out += '<div class="messgroupdel">';
+					out += '<div class="messgroupdelicon" mess_group='+chat.group+'>';
+					out += '<span class="glyphicon glyphicon-trash"></span>';
+					out += '<span>삭제</span></div></div>';
 				})
 				
 				if (out == "") {
@@ -911,6 +1015,8 @@ div.msgsearchuser {
 
 				$(".messagmember").html(out);
 				//왼쪽의 채팅방 목록(멤버 목록)을 클릭하면 오른쪽의 채팅화면이 바뀐다.
+				
+				$(".messgroupdel").hide();
 			}
 		})
 	}
@@ -1034,7 +1140,8 @@ div.msgsearchuser {
 						placeholder="Messenger 검색">
 				</div>
 			</div>
-			<div class="messagmember"></div>
+			<div class="messagmember">
+			</div>
 		</div>
 
 		<div class="messagechatlist">
