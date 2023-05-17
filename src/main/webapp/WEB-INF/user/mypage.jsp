@@ -400,24 +400,41 @@ $(function(){
          });
       })
       
-      //좋아요
+      //방명록,게시글 좋아요
       $(".img_like").click(function(){
-         
+    	  
+    	 var type= $(this).attr("type");
          var post_num = $(this).attr("post_num");
          var user_num = "${loginnum}";
          
-         $.ajax({
-            type : "get",
-            dataType : "text",
-            url : "likeinsert",
-            data : {"post_num" : post_num,"user_num" : user_num},
-            success : function() {
-               
-               
-            }
-         })
+         
+         if(type=="post"){
+        	 
+             $.ajax({
+                 type : "get",
+                 dataType : "text",
+                 url : "likeinsert",
+                 data : {"post_num" : post_num,"user_num" : user_num},
+                 success : function() {
+                	 
+                 }
+              })  
+              
+         }else{
+        	 
+             $.ajax({
+                 type : "get",
+                 dataType : "text",
+                 url : "guestlikeinsert",
+                 data : {"guest_num" : post_num,"user_num" : user_num},
+                 success : function() {
+                 	
+                 }
+              })   	 
+         }
       })
       
+      //좋아요 토글
       $(document).on("click", ".liketoggle", function() {
 
          var likeshow1_num = $(this).attr("likeshow1_num");
@@ -431,29 +448,41 @@ $(function(){
       //좋아요 취소
       $(".img_dlike").click(function(){
          
+    	 var type=$(this).attr("type");
          var post_num = $(this).attr("post_num");
          var user_num = "${loginnum}";
-         
-         $.ajax({
-            type : "get",
-            dataType : "text",
-            url : "likedelete",
-            data : {"post_num" : post_num,"user_num" : user_num},
-            success : function() {
-               
 
-                  }
-               })
+         if(type=="post"){
+        	 
+             $.ajax({
+                 type : "get",
+                 dataType : "text",
+                 url : "likedelete",
+                 data : {"post_num" : post_num,"user_num" : user_num},
+                 success : function() {
+                    
+                       }
+                    })
+                    
+         }else{
+
+             $.ajax({
+                 type : "get",
+                 dataType : "text",
+                 url : "guestlikedelete",
+                 data : {"guest_num" : post_num,"user_num" : user_num},
+                 success : function() {
+
+                       }
+                    })           
+         		}
             })
-            
-            $(document).on("click", ".liketoggle2", function() {
+         
+         //좋아요 취소 토글
+         $(document).on("click", ".liketoggle2", function() {
 
          var likeshow2_num = $(this).attr("likeshow2_num");
          var likehide2_num = $(this).attr("likehide2_num");
-
-         /*       
-               $(".likeshow2").toggle();
-               $(".likehide2").toggle(); */
 
          $("#" + likeshow2_num).toggle();
          $("#" + likehide2_num).toggle();
@@ -535,7 +564,7 @@ $(function(){
       .menu a {
            margin: 0 10px;
       }
-
+      
       .mypage-main{
          margin: 0 auto;
       }
@@ -702,7 +731,6 @@ $(function(){
             width: 100px; 
           height: 100px;
           cursor: pointer;
-
       }
       
       .btnfollow{
@@ -750,7 +778,8 @@ $(function(){
       .dropdown{
          height: 0px;
       }
-      
+      	
+
 </style>
 </head>
 <body>
@@ -1187,16 +1216,16 @@ $(function(){
                               <div class="bottom-up">
                                  <div class="like">
                                     <c:if test="${adto.likecheck ==0 }">
-                                       <span class="bottom-left2 liketoggle" user_num="${sessionScope.user_num}" likehide1_num="likehide1${adto.post_num}"
+                                       <span class="bottom-left2 liketoggle" likehide1_num="likehide1${adto.post_num}"
                                        likeshow1_num="likeshow1${adto.post_num}" post_num="${adto.post_num }"> 
                                     
-                                       <span class="like" id="likehide1${adto.post_num}" user_num="${sessionScope.user_num}" likehide1_num="likehide1" ${adto.post_num}" likeshow1_num="likeshow1${adto.post_num}"
+                                       <span class="like" id="likehide1${adto.post_num}" likehide1_num="likehide1" ${adto.post_num}" likeshow1_num="likeshow1${adto.post_num}"
                                        post_num="${adto.post_num }">
                                      
-                                       <span   style="cursor: pointer;"> <i class="img_like fa-regular fa-thumbs-up fa-2x - 2em"></i></span>
+                                       <span   style="cursor: pointer;"> <i class="img_like fa-regular fa-thumbs-up fa-2x - 2em" post_num="${adto.post_num }" type="${adto.type }"></i></span>
                                      
                                           <c:if test="${adto.like_count==0 }">
-                                             &nbsp;좋아요 ${adto.like_count}
+                                             &nbsp;좋아요 
                                           </c:if>
                                            
                                           <c:if test="${adto.like_count !=0 }">
@@ -1205,7 +1234,7 @@ $(function(){
                                        </span>
                                  
                                         <span class="dlike" id="likeshow1${adto.post_num}" user_num="${sessionScope.user_num}" post_num="${adto.post_num }" style="display: none;"> 
-                                       <span style="font-size: 1.2em; top: 3px; color: blue;"> <i class="fa-solid fa-thumbs-up"></i></span> 
+                                       <span > <i class="img_dlike fa-solid fa-thumbs-up fa-2x - 2em" style="cursor: pointer; color: #3578E5;" post_num="${adto.post_num }" type="${adto.type }"></i></span> 
                                        <c:if test="${adto.like_count==0 }">
                                           &nbsp;좋아요 회원님 
                                        </c:if>
@@ -1223,7 +1252,7 @@ $(function(){
                                     
                                     <span id="likehide2${adto.post_num}" class="dlike" user_num="${sessionScope.user_num}" likehide1_num="likehide1${adto.post_num}"
                                     likeshow1_num="likeshow1${adto.post_num}" post_num="${adto.post_num }"> 
-                                       <span style="color: #3578E5; cursor: pointer;"> <i class="img_dlike fa-solid fa-thumbs-up fa-2x - 2em"></i></span>
+                                       <span > <i class="img_dlike fa-solid fa-thumbs-up fa-2x - 2em" style="color: #3578E5; cursor: pointer;" post_num="${adto.post_num }" type="${adto.type }"></i></span>
                                        <c:if test="${adto.like_count!= 1}">
                                           &nbsp;좋아요 회원님 외 ${adto.like_count-1}명
                                        </c:if> 
@@ -1235,12 +1264,12 @@ $(function(){
                                     
                                  
                                  <span user_num="${sessionScope.user_num}" id="likeshow2${adto.post_num}" class="like" post_num="${adto.post_num }" style="display: none;"> <span> 
-                                 <i class="img_like fa-solid fa-thumbs-up fa-2x - 2em"></i> 
+                                 <i class="img_like fa-regular fa-thumbs-up fa-2x - 2em" post_num="${adto.post_num }" type="${adto.type }"></i> 
                                  <c:if test="${adto.like_count== 1}">
-                                    &nbsp;좋아요 0
+                                    &nbsp;좋아요 
                                  </c:if> 
                                  <c:if test="${adto.like_count!= 1}">
-                                    &nbsp;좋아요 ${adto.like_count -1 }
+                                    &nbsp;좋아요 ${adto.like_count -1 } 명
                                  </c:if>
                                     </span>
                                  </span>
@@ -1281,4 +1310,4 @@ $(function(){
       </div>
 
 </body>
-</
+</html>
