@@ -156,13 +156,6 @@ public class LoginController {
 			return "redirect:post/timeline"; // 로그인 하면 타임라인으로 넘어감.
 		} else {
 			// 계정 로그인 안 되어있으면 db에 넣고(일단회원가입) 로그인 세션 유지
-			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
-			session.setAttribute("signIn", apiResult);
-			session.setAttribute("email", email);
-			session.setAttribute("name", name);
-			session.setAttribute("myid", user_id);
-			session.setAttribute("loginok", "yes");
-
 			UserDto user = new UserDto();
 			String user_birth;
 			user_birth = birthyear + "-" + birthday;
@@ -177,15 +170,22 @@ public class LoginController {
 			}
 			user.setUser_hp(mobile);
 			user.setUser_id(user_id);
-			// user.setUser_pass(user_pass);
 			user.setUser_name(name);
-			// user.setUser_photo(profile_image);
-
+			user.setUser_pass("naver");
+			
 			service.insertUserInfo(user);
+			
+			UserDto user1 = service.getUserById(user_id);
+			
+			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
+			session.setAttribute("signIn", apiResult);
+			session.setAttribute("email", user1.getUser_email());
+			session.setAttribute("name", user1.getUser_name());
+			session.setAttribute("myid", user_id);
+			session.setAttribute("loginok", "yes");
 			session.setAttribute("user_num", user.getUser_num()); // session에 num값 넣음.
 			session.setAttribute("user_photo", user.getUser_photo());// session에 photo 넣음.
 
-			// System.out.println("signin session : "+session.getAttribute("signIn"));
 			return "redirect:post/timeline";
 		}
 	}
@@ -223,7 +223,6 @@ public class LoginController {
 			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
 
 			// 세션에 사용자 정보 등록
-			// session.setAttribute("islogin_r", "Y");
 			session.setAttribute("signIn", apiResult);
 			session.setAttribute("email", email);
 			session.setAttribute("name", name);
@@ -235,13 +234,6 @@ public class LoginController {
 			return "redirect:post/timeline"; // 로그인 하면 타임라인으로 넘어감.
 		} else {
 			// 계정 로그인 안 되어있으면 db에 넣고(일단회원가입) 로그인 세션 유지
-			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
-			session.setAttribute("signIn", apiResult);
-			session.setAttribute("email", email);
-			session.setAttribute("name", name);
-			session.setAttribute("myid", user_id);
-			session.setAttribute("loginok", "yes");
-
 			UserDto user = new UserDto();
 			user.setUser_email(email);
 			if (gender.equalsIgnoreCase("male")) {
@@ -253,10 +245,19 @@ public class LoginController {
 			}
 			user.setUser_id(user_id);
 			user.setUser_name(name);
+			user.setUser_pass("kakao");
 
 			service.insertUserInfo(user);
-			session.setAttribute("user_num", user.getUser_num()); // session에 num값 넣음.
-			session.setAttribute("user_photo", user.getUser_photo());// session에 photo 넣음.
+			UserDto user1 = service.getUserById(user_id);
+			
+			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
+			session.setAttribute("signIn", apiResult);
+			session.setAttribute("email", user1.getUser_email());
+			session.setAttribute("name", user1.getUser_name());
+			session.setAttribute("myid", user_id);
+			session.setAttribute("loginok", "yes");
+			session.setAttribute("user_num", user1.getUser_num()); // session에 num값 넣음.
+			//session.setAttribute("user_photo", user1.getUser_photo());// session에 photo 넣음.
 
 			return "redirect:post/timeline";
 		}
@@ -280,14 +281,11 @@ public class LoginController {
 		// 프로필 조회
 		String email = (String) response_obj.get("email");
 		String name = (String) response_obj.get("name");
-		String photo = (String) response_obj.get("picture");
 
 		// id 이메일에서 가져오기
 		String splitemail[] = email.split("@");
 		String user_id;
 		user_id = splitemail[0];
-		// System.out.println("name+email+photo : " + name + "//" + email + "//" +
-		// photo);
 
 		int check = service.loginEmailCheck(email); // 입력한 이메일이 가입되어있는지 아닌지 판단
 
@@ -305,22 +303,25 @@ public class LoginController {
 			session.setAttribute("user_photo", dto.getUser_photo());
 			return "redirect:post/timeline";
 		} else {
-			session.setMaxInactiveInterval(60 * 60 * 8);
-			session.setAttribute("signIn", apiResult);
-			session.setAttribute("email", email);
-			session.setAttribute("name", name);
-			session.setAttribute("myid", user_id);
-			session.setAttribute("loginok", "yes");
-
 			UserDto user = new UserDto();
 			user.setUser_email(email);
 			user.setUser_gender("기타");
 			user.setUser_id(user_id);
 			user.setUser_name(name);
+			user.setUser_pass("google");
 
 			service.insertUserInfo(user);
-			session.setAttribute("user_num", user.getUser_num());
-			session.setAttribute("user_photo", user.getUser_photo());
+			
+			UserDto user1= service.getUserById(user_id);
+			
+			session.setMaxInactiveInterval(60 * 60 * 8);
+			session.setAttribute("signIn", apiResult);
+			session.setAttribute("email", user1.getUser_email());
+			session.setAttribute("name", user1.getUser_name());
+			session.setAttribute("myid", user_id);
+			session.setAttribute("loginok", "yes");
+			session.setAttribute("user_num", user1.getUser_num());
+			session.setAttribute("user_photo", user1.getUser_photo());
 
 			return "redirect:post/timeline";
 		}
