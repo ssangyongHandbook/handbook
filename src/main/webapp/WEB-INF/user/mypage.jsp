@@ -978,7 +978,7 @@ $(function(){
               
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="btnwrite" num="${dto.user_num }">게시</button>
-              </div>
+              </div>c
               
             </div>
             

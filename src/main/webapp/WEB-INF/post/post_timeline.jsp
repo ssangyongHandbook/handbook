@@ -260,8 +260,8 @@
 
 					$('#slider').slick({
 
-						 prevArrow : '<img src="../image/left.png" id="prev">',
-						nextArrow : '<img src="../image/right.png" id="next">', 
+						prevArrow : '<img src="../image/left.png" id="prev">',
+						nextArrow : '<img src="../image/right.png" id="next">',
 						autoplay : false, // 자동 재생 여부
 						autoplaySpeed : 0, // 자동 재생 속도 (단위: ms)
 						dots : false, // 점 네비게이션 표시 여부
@@ -276,18 +276,29 @@
 					//마지막,처음 화살표 삭제
 					$('#slider').on('afterChange',
 							function(event, slick, currentSlide) {
-								if(currentSlide == 0){
-								   $('#prev').css("visibility","hidden");
+								if (currentSlide == 0) {
+									$('#prev').css("visibility", "hidden");
 								} else {
-								   $('#prev').css("visibility","visible");
+									$('#prev').css("visibility", "visible");
 								}
-								if(currentSlide == slick.slideCount - 1){
-								   $('#next').css("visibility","hidden");
+								if (currentSlide == slick.slideCount - 1) {
+									$('#next').css("visibility", "hidden");
 								} else {
-								   $('#next').css("visibility","visible");
-								} 
+									$('#next').css("visibility", "visible");
+								}
 							});
 				});
+		
+		 $("#btncontentphoto").click(function(){
+	         
+	         $("#post_file").trigger("click");
+	      });
+		
+		
+		
+		
+		
+		
 
 		/*  window.onscroll = function(e) {
 		        if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
@@ -451,7 +462,6 @@ body {
 .bottom2 {
 	width: 100%;
 	height: 13%;
-	
 }
 
 .bottom-up2 {
@@ -612,13 +622,13 @@ body {
 	height: 350px;
 }
 
-.fileimg img{
+.fileimg img {
 	width: 100%;
 	height: 100%;
-	obejct-fit:cover;
+	obejct-fit: cover;
 }
 
-#slider{
+#slider {
 	width: 100%;
 	margin: 0 auto;
 	display: inline-flex;
@@ -626,11 +636,10 @@ body {
 	align-items: center;
 }
 
-.slick-list{
+.slick-list {
 	float: left;
 	width: 500px;
 }
-
 </style>
 </head>
 
@@ -678,7 +687,7 @@ body {
 									style="width: 40px; height: 40px; border-radius: 20px;">
 								<span>${login_name}</span>
 							</div>
-							<br> <select class="form-control" name="post_access" style="width: 150px;"
+							 <select class="form-control" name="post_access" style="width: 150px;"
 								id="post_access">
 								<option value="all">전체공개</option>
 								<option value="follower">팔로워 공개</option>
@@ -690,8 +699,14 @@ body {
 							<div class="form-group">
 								<textarea style="width: 550px; height: 150px;" name="post_content" class="form-control"
 									required="required" id="post_content" placeholder="내용을 입력해주세요"></textarea>
+									
 							</div>
+							
+							
+							<input type="file" multiple="multiple" id="post_file" name="post_file"  style="display: none;">
+              <button type="button" id="btncontentphoto"style="margin-top: 1%;">사진 선택</button>
 						</div>
+						
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal" id="insertbtn">게시</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -743,9 +758,6 @@ body {
 
 			</div>
 		</div>
-
-
-
 
 
 		<section>
@@ -824,42 +836,22 @@ body {
 
 
 
-
-
-
-
-
-
-
 						<div class="center">
 							<div class="center-up">${dto.post_content }</div>
 
-							<div class="center-down" id="slider" >
-									<c:forTokens items="${dto.post_file }" delims="," var="file">
-										<div class="fileimg">
-											<img   src="/post_file/${file }">
-										</div>
-									</c:forTokens>
+							<div class="center-down" id="slider">
+								<c:forTokens items="${dto.post_file }" delims="," var="file">
+									<div class="fileimg">
+										<img src="/post_file/${file }">
+									</div>
+								</c:forTokens>
 
 								<%-- <img src="/post_file/${dto.post_file }" class="fileimg"> --%>
 
 							</div>
 						</div>
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
+
+
 						<div class="bottom">
 							<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 							<div class="bottom-up">
@@ -948,19 +940,7 @@ body {
 								</span>
 
 							</div>
-							<%-- <div class="bottom-down">
-								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
-								<span style="float: left; width: 8%; padding-left: 1%;">
-									<img src="${root }/photo/${user_photo}" class="writeimg">
-								</span>
-								<span
-									style="background-color: #F0F2F5; width: 8%; width: 88%; float: left; border-radius: 60px; display: inline-flex; align-items: center;">
-									<input type="text" name="commentwrite"
-										style="width: 600px; border: none; background: none; outline: none; font-size: 15pt; padding: 1%; margin-right: 10px;"
-										placeholder="댓글을 입력하세요...">
-									<img class="commentarrow" src="${root }/image/submit.png">
-								</span>
-							</div> --%>
+
 						</div>
 
 					</div>
@@ -1121,11 +1101,6 @@ body {
 
 
 
-
-
-
-
-
 								<!-- comment -->
 								<span class="bottom-right2" id="commentmodal" style="cursor: pointer;">
 									<span style="font-size: 1.2em; top: 3px; color: gray;" post_num="${dto.post_num }">
@@ -1137,22 +1112,6 @@ body {
 							</div>
 
 
-
-
-							<%-- 
-							<div class="bottom-down2">
-								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
-								<span style="float: left; width: 8%; padding-left: 1%;">
-									<img src="${root }/photo/${user_photo}" class="writeimg">
-								</span>
-								<span
-									style="background-color: #F0F2F5; width: 8%; width: 88%; float: left; border-radius: 60px; display: inline-flex; align-items: center;">
-									<input type="text" name="commentwrite"
-										style="width: 600px; border: none; background: none; outline: none; font-size: 15pt; padding: 1%; margin-right: 10px;"
-										placeholder="댓글을 입력하세요...">
-									<img class="commentarrow" src="${root }/image/submit.png">
-								</span>
-							</div> --%>
 						</div>
 
 
