@@ -28,19 +28,34 @@
 		<div>
 			<p style="font-size: 3em; font-weight: bold;" align="center">HandBook</p>
 			<div>
-				<form action="signupprocess" method="post">
+				<form action="signupprocess" method="post" onsubmit="return validateForm()">
 					<p align="center" style="font-size: 1.2em;">새 계정 만들기</p>
 					<div class="form-floating">
-					   <input type="text" class="form-control" id="user_name" name="user_name" placeholder="이름 입력"  required="required">
+					   <input type="text" class="form-control" id="user_name" name="user_name" placeholder="이름 입력"  required>
 					</div><br>
 					
-					<div class="form-floating">
-						<input type="email" class="form-control" id="user_email" name="user_email" placeholder="이메일 입력" required="required">
+					
+					
+					<div class="row" >
+						<div class="col-md-8" style="padding-right: 5px;">
+							<input type="email" class="form-control" id="user_email" name="user_email" placeholder="이메일 입력" required>
+						</div>
+						
+						<div class="col-md-4">
+							<button type="button" style="" class="btn btn-primary btn-block" onclick="fn_emailCheck();">중복체크</button>
+						</div>
 					</div><br>
 					
+					
+					
+					
 					<div class="form-floating">
-					   <input type="password" class="form-control" id="user_pass" name="user_pass" placeholder="비밀번호 입력" required="required">
+					   <input type="password" class="form-control" id="user_pass" name="user_pass" placeholder="비밀번호 입력" required pattern=".{6,20}" title="6자리 이상 20자리 이하로 작성하세요." onchange="check_pw()">
+					   <input type="password" class="form-control" id="user_pass_r" name="user_pass_r" placeholder="비밀번호 다시 입력" required onchange="check_pw()">
+					   <span id="check"></span>
 					</div><br>
+					
+					
 					
 					<div class="form-floating">
 						<p>핸드폰 번호</p>
@@ -49,7 +64,8 @@
 								<option value="010" class="hp1">010</option>
 								<option value="011" class="hp2">011</option>
 								<option value="016" class="hp3">016</option>
-								<option value="070" class="hp4">070</option>
+								<option value="017" class="hp4">017</option>
+								<option value="019" class="hp5">019</option>
 							</select>
 							<span>-</span>
 							<input type="text" class="form-control" id="hp2" name="hp2" size="3" required="required" style="width:100px;display:inline-block;" required="required">
@@ -82,9 +98,14 @@
 					
 					<div class="form-floating">
 						<p>성별</p>
-						여자<input type="radio" name="user_gender" value="여자" checked="checked">&nbsp;&nbsp;
-						남자<input type="radio" name="user_gender" value="남자">&nbsp;&nbsp;
-						기타<input type="radio" name="user_gender" value="기타">
+						<label class="radio-inline">
+    						<input type="radio" name="user_gender" value="여자" checked>여자
+    					</label>
+    					<label class="radio-inline">
+    						<input type="radio" name="user_gender" value="남자">남자
+    					</label><label class="radio-inline">
+    						<input type="radio" name="user_gender" value="기타">기타
+    					</label>
 					</div><br>
 					
 					<div class="d-grid gap-2">
@@ -130,4 +151,62 @@
 	    }).open();
 	}
 </script>
+<script>
+function check_pw(){
+	var pw = document.getElementById('user_pass').value;
+	var SC = ["!","@","#","$","%"];
+	var check_SC = 0;
+
+	for(var i = 0 ; i < SC.length ; i++){
+		if(pw.indexOf(SC[i]) != -1){ //일치하는 값이 없으면 -1반환
+			check_SC = 1;
+		}
+	}
+	if(check_SC == 0){
+		window.alert('!,@,#,$,% 의 특수문자가 들어가 있지 않습니다.')
+		document.getElementById('user_pass').value='';
+		document.getElementById('user_pass_r').value='';
+	}
+	if(document.getElementById('user_pass').value !='' && document.getElementById('user_pass_r').value!=''){
+        if(document.getElementById('user_pass').value==document.getElementById('user_pass_r').value){
+            document.getElementById('check').innerHTML='비밀번호가 일치합니다.'
+            document.getElementById('check').style.color='blue';
+		}
+        else{
+            document.getElementById('check').innerHTML='비밀번호가 일치하지 않습니다.';
+            document.getElementById('check').style.color='red';
+        }
+    }
+}
+
+function validateForm() {
+	var password = document.getElementById("user_pass").value;
+	var confirmPassword = document.getElementById("user_pass_r").value;
+	
+	if (password !== confirmPassword) {
+		//alert("비밀번호가 일치하지 않습니다.");
+		return false;
+	}
+	return true;
+}
+
+function fn_emailCheck() {
+    $.ajax({
+        url : "/signupform/emailcheck",
+        type : "POST",
+        dataType :"JSON",
+        data : {"email" : $("#user_email").val()},
+        success : function (data) {
+            if(data == 1) {
+                alert("중복된 이메일입니다.");
+            } else if (data == 0) {
+                $("#emailCheck").attr("value", "Y");
+                alert("사용 가능한 이메일입니다.")
+            }
+        }
+
+    })
+}
+</script>
+
 </html>
