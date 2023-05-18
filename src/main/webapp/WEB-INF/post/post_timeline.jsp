@@ -534,7 +534,7 @@
       });
 
       $(document).on("click", "#addcomment", function() {
-    	 var post_num=$("#inputhidden-post_num").val(); 
+        var post_num=$("#inputhidden-post_num").val(); 
          commentoffset = commentoffset + 8;
          scroll(commentoffset, post_num);
       })
@@ -652,15 +652,15 @@
       
       
       $(document).on("click",".commentspan",function(){
-    	  
-    	  var post_num=$(this).attr("post_num");
-    	  //alert(post_num);
-    	  $("#inputhidden-post_num").val(post_num);
-    	  $("#commentsection").empty();
-    	  scroll(0,post_num);
-		  $(".cmmodalbtn").trigger("click");
-		  
-    	  
+         
+         var post_num=$(this).attr("post_num");
+         //alert(post_num);
+         $("#inputhidden-post_num").val(post_num);
+         $("#commentsection").empty();
+         scroll(0,post_num);
+        $(".cmmodalbtn").trigger("click");
+        
+         
       })
       
       
@@ -1685,9 +1685,9 @@ li{
 
       
 
-		
+      
 
-	  <button type="button" class="btn btn-info btn-lg cmmodalbtn hide" data-toggle="modal" data-target="#commentmodal"></button>
+     <button type="button" class="btn btn-info btn-lg cmmodalbtn hide" data-toggle="modal" data-target="#commentmodal"></button>
       <!-- comment -->
       <div id="commentmodal" class="modal fade" role="dialog">
             <div class="modal-dialog modal-lg">
