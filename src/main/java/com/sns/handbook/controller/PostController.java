@@ -54,7 +54,7 @@ public class PostController {
 
 	@GetMapping("/post/timeline")
 	@ResponseBody
-	public ModelAndView list(@RequestParam(defaultValue = "0") int offset, HttpSession session,
+	public ModelAndView list(@RequestParam(defaultValue = "0") int offset,@RequestParam(defaultValue = "0") int commentoffset, HttpSession session,
 			@RequestParam(required = false) String searchcolumn, @RequestParam(required = false) String searchword,
 			FollowingDto fdto) {
 
@@ -127,6 +127,7 @@ public class PostController {
 		int totalCount = pservice.getTotalCount();
 		
 		model.addObject("offset", offset);
+		model.addObject("commentoffset", commentoffset);
 		model.addObject("searchcolumn", searchcolumn);
 		model.addObject("total", totalCount);
 		model.addObject("list", list);

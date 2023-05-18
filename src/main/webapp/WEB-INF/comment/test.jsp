@@ -56,7 +56,7 @@ b.user_name {
 }
 
 /* 사용자 댓글  */
-span {
+span.content {
 	font-size: 1.1em;
 }
 
@@ -119,7 +119,7 @@ li{
 </head>
 <script type="text/javascript">
 	$(function() {
-		offset = ${offset};
+		commentoffset = ${commentoffset};
 
 		$('#commentinput').keydown(function() {
 			if (event.keyCode === 13) {
@@ -161,8 +161,8 @@ li{
 					$("#addcomment").hide();
 					$("#input" + comment_num).val("");
 					$("#input" + comment_num).hide();
-					offset = 0;
-					scroll(offset, "9");
+					commentoffset = 0;
+					scroll(commentoffset, "9");
 					$("#addcomment").show();
 				}
 			})
@@ -183,16 +183,16 @@ li{
 					$("#commentsection").empty();
 					$("#addcomment").hide();
 					$("#commentinput").val("");
-					offset = 0;
-					scroll(offset, "9");
+					commentoffset = 0;
+					scroll(commentoffset, "9");
 					$("#addcomment").show();
 				}
 			})
 		});
 
 		$(document).on("click", "#addcomment", function() {
-			offset = offset + 8;
-			scroll(offset, "9");
+			commentoffset = commentoffset + 8;
+			scroll(commentoffset, "9");
 		})
 
 		$(document).on("click", ".recontent", function() {
@@ -214,12 +214,12 @@ li{
 					"comment_num" : comment_num
 				},
 				success : function() {
-					offset = 0;
+					commentoffset = 0;
 					$("#commentsection").empty();
 					$("#addcomment").hide();
 					$("#input" + comment_num).val("");
 					$("#input" + comment_num).hide();
-					scroll(offset, "9");
+					scroll(commentoffset, "9");
 					$("#addcomment").show();
 				}
 			});
@@ -238,12 +238,12 @@ li{
 					"comment_num" : comment_num
 				},
 				success : function() {
-					offset = 0;
+					commentoffset = 0;
 					$("#commentsection").empty();
 					$("#addcomment").hide();
 					$("#input" + comment_num).val("");
 					$("#input" + comment_num).hide();
-					scroll(offset, "9");
+					scroll(commentoffset, "9");
 					$("#addcomment").show();
 				}
 			});
@@ -259,12 +259,12 @@ li{
 				url:"cdelete",
 				data:{"comment_num":comment_num},
 				success:function(){
-					offset=0;
+					commentoffset=0;
 					$("#commentsection").empty();
 					$("#addcomment").hide();
 					$("#input" + comment_num).val("");
 					$("#input" + comment_num).hide();
-					scroll(offset, "9");
+					scroll(commentoffset, "9");
 					$("#addcomment").show();
 				}
 			})
@@ -290,12 +290,12 @@ li{
 					url:"commentupdate",
 					data:{"comment_num":comment_num,"comment_content":comment_content},
 					success:function(){
-						offset=0;
+						commentoffset=0;
 						$("#commentsection").empty();
 						$("#addcomment").hide();
 						$("#input" + comment_num).val("");
 						$("#input" + comment_num).hide();
-						scroll(offset, "9");
+						scroll(commentoffset, "9");
 						$("#addcomment").show();
 					}
 				});
@@ -304,14 +304,14 @@ li{
 	})
 
 	/* 무한스크롤 함수 */
-	function scroll(offset, post_num) {
+	function scroll(commentoffset, post_num) {
 
 		$.ajax({
 			type : "get",
 			dataType : "json",
 			url : "scroll",
 			data : {
-				"offset" : offset,
+				"commentoffset" : commentoffset,
 				"post_num" : "9"
 			},
 			success : function(res) {
@@ -346,8 +346,8 @@ li{
 					
 					s += "<div class='comment' id='div"+item.comment_num+"'>";
 					s += "<img src='/photo/"+item.user_photo+"' class='profile'>";
-					s += "<b class='name'>" + item.user_name + "</b><br>";
-					s += "<span class='content'>" + item.comment_content + "</span></div>";
+					s += "<b class='user_name'>" + item.user_name + "</b><br>";
+					s += "<span class='spancontent'>" + item.comment_content + "</span></div>";
 					s += "<div class='cmlike'>";
 
 					if (item.like_check == 0) {
