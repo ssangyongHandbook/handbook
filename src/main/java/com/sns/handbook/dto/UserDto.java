@@ -24,5 +24,4 @@ public class UserDto {
 	private String user_cover;
 	
 	private int tf_count;
-	private String to_user;
 }
