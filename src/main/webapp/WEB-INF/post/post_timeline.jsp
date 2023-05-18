@@ -286,12 +286,31 @@
                      });
             });
       
-       $("#btncontentphoto").click(function(){
-            
-            $("#post_file").trigger("click");
-         });
       
-      
+        $("#btncontentphoto").click(function(){
+       
+       $("#post_file").trigger("click");
+    });
+ 
+   $("#contentphoto").change(function(){
+          
+        if($(this)[0].files[0]){
+         var reader=new FileReader();
+         reader.onload=function(e){
+          $("#showimg").attr("src",e.target.result);
+          $("#showtext").hide();
+         }
+         reader.readAsDataURL($(this)[0].files[0]);
+        }
+    });
+   
+   
+   $("#btncontentphoto").click(function(){
+          
+          $("#showimg").show();
+          $("#showtext").show();
+       })
+ 
       
       
       
@@ -1102,6 +1121,13 @@ li{
                            
                      </div>
                      
+                     <div class="show" id="show" style="position: relative;">
+                 <img id="showimg" style="display:none; width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
+                 <p id="showtext" style="display:none; position: absolute; top: 65px; left: 190px; font-weight: bold;">사진/동영상 추가</p>
+              </div>
+                     
+                     
+                     
                      
                      <input type="file" multiple="multiple" id="post_file" name="post_file"  style="display: none;">
               <button type="button" id="btncontentphoto"style="margin-top: 1%;">사진 선택</button>
@@ -1522,8 +1548,6 @@ li{
             </c:if>
          </c:forEach>
       </section>
-
-
 
 
 
