@@ -71,8 +71,18 @@
 	</select> -->
 
 	<!-- 팔로우 추천 합친거 -->
-	<select id="followRecommend">
-	
+	<select id="followRecommend" resultType="UserDto" parameterType="Map">
+	 	select user.* from user
+	 	left join following on user.user_num = following.to_user and following.from_user = #{from_user}
+	 	where following.from_user is null and user.user_num != #{from_user}
+	 	<if test = "searchword != null">
+	 		and user.user_name = #{searchword}
+	 	</if> 
+	 	order by(
+	 		select count(to_user)
+	 		from following
+	 		where to_user = user.user_num
+	 	)desc limit 8 offset #{offset}
 	</select>
 	
 </mapper>
