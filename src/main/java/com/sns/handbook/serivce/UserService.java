@@ -204,6 +204,11 @@ public class UserService implements UserServiceInter {
 	public int loginIdCheck(String user_id) {
 		return mapperInter.loginIdCheck(user_id);
 	}
+	
+	@Override
+	public void userDelete(String user_num) {
+		mapperInter.userDelete(user_num);
+	}
 	// 희수 끝
 
 	//예지
@@ -212,5 +217,7 @@ public class UserService implements UserServiceInter {
 		// TODO Auto-generated method stub
 		return mapperInter.getUserByName(user_name);
 	}
+
+	
 	
 }

@@ -40,6 +40,7 @@ public interface UserServiceInter {
 	public String getUserIdByEmail(String user_email);
 	public String getUserEmailBynamehp(String user_name, String user_hp);
 	public int loginIdCheck(String user_id);
+	public void userDelete(String user_num);
 	//희수 끝
 	
 	//예지
