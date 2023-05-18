@@ -50,15 +50,17 @@
 	border-radius: 100px;
 	margin-left: 15px;
 	margin-right: 10px;
-	width: 80px;
+	width: 90px;
 	height: 80px;
 	overflow: hidden;
 	text-align: center;
+	background-size: cover
 }
 
 .userphoto {
 	border-radius: 100px;
 	float: left;
+	width : 80px;
 	height: 80px;
 }
 
@@ -122,7 +124,7 @@
 
 			      if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
 
-			    	  offset=offset+1;
+			    	  offset=offset+8;
 			    	  $.ajax({
 			    		 type:"get",
 			    		 dataType:"json",
@@ -179,14 +181,6 @@
 			       
 			      }
 			    }
-				
-			
-			$(".followsearchbox").keyup(function(e){
-				if(e.keyCode == 13){
-					alert("넘어감");
-					location.href = "recommendsearch?searchword="+$(".followsearchbox").val();
-				}
-			});
 		});
 	
 </script>
@@ -232,15 +226,8 @@
 					</div>
 						
 					<div class="btndiv">
-						<c:if test="${dto.to_user != null }">
-							<button type="button" class="btn btn-outline-primary btn-lg addbtn" id="btn${dto.to_user}"
-							user_num="${dto.to_user }">팔로워추가</button>
-						</c:if>
-						<c:if test="${dto.to_user == null }">
 							<button type="button" class="btn btn-outline-primary btn-lg addbtn" id="btn${dto.user_num }"
 								user_num="${dto.user_num }">팔로워추가</button>
-						</c:if>
-
 					</div>
 				</div>
 
