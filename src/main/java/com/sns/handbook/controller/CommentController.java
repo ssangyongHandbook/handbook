@@ -40,13 +40,13 @@ public class CommentController {
 			@RequestParam(defaultValue = "0") int comment_group,
 			@RequestParam(defaultValue = "0") int comment_step,
 			@RequestParam(defaultValue = "0") int comment_level,
-			@RequestParam(defaultValue = "0")int offset,
+			@RequestParam(defaultValue = "0")int commentoffset,
 			@RequestParam(defaultValue = "9") String post_num,
 			HttpSession session){
 
 		ModelAndView model=new ModelAndView();
 
-		List<CommentDto> list=service.selectScroll(post_num, offset);
+		List<CommentDto> list=service.selectScroll(post_num, commentoffset);
 
 		for(int i=0;i<list.size();i++) {
 
@@ -109,7 +109,7 @@ public class CommentController {
 		model.addObject("comment_step", comment_step);
 		model.addObject("comment_level", comment_level);
 		model.addObject("list",list);
-		model.addObject("offset", offset);
+		model.addObject("commentoffset", commentoffset);
 
 
 		model.setViewName("/comment/test");
@@ -176,9 +176,9 @@ public class CommentController {
 
 	@GetMapping("test/scroll")
 	@ResponseBody
-	public List<CommentDto> scroll (String post_num,int offset,HttpSession session) {
+	public List<CommentDto> scroll (String post_num,int commentoffset,HttpSession session) {
 
-		List<CommentDto> list=service.selectScroll(post_num	, offset);
+		List<CommentDto> list=service.selectScroll(post_num	, commentoffset);
 
 		for(int i=0;i<list.size();i++) {
 
