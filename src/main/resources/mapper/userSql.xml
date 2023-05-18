@@ -57,6 +57,21 @@
 		insert into guestbook (write_num,owner_num,guest_content,guest_file,guest_writeday) values (#{write_num},#{owner_num},#{guest_content},#{guest_file},now())
 	</insert>
 	
+	<!-- 방명록 삭제 -->
+	<delete id="deleteGuestBook" parameterType="String">
+		delete from guestbook where guest_num=#{guest_num}
+	</delete>
+	
+	<!-- 방명록 수정 값 불러오기 -->
+	<select id="getDataByGuestNum" parameterType="String" resultType="GuestbookDto">
+		select * from guestbook where guest_num=#{guest_num}
+	</select>
+	
+	<!-- 방명록 수정 -->
+	<update id="updateGuestBook" parameterType="GuestbookDto">
+		update guestbook set guest_content=#{guest_content},guest_file=#{guest_file} where guest_num=#{guest_num}
+	</update>
+	
 	<!-- 방명록 리스트 -->
 	<select id="getGuestPost" parameterType="String" resultType="GuestbookDto">
 		select guest_num,write_num,owner_num,guest_content,guest_file,guest_access,guest_writeday from guestbook where owner_num=#{owner_num} order by guest_num desc

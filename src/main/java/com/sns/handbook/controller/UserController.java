@@ -449,6 +449,62 @@ public class UserController {
 		    
 		}
 	
+	//방명록 삭제
+	@ResponseBody
+	@GetMapping("/user/deleteguestbook")
+	public void deleteGuestBook(String guest_num)
+	{
+		uservice.deleteGuestBook(guest_num);
+	}
+	
+	
+	 //방명록 수정
+	 @ResponseBody
+	 @PostMapping("/user/updateguestbook")
+	 public void updateguestbook(@ModelAttribute GuestbookDto dto,HttpSession session,@RequestParam(required = false) List<MultipartFile> photo)
+		{
+			
+			String path = session.getServletContext().getRealPath("/guest_file");
+		    
+		    int idx = 1;
+		    String uploadName = "";
+		    
+		    if (photo != null) {
+		      
+		        for (MultipartFile f : photo) {
+		    	    
+		            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+		            String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
+		            uploadName += fileName + ",";
+		            
+		            try {
+		            	
+		                f.transferTo(new File(path + "\\" + fileName));
+		                
+		            } catch (IllegalStateException | IOException e) {
+		                e.printStackTrace();
+		            }
+		        }
+		        //콤마 제거
+		        uploadName = uploadName.substring(0, uploadName.length() - 1);
+		        
+			    dto.setGuest_file(uploadName);
+		    }
+		    
+		    uservice.updateGuestBook(dto);
+		}
+	 
+	
+	//방명록 수정 값 불러오기
+	@ResponseBody
+	@GetMapping("/user/updateguestform")
+	public GuestbookDto getDataByGuestNum(String guest_num)
+	{
+		GuestbookDto dto=uservice.getDataByGuestNum(guest_num);
+
+		return dto;
+	}
+	
 	//정보 페이지 이동
 	@GetMapping("/user/info")
 	public String info()
