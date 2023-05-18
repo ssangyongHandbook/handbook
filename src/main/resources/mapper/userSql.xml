@@ -114,6 +114,11 @@
 		select count(*) from user where user_id=#{user_id}
 	</select>
 	
+	<!-- 회원탈퇴 -->
+	<delete id="userDelete" parameterType="String">
+		delete from user where user_num = #{user_num}
+	</delete>
+	
 	<!-- 여기 위까지는 김희수가 구현함. -->
 	
 	<!-- 예지 -->

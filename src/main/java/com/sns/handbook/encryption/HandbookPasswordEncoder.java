@@ -13,7 +13,7 @@ public class HandbookPasswordEncoder implements PasswordEncoder{
 	public String encode(CharSequence rawPassword) {
 		// 비밀번호를 암호화하여 반환하는 로직
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		System.out.println("password인코딩했다 appconfig에서 호출");
+		//System.out.println("password인코딩했다 appconfig에서 호출");
         return encoder.encode(rawPassword);
 	}
 
@@ -21,7 +21,7 @@ public class HandbookPasswordEncoder implements PasswordEncoder{
 	public boolean matches(CharSequence rawPassword, String encodedPassword) {
 		// 입력받은 비밀번호(rawPassword)와 저장된 암호화된 비밀번호(encodedPassword)를 비교하는 로직
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		System.out.println("password비교한다! appconfig에서 호출");
+		//System.out.println("password비교한다! appconfig에서 호출");
         return encoder.matches(rawPassword, encodedPassword);
 	}
 	

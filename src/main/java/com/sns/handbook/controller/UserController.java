@@ -519,5 +519,11 @@ public class UserController {
 		return "/sub/user/friend";
 	}
 
-	
+	@GetMapping("/user/userdelete")
+	public String userdelete(String user_num, HttpSession session) {
+		uservice.userDelete(user_num);
+		session.removeAttribute("loginok");
+		session.invalidate(); // 세션의 모든 속성을 삭제
+		return "redirect:/";
+	}
 }
