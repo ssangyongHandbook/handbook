@@ -34,9 +34,20 @@
 					   <input type="text" class="form-control" id="user_name" name="user_name" placeholder="이름 입력"  required>
 					</div><br>
 					
-					<div class="form-floating">
-						<input type="email" class="form-control" id="user_email" name="user_email" placeholder="이메일 입력" required>
+					
+					
+					<div class="row" >
+						<div class="col-md-8" style="padding-right: 5px;">
+							<input type="email" class="form-control" id="user_email" name="user_email" placeholder="이메일 입력" required>
+						</div>
+						
+						<div class="col-md-4">
+							<button type="button" style="" class="btn btn-primary btn-block" onclick="fn_emailCheck();">중복체크</button>
+						</div>
 					</div><br>
+					
+					
+					
 					
 					<div class="form-floating">
 					   <input type="password" class="form-control" id="user_pass" name="user_pass" placeholder="비밀번호 입력" required pattern=".{6,20}" title="6자리 이상 20자리 이하로 작성하세요." onchange="check_pw()">
@@ -177,6 +188,24 @@ function validateForm() {
 		return false;
 	}
 	return true;
+}
+
+function fn_emailCheck() {
+    $.ajax({
+        url : "/signupform/emailcheck",
+        type : "POST",
+        dataType :"JSON",
+        data : {"email" : $("#user_email").val()},
+        success : function (data) {
+            if(data == 1) {
+                alert("중복된 이메일입니다.");
+            } else if (data == 0) {
+                $("#emailCheck").attr("value", "Y");
+                alert("사용 가능한 이메일입니다.")
+            }
+        }
+
+    })
 }
 </script>
 

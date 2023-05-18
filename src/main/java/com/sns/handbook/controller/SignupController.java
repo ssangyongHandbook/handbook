@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sns.handbook.dto.UserDto;
 import com.sns.handbook.serivce.UserService;
@@ -23,6 +24,13 @@ public class SignupController {
 	@GetMapping("/signupform")
 	public String signupform() {
 		return "/sub/login/signup";
+	}
+	
+	@PostMapping("/signupform/emailcheck")
+	@ResponseBody
+	public int emailCheck(String email) {
+		int result = service.loginEmailCheck(email);
+		return result;
 	}
 
 	@PostMapping("/signupprocess")
