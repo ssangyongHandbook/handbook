@@ -181,6 +181,12 @@
 			       
 			      }
 			    }
+				$(".followsearchbox").keyup(function(e){
+				if(e.keyCode == 13){
+					alert("넘어감");
+					location.href = "recommendlist?from_user="+${sessionScope.user_num}+"&searchword="+$(".followsearchbox").val(); //sessionScope.user_num 로그인한 사람
+				}
+			});
 		});
 	
 </script>
