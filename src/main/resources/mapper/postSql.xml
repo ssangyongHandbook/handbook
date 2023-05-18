@@ -36,28 +36,34 @@ and user_num in (select user_num from user where user_num Not in ("#{user_num}")
 	
 	
 	<select id="postList" parameterType="Map" resultType="PostDto">
-  SELECT *
-  FROM post
-  WHERE (post_access = 'all'
-    OR (post_access = 'follower' AND (user_num = #{user_num} OR user_num IN (
-      SELECT to_user
-      FROM following
-      WHERE from_user = #{user_num}
-    ))))
-    <if test="searchcolumn != null and searchword != null">
-      <if test="searchcolumn=='post_content'">
-         AND ${searchcolumn} LIKE CONCAT('%', #{searchword}, '%')
-      </if>
-      <if test="searchcolumn=='user_name'">
-         AND user_num = ANY(SELECT user_num FROM user WHERE user_name = #{searchword})
-      </if>
-    </if>
-  ORDER BY CASE 
-    WHEN post_access = 'follower' AND post_writeday >= DATE_SUB(NOW(), INTERVAL 24 HOUR) THEN 0
-    ELSE 1
-  END, post_writeday DESC
-  LIMIT 10
-  OFFSET #{offset}
+SELECT *
+FROM post
+WHERE (post_access = 'all'
+  OR (post_access = 'follower' AND (user_num = #{user_num} OR user_num IN (
+    SELECT to_user
+    FROM following
+    WHERE from_user = #{user_num}
+  ))))
+<if test="searchcolumn != null and searchword != null">
+  <if test="searchcolumn=='post_content'">
+     AND ${searchcolumn} LIKE CONCAT('%', #{searchword}, '%')
+  </if>
+  <if test="searchcolumn=='user_name'">
+     AND user_num = ANY(SELECT user_num FROM user WHERE user_name = #{searchword})
+  </if>
+</if>
+ORDER BY CASE 
+  WHEN post_writeday >= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND user_num = #{user_num} THEN 0
+  WHEN post_writeday >= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND user_num IN (
+    SELECT to_user
+    FROM following
+    WHERE from_user = #{user_num}
+  ) THEN 0
+  ELSE 1
+END, post_writeday DESC
+LIMIT 10
+OFFSET #{offset}
+  
 </select>
 	
 	
