@@ -49,6 +49,7 @@
 		order by fing_num desc limit 8 offset #{offset} 
 	</select>
 	
+	
 	<!-- 팔로워 추천 -->
 	<!-- <select id="followRecommend" resultType="FollowingDto" parameterType="Map">
 		select to_user from following
