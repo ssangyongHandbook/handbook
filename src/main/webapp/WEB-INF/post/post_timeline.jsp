@@ -24,302 +24,590 @@
 
 
 <script type="text/javascript">
-	$(function() {
+   $(function() {
 
-		offset = $
-		{
-			offset
-		}
-		;
+      offset = ${offset};
+      commentoffset = ${commentoffset};
 
-		$("#insertbtn").click(function() {
+      $("#insertbtn").click(function() {
 
-			var post_access = $("#post_access").val();
-			var post_content = $("#post_content").val();
-			var user_num = $("#user_num").val();
-			var files = $("#post_file")[0].files;
-			//var data="num="+updatenum+"&name="+updatename+"&hp="+updatehp+"&email="+updateemail+"&addr="+updateaddr;
-			//var data=$("#postInsert").serialize();
+         var post_access = $("#post_access").val();
+         var post_content = $("#post_content").val();
+         var user_num = $("#user_num").val();
+         var files = $("#post_file")[0].files;
+         //var data="num="+updatenum+"&name="+updatename+"&hp="+updatehp+"&email="+updateemail+"&addr="+updateaddr;
+         //var data=$("#postInsert").serialize();
 
-			/* 		 var form = new FormData();
-					form.append("photo", $("#post_file")[0].files[0]);  */
+         /*        var form = new FormData();
+               form.append("photo", $("#post_file")[0].files[0]);  */
 
-			var form = new FormData();
+         var form = new FormData();
 
-			for (var i = 0; i < files.length; i++) {
-				form.append("photo", files[i]);
-			}
+         for (var i = 0; i < files.length; i++) {
+            form.append("photo", files[i]);
+         }
 
-			form.append("post_access", post_access);
-			form.append("post_content", post_content);
-			form.append("user_num", user_num);
+         form.append("post_access", post_access);
+         form.append("post_content", post_content);
+         form.append("user_num", user_num);
 
+         $.ajax({
+
+            type : "post",
+            dataType : "text",
+            processData : false,
+            contentType : false,
+            data : form,
+            url : "insertpost",
+            success : function() {
+               location.reload();
+            }
+         });
+      });
+
+      $(document).on("click", ".postmenu", function() {
+         var user_num = $(this).attr("user_num");
+         var post_num = $(this).attr("post_num");
+
+         $("#" + post_num).toggle();
+
+      });
+
+      $(document).on("click", ".posthide", function() {
+         var divpost_num = $(this).attr("divpost_num");
+         var divspost_num = $(this).attr("divspost_num")
+
+         $("#" + divpost_num).hide();
+
+         $("#" + divspost_num).show();
+
+      });
+
+      $(document).on("click", ".showbtn", function() {
+         var divpost_num = $(this).attr("divpost_num");
+         var divspost_num = $(this).attr("divspost_num")
+
+         $("#" + divpost_num).show();
+
+         $("#" + divspost_num).hide();
+
+      });
+
+      $(document).on("click", ".liketoggle", function() {
+
+         var likeshow1_num = $(this).attr("likeshow1_num");
+         var likehide1_num = $(this).attr("likehide1_num");
+
+         $("#" + likeshow1_num).toggle();
+         $("#" + likehide1_num).toggle();
+
+      });
+
+      $(document).on("click", ".liketoggle2", function() {
+
+         var likeshow2_num = $(this).attr("likeshow2_num");
+         var likehide2_num = $(this).attr("likehide2_num");
+
+         /*       
+               $(".likeshow2").toggle();
+               $(".likehide2").toggle(); */
+
+         $("#" + likeshow2_num).toggle();
+         $("#" + likehide2_num).toggle();
+
+      });
+
+      $(document).on("click", ".userimg", function() {
+         var num = $(this).attr("user_num");
+
+         location.href = "/user/mypage?user_num=" + num;
+
+      });
+
+      $(document).on("click", "#postdelete", function() {
+         delnum = $(this).attr("post_num");
+
+         $.ajax({
+            type : "get",
+            dataType : "text",
+            url : "delete",
+            data : {
+               "post_num" : delnum
+            },
+            success : function() {
+               location.reload();
+            }
+         })
+      })
+
+      //수정버튼 클릭 시 모달에 데이터 넣기
+      $(document).on("click", "#postupdate", function() {
+         updatenum = $(this).attr("post_num");
+
+         $.ajax({
+            type : "get",
+            dataType : "json",
+            url : "updateform",
+            data : {
+               "post_num" : updatenum
+            },
+            success : function(res) {
+               $("#update_access").val(res.post_access);
+               $("#update_content").val(res.post_content);
+
+            }
+         })
+      })
+
+      $(document)
+            .on(
+                  "click",
+                  "#updatetbtn",
+                  function() {
+
+                     var update_access = $("#update_access").val();
+                     var update_content = $("#update_content").val();
+
+                     var data = "post_num=" + updatenum
+                           + "&post_access=" + update_access
+                           + "&post_content=" + update_content;
+
+                     $.ajax({
+
+                        type : "post",
+                        dataType : "text",
+                        data : data,
+                        url : "update",
+                        success : function() {
+                           location.reload();
+                        }
+                     });
+                  });
+
+      $(document).on("click", ".like", function() {
+         var post_num = $(this).attr("post_num");
+         var user_num = $(this).attr("user_num");
+
+         $.ajax({
+            type : "get",
+            dataType : "text",
+            url : "likeinsert",
+            data : {
+               "post_num" : post_num,
+               "user_num" : user_num
+            },
+            success : function() {
+            }
+         })
+      })
+
+      $(document).on("click", ".dlike", function() {
+         var post_num = $(this).attr("post_num");
+         var user_num = $(this).attr("user_num");
+
+         $.ajax({
+            type : "get",
+            dataType : "text",
+            url : "likedelete",
+            data : {
+               "post_num" : post_num,
+               "user_num" : user_num
+            },
+            success : function() {
+            }
+         })
+      });
+
+      $(document).on("click", "#postfollow", function() {
+         var from_user = $(this).attr("from_user");
+         var to_user = $(this).attr("to_user");
+
+         $.ajax({
+            type : "get",
+            dataType : "text",
+            url : "followinginsert",
+            data : {
+               "from_user" : from_user,
+               "to_user" : to_user
+            },
+            success : function() {
+               location.reload();
+            }
+         })
+      })
+
+      $(document).on("click", "#postunfollow", function() {
+         var to_user = $(this).attr("to_user");
+         $.ajax({
+            type : "get",
+            dataType : "text",
+            url : "followingdelete",
+            data : {
+               "to_user" : to_user
+            },
+            success : function() {
+               location.reload();
+            }
+         })
+      })
+
+      //사진 넘기면서 보기
+      $(document).ready(
+            function() {
+
+               $('#slider').slick({
+
+                  prevArrow : '<img src="../image/left.png" id="prev">',
+                  nextArrow : '<img src="../image/right.png" id="next">',
+                  autoplay : false, // 자동 재생 여부
+                  autoplaySpeed : 0, // 자동 재생 속도 (단위: ms)
+                  dots : false, // 점 네비게이션 표시 여부
+                  arrows : true, // 화살표 네비게이션 표시 여부
+                  infinite : false, // 무한 슬라이드 여부
+                  slidesToShow : 1, // 한 화면에 보여줄 슬라이드 수
+                  slidesToScroll : 1
+               // 한 번에 스크롤할 슬라이드 수
+
+               });
+
+               //마지막,처음 화살표 삭제
+               $('#slider').on('afterChange',
+                     function(event, slick, currentSlide) {
+                        if (currentSlide == 0) {
+                           $('#prev').css("visibility", "hidden");
+                        } else {
+                           $('#prev').css("visibility", "visible");
+                        }
+                        if (currentSlide == slick.slideCount - 1) {
+                           $('#next').css("visibility", "hidden");
+                        } else {
+                           $('#next').css("visibility", "visible");
+                        }
+                     });
+            });
+      
+       $("#btncontentphoto").click(function(){
+            
+            $("#post_file").trigger("click");
+         });
+      
+      
+      
+      
+      
+      
+
+      /*  window.onscroll = function(e) {
+              if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
+                 
+                 offset=offset+2;
+                 $.ajax({
+                   type:"get",
+                   dataType:"json",
+                   url:"scroll",
+                   data:{"offset":offset},
+                   success:function(res){
+                      $.each(res,function(i,item){
+                      alert("hello");
+                         
+                         setTimeout(function(){
+                                
+                                  var addTimeline = document.createElement("div");
+                                  addTimeline.classList.add("divmain");
+                                 
+                                  addTimeline.innerHTML =
+                                   
+                                   document.querySelector('section').appendChild(addTimeline);
+                         }, 1000) 
+                      })
+                   }
+                 });
+                 
+               
+              }
+            }  */
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+		
+		/* comment */
+		$('#commentinput').keydown(function() {
+			if (event.keyCode === 13) {
+				$("#insertbtn").trigger("click");
+			};
+		});
+
+		$(document).on("keydown", ".input", function() {
+
+			if (event.keyCode === 13) {
+				$(this).next().trigger("click");
+			};
+		});
+
+		$(document).on("click", ".ulimg", function() {
+
+			var comment_num = $(this).attr("comment_num");
+			$("#ul" + comment_num).toggle();
+		})
+
+		$(document).on("click", ".cminsert", function() {
+
+			var comment_num = $(this).attr("comment_num");
+			var comment_content = $("#input" + comment_num).val();
+			var post_num = $(this).attr("post_num");
+			//alert(comment_num + comment_content + post_num);
 			$.ajax({
 
 				type : "post",
 				dataType : "text",
-				processData : false,
-				contentType : false,
-				data : form,
-				url : "insertpost",
+				url : "cinsert",
+				data : {
+					"comment_num" : comment_num,
+					"comment_content" : comment_content,
+					"post_num" : post_num
+				},
 				success : function() {
-					location.reload();
+					$("#commentsection").empty();
+					$("#addcomment").hide();
+					$("#input" + comment_num).val("");
+					$("#input" + comment_num).hide();
+					commentoffset = 0;
+					scroll(commentoffset, "9");
+					$("#addcomment").show();
+				}
+			})
+
+		})
+
+		$("#insertbtn").click(function() {
+
+			var formdata = $("#form").serialize();
+			//alert(formdata);
+			$.ajax({
+
+				type : "post",
+				dataType : "text",
+				url : "cinsert",
+				data : formdata,
+				success : function() {
+					$("#commentsection").empty();
+					$("#addcomment").hide();
+					$("#commentinput").val("");
+					commentoffset = 0;
+					scroll(commentoffset, "9");
+					$("#addcomment").show();
+				}
+			})
+		});
+
+		$(document).on("click", "#addcomment", function() {
+			commentoffset = commentoffset + 8;
+			scroll(commentoffset, "9");
+		})
+
+		$(document).on("click", ".recontent", function() {
+
+			var comment_num = $(this).attr("comment_num");
+			//alert(comment_num);
+			$("#comment" + comment_num).toggle();
+		})
+
+		$(document).on("click", "span.nolike", function() {
+
+			var comment_num = $(this).attr("comment_num");
+			//alert(comment_num);
+			$.ajax({
+				type : "get",
+				dataType : "text",
+				url : "commentlikeinsert",
+				data : {
+					"comment_num" : comment_num
+				},
+				success : function() {
+					commentoffset = 0;
+					$("#commentsection").empty();
+					$("#addcomment").hide();
+					$("#input" + comment_num).val("");
+					$("#input" + comment_num).hide();
+					scroll(commentoffset, "9");
+					$("#addcomment").show();
 				}
 			});
-		});
 
-		$(document).on("click", ".postmenu", function() {
-			var user_num = $(this).attr("user_num");
-			var post_num = $(this).attr("post_num");
+		})
 
-			$("#" + post_num).toggle();
+		$(document).on("click", "span.yeslike", function() {
 
-		});
-
-		$(document).on("click", ".posthide", function() {
-			var divpost_num = $(this).attr("divpost_num");
-			var divspost_num = $(this).attr("divspost_num")
-
-			$("#" + divpost_num).hide();
-
-			$("#" + divspost_num).show();
-
-		});
-
-		$(document).on("click", ".showbtn", function() {
-			var divpost_num = $(this).attr("divpost_num");
-			var divspost_num = $(this).attr("divspost_num")
-
-			$("#" + divpost_num).show();
-
-			$("#" + divspost_num).hide();
-
-		});
-
-		$(document).on("click", ".liketoggle", function() {
-
-			var likeshow1_num = $(this).attr("likeshow1_num");
-			var likehide1_num = $(this).attr("likehide1_num");
-
-			$("#" + likeshow1_num).toggle();
-			$("#" + likehide1_num).toggle();
-
-		});
-
-		$(document).on("click", ".liketoggle2", function() {
-
-			var likeshow2_num = $(this).attr("likeshow2_num");
-			var likehide2_num = $(this).attr("likehide2_num");
-
-			/* 		
-					$(".likeshow2").toggle();
-					$(".likehide2").toggle(); */
-
-			$("#" + likeshow2_num).toggle();
-			$("#" + likehide2_num).toggle();
-
-		});
-
-		$(document).on("click", ".userimg", function() {
-			var num = $(this).attr("user_num");
-
-			location.href = "/user/mypage?user_num=" + num;
-
-		});
-
-		$(document).on("click", "#postdelete", function() {
-			delnum = $(this).attr("post_num");
-
+			var comment_num = $(this).attr("comment_num");
+			//alert(comment_num);
 			$.ajax({
 				type : "get",
 				dataType : "text",
-				url : "delete",
+				url : "commentlikedelete",
 				data : {
-					"post_num" : delnum
+					"comment_num" : comment_num
 				},
 				success : function() {
-					location.reload();
+					commentoffset = 0;
+					$("#commentsection").empty();
+					$("#addcomment").hide();
+					$("#input" + comment_num).val("");
+					$("#input" + comment_num).hide();
+					scroll(commentoffset, "9");
+					$("#addcomment").show();
+				}
+			});
+
+		})
+		
+		$(document).on("click",".commentdel",function(){
+			
+			var comment_num=$(this).attr("comment_num");
+			$.ajax({
+				type:"get",
+				dataType:"text",
+				url:"cdelete",
+				data:{"comment_num":comment_num},
+				success:function(){
+					commentoffset=0;
+					$("#commentsection").empty();
+					$("#addcomment").hide();
+					$("#input" + comment_num).val("");
+					$("#input" + comment_num).hide();
+					scroll(commentoffset, "9");
+					$("#addcomment").show();
 				}
 			})
 		})
-
-		//수정버튼 클릭 시 모달에 데이터 넣기
-		$(document).on("click", "#postupdate", function() {
-			updatenum = $(this).attr("post_num");
-
-			$.ajax({
-				type : "get",
-				dataType : "json",
-				url : "updateform",
-				data : {
-					"post_num" : updatenum
-				},
-				success : function(res) {
-					$("#update_access").val(res.post_access);
-					$("#update_content").val(res.post_content);
-
-				}
-			})
+		
+		
+		$(document).on("click",".commentmod",function(){
+			
+			var comment_num=$(this).attr("comment_num");
+			$("#div"+comment_num).hide();
+			$("#commentmod"+comment_num).show();
 		})
-
-		$(document)
-				.on(
-						"click",
-						"#updatetbtn",
-						function() {
-
-							var update_access = $("#update_access").val();
-							var update_content = $("#update_content").val();
-
-							var data = "post_num=" + updatenum
-									+ "&post_access=" + update_access
-									+ "&post_content=" + update_content;
-
-							$.ajax({
-
-								type : "post",
-								dataType : "text",
-								data : data,
-								url : "update",
-								success : function() {
-									location.reload();
-								}
-							});
-						});
-
-		$(document).on("click", ".like", function() {
-			var post_num = $(this).attr("post_num");
-			var user_num = $(this).attr("user_num");
-
-			$.ajax({
-				type : "get",
-				dataType : "text",
-				url : "likeinsert",
-				data : {
-					"post_num" : post_num,
-					"user_num" : user_num
-				},
-				success : function() {
-				}
-			})
-		})
-
-		$(document).on("click", ".dlike", function() {
-			var post_num = $(this).attr("post_num");
-			var user_num = $(this).attr("user_num");
-
-			$.ajax({
-				type : "get",
-				dataType : "text",
-				url : "likedelete",
-				data : {
-					"post_num" : post_num,
-					"user_num" : user_num
-				},
-				success : function() {
-				}
-			})
-		});
-
-		$(document).on("click", "#postfollow", function() {
-			var from_user = $(this).attr("from_user");
-			var to_user = $(this).attr("to_user");
-
-			$.ajax({
-				type : "get",
-				dataType : "text",
-				url : "followinginsert",
-				data : {
-					"from_user" : from_user,
-					"to_user" : to_user
-				},
-				success : function() {
-					location.reload();
-				}
-			})
-		})
-
-		$(document).on("click", "#postunfollow", function() {
-			var to_user = $(this).attr("to_user");
-			$.ajax({
-				type : "get",
-				dataType : "text",
-				url : "followingdelete",
-				data : {
-					"to_user" : to_user
-				},
-				success : function() {
-					location.reload();
-				}
-			})
-		})
-
-		//사진 넘기면서 보기
-		$(document).ready(
-				function() {
-
-					$('#slider').slick({
-
-						 prevArrow : '<img src="../image/left.png" id="prev">',
-						nextArrow : '<img src="../image/right.png" id="next">', 
-						autoplay : false, // 자동 재생 여부
-						autoplaySpeed : 0, // 자동 재생 속도 (단위: ms)
-						dots : false, // 점 네비게이션 표시 여부
-						arrows : true, // 화살표 네비게이션 표시 여부
-						infinite : false, // 무한 슬라이드 여부
-						slidesToShow : 1, // 한 화면에 보여줄 슬라이드 수
-						slidesToScroll : 1
-					// 한 번에 스크롤할 슬라이드 수
-
-					});
-
-					//마지막,처음 화살표 삭제
-					$('#slider').on('afterChange',
-							function(event, slick, currentSlide) {
-								if(currentSlide == 0){
-								   $('#prev').css("visibility","hidden");
-								} else {
-								   $('#prev').css("visibility","visible");
-								}
-								if(currentSlide == slick.slideCount - 1){
-								   $('#next').css("visibility","hidden");
-								} else {
-								   $('#next').css("visibility","visible");
-								} 
-							});
+		
+		$(document).on("keydown",".inputmod",function(){
+			
+			if (event.keyCode === 13) {
+				var comment_num=$(this).attr("comment_num");
+				var comment_content=$(this).val();
+				//alert(comment_num + comment_content);
+				$.ajax({
+					type:"post",
+					dataType:"text",
+					url:"commentupdate",
+					data:{"comment_num":comment_num,"comment_content":comment_content},
+					success:function(){
+						commentoffset=0;
+						$("#commentsection").empty();
+						$("#addcomment").hide();
+						$("#input" + comment_num).val("");
+						$("#input" + comment_num).hide();
+						scroll(commentoffset, "9");
+						$("#addcomment").show();
+					}
 				});
+			};
+		})
+   })
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   /* 댓글 무한스크롤 */
+   function scroll(commentoffset, post_num) {
 
-		/*  window.onscroll = function(e) {
-		        if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
-		           
-		           offset=offset+2;
-		           $.ajax({
-		             type:"get",
-		             dataType:"json",
-		             url:"scroll",
-		             data:{"offset":offset},
-		             success:function(res){
-		                $.each(res,function(i,item){
-		                alert("hello");
-		                   
-		                   setTimeout(function(){
-		                          
-		                            var addTimeline = document.createElement("div");
-		                            addTimeline.classList.add("divmain");
-		                           
-		                            addTimeline.innerHTML =
-		                             
-		                             document.querySelector('section').appendChild(addTimeline);
-		                   }, 1000) 
-		                })
-		             }
-		           });
-		           
-		         
-		        }
-		      }  */
+		$.ajax({
+			type : "get",
+			dataType : "json",
+			url : "scrollcomment",
+			data : {
+				"commentoffset" : commentoffset,
+				"post_num" : "9"
+			},
+			success : function(res) {
 
-	});
+				$.each(res, function(i, item) {
+
+					var s = "";
+					var addContent = document.createElement("div");
+					s += "<div class='allcomment' style='margin-left:"+item.comment_level*50+"px;'>";
+					if (item.comment_level > 0) {
+						s += "<div style='position: relative; left: -50px; top: 30px; height: 0;' >";
+						s += "<img src='../image/re.png' style='width: 30px;\'>";
+						s += "</div>";
+					}
+					
+					if(item.post_user_num ==${sessionScope.user_num} || item.user_num == ${sessionScope.user_num}){
+						
+						s += '<div style="height: 0; width: 450px; position: relative; left: -30px; top: 30px;">';
+						s += '<img src="../image/add.png" class="ulimg" style="width: 20px; float: right;" comment_num="'+item.comment_num+'">';
+						s += '<ul class="list-group commentul" id="ul'+item.comment_num+'">';
+						s += '<li class="list-group-item list-group-item-success commentmod" comment_num="'+item.comment_num+'">수정</li>';
+						s += '<li class="list-group-item list-group-item-danger commentdel" comment_num="'+item.comment_num+'">삭제</li>';
+						s += '</ul>';
+						s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display: none; width: 447px; position: relative; left: 31px; bottom: 31px;">';
+						s += '<img src="/photo/'+item.user_photo+'" class="profile">';
+						s += '<b class="user_name">'+item.user_name+'</b>';
+						s += '<br>';
+						s += '<input type="text" class="inputmod" style="width: 200px;" comment_num="'+item.comment_num+'" value="'+item.comment_content+'">';
+						s += '</div>';
+						s += '</div>';
+					}
+					
+					s += "<div class='comment' id='div"+item.comment_num+"'>";
+					s += "<img src='/photo/"+item.user_photo+"' class='profile'>";
+					s += "<b class='user_name'>" + item.user_name + "</b><br>";
+					s += "<span class='spancontent'>" + item.comment_content + "</span></div>";
+					s += "<div class='cmlike'>";
+
+					if (item.like_check == 0) {
+						s += '<span class="glyphicon glyphicon-heart-empty nolike" style="color: red;" comment_num="'+item.comment_num+'">' + item.like_count + '</span>';
+					} else {
+						s += '<span class="glyphicon glyphicon-heart yeslike" style="color: red;" comment_num="'+item.comment_num+'">' + item.like_count + '</span>';
+					}
+					
+					s += "<span class='recontent' comment_num='"+item.comment_num+"'>답글달기</span>";
+					s += "<span class='comment_writeday'>" + item.perTime + "</span></div>";
+					s += '<form method="post" class="form-inline" id="comment'+item.comment_num+'" style="display: none;">';
+					s += '<input type="hidden" name="comment_num" value="75">';
+					s += '<input type="hidden" name="post_num" value="9">';
+					s += '<div id="commentaddform">';
+					s += '<img src="/photo/${sessionScope.user_photo }" id="commentprofile">';
+					s += '<input hidden="hidden" /> ';
+					s += '<input type="text" class="input" name="comment_content" placeholder="댓글을 입력하세요" id="input'+item.comment_num+'">';
+					s += '<button type="button" class="btn btn-info cminsert" comment_num="'+item.comment_num+'" post_num="9"  style="margin-right: 20px;">답글입력</button>';
+					s += '</div>';
+					s += '</form></div>';
+					console.log(s);
+					addContent.innerHTML = s;
+					document.querySelector('section1').appendChild(addContent);
+
+					var brcontent = document.createElement("div");
+					brcontent.innerHTML = "<br>";
+					document.querySelector('section1').appendChild(brcontent);
+
+				})
+			}
+		});
+	}
+  
 </script>
 
 
@@ -451,7 +739,6 @@ body {
 .bottom2 {
 	width: 100%;
 	height: 13%;
-	
 }
 
 .bottom-up2 {
@@ -612,13 +899,13 @@ body {
 	height: 350px;
 }
 
-.fileimg img{
+.fileimg img {
 	width: 100%;
 	height: 100%;
-	obejct-fit:cover;
+	obejct-fit: cover;
 }
 
-#slider{
+#slider {
 	width: 100%;
 	margin: 0 auto;
 	display: inline-flex;
@@ -626,11 +913,133 @@ body {
 	align-items: center;
 }
 
-.slick-list{
+.slick-list {
 	float: left;
 	width: 500px;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* comment */
+.commentmodal-content{
+	overflow-y: initial !important
+}
+
+.commentmodal-body{
+	height: 740px;
+	overflow-y: auto;
+}
+
+.comment {
+	width: 450px;
+	border: 1px solid gray;
+	border-radius: 40px;
+	background-color: #EEEEEE;
+	padding-left: 85px;
+}
+
+/* 사용자 프로필  */
+.profile {
+	width: 60px;
+	margin-left: -75px;
+	border-radius: 100px;
+	margin-right: 20px;
+	position: relative;
+	top: 10px;
+}
+
+/* 좋아요,댓글,날짜 */
+.cmlike {
+	width: 450px;
+	margin-top: 10px;
+	display: flex;
+	justify-content: space-around;
+	align-content: center;
+}
+
+/* 사용자 이름  */
+b.user_name {
+	font-size: 1.4em;
+}
+
+/* 사용자 댓글  */
+span.content {
+	font-size: 1.1em;
+}
+
+#commentaddform {
+	margin-top: 7px;
+	height: 60px;
+	display: flex;
+	justify-content: space-between;
+	align-content: center;
+}
+
+#commentprofile {
+	width: 60px;
+	border: 1px solid gray;
+	border-radius: 100px;
+}
+
+.input {
+	width: 700px;
+	border: 1px solid gray;
+	border-radius: 40px;
+	background-color: #EEEEEE;
+}
+
+.mominput {
+	width: 700px;
+	border: 1px solid gray;
+	border-radius: 40px;
+	background-color: #EEEEEE;
+}
+
+.recontent {
+	cursor: pointer;
+}
+
+.nolike {
+	cursor: pointer;
+}
+
+.yeslike {
+	cursor: pointer;
+}
+
+.ulimg {
+	cursor: pointer;
+}
+
+.commentul {
+	float: right;
+	list-style: none;
+	display: none;
+	font-size: 0.7em;
+	height: 70px;
+}
+
+li{
+	cursor:  pointer;
+}
 </style>
 </head>
 
@@ -678,7 +1087,7 @@ body {
 									style="width: 40px; height: 40px; border-radius: 20px;">
 								<span>${login_name}</span>
 							</div>
-							<br> <select class="form-control" name="post_access" style="width: 150px;"
+							 <select class="form-control" name="post_access" style="width: 150px;"
 								id="post_access">
 								<option value="all">전체공개</option>
 								<option value="follower">팔로워 공개</option>
@@ -690,8 +1099,14 @@ body {
 							<div class="form-group">
 								<textarea style="width: 550px; height: 150px;" name="post_content" class="form-control"
 									required="required" id="post_content" placeholder="내용을 입력해주세요"></textarea>
+									
 							</div>
+							
+							
+							<input type="file" multiple="multiple" id="post_file" name="post_file"  style="display: none;">
+              <button type="button" id="btncontentphoto"style="margin-top: 1%;">사진 선택</button>
 						</div>
+						
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal" id="insertbtn">게시</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -743,9 +1158,6 @@ body {
 
 			</div>
 		</div>
-
-
-
 
 
 		<section>
@@ -824,42 +1236,22 @@ body {
 
 
 
-
-
-
-
-
-
-
 						<div class="center">
 							<div class="center-up">${dto.post_content }</div>
 
-							<div class="center-down" id="slider" >
-									<c:forTokens items="${dto.post_file }" delims="," var="file">
-										<div class="fileimg">
-											<img   src="/post_file/${file }">
-										</div>
-									</c:forTokens>
+							<div class="center-down" id="slider">
+								<c:forTokens items="${dto.post_file }" delims="," var="file">
+									<div class="fileimg">
+										<img src="/post_file/${file }">
+									</div>
+								</c:forTokens>
 
 								<%-- <img src="/post_file/${dto.post_file }" class="fileimg"> --%>
 
 							</div>
 						</div>
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
+
+
 						<div class="bottom">
 							<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 							<div class="bottom-up">
@@ -940,7 +1332,7 @@ body {
 
 
 								<!-- comment -->
-								<span class="bottom-right" id="commentmodal" style="cursor: pointer;">
+								<span class="bottom-right commentspan"  style="cursor: pointer;">
 									<span style="font-size: 1.3em; color: gray;" post_num="${dto.post_num }">
 										<i class="fa-regular fa-comment"></i>
 									</span>
@@ -948,19 +1340,7 @@ body {
 								</span>
 
 							</div>
-							<%-- <div class="bottom-down">
-								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
-								<span style="float: left; width: 8%; padding-left: 1%;">
-									<img src="${root }/photo/${user_photo}" class="writeimg">
-								</span>
-								<span
-									style="background-color: #F0F2F5; width: 8%; width: 88%; float: left; border-radius: 60px; display: inline-flex; align-items: center;">
-									<input type="text" name="commentwrite"
-										style="width: 600px; border: none; background: none; outline: none; font-size: 15pt; padding: 1%; margin-right: 10px;"
-										placeholder="댓글을 입력하세요...">
-									<img class="commentarrow" src="${root }/image/submit.png">
-								</span>
-							</div> --%>
+
 						</div>
 
 					</div>
@@ -1121,13 +1501,8 @@ body {
 
 
 
-
-
-
-
-
 								<!-- comment -->
-								<span class="bottom-right2" id="commentmodal" style="cursor: pointer;">
+								<span class="bottom-right2 commentspan" style="cursor: pointer;">
 									<span style="font-size: 1.2em; top: 3px; color: gray;" post_num="${dto.post_num }">
 										<i class="fa-regular fa-comment"></i>
 									</span>
@@ -1137,22 +1512,6 @@ body {
 							</div>
 
 
-
-
-							<%-- 
-							<div class="bottom-down2">
-								<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
-								<span style="float: left; width: 8%; padding-left: 1%;">
-									<img src="${root }/photo/${user_photo}" class="writeimg">
-								</span>
-								<span
-									style="background-color: #F0F2F5; width: 8%; width: 88%; float: left; border-radius: 60px; display: inline-flex; align-items: center;">
-									<input type="text" name="commentwrite"
-										style="width: 600px; border: none; background: none; outline: none; font-size: 15pt; padding: 1%; margin-right: 10px;"
-										placeholder="댓글을 입력하세요...">
-									<img class="commentarrow" src="${root }/image/submit.png">
-								</span>
-							</div> --%>
 						</div>
 
 
@@ -1164,7 +1523,59 @@ body {
 			</c:forEach>
 		</section>
 
-	</div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<!-- comment -->
+		<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#commentmodal">Open Modal</button>
+
+
+
+		<!-- comment -->
+		<div id="commentmodal" class="modal fade" role="dialog">
+				<div class="modal-dialog modal-lg">
+					<!-- Modal content-->
+					<div class="modal-content commentmodal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title commenth4">${dto.user_name }의게시물</h4>
+						</div>
+						<div class="modal-body commentmodal-body" style="max-height: 800px;">
+							<!-- 타임라인 -->
+							
+							<br>
+							<hr>
+							<section1 id="commentsection">
+								<!-- 댓글 나올 부분 -->
+							</section1>
+							<button type="button" class="btn btn-success" id="addcomment">댓글 더보기</button>
+						</div>
+						<div class="modal-footer" style="height: 80px; padding: 0;">
+							<form method="post" class="form-inline" id="form">
+								<input type="hidden" name="comment_num" value="0">
+								<input type="hidden" name="post_num" value="9">
+								<div id="commentaddform">
+									<img src="/photo/${sessionScope.user_photo }" id="commentprofile">
+									<input hidden="hidden" />
+									<input type="text" class="mominput" name="comment_content" placeholder="댓글을 입력하세요" id="commentinput">
+									<button type="button" id="insertbtn" class="btn btn-info" style="margin-right: 20px;">입력</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+	</div>
 </body>
 </html>

@@ -40,13 +40,13 @@ public class CommentController {
 			@RequestParam(defaultValue = "0") int comment_group,
 			@RequestParam(defaultValue = "0") int comment_step,
 			@RequestParam(defaultValue = "0") int comment_level,
-			@RequestParam(defaultValue = "0")int offset,
+			@RequestParam(defaultValue = "0")int commentoffset,
 			@RequestParam(defaultValue = "9") String post_num,
 			HttpSession session){
 
 		ModelAndView model=new ModelAndView();
 
-		List<CommentDto> list=service.selectScroll(post_num, offset);
+		List<CommentDto> list=service.selectScroll(post_num, commentoffset);
 
 		for(int i=0;i<list.size();i++) {
 
@@ -109,7 +109,7 @@ public class CommentController {
 		model.addObject("comment_step", comment_step);
 		model.addObject("comment_level", comment_level);
 		model.addObject("list",list);
-		model.addObject("offset", offset);
+		model.addObject("commentoffset", commentoffset);
 
 
 		model.setViewName("/comment/test");
@@ -117,7 +117,7 @@ public class CommentController {
 		return model;
 	}
 
-	@PostMapping("test/cinsert")
+	@PostMapping("post/cinsert")
 	@ResponseBody
 	public void insert(@ModelAttribute CommentDto dto,HttpSession session) {
 
@@ -135,7 +135,7 @@ public class CommentController {
 	}
 
 
-	@GetMapping("test/cdelete")
+	@GetMapping("post/cdelete")
 	@ResponseBody
 	public void cdelete(String comment_num) {
 
@@ -163,7 +163,7 @@ public class CommentController {
 
 	}
 
-	@PostMapping("test/commentupdate")
+	@PostMapping("post/commentupdate")
 	@ResponseBody
 	public void commentupdate(@ModelAttribute CommentDto dto,HttpSession session) {
 
@@ -174,11 +174,11 @@ public class CommentController {
 
 
 
-	@GetMapping("test/scroll")
+	@GetMapping("post/scrollcomment")
 	@ResponseBody
-	public List<CommentDto> scroll (String post_num,int offset,HttpSession session) {
+	public List<CommentDto> scroll (String post_num,int commentoffset,HttpSession session) {
 
-		List<CommentDto> list=service.selectScroll(post_num	, offset);
+		List<CommentDto> list=service.selectScroll(post_num	, commentoffset);
 
 		for(int i=0;i<list.size();i++) {
 
@@ -241,7 +241,7 @@ public class CommentController {
 	}
 
 
-	@GetMapping("test/likeinsert")
+	@GetMapping("post/commentlikeinsert")
 	@ResponseBody
 	public void likeinsert(String comment_num,HttpSession session) {
 
@@ -253,7 +253,7 @@ public class CommentController {
 		service.insertLike(dto);
 	}
 
-	@GetMapping("test/likedelete")
+	@GetMapping("post/commentlikedelete")
 	@ResponseBody
 	public void likedelete(String comment_num,HttpSession session) {
 

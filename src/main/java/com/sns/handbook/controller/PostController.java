@@ -54,11 +54,11 @@ public class PostController {
 
 	@GetMapping("/post/timeline")
 	@ResponseBody
-	public ModelAndView list(@RequestParam(defaultValue = "0") int offset, HttpSession session,
+	public ModelAndView list(@RequestParam(defaultValue = "0") int offset,@RequestParam(defaultValue = "0") int commentoffset, HttpSession session,
 			@RequestParam(required = false) String searchcolumn, @RequestParam(required = false) String searchword,
 			FollowingDto fdto) {
 
-		List<PostDto> list = pservice.postList(searchcolumn, searchword, offset);
+		List<PostDto> list = pservice.postList((String)session.getAttribute("user_num"),searchcolumn, searchword, offset);
 		for (int i = 0; i < list.size(); i++) {
 			UserDto dto = uservice.getUserByNum(list.get(i).getUser_num()); // 여러가지 수많은 데이터에서 i번째 데이터만 가져오기, 여기서 필요한 상대방
 																			// num을 list에서 뽑아옴
@@ -125,7 +125,9 @@ public class PostController {
 		String login_name = uservice.getUserByNum((String) session.getAttribute("user_num")).getUser_name();
 		ModelAndView model = new ModelAndView();
 		int totalCount = pservice.getTotalCount();
+		
 		model.addObject("offset", offset);
+		model.addObject("commentoffset", commentoffset);
 		model.addObject("searchcolumn", searchcolumn);
 		model.addObject("total", totalCount);
 		model.addObject("list", list);
@@ -219,9 +221,10 @@ public class PostController {
 	@GetMapping("/post/scroll")
 	@ResponseBody
 	public List<PostDto> scroll(int offset, @RequestParam(required = false) String searchcolumn,
-			@RequestParam(required = false) String searchword) {
+			@RequestParam(required = false) String searchword,
+			String user_num) {
 
-		List<PostDto> list = pservice.postList(searchcolumn, searchword, offset);
+		List<PostDto> list = pservice.postList(user_num,searchcolumn, searchword, offset);
 
 		return list;
 	}

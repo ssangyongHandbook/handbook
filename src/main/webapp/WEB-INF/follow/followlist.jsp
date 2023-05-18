@@ -261,7 +261,7 @@
 					alert("넘어감");
 					location.href = "followsearch?searchword="+$(".followsearchbox").val();
 				}
-			})
+			});
 	</script>
 </body>
 </html>
