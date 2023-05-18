@@ -117,7 +117,7 @@ public class CommentController {
 		return model;
 	}
 
-	@PostMapping("test/cinsert")
+	@PostMapping("post/cinsert")
 	@ResponseBody
 	public void insert(@ModelAttribute CommentDto dto,HttpSession session) {
 
@@ -135,7 +135,7 @@ public class CommentController {
 	}
 
 
-	@GetMapping("test/cdelete")
+	@GetMapping("post/cdelete")
 	@ResponseBody
 	public void cdelete(String comment_num) {
 
@@ -163,7 +163,7 @@ public class CommentController {
 
 	}
 
-	@PostMapping("test/commentupdate")
+	@PostMapping("post/commentupdate")
 	@ResponseBody
 	public void commentupdate(@ModelAttribute CommentDto dto,HttpSession session) {
 
@@ -174,7 +174,7 @@ public class CommentController {
 
 
 
-	@GetMapping("test/scroll")
+	@GetMapping("post/scrollcomment")
 	@ResponseBody
 	public List<CommentDto> scroll (String post_num,int commentoffset,HttpSession session) {
 
@@ -241,7 +241,7 @@ public class CommentController {
 	}
 
 
-	@GetMapping("test/likeinsert")
+	@GetMapping("post/commentlikeinsert")
 	@ResponseBody
 	public void likeinsert(String comment_num,HttpSession session) {
 
@@ -253,7 +253,7 @@ public class CommentController {
 		service.insertLike(dto);
 	}
 
-	@GetMapping("test/likedelete")
+	@GetMapping("post/commentlikedelete")
 	@ResponseBody
 	public void likedelete(String comment_num,HttpSession session) {
 

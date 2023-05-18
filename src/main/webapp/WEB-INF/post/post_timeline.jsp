@@ -427,7 +427,7 @@
 			$.ajax({
 				type : "get",
 				dataType : "text",
-				url : "likeinsert",
+				url : "commentlikeinsert",
 				data : {
 					"comment_num" : comment_num
 				},
@@ -451,7 +451,7 @@
 			$.ajax({
 				type : "get",
 				dataType : "text",
-				url : "likedelete",
+				url : "commentlikedelete",
 				data : {
 					"comment_num" : comment_num
 				},
@@ -536,7 +536,7 @@
 		$.ajax({
 			type : "get",
 			dataType : "json",
-			url : "scroll",
+			url : "scrollcomment",
 			data : {
 				"commentoffset" : commentoffset,
 				"post_num" : "9"
@@ -939,12 +939,12 @@ body {
 
 
 /* comment */
-.modal-content {
+.commentmodal-content{
 	overflow-y: initial !important
 }
 
-.modal-body {
-	height: 900px;
+.commentmodal-body{
+	height: 740px;
 	overflow-y: auto;
 }
 
@@ -1332,7 +1332,7 @@ li{
 
 
 								<!-- comment -->
-								<span class="bottom-right" id="commentmodal" style="cursor: pointer;">
+								<span class="bottom-right commentspan"  style="cursor: pointer;">
 									<span style="font-size: 1.3em; color: gray;" post_num="${dto.post_num }">
 										<i class="fa-regular fa-comment"></i>
 									</span>
@@ -1502,7 +1502,7 @@ li{
 
 
 								<!-- comment -->
-								<span class="bottom-right2" id="commentmodalspan" style="cursor: pointer;">
+								<span class="bottom-right2 commentspan" style="cursor: pointer;">
 									<span style="font-size: 1.2em; top: 3px; color: gray;" post_num="${dto.post_num }">
 										<i class="fa-regular fa-comment"></i>
 									</span>
@@ -1546,12 +1546,12 @@ li{
 		<div id="commentmodal" class="modal fade" role="dialog">
 				<div class="modal-dialog modal-lg">
 					<!-- Modal content-->
-					<div class="modal-content">
+					<div class="modal-content commentmodal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal">&times;</button>
 							<h4 class="modal-title commenth4">${dto.user_name }의게시물</h4>
 						</div>
-						<div class="modal-body" style="max-height: 800px;">
+						<div class="modal-body commentmodal-body" style="max-height: 800px;">
 							<!-- 타임라인 -->
 							
 							<br>
