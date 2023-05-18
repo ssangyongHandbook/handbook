@@ -38,17 +38,12 @@ and user_num in (select user_num from user where user_num Not in ("#{user_num}")
 	<select id="postList" parameterType="Map" resultType="PostDto">
 SELECT *
 FROM post
-WHERE (
-  (post_access = 'all' AND (user_num IN (
+WHERE (post_access = 'all'
+  OR (post_access = 'follower' AND (user_num = #{user_num} OR user_num IN (
     SELECT to_user
     FROM following
     WHERE from_user = #{user_num}
-  )) AND post_writeday >= DATE_SUB(NOW(), INTERVAL 24 HOUR))
-  OR (post_access = 'all' AND user_num = #{user_num} AND post_writeday >= DATE_SUB(NOW(), INTERVAL 24 HOUR))
-  OR (post_access = 'follower' AND user_num = #{user_num} AND post_writeday >= DATE_SUB(NOW(), INTERVAL 24 HOUR))
-  OR (DATE_SUB(NOW(), INTERVAL 24 HOUR) > post_writeday) 
-)
-
+  ))))
 <if test="searchcolumn != null and searchword != null">
   <if test="searchcolumn=='post_content'">
      AND ${searchcolumn} LIKE CONCAT('%', #{searchword}, '%')
@@ -58,11 +53,14 @@ WHERE (
   </if>
 </if>
 ORDER BY CASE 
-  WHEN post_writeday >= DATE_SUB(NOW(), INTERVAL 24 HOUR) THEN 0
+  WHEN post_writeday >= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND user_num = #{user_num} THEN 0
+  WHEN post_writeday >= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND user_num IN (
+    SELECT to_user
+    FROM following
+    WHERE from_user = #{user_num}
+  ) THEN 0
   ELSE 1
-END, 
-post_writeday desc, 
-post_num 
+END, post_writeday DESC
 LIMIT 10
 OFFSET #{offset}
   

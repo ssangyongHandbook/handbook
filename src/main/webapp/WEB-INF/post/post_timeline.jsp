@@ -165,7 +165,7 @@
                   "#updatetbtn",
                   function() {
 
-                     var update_access = $("#update_access").val();
+                   /*   var update_access = $("#update_access").val();
                      var update_content = $("#update_content").val();
 
                      var data = "post_num=" + updatenum
@@ -179,6 +179,31 @@
                         data : data,
                         url : "update",
                         success : function() {
+                           location.reload();
+                        }
+                     }); */
+                     var update_access=$("#update_access").val();
+                     var update_content=$("#update_content").val();
+                     
+                     var form = new FormData();
+
+                     var files=$("#update_file")[0].files;
+                     
+                     for (var i = 0; i < files.length; i++) {
+                          form.append("photo", files[i]);
+                      }
+                     form.append("post_num",updatenum);
+                     form.append("post_access",update_access);
+                     form.append("post_content",update_content);
+                     
+                     $.ajax({
+                        type: "post",
+                        dataType: "text",
+                        url: "update",
+                        processData: false,
+                        contentType: false,
+                        data: form,
+                        success: function(){
                            location.reload();
                         }
                      });
@@ -255,10 +280,10 @@
       $(document).ready(
             function() {
 
-               $('#slider').slick({
+               $('.slider').slick({
 
-                  prevArrow : '<img src="../image/left.png" id="prev">',
-                  nextArrow : '<img src="../image/right.png" id="next">',
+                  prevArrow : '<img src="../image/left.png" class="prev">',
+                  nextArrow : '<img src="../image/right.png" class="next">',
                   autoplay : false, // 자동 재생 여부
                   autoplaySpeed : 0, // 자동 재생 속도 (단위: ms)
                   dots : false, // 점 네비게이션 표시 여부
@@ -271,28 +296,127 @@
                });
 
                //마지막,처음 화살표 삭제
-               $('#slider').on('afterChange',
+               $('.slider').on('afterChange',
                      function(event, slick, currentSlide) {
                         if (currentSlide == 0) {
-                           $('#prev').css("visibility", "hidden");
+                           $('.prev').css("visibility", "hidden");
                         } else {
-                           $('#prev').css("visibility", "visible");
+                           $('.prev').css("visibility", "visible");
                         }
                         if (currentSlide == slick.slideCount - 1) {
-                           $('#next').css("visibility", "hidden");
+                           $('.next').css("visibility", "hidden");
                         } else {
-                           $('#next').css("visibility", "visible");
+                           $('.next').css("visibility", "visible");
                         }
                      });
             });
       
-       $("#btncontentphoto").click(function(){
-            
-            $("#post_file").trigger("click");
-         });
       
+      $("#btncontentphoto").click(function(){
       
+      $("#post_file").trigger("click");
+   });
+
+      $("#post_file").change(function(){
+          
+          if($(this)[0].files[0]){
+           var reader=new FileReader();
+           reader.onload=function(e){
+            $("#showimg").attr("src",e.target.result);
+            $("#showtext").hide();
+           }
+           reader.readAsDataURL($(this)[0].files[0]);
+          }
+      });
+  
+  
+  $("#btncontentphoto").click(function(){
+         
+         $("#showimg").show();
+         $("#showtext").show();
+      });
+
       
+  
+  
+  
+  //강제 호출
+  $("#btnmodcontentphoto").click(function(){
+     
+     $("#update_file").trigger("click");
+  });
+  
+  //게시물 수정 시 사진 미리보기
+  $("#update_file").change(function(){
+     
+      if($(this)[0].files[0]){
+       var reader=new FileReader();
+       reader.onload=function(e){
+        $("#showmodimg").attr("src",e.target.result);
+        $("#showtext").hide();
+       }
+       reader.readAsDataURL($(this)[0].files[0]);
+      }
+  });
+  
+  $(".modpost").click(function(){
+      
+      updatenum=$(this).attr("post_num");
+
+      $.ajax({
+         type : "get",
+         dataType : "json",
+         url : "updateform",
+         data : {"post_num" : updatenum},      
+         success : function(res) {
+            $("#update_access").val(res.post_access);
+            $("#update_content").val(res.post_content);
+            $("#showmodimg").attr("src","/post_file/"+res.post_file);
+         }
+      })
+   })
+   
+   //게시물 수정      
+   $("#btnupdate2").click(function(){
+      
+      var update_access=$("#update_access").val();
+      var update_content=$("#update_content").val();
+      
+      var form = new FormData();
+
+      var files=$("#update_file")[0].files;
+      
+      for (var i = 0; i < files.length; i++) {
+           form.append("photo", files[i]);
+       }
+      form.append("post_num",updatenum);
+      form.append("post_access",update_access);
+      form.append("post_content",update_content);
+      
+      $.ajax({
+         type: "post",
+         dataType: "text",
+         url: "updatepost",
+         processData: false,
+         contentType: false,
+         data: form,
+         success: function(){
+            location.reload();
+         }
+      });
+      
+   })
+   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
       
       
       
@@ -341,7 +465,7 @@
       /* comment */
       $('#commentinput').keydown(function() {
          if (event.keyCode === 13) {
-            $("#insertbtn").trigger("click");
+            $("#insertcommentbtn").trigger("click");
          };
       });
 
@@ -380,16 +504,17 @@
                $("#input" + comment_num).val("");
                $("#input" + comment_num).hide();
                commentoffset = 0;
-               scroll(commentoffset, "9");
+               scroll(commentoffset, post_num);
                $("#addcomment").show();
             }
          })
 
       })
 
-      $("#insertbtn").click(function() {
+      $("#insertcommentbtn").click(function() {
 
          var formdata = $("#form").serialize();
+         var post_num=$("#inputhidden-post_num").val();
          //alert(formdata);
          $.ajax({
 
@@ -402,15 +527,16 @@
                $("#addcomment").hide();
                $("#commentinput").val("");
                commentoffset = 0;
-               scroll(commentoffset, "9");
+               scroll(commentoffset, post_num);
                $("#addcomment").show();
             }
          })
       });
 
       $(document).on("click", "#addcomment", function() {
+    	 var post_num=$("#inputhidden-post_num").val(); 
          commentoffset = commentoffset + 8;
-         scroll(commentoffset, "9");
+         scroll(commentoffset, post_num);
       })
 
       $(document).on("click", ".recontent", function() {
@@ -423,6 +549,7 @@
       $(document).on("click", "span.nolike", function() {
 
          var comment_num = $(this).attr("comment_num");
+         var post_num=$("#inputhidden-post_num").val();
          //alert(comment_num);
          $.ajax({
             type : "get",
@@ -437,7 +564,7 @@
                $("#addcomment").hide();
                $("#input" + comment_num).val("");
                $("#input" + comment_num).hide();
-               scroll(commentoffset, "9");
+               scroll(commentoffset, post_num);
                $("#addcomment").show();
             }
          });
@@ -447,6 +574,7 @@
       $(document).on("click", "span.yeslike", function() {
 
          var comment_num = $(this).attr("comment_num");
+         var post_num=$("#inputhidden-post_num").val();
          //alert(comment_num);
          $.ajax({
             type : "get",
@@ -461,7 +589,7 @@
                $("#addcomment").hide();
                $("#input" + comment_num).val("");
                $("#input" + comment_num).hide();
-               scroll(commentoffset, "9");
+               scroll(commentoffset, post_num);
                $("#addcomment").show();
             }
          });
@@ -471,6 +599,7 @@
       $(document).on("click",".commentdel",function(){
          
          var comment_num=$(this).attr("comment_num");
+         var post_num=$("#inputhidden-post_num").val();
          $.ajax({
             type:"get",
             dataType:"text",
@@ -482,7 +611,7 @@
                $("#addcomment").hide();
                $("#input" + comment_num).val("");
                $("#input" + comment_num).hide();
-               scroll(commentoffset, "9");
+               scroll(commentoffset, post_num);
                $("#addcomment").show();
             }
          })
@@ -500,6 +629,7 @@
          
          if (event.keyCode === 13) {
             var comment_num=$(this).attr("comment_num");
+            var post_num=$("#inputhidden-post_num").val();
             var comment_content=$(this).val();
             //alert(comment_num + comment_content);
             $.ajax({
@@ -513,12 +643,27 @@
                   $("#addcomment").hide();
                   $("#input" + comment_num).val("");
                   $("#input" + comment_num).hide();
-                  scroll(commentoffset, "9");
+                  scroll(commentoffset, post_num);
                   $("#addcomment").show();
                }
             });
          };
       })
+      
+      
+      $(document).on("click",".commentspan",function(){
+    	  
+    	  var post_num=$(this).attr("post_num");
+    	  //alert(post_num);
+    	  $("#inputhidden-post_num").val(post_num);
+    	  $("#commentsection").empty();
+    	  scroll(0,post_num);
+		  $(".cmmodalbtn").trigger("click");
+		  
+    	  
+      })
+      
+      
    })
    
    
@@ -539,7 +684,7 @@
          url : "scrollcomment",
          data : {
             "commentoffset" : commentoffset,
-            "post_num" : "9"
+            "post_num" : post_num
          },
          success : function(res) {
 
@@ -586,13 +731,11 @@
                s += "<span class='recontent' comment_num='"+item.comment_num+"'>답글달기</span>";
                s += "<span class='comment_writeday'>" + item.perTime + "</span></div>";
                s += '<form method="post" class="form-inline" id="comment'+item.comment_num+'" style="display: none;">';
-               s += '<input type="hidden" name="comment_num" value="75">';
-               s += '<input type="hidden" name="post_num" value="9">';
                s += '<div id="commentaddform">';
                s += '<img src="/photo/${sessionScope.user_photo }" id="commentprofile">';
                s += '<input hidden="hidden" /> ';
                s += '<input type="text" class="input" name="comment_content" placeholder="댓글을 입력하세요" id="input'+item.comment_num+'">';
-               s += '<button type="button" class="btn btn-info cminsert" comment_num="'+item.comment_num+'" post_num="9"  style="margin-right: 20px;">답글입력</button>';
+               s += '<button type="button" class="btn btn-info cminsert" comment_num="'+item.comment_num+'" post_num="'+item.post_num+'"  style="margin-right: 20px;">답글입력</button>';
                s += '</div>';
                s += '</form></div>';
                console.log(s);
@@ -872,7 +1015,7 @@ body {
    cursor: pointer;
 }
 
-#prev {
+.prev {
    float: left;
    position: relative;
    z-index: 1;
@@ -883,7 +1026,7 @@ body {
    visibility: hidden;
 }
 
-#next {
+.next {
    float: right;
    border: none;
    position: relative;
@@ -905,7 +1048,7 @@ body {
    obejct-fit: cover;
 }
 
-#slider {
+.slider {
    width: 100%;
    margin: 0 auto;
    display: inline-flex;
@@ -1068,7 +1211,7 @@ li{
       </div>
 
       <br>
-      <!-- Modal -->
+       <!-- Modal -->
       <div class="modal fade" id="contentwrite" role="dialog">
          <div class="modal-dialog">
 
@@ -1093,14 +1236,17 @@ li{
                         <option value="follower">팔로워 공개</option>
                         <option value="onlyme">나만보기</option>
                      </select>
-                     <div class="form-group" style="width: 500px;">
-                        <input type="file" name="post_file" class="form-control" multiple="multiple" id="post_file">
-                     </div>
+                     
                      <div class="form-group">
                         <textarea style="width: 550px; height: 150px;" name="post_content" class="form-control"
                            required="required" id="post_content" placeholder="내용을 입력해주세요"></textarea>
                            
                      </div>
+                     
+                     <div class="show" id="show" style="position: relative;">
+                 <img id="showimg" style="display:none; width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
+                 <p id="showtext" style="display:none; position: absolute; top: 65px; left: 190px; font-weight: bold;">사진/동영상 추가</p>
+              </div>
                      
                      
                      <input type="file" multiple="multiple" id="post_file" name="post_file"  style="display: none;">
@@ -1239,7 +1385,7 @@ li{
                   <div class="center">
                      <div class="center-up">${dto.post_content }</div>
 
-                     <div class="center-down" id="slider">
+                     <div class="center-down slider" >
                         <c:forTokens items="${dto.post_file }" delims="," var="file">
                            <div class="fileimg">
                               <img src="/post_file/${file }">
@@ -1332,8 +1478,8 @@ li{
 
 
                         <!-- comment -->
-                        <span class="bottom-right commentspan"  style="cursor: pointer;">
-                           <span style="font-size: 1.3em; color: gray;" post_num="${dto.post_num }">
+                        <span class="bottom-right commentspan"  style="cursor: pointer;"  post_num="${dto.post_num }">
+                           <span style="font-size: 1.3em; color: gray;">
                               <i class="fa-regular fa-comment"></i>
                            </span>
                            &nbsp;댓글
@@ -1502,8 +1648,8 @@ li{
 
 
                         <!-- comment -->
-                        <span class="bottom-right2 commentspan" style="cursor: pointer;">
-                           <span style="font-size: 1.2em; top: 3px; color: gray;" post_num="${dto.post_num }">
+                        <span class="bottom-right2 commentspan" style="cursor: pointer;" post_num="${dto.post_num }">
+                           <span style="font-size: 1.2em; top: 3px; color: gray;">
                               <i class="fa-regular fa-comment"></i>
                            </span>
                            &nbsp;댓글
@@ -1537,11 +1683,11 @@ li{
 
 
 
-      <!-- comment -->
-      <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#commentmodal">Open Modal</button>
+      
 
+		
 
-
+	  <button type="button" class="btn btn-info btn-lg cmmodalbtn hide" data-toggle="modal" data-target="#commentmodal"></button>
       <!-- comment -->
       <div id="commentmodal" class="modal fade" role="dialog">
             <div class="modal-dialog modal-lg">
@@ -1564,12 +1710,12 @@ li{
                   <div class="modal-footer" style="height: 80px; padding: 0;">
                      <form method="post" class="form-inline" id="form">
                         <input type="hidden" name="comment_num" value="0">
-                        <input type="hidden" name="post_num" value="9">
+                        <input type="hidden" name="post_num" id="inputhidden-post_num">
                         <div id="commentaddform">
                            <img src="/photo/${sessionScope.user_photo }" id="commentprofile">
                            <input hidden="hidden" />
                            <input type="text" class="mominput" name="comment_content" placeholder="댓글을 입력하세요" id="commentinput">
-                           <button type="button" id="insertbtn" class="btn btn-info" style="margin-right: 20px;">입력</button>
+                           <button type="button" id="insertcommentbtn" class="btn btn-info" style="margin-right: 20px;">입력</button>
                         </div>
                      </form>
                   </div>
