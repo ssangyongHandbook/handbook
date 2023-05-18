@@ -286,31 +286,12 @@
                      });
             });
       
+       $("#btncontentphoto").click(function(){
+            
+            $("#post_file").trigger("click");
+         });
       
-        $("#btncontentphoto").click(function(){
-       
-       $("#post_file").trigger("click");
-    });
- 
-   $("#contentphoto").change(function(){
-          
-        if($(this)[0].files[0]){
-         var reader=new FileReader();
-         reader.onload=function(e){
-          $("#showimg").attr("src",e.target.result);
-          $("#showtext").hide();
-         }
-         reader.readAsDataURL($(this)[0].files[0]);
-        }
-    });
-   
-   
-   $("#btncontentphoto").click(function(){
-          
-          $("#showimg").show();
-          $("#showtext").show();
-       })
- 
+      
       
       
       
@@ -446,7 +427,7 @@
          $.ajax({
             type : "get",
             dataType : "text",
-            url : "likeinsert",
+            url : "commentlikeinsert",
             data : {
                "comment_num" : comment_num
             },
@@ -470,7 +451,7 @@
          $.ajax({
             type : "get",
             dataType : "text",
-            url : "likedelete",
+            url : "commentlikedelete",
             data : {
                "comment_num" : comment_num
             },
@@ -555,7 +536,7 @@
       $.ajax({
          type : "get",
          dataType : "json",
-         url : "scroll",
+         url : "scrollcomment",
          data : {
             "commentoffset" : commentoffset,
             "post_num" : "9"
@@ -958,12 +939,12 @@ body {
 
 
 /* comment */
-.modal-content {
+.commentmodal-content{
    overflow-y: initial !important
 }
 
-.modal-body {
-   height: 900px;
+.commentmodal-body{
+   height: 740px;
    overflow-y: auto;
 }
 
@@ -1120,13 +1101,6 @@ li{
                            required="required" id="post_content" placeholder="내용을 입력해주세요"></textarea>
                            
                      </div>
-                     
-                     <div class="show" id="show" style="position: relative;">
-                 <img id="showimg" style="display:none; width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
-                 <p id="showtext" style="display:none; position: absolute; top: 65px; left: 190px; font-weight: bold;">사진/동영상 추가</p>
-              </div>
-                     
-                     
                      
                      
                      <input type="file" multiple="multiple" id="post_file" name="post_file"  style="display: none;">
@@ -1561,6 +1535,8 @@ li{
 
 
 
+
+
       <!-- comment -->
       <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#commentmodal">Open Modal</button>
 
@@ -1570,12 +1546,12 @@ li{
       <div id="commentmodal" class="modal fade" role="dialog">
             <div class="modal-dialog modal-lg">
                <!-- Modal content-->
-               <div class="modal-content">
+               <div class="modal-content commentmodal-content">
                   <div class="modal-header">
                      <button type="button" class="close" data-dismiss="modal">&times;</button>
                      <h4 class="modal-title commenth4">${dto.user_name }의게시물</h4>
                   </div>
-                  <div class="modal-body" style="max-height: 800px;">
+                  <div class="modal-body commentmodal-body" style="max-height: 800px;">
                      <!-- 타임라인 -->
                      
                      <br>
