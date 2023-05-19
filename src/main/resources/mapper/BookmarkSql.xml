@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTDMapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sns.handbook.mapper.BookmarkMapperInter">
+
+	<!-- 즐겨 찾기 추가 -->
+	<insert id="insertBookmark" parameterType="BookmarkDto">
+		insert into bookmark value(null,#{owner_num},#{bfriend_num})
+	</insert>
 	
+	<!-- 즐겨 찾기 취소 -->
+	<delete id="deleteBookmark" parameterType="Map">
+		delete from bookmark where owner_num = #{owner_num} and bfriend_num = #{bfriend_num}
+	</delete>
+	
+	<!-- 즐겨 찾기 몇 명에서 했는지 확인  -->
+	<select id="bookmarkCheck" parameterType="Map" resultType="int">
+		select count(*) from bookmark where owner_num = #{owner_num} and bfriend_num = #{bfriend_num}
+	</select>
+	
+	<select id ="selectbookmarkusernum"  parameterType="String" resultType="String"> 
+	
+	</select>
 	
 </mapper>
