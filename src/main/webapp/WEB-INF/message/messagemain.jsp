@@ -745,6 +745,7 @@ div.msgsearchuser {
 				$('.msgsearchuser').css("left", position.left + 60);
 				$('.msgsearchuser').css("top", position.top + 30);
 				$('.msgsearchuser').css("display", "inline-flex");
+				$("input.msgaddname").focus();
 			}
 		})
 
