@@ -58,7 +58,7 @@ public class SocketHandler extends TextWebSocketHandler{
         JSONObject ob=new JSONObject(msg);
         
         //메시지 구분(보낸사람:내용)
-        String myid=ob.getString("myid"); //보낸사람
+        String mynum=ob.getString("mynum"); //보낸사람
         String upload=ob.getString("upload"); //메시지내용
         String reciever=""+ob.getInt("receiver"); //받는사람num
         String group=""+ob.getInt("group"); //그룹
@@ -67,7 +67,7 @@ public class SocketHandler extends TextWebSocketHandler{
         //메시지 저장
         MessageDto dto=new MessageDto();
 		  
-        String user_num=uservice.getUserById(myid).getUser_num();
+        String user_num=mynum;
         dto.setSender_num(user_num);
         
         if(type.equals("chat")) {

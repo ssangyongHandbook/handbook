@@ -7,6 +7,12 @@ spring:
     #view:
       #prefix: /WEB-INF/
       #suffix: .jsp
+  #영상 올릴 용량 추가
+  servlet:
+    multipart:
+      enabled: true
+      max-request-size: 1000MB
+      max-file-size: 1000MB
   devtools:
     livereload:
       enabled: true
