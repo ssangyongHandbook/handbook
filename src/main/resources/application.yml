@@ -3,12 +3,6 @@ server:
   port: 7777
 #jsp
 spring:
-  #input file 용량 늘리기
-  servlet:
-    multipart:
-      enabled: true
-      max-file-size: 1000MB
-      max-request-size: 1000MB
   #mvc:
     #view:
       #prefix: /WEB-INF/

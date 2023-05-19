@@ -177,23 +177,8 @@ public class PostController {
 	// delete
 	@GetMapping("/post/delete")
 	@ResponseBody
-	public void delete(@RequestParam String post_num ,HttpSession session) {
+	public void delete(@RequestParam String post_num ) {
 
-		//저장경로
-		String path=session.getServletContext().getRealPath("/post_file");
-		
-		//삭제하기 전에 저장된 사진명 받아오기
-		String delPhotoName=pservice.getDataByNum(post_num).getPost_file();
-		
-		//사진이 no가 아니라면=사진이 존재한다면
-		if(!delPhotoName.equals("no")) {
-			//삭제 File 만들기
-			File delFile=new File(path+"\\"+delPhotoName);
-			
-			//사진 삭제
-			delFile.delete();
-		}
-		
 		pservice.deletePost(post_num);
 	}
 

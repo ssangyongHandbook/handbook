@@ -376,20 +376,8 @@
           if($(this)[0].files[0]){
            var reader=new FileReader();
            reader.onload=function(e){
-        	$("#showtext").hide();
-        	   
-        	//영상 선택했을 경우 추가
-        	if((e.target.result).includes('video')){
-        		$("#showvideo").show();
-        		$("#showvideo").attr("src",e.target.result);
-        		$("#showimg").attr("src","");
-        		$("#showimg").hide();
-        	}else{
-        		$("#showimg").show();
-        		$("#showimg").attr("src",e.target.result);	
-        		$("#showvideo").attr("src","");
-        		$("#showvideo").hide();
-        	}
+            $("#showimg").attr("src",e.target.result);
+            $("#showtext").hide();
            }
            reader.readAsDataURL($(this)[0].files[0]);
           }
@@ -397,7 +385,8 @@
   
   
   $("#btncontentphoto").click(function(){
-         //$("#showimg").show();
+         
+         $("#showimg").show();
          $("#showtext").show();
       });
 
@@ -702,59 +691,17 @@
 
       })
       
-      //예지 비디오 부분 시작
-      
-      //처음 화면 로딩됐을 때 영상 위치 확인
-      $(".fileimg video").each(function(i,ele){
-    	  videoStatus($(ele));
-      })
-      
-      //스크롤 할 때마다 영상 위치 확인
-      $(window).scroll(function(){
-    	  $(".fileimg video").each(function(i,ele){
-        	  if(videoStatus($(ele))){
-        		  return;
-        	  }
-          })
-      })
-      
-      //예지 비디오 부분 끝
-      
       
    })
    
    
-   /* 예지: 영상 화면에 보일 시 자동재생 */
-   function videoStatus(video){
-	   var viewHeight=$(window).height();
-	   var scrollTop=$(window).scrollTop();
-	   var y=video.offset().top;
-	   var elementHeight=video.height();
- 	  
-	   if(y<(viewHeight+scrollTop) && y>(scrollTop-elementHeight)){
-		   if(video.attr("onwindow")!="true"){
-			   video.get(0).play();
-			   video.attr("onwindow","true");    
-		   }
-		   
-		   return true;
-		}
-	   else if(y<(viewHeight+scrollTop) && video.attr("onwindow")!="true"){
-		   if(video.attr("onwindow")!="true"){
-			   video.get(0).play();
-			   video.attr("onwindow","true");  
-		   }  
-		   
-		   return true;
-		}
-	   else{
-		   video.get(0).pause();
-		   video.attr("onwindow","false"); 
-		   
-		   return false;
-		}
-	}
-   /* 예지 자동재생 끝 */
+   
+   
+   
+   
+   
+   
+   
    
    /* 댓글 무한스크롤 */
    function scroll(commentoffset, post_num) {
@@ -1131,12 +1078,6 @@ body {
 	obejct-fit: cover;
 }
 
-.fileimg video {
-   width: 100%;
-   height: 100%;
-   obejct-fit: cover;
-}
-
 .slider {
 	width: 100%;
 	margin: 0 auto;
@@ -1335,7 +1276,6 @@ li {
                      
                      <div class="show" id="show" style="position: relative;">
                  <img id="showimg" style="display:none; width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
-                 <video id="showvideo" style="display:none; width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;" controls="controls"></video>
                  <p id="showtext" style="display:none; position: absolute; top: 65px; left: 190px; font-weight: bold;">사진/동영상 추가</p>
               </div>
                      
@@ -1533,12 +1473,21 @@ li {
 						<%-- <div class="center">
 							<div class="center-up">${dto.post_content }</div>
 
+<<<<<<< HEAD
 							<div class="center-down slider">
 								<c:forTokens items="${dto.post_file }" delims="," var="file">
 									<div class="fileimg">
 										<img src="/post_file/${file }">
 									</div>
 								</c:forTokens>
+=======
+                     <div class="center-down slider" >
+                        <c:forTokens items="${dto.post_file }" delims="," var="file">
+                           <div class="fileimg">
+                              <img src="/post_file/${file }">
+                           </div>
+                        </c:forTokens>
+>>>>>>> parent of a312738 (0519 timeline video)
 
 								<img src="/post_file/${dto.post_file }" class="fileimg">
 
