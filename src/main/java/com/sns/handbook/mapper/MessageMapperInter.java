@@ -18,4 +18,5 @@ public interface MessageMapperInter {
 	public void deleteMessage(String mess_num);
 	public int selectMaxNum();
 	public int getCountOfMessage(Map<String, String> map);
+	public void deleteMessageGroup(int mess_group);
 }

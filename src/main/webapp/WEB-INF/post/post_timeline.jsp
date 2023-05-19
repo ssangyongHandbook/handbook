@@ -535,7 +535,7 @@
       });
 
       $(document).on("click", "#addcomment", function() {
-    	 var post_num=$("#inputhidden-post_num").val(); 
+        var post_num=$("#inputhidden-post_num").val(); 
          commentoffset = commentoffset + 8;
          scroll(commentoffset, post_num);
       })
@@ -688,8 +688,7 @@
     	  $("#commentsection").empty();
     	  scroll(0,post_num);
 		  $(".cmmodalbtn").trigger("click");
-		  
-    	  
+
       })
       
       
@@ -1743,20 +1742,6 @@ li {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		<button type="button" class="btn btn-info btn-lg cmmodalbtn hide" data-toggle="modal"
 			data-target="#commentmodal"></button>
 		<!-- comment -->
@@ -1792,5 +1777,6 @@ li {
 			</div>
 		</div>
 	</div>
+
 </body>
 </html>
