@@ -59,4 +59,9 @@
 	<select id="getLikeCheck" resultType="int" parameterType="Map">
 		select count(*) from commentlike where user_num=#{user_num} and comment_num=#{comment_num} 
 	</select>
+	
+	<!-- 댓글 총 개수 -->
+	<select id="getTotalCount" resultType="int" parameterType="String">
+		select count(*) from comment where post_num=#{post_num}
+	</select>
 </mapper>

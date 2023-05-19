@@ -102,6 +102,30 @@
          $("#" + likehide1_num).toggle();
 
       });
+      
+      
+      $(document).on("click", ".follow", function() {
+
+          var followpost_num = $(this).attr("followpost_num");
+          var unfollowpost_num= $(this).attr("unfollowpost_num");
+
+          $("#" + followpost_num).toggle();
+          $("#" + unfollowpost_num).toggle();
+
+       });
+      
+      $(document).on("click", ".unfollow", function() {
+
+          var followpost_num = $(this).attr("followpost_num");
+          var unfollowpost_num= $(this).attr("unfollowpost_num");
+
+          $("#" + followpost_num).toggle();
+          $("#" + unfollowpost_num).toggle();
+
+       });
+      
+      
+      
 
       $(document).on("click", ".liketoggle2", function() {
 
@@ -244,7 +268,7 @@
             }
          })
       });
-
+/* 
       
       $(document).on("click", "#followbtn", function() {
           var from_user = $(this).attr("from_user");
@@ -285,14 +309,14 @@
           })
        })
       
-      
+       */
       
       
       
       
       
 
-      $(document).on("click", "#postfollow", function() {
+      $(document).on("click", ".follow", function() {
          var from_user = $(this).attr("from_user");
          var to_user = $(this).attr("to_user");
 
@@ -306,13 +330,13 @@
             },
             success : function() {
             	
-           	 $("#followbtn").hide();
+           	 
 
             }
          })
       })
 
-      $(document).on("click", "#postunfollow", function() {
+      $(document).on("click", ".unfollow", function() {
          var to_user = $(this).attr("to_user");
          $.ajax({
             type : "get",
@@ -322,7 +346,6 @@
                "to_user" : to_user
             },
             success : function() {
-            	 $("#followbtn").show();
             }
          })
       })
@@ -725,13 +748,13 @@
                   
                   s += '<div style="height: 0; width: 450px; position: relative; left: -30px; top: 30px;">';
                   s += '<img src="../image/add.png" class="ulimg" style="width: 20px; float: right;" comment_num="'+item.comment_num+'">';
-                  s += '<ul class="list-group commentul" style="height:0; position:inherit;" id="ul'+item.comment_num+'">';
+                  s += '<ul class="list-group commentul" style="height:0;" id="ul'+item.comment_num+'">';
                   if(item.user_num == ${sessionScope.user_num})
-                  	s += '<li class="list-group-item list-group-item-success commentmod" comment_num="'+item.comment_num+'">수정</li>';
-                  s += '<li class="list-group-item list-group-item-danger commentdel" comment_num="'+item.comment_num+'">삭제</li>';
+                  	s += '<li class="list-group-item commentmod" comment_num="'+item.comment_num+'">수정</li>';
+                  s += '<li class="list-group-item commentdel" comment_num="'+item.comment_num+'">삭제</li>';
                   s += '</ul>';
                   s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display:flex; flex-wrap:wrap; visibility: hidden; position:relative; left: 31px; bottom: 31px;">';
-                  s += '<span class="glyphicon glyphicon-remove modclose" comment_num="'+item.comment_num+'" style="float:right"></span>';
+                  s += '<span class="glyphicon glyphicon-remove modclose" comment_num="'+item.comment_num+'" style="position: relative; left:400px;"></span>';
                   s += '<div><img src="/photo/'+item.user_photo+'" class="profile"></div>';
                   s += '<div><b class="user_name">'+item.user_name+'</b>';
                   s += '<br>';
@@ -1087,125 +1110,154 @@ body {
 
 /* comment */
 .commentmodal-content {
-  overflow-y: initial !important;
+	overflow-y: initial !important;
 }
 
 .commentmodal-body {
-  height: 740px;
-  overflow-y: auto;
+	height: 740px;
+	overflow-y: auto;
 }
 
 .comment {
-width: 450px;
-border-radius: 20px;
-background-color:    #F6F6F6;
-padding: 10px;
-margin-bottom: 10px;
+	width: 450px;
+	border-radius: 20px;
+	background-color: #F6F6F6;
+	padding: 10px;
+	margin-bottom: 10px;
 }
 
-
-
 .profile {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 20px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	margin-right: 20px;
 }
 
 .cmlike {
-   width: 450px;
-   margin-top: 10px;
-   display: flex;
-   justify-content: space-around;
-   align-content: center;
+	width: 450px;
+	margin-top: 10px;
+	display: flex;
+	justify-content: space-around;
+	align-content: center;
 }
 
 b.user_name {
-  font-size: 14px;
-  font-weight: bold;
+	font-size: 14px;
+	font-weight: bold;
 }
 
 span.content {
-  font-size: 16px;
+	font-size: 16px;
 }
 
 #commentaddform {
-   margin-top: 7px;
-   height: 60px;
-   display: flex;
-   justify-content: space-between;
-   align-content: center;
+	margin-top: 7px;
+	height: 60px;
+	display: flex;
+	justify-content: space-between;
+	align-content: center;
 }
 
 #commentprofile {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	margin-right: 10px;
 }
 
 .input {
-  flex: 1;
-  height: 40px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  padding: 5px 10px;
+	flex: 1;
+	height: 40px;
+	border: 1px solid #ddd;
+	border-radius: 20px;
+	padding: 5px 10px;
 }
 
 .mominput {
-   width: 700px;
-   border: 1px solid gray;
-   border-radius: 40px;
+	width: 700px;
+	border: 1px solid gray;
+	border-radius: 40px;
 }
 
-.recontent,
-.nolike,
-.yeslike {
-  color: #777;
-  cursor: pointer;
+.recontent, .nolike, .yeslike {
+	color: #777;
+	cursor: pointer;
 }
-
 
 .commentul {
-   float: right;
-   list-style: none;
-   display: none;
-   font-size: 0.7em;
-   height: 70px;
+  position: absolute;
+  top: 20px;
+  right: 0;
+  list-style: none;
+  display: none;
+  font-size: 0.7em;
+  width: 70px;
+  padding: 0;
+  margin: 0;
+  border: none;
 }
 
-li {
+.commentul:before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  right: -1px;
+  border-top: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #e6f0fb;
+  border-left: 16px solid transparent;
+}
+
+.commentul li {
+  border: none;
+  background-color: #e6f0fb;
   cursor: pointer;
+  padding: 8px 12px;
+  transition: background-color 0.3s, color 0.3s;
+  text-align: center;
+}
+
+.commentul li:not(:last-child) {
+  margin-bottom: -1px;
+}
+
+.commentul li:hover {
+  background-color: #cfe0fa;
+  color: #3355a0;
 }
 
 .ulimg {
    cursor: pointer;
 }
 
-
-
-.commentul ul li:hover {
-  background-color: #f5f5f5;
+.commentmod, .commentdel {
+	padding: 5px;
+	font-size: 12px;
+	color: #555;
 }
 
-.commentmod,
-.commentdel {
-  padding: 5px;
-  font-size: 12px;
-  color: #555;
-}
-
-.commentmod:hover,
-.commentdel:hover {
-  color: #333;
+.commentmod:hover, .commentdel:hover {
+	color: #333;
 }
 
 .comment .allcomment {
-  margin-left: 50px;
+	margin-left: 50px;
 }
 
 .comment .comment {
-  margin-left: 50px;
+	margin-left: 50px;
+}
+
+.modclose {
+	cursor: pointer;
+}
+
+.unfollow{
+color: blue;
+}
+
+.follow{
+color: gray;
 }
 </style>
 </head>
@@ -1322,28 +1374,12 @@ li {
 								multiple="multiple" id="update_file">
 						</div>
 						<div>
-                  <img  id="showmodimg" style="width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
+							<img id="showmodimg"
+								style="width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;">
+							<br>
 						</div>
 
 						<button type="button" id="btnmodcontentphoto">사진 선택</button>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1397,15 +1433,23 @@ li {
 								</span>
 							</div>
 							<span class="top-right">
-							
-							 <c:if test="${dto.user_num!=sessionScope.user_num && dto.checkfollowing !=1 }">
-							<button id="followbtns" from_user="${sessionScope.user_num }"  to_user="${dto.user_num }" >팔로우</button>
-							</c:if>  
-							<c:if test="${dto.checkfollowing ==1 }">
-							<button id="followbtn" from_user="${sessionScope.user_num }"  to_user="${dto.user_num }" style="display: none;" >팔로우</button>
-							</c:if>
-							
-							
+
+								<c:if test="${dto.user_num!=sessionScope.user_num &&dto.checkfollowing !=1 }">
+									<span class="follow" id="follow${dto.post_num}"  followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }" from_user="${sessionScope.user_num }"
+										to_user="${dto.user_num }">팔로우 하기</span>
+
+									<span class="unfollow" id="unfollow${dto.post_num }" followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }" to_user="${dto.user_num }"  style="display: none;">팔로우 끊기</span>
+								</c:if>
+								<c:if test="${dto.user_num!=sessionScope.user_num && dto.checkfollowing ==1 }">
+									<span class="unfollow" id="unfollow${dto.post_num }"  followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }" to_user="${dto.user_num }">팔로우 끊기</span>
+									<span class="follow" id="follow${dto.post_num}"  followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }" from_user="${sessionScope.user_num }"
+										to_user="${dto.user_num }" style="display: none;">팔로우 하기</span>
+								</c:if>
+
+
+
+
+
 								<span class="postmenu dropdown" post_num="${dto.post_num }"
 									user_num="${sessionScope.user_num }" dtouser_num="${dto.user_num}">
 									<i class="fa-solid fa-ellipsis"></i>
@@ -1426,14 +1470,6 @@ li {
 											style="font-size: 25pt; line-height: 1.5em; display: none;">
 											<li class="postdetail posthide" divpost_num="div${dto.post_num }"
 												divspost_num="divs${dto.post_num }">게시물 숨김</li>
-											<!--  이부분 팔로일땐 팔로우하기 or 팔로우 하고 있을 땐 팔로우 끊기 -->
-											<c:if test="${dto.checkfollowing !=1 }">
-												<li class="postdetail" id="postfollow" from_user="${sessionScope.user_num }"
-													to_user="${dto.user_num }">팔로우 하기</li>
-											</c:if>
-											<c:if test="${dto.checkfollowing ==1 }">
-												<li class="postdetail" id="postunfollow" to_user="${dto.user_num }">팔로우 끊기</li>
-											</c:if>
 										</ul>
 									</c:if>
 								</span>
@@ -1540,11 +1576,12 @@ li {
 
 
 								<!-- comment -->
-								<span class="bottom-right commentspan" style="cursor: pointer;" user_name=${dto.user_name } post_num="${dto.post_num }">
+								<span class="bottom-right commentspan" style="cursor: pointer;" user_name=${dto.user_name }
+									post_num="${dto.post_num }">
 									<span style="font-size: 1.3em; color: gray;">
 										<i class="fa-regular fa-comment"></i>
 									</span>
-									&nbsp;댓글
+									&nbsp;댓글 ${dto.comment_count }
 								</span>
 
 							</div>
@@ -1590,13 +1627,19 @@ li {
 								</span>
 							</div>
 							<span class="top-right2">
-							<c:if test="${dto.checkfollowing !=1 }">
-							<button id="followbtn" from_user="${sessionScope.user_num }"  to_user="${dto.user_num }" style="display: none;">팔로우</button>
-							</c:if>
-							<c:if test="${dto.checkfollowing ==1 }">
-							<button id="followbtn" from_user="${sessionScope.user_num }"  to_user="${dto.user_num }" style="display: none;" >팔로우</button>
-							</c:if>
-							
+								
+								<c:if test="${dto.user_num!=sessionScope.user_num &&dto.checkfollowing !=1 }">
+									<span class="follow" id="follow${dto.post_num}"  followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }" from_user="${sessionScope.user_num }"
+										to_user="${dto.user_num }">팔로우 하기</span>
+
+									<span class="unfollow" id="unfollow${dto.post_num }" followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }" to_user="${dto.user_num }"  style="display: none;">팔로우 끊기</span>
+								</c:if>
+								<c:if test="${dto.user_num!=sessionScope.user_num && dto.checkfollowing ==1 }">
+									<span class="unfollow" id="unfollow${dto.post_num }"  followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }" to_user="${dto.user_num }">팔로우 끊기</span>
+									<span class="follow" id="follow${dto.post_num}"  followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }" from_user="${sessionScope.user_num }"
+										to_user="${dto.user_num }" style="display: none;">팔로우 하기</span>
+								</c:if>
+
 								<span class="postmenu dropdown" post_num="${dto.post_num }"
 									user_num="${sessionScope.user_num }" dtouser_num="${dto.user_num}">
 									<i class="fa-solid fa-ellipsis"></i>
@@ -1717,11 +1760,12 @@ li {
 
 
 								<!-- comment -->
-								<span class="bottom-right2 commentspan" style="cursor: pointer;" user_name=${dto.user_name } post_num="${dto.post_num }">
+								<span class="bottom-right2 commentspan" style="cursor: pointer;" user_name=${dto.user_name }
+									post_num="${dto.post_num }">
 									<span style="font-size: 1.2em; top: 3px; color: gray;">
 										<i class="fa-regular fa-comment"></i>
 									</span>
-									&nbsp;댓글
+									&nbsp;댓글 ${dto.comment_count }
 								</span>
 
 							</div>
