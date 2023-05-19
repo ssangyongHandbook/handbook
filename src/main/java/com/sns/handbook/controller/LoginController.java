@@ -58,9 +58,7 @@ public class LoginController {
 
 		UserDto user = service.getUserById(user_id); // 암호화된 유저의 비밀번호 가져오기 위함.
 		int inputIdPassCheck = service.loginIdPassCheck(user_id, user_pass); // 입력한 아이디 비번에 맞는 계정 있는지 없는지 확인
-		// PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		boolean matches = passwordEncoder.matches(user_pass, user.getUser_pass()); // 유저가 적은 비밀번호와, 저장되어있는 암호화된 비밀번호가
-																					// 같은지
+		boolean matches = passwordEncoder.matches(user_pass, user.getUser_pass()); // 유저가 적은 비밀번호와, 저장되어있는 암호화된 비밀번호가 같은지
 
 		if (matches == true) {// 암호화 비번 비교
 			System.out.println("암호화 password login");
@@ -129,12 +127,12 @@ public class LoginController {
 		String birthyear = (String) response_obj.get("birthyear");
 		String mobile = (String) response_obj.get("mobile");
 
-		int check = service.loginEmailCheck(email); // 입력한 이메일이 가입되어있는지 아닌지 판단
-
 		// 이메일에서 user_id 추출
-		String splitemail[] = email.split("@");
+		String[] splitemail = email.split("@");
 		String user_id;
 		user_id = splitemail[0];
+
+		int check = service.loginEmailCheck(email); // 입력한 이메일이 가입되어있는지 아닌지 판단
 
 		// 이 아래는 아무튼 로그인 한다.
 		// 이미 예전에 로그인한 네이버 계정이면 그냥 로그인
@@ -142,9 +140,6 @@ public class LoginController {
 		if (check == 1) { // 계정 있으면
 			UserDto dto = service.getUserDtoById(user_id);
 			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
-
-			// 세션에 사용자 정보 등록
-			// session.setAttribute("islogin_r", "Y");
 			session.setAttribute("signIn", apiResult);
 			session.setAttribute("email", email);
 			session.setAttribute("name", name);
@@ -152,7 +147,6 @@ public class LoginController {
 			session.setAttribute("myid", user_id);
 			session.setAttribute("user_num", dto.getUser_num()); // session에 num값 넣음.
 			session.setAttribute("user_photo", dto.getUser_photo());// session에 photo 넣음.
-
 			return "redirect:post/timeline"; // 로그인 하면 타임라인으로 넘어감.
 		} else {
 			// 계정 로그인 안 되어있으면 db에 넣고(일단회원가입) 로그인 세션 유지
@@ -221,8 +215,6 @@ public class LoginController {
 		if (check == 1) { // 계정 있으면
 			UserDto dto = service.getUserDtoById(user_id);
 			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
-
-			// 세션에 사용자 정보 등록
 			session.setAttribute("signIn", apiResult);
 			session.setAttribute("email", email);
 			session.setAttribute("name", name);
@@ -230,7 +222,6 @@ public class LoginController {
 			session.setAttribute("myid", user_id);
 			session.setAttribute("user_num", dto.getUser_num()); // session에 num값 넣음.
 			session.setAttribute("user_photo", dto.getUser_photo());// session에 photo 넣음.
-
 			return "redirect:post/timeline"; // 로그인 하면 타임라인으로 넘어감.
 		} else {
 			// 계정 로그인 안 되어있으면 db에 넣고(일단회원가입) 로그인 세션 유지
@@ -283,7 +274,7 @@ public class LoginController {
 		String name = (String) response_obj.get("name");
 
 		// id 이메일에서 가져오기
-		String splitemail[] = email.split("@");
+		String[] splitemail = email.split("@");
 		String user_id;
 		user_id = splitemail[0];
 
@@ -292,8 +283,6 @@ public class LoginController {
 		if (check == 1) {
 			UserDto dto = service.getUserDtoById(user_id);
 			session.setMaxInactiveInterval(60 * 60 * 8);
-
-			// 세션에 사용자 정보 등록
 			session.setAttribute("signIn", apiResult);
 			session.setAttribute("email", email);
 			session.setAttribute("name", name);
@@ -313,7 +302,6 @@ public class LoginController {
 			service.insertUserInfo(user);
 			
 			UserDto user1= service.getUserById(user_id);
-			
 			session.setMaxInactiveInterval(60 * 60 * 8);
 			session.setAttribute("signIn", apiResult);
 			session.setAttribute("email", user1.getUser_email());
