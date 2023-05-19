@@ -25,12 +25,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sns.handbook.dto.CommentDto;
+import com.sns.handbook.dto.CommentlikeDto;
 import com.sns.handbook.dto.FollowingDto;
 import com.sns.handbook.dto.GuestbookDto;
 import com.sns.handbook.dto.GuestbooklikeDto;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.PostlikeDto;
 import com.sns.handbook.dto.UserDto;
+import com.sns.handbook.serivce.CommentService;
 import com.sns.handbook.serivce.FollowingService;
 import com.sns.handbook.serivce.GuestbooklikeService;
 import com.sns.handbook.serivce.PostService;
@@ -54,6 +57,9 @@ public class UserController {
 	
 	@Autowired
 	GuestbooklikeService glservice;
+	
+	@Autowired
+	CommentService cservice;
 	
 	//커버 사진 업데이트
 	@PostMapping("/user/coverupdate")
@@ -489,6 +495,10 @@ public class UserController {
 		        uploadName = uploadName.substring(0, uploadName.length() - 1);
 		        
 			    dto.setGuest_file(uploadName);
+		    }else {
+		    	
+		    	String prevFile=uservice.getDataByGuestNum(dto.getGuest_num()).getGuest_file();
+		    	dto.setGuest_file(prevFile);
 		    }
 		    
 		    uservice.updateGuestBook(dto);
@@ -505,6 +515,49 @@ public class UserController {
 		return dto;
 	}
 	
+	//댓글 입력
+	@ResponseBody
+	@PostMapping("/user/cinsert")
+	public void insert(@ModelAttribute CommentDto dto,HttpSession session) {
+
+
+		if(!dto.getComment_num().equals("0")) {
+			CommentDto momDto= cservice.getData(dto.getComment_num());
+
+			dto.setComment_group(momDto.getComment_group());
+			dto.setComment_step(momDto.getComment_step());
+			dto.setComment_level(momDto.getComment_level());
+		}
+		dto.setUser_num((String)session.getAttribute("user_num"));
+		cservice.insert(dto);
+
+	}
+	
+	//댓글 좋아요
+	@GetMapping("/user/commentlikeinsert")
+	@ResponseBody
+	public void likeinsert(String comment_num,HttpSession session) {
+
+		CommentlikeDto dto=new CommentlikeDto();
+
+		dto.setComment_num(comment_num);
+		dto.setUser_num((String)session.getAttribute("user_num"));
+
+		cservice.insertLike(dto);
+	}
+	
+	@GetMapping("/user/commentlikedelete")
+	@ResponseBody
+	public void likedelete(String comment_num,HttpSession session) {
+
+		CommentlikeDto dto=new CommentlikeDto();
+
+		dto.setComment_num(comment_num);
+		dto.setUser_num((String)session.getAttribute("user_num"));
+
+		cservice.deleteLike((String)session.getAttribute("user_num"), comment_num);
+	}
+	
 	//정보 페이지 이동
 	@GetMapping("/user/info")
 	public String info()
@@ -519,6 +572,7 @@ public class UserController {
 		return "/sub/user/friend";
 	}
 
+	//회원 탈퇴
 	@GetMapping("/user/userdelete")
 	public String userdelete(String user_num, HttpSession session) {
 		uservice.userDelete(user_num);
