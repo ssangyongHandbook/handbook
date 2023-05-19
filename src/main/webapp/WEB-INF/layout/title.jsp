@@ -131,7 +131,7 @@
 .msgalarmone{
 	display: inline-flex;
 	align-items: center;
-	width: 260px;
+	width: 280px;
 	padding: 10px;
 	margin: 0 auto;
 	margin-top: 15px;
