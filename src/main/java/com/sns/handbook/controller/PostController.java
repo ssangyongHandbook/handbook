@@ -120,6 +120,7 @@ public class PostController {
 			}
 
 			list.get(i).setPost_time(preTime);
+			
 		}
 
 		String login_name = uservice.getUserByNum((String) session.getAttribute("user_num")).getUser_name();

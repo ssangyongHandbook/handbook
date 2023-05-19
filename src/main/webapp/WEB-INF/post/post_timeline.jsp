@@ -724,7 +724,6 @@
    })
    
    
-<<<<<<< HEAD
    /* 예지: 영상 화면에 보일 시 자동재생 */
    function videoStatus(video){
 	   var viewHeight=$(window).height();
@@ -756,9 +755,6 @@
 		}
 	}
    /* 예지 자동재생 끝 */
-=======
-   
->>>>>>> 2e71ce1e911e83df1d4a8c20d3fe69a06a905e23
    
    /* 댓글 무한스크롤 */
    function scroll(commentoffset, post_num) {
@@ -1311,7 +1307,7 @@ li {
 				<!-- Modal content-->
 				<form method="post" enctype="multipart/form-data" id="postInsert">
 
-<<<<<<< HEAD
+<!-- 변경된 부분 -->
                <input type="hidden" name="user_num" id="user_num" value="${sessionScope.user_num }">
                <div class="modal-content">
                   <div class="modal-header">
@@ -1354,8 +1350,8 @@ li {
                   </div>
                </div>
             </form>
-=======
-					<input type="hidden" name="user_num" id="user_num" value="${sessionScope.user_num }">
+<!-- 변경끝/주석처리 -->
+					<%-- <input type="hidden" name="user_num" id="user_num" value="${sessionScope.user_num }">
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -1371,8 +1367,7 @@ li {
 								<option value="all">전체공개</option>
 								<option value="follower">팔로워 공개</option>
 								<option value="onlyme">나만보기</option>
-							</select>
->>>>>>> 2e71ce1e911e83df1d4a8c20d3fe69a06a905e23
+							</select> --%>
 
 							<div class="form-group">
 								<textarea style="width: 550px; height: 150px;" name="post_content" class="form-control"
@@ -1400,9 +1395,6 @@ li {
 						</div>
 					</div>
 				</form>
-
-			</div>
-		</div>
 
 		<!-- 수정 Modal -->
 
@@ -1440,56 +1432,6 @@ li {
 						</div>
 
 						<button type="button" id="btnmodcontentphoto">사진 선택</button>
-
-
-
-
-<<<<<<< HEAD
-                  <div class="center">
-                     <div class="center-up">${dto.post_content }</div>
-
-                     <div class="center-down slider" >
-                     	<c:forTokens items="${dto.post_file }" delims="." var="filetype" begin="1">
-                     	
-                     	<!-- 예지: 파일이 사진인지 영상인지 확인 -->
-                     		<c:if test="${filetype=='mp4' || filetype=='avi'}">
-                     			<div class="fileimg">
-                     				<video src="/post_file/${dto.post_file }" controls="controls" muted="muted"></video>
-                     			</div>
-                     		</c:if>
-                     		<c:if test="${filetype!='mp4' }">
-                     			<c:forTokens items="${dto.post_file }" delims="," var="file">
-		                           <div class="fileimg">
-		                              <img src="/post_file/${file }">
-		                           </div>
-		                        </c:forTokens>
-                     		</c:if>
-                     	</c:forTokens>
-                     	
-                     	<!-- 예지 끝 -->
-
-                        <%-- <img src="/post_file/${dto.post_file }" class="fileimg"> --%>
-
-                     </div>
-                  </div>
-=======
->>>>>>> 2e71ce1e911e83df1d4a8c20d3fe69a06a905e23
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 					</div>
 					<div class="modal-footer">
@@ -1588,7 +1530,7 @@ li {
 
 
 
-						<div class="center">
+						<%-- <div class="center">
 							<div class="center-up">${dto.post_content }</div>
 
 							<div class="center-down slider">
@@ -1598,10 +1540,36 @@ li {
 									</div>
 								</c:forTokens>
 
-								<%-- <img src="/post_file/${dto.post_file }" class="fileimg"> --%>
+								<img src="/post_file/${dto.post_file }" class="fileimg">
 
 							</div>
-						</div>
+						</div> --%>
+						
+						<div class="center">
+		                     <div class="center-up">${dto.post_content }</div>
+		
+		                     <div class="center-down slider" >
+		                     	<c:forTokens items="${dto.post_file }" delims="." var="filetype" begin="1">
+		                     	
+		                     	<!-- 예지: 파일이 사진인지 영상인지 확인 -->
+		                     		<c:if test="${filetype=='mp4' || filetype=='avi'}">
+		                     			<div class="fileimg">
+		                     				<video src="/post_file/${dto.post_file }" controls="controls" muted="muted"></video>
+		                     			</div>
+		                     		</c:if>
+		                     		<c:if test="${filetype!='mp4' }">
+		                     			<c:forTokens items="${dto.post_file }" delims="," var="file">
+				                           <div class="fileimg">
+				                              <img src="/post_file/${file }">
+				                           </div>
+				                        </c:forTokens>
+		                     		</c:if>
+		                     	</c:forTokens>
+		                     	
+		                     	<!-- 예지 끝 -->
+		
+		                     </div>
+		                  </div>
 
 
 						<div class="bottom">
