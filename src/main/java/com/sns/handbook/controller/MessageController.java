@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.sns.handbook.dto.MessageDto;
 import com.sns.handbook.dto.UserDto;
 import com.sns.handbook.serivce.MessageService;
+import com.sns.handbook.serivce.MessagealarmService;
 import com.sns.handbook.serivce.UserService;
 
 @Controller
@@ -38,9 +39,12 @@ public class MessageController {
 	
 	@Autowired
 	UserService uservice;
+	
+	@Autowired
+	MessagealarmService maservice;
 
 	@GetMapping("/message/main")
-	public ModelAndView meesageMain(HttpSession session)
+	public ModelAndView meesageMain(HttpSession session,@RequestParam(defaultValue = "0") int selgroup)
 	{
 		ModelAndView model=new ModelAndView();
 		
@@ -50,26 +54,49 @@ public class MessageController {
 		
 		//로그인한 사용자가 가장 최근한 대화한 채팅방
 		int recentGroup=0;
-		try {
-			recentGroup=mservice.getRecentGroup(user_num);
-		}catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-		//가장 최근 대화한 상대 정보 전달
-		List<Map<String, Object>> chatMember=null;
-		try{
-			chatMember=mservice.selectAllChatMemeber(user_num,null);
-		}catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-		//최근 상대방의 userDto
 		UserDto otherInfo=new UserDto();
-		try {
-			otherInfo=uservice.getUserByNum(chatMember.get(0).get("member_num").toString());
-		}catch (Exception e) {
-			// TODO: handle exception
+		
+		//선택된 그룹이 없으면 최근 그룹 정보를 넘긴다.
+		if(selgroup==0) {
+			//로그인한 사용자가 가장 최근한 대화한 채팅방
+			try {
+				recentGroup=mservice.getRecentGroup(user_num);
+			}catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+			//가장 최근 대화한 상대 정보 전달
+			List<Map<String, Object>> chatMember=null;
+			try{
+				chatMember=mservice.selectAllChatMemeber(user_num,null);
+			}catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+			//최근 상대방의 userDto
+			try {
+				otherInfo=uservice.getUserByNum(chatMember.get(0).get("member_num").toString());
+			}catch (Exception e) {
+				// TODO: handle exception
+			}
+		}else {
+			//넘어온 그룹이 있으면 그 그룹에 대한 정보를 넘긴다.
+			recentGroup=selgroup;
+			
+			List<Map<String, Object>> chatMember=null;
+			try{
+				chatMember=mservice.selectAllChatMemeber(user_num,null);
+			}catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+			//해당 그룹의 상대의 유저dto
+			try {
+				String other_num=maservice.getMessAlarm(selgroup).getSender_num();
+				otherInfo=uservice.getUserByNum(other_num);
+			}catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 		
 		//저장
@@ -151,6 +178,15 @@ public class MessageController {
 			dto.setMess_time(preTime);; //시간 다시 넣어주기
 		}
 		////////////
+		
+		//띄운 채팅이 알림에 있던 거라면 알림테이블에서 삭제(봤으니까)
+		//해당 그룹의 알림이 존재하는지 확인!
+		if(maservice.getMessAlarmCount(mess_group)!=0) {
+			//존재한다면 로그인한 사람이 receiver인지 확인(sneder가 봤을 때 사라지는 거 방지)
+			if(maservice.getMessAlarm(mess_group).getReceiver_num().equals(user_num)) {
+				maservice.delteMessAlarm(mess_group);
+			}
+		}
 		
 		return chat;
 	}
@@ -251,9 +287,18 @@ public class MessageController {
 	
 	@GetMapping("/message/searchuser")
 	@ResponseBody
-	public List<UserDto> searchUser(String user_name)
+	public List<UserDto> searchUser(String user_name,HttpSession session)
 	{
 		List<UserDto> list=uservice.getUserByName(user_name);
+		
+		String myNum=(String)session.getAttribute("user_num");
+		
+		for(int i=0;i<list.size();i++) {
+			if(list.get(i).getUser_num().equals(myNum)) {
+				//내 이름 제거
+				list.remove(i);
+			}
+		}
 		
 		return list;
 	}
@@ -307,6 +352,12 @@ public class MessageController {
 		map.put("upload", uploadName);
 		
 		return map;
+	}
+	
+	@GetMapping("/message/deletegroup")
+	@ResponseBody
+	public void deleteGroup(int mess_group) {
+		mservice.deleteMessageGroup(mess_group);
 	}
  	
 }

@@ -26,6 +26,9 @@ public interface UserServiceInter {
 	public List<FollowingDto> getFollowList(String from_user, int offset);
 	public void insertGuestBook(GuestbookDto dto);
 	public List<GuestbookDto> getGuestPost(String owner_num);
+	public void deleteGuestBook(String guest_num);
+	public void updateGuestBook(GuestbookDto dto);
+	public GuestbookDto getDataByGuestNum(String guest_num);
 	//우형 끝	
 
 	//희수 시작
@@ -40,6 +43,7 @@ public interface UserServiceInter {
 	public String getUserIdByEmail(String user_email);
 	public String getUserEmailBynamehp(String user_name, String user_hp);
 	public int loginIdCheck(String user_id);
+	public void userDelete(String user_num);
 	//희수 끝
 	
 	//예지

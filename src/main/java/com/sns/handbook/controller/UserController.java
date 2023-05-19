@@ -25,12 +25,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sns.handbook.dto.CommentDto;
+import com.sns.handbook.dto.CommentlikeDto;
 import com.sns.handbook.dto.FollowingDto;
 import com.sns.handbook.dto.GuestbookDto;
 import com.sns.handbook.dto.GuestbooklikeDto;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.PostlikeDto;
 import com.sns.handbook.dto.UserDto;
+import com.sns.handbook.serivce.CommentService;
 import com.sns.handbook.serivce.FollowingService;
 import com.sns.handbook.serivce.GuestbooklikeService;
 import com.sns.handbook.serivce.PostService;
@@ -54,6 +57,9 @@ public class UserController {
 	
 	@Autowired
 	GuestbooklikeService glservice;
+	
+	@Autowired
+	CommentService cservice;
 	
 	//커버 사진 업데이트
 	@PostMapping("/user/coverupdate")
@@ -449,6 +455,109 @@ public class UserController {
 		    
 		}
 	
+	//방명록 삭제
+	@ResponseBody
+	@GetMapping("/user/deleteguestbook")
+	public void deleteGuestBook(String guest_num)
+	{
+		uservice.deleteGuestBook(guest_num);
+	}
+	
+	
+	 //방명록 수정
+	 @ResponseBody
+	 @PostMapping("/user/updateguestbook")
+	 public void updateguestbook(@ModelAttribute GuestbookDto dto,HttpSession session,@RequestParam(required = false) List<MultipartFile> photo)
+		{
+			
+			String path = session.getServletContext().getRealPath("/guest_file");
+		    
+		    int idx = 1;
+		    String uploadName = "";
+		    
+		    if (photo != null) {
+		      
+		        for (MultipartFile f : photo) {
+		    	    
+		            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+		            String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
+		            uploadName += fileName + ",";
+		            
+		            try {
+		            	
+		                f.transferTo(new File(path + "\\" + fileName));
+		                
+		            } catch (IllegalStateException | IOException e) {
+		                e.printStackTrace();
+		            }
+		        }
+		        //콤마 제거
+		        uploadName = uploadName.substring(0, uploadName.length() - 1);
+		        
+			    dto.setGuest_file(uploadName);
+		    }else {
+		    	
+		    	String prevFile=uservice.getDataByGuestNum(dto.getGuest_num()).getGuest_file();
+		    	dto.setGuest_file(prevFile);
+		    }
+		    
+		    uservice.updateGuestBook(dto);
+		}
+	 
+	
+	//방명록 수정 값 불러오기
+	@ResponseBody
+	@GetMapping("/user/updateguestform")
+	public GuestbookDto getDataByGuestNum(String guest_num)
+	{
+		GuestbookDto dto=uservice.getDataByGuestNum(guest_num);
+
+		return dto;
+	}
+	
+	//댓글 입력
+	@ResponseBody
+	@PostMapping("/user/cinsert")
+	public void insert(@ModelAttribute CommentDto dto,HttpSession session) {
+
+
+		if(!dto.getComment_num().equals("0")) {
+			CommentDto momDto= cservice.getData(dto.getComment_num());
+
+			dto.setComment_group(momDto.getComment_group());
+			dto.setComment_step(momDto.getComment_step());
+			dto.setComment_level(momDto.getComment_level());
+		}
+		dto.setUser_num((String)session.getAttribute("user_num"));
+		cservice.insert(dto);
+
+	}
+	
+	//댓글 좋아요
+	@GetMapping("/user/commentlikeinsert")
+	@ResponseBody
+	public void likeinsert(String comment_num,HttpSession session) {
+
+		CommentlikeDto dto=new CommentlikeDto();
+
+		dto.setComment_num(comment_num);
+		dto.setUser_num((String)session.getAttribute("user_num"));
+
+		cservice.insertLike(dto);
+	}
+	
+	@GetMapping("/user/commentlikedelete")
+	@ResponseBody
+	public void likedelete(String comment_num,HttpSession session) {
+
+		CommentlikeDto dto=new CommentlikeDto();
+
+		dto.setComment_num(comment_num);
+		dto.setUser_num((String)session.getAttribute("user_num"));
+
+		cservice.deleteLike((String)session.getAttribute("user_num"), comment_num);
+	}
+	
 	//정보 페이지 이동
 	@GetMapping("/user/info")
 	public String info()
@@ -463,5 +572,12 @@ public class UserController {
 		return "/sub/user/friend";
 	}
 
-	
+	//회원 탈퇴
+	@GetMapping("/user/userdelete")
+	public String userdelete(String user_num, HttpSession session) {
+		uservice.userDelete(user_num);
+		session.removeAttribute("loginok");
+		session.invalidate(); // 세션의 모든 속성을 삭제
+		return "redirect:/";
+	}
 }

@@ -120,6 +120,7 @@ public class PostController {
 			}
 
 			list.get(i).setPost_time(preTime);
+			
 		}
 
 		String login_name = uservice.getUserByNum((String) session.getAttribute("user_num")).getUser_name();
@@ -176,8 +177,21 @@ public class PostController {
 	// delete
 	@GetMapping("/post/delete")
 	@ResponseBody
-	public void delete(@RequestParam String post_num ) {
+	public void delete(@RequestParam String post_num, HttpSession session ) {
 
+		//사진 이름 받기
+		String delPhoto=pservice.getDataByNum(post_num).getPost_file();
+		
+		if(delPhoto!="no") {
+			//사진이 존재한다면 삭제
+			String path=session.getServletContext().getRealPath("/post_file");
+			
+			File delFile=new File(path+"\\"+delPhoto);
+			
+			//파일(사진) 삭제
+			delFile.delete();
+		}
+		
 		pservice.deletePost(post_num);
 	}
 
@@ -213,10 +227,45 @@ public class PostController {
 	// 수정
 	@PostMapping("/post/update")
 	@ResponseBody
-	public void update(PostDto dto, HttpSession session) {
-		pservice.updatePost(dto);
-
+	public void update(@ModelAttribute PostDto dto,HttpSession session,@RequestParam(required = false) List<MultipartFile> photo)
+	{
+		
+		String path = session.getServletContext().getRealPath("/post_file");
+	    
+	    int idx = 1;
+	    String uploadName = "";
+	    
+	    
+	    if (photo != null) {
+	      
+	        for (MultipartFile f : photo) {
+	    	    
+	            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+	            String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
+	            uploadName += fileName + ",";
+	            
+	            try {
+	            	
+	                f.transferTo(new File(path + "\\" + fileName));
+	                
+	            } catch (IllegalStateException | IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	        //콤마 제거
+	        uploadName = uploadName.substring(0, uploadName.length() - 1);
+	        
+		    dto.setPost_file(uploadName);
+		    
+		    pservice.updatePhoto(dto.getPost_num(), uploadName);
+		    
+	    }
+	    
+	    pservice.updatePost(dto);
+	    
+	    
 	}
+
 
 	@GetMapping("/post/scroll")
 	@ResponseBody
