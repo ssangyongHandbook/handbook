@@ -1172,9 +1172,11 @@ body {
 .cmlike {
    width: 450px;
    margin-top: 10px;
+   margin-left 10px;
    display: flex;
    justify-content: space-around;
    align-content: center;
+
 }
 
 /* 사용자 이름  */
