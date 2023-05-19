@@ -27,10 +27,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.sns.handbook.dto.FollowingDto;
 import com.sns.handbook.dto.GuestbookDto;
+import com.sns.handbook.dto.GuestbooklikeDto;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.PostlikeDto;
 import com.sns.handbook.dto.UserDto;
 import com.sns.handbook.serivce.FollowingService;
+import com.sns.handbook.serivce.GuestbooklikeService;
 import com.sns.handbook.serivce.PostService;
 import com.sns.handbook.serivce.PostlikeService;
 import com.sns.handbook.serivce.UserService;
@@ -49,6 +51,9 @@ public class UserController {
 	
 	@Autowired
 	PostlikeService plservice;
+	
+	@Autowired
+	GuestbooklikeService glservice;
 	
 	//커버 사진 업데이트
 	@PostMapping("/user/coverupdate")
@@ -144,12 +149,36 @@ public class UserController {
 			map.put("post_file", g.getGuest_file());
 			map.put("post_access", g.getGuest_access());
 			map.put("post_writeday", g.getGuest_writeday());
+			map.put("like_count", glservice.getTotalGuestLike(g.getGuest_num()));
+			map.put("likecheck", glservice.checkGuestLike((String)session.getAttribute("user_num"), g.getGuest_num()));
 			map.put("type", "guest");
 			
 			UserDto dto=uservice.getUserByNum(g.getWrite_num());
 			map.put("dto", dto);
 			
 			alllist.add(map);
+		}
+		
+		//최신 순 정렬
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+		for (int i = 0; i < alllist.size() - 1; i++) {
+		    for (int j = i + 1; j < alllist.size(); j++) {
+		        try {
+		            Date date1 = dateFormat.parse(alllist.get(i).get("post_writeday").toString());
+		            Date date2 = dateFormat.parse(alllist.get(j).get("post_writeday").toString());
+
+		            // 뒤에 데이터가 더 최신이면 앞으로 옮기기 (자리 바꾸기)
+		            if (date2.compareTo(date1) > 0) {
+		                Map<String, Object> temp = alllist.get(j);
+		                alllist.set(j, alllist.get(i));
+		                alllist.set(i, temp);
+		            }
+		        } catch (ParseException e) {
+		            // 날짜 형식이 잘못되었을 경우 처리할 예외 처리 코드
+		            e.printStackTrace();
+		        }
+		    }
 		}
 		
 		for(int i = 0; i<alllist.size(); i++) {
@@ -333,17 +362,6 @@ public class UserController {
 		pservice.deletePost(post_num);
 	}
 	
-	//좋아요 갯수 확인
-	@GetMapping("/user/checklike")
-	@ResponseBody
-	public Map<String, Integer> checklike(String user_num,String post_num){
-		Map<String, Integer> map= new HashMap<>();
-		
-		map.put("checklike", plservice.checklike(user_num, post_num));
-		
-		return map;
-	}
-	
 	//좋아요
 	@GetMapping("/user/likeinsert")
 	@ResponseBody
@@ -356,9 +374,25 @@ public class UserController {
 	//좋아요 취소
 	@GetMapping("/user/likedelete")
 	@ResponseBody
-	public void deleteFollowing(String post_num,String user_num) {
+	public void deleteLike(String post_num,String user_num) {
 		
 		plservice.deleteLike(post_num,user_num);
+	}
+	
+	//방명록 좋아요
+	@GetMapping("/user/guestlikeinsert")
+	@ResponseBody
+	public void insertGuestLike(@ModelAttribute GuestbooklikeDto dto) {
+		
+		glservice.insertGuestLike(dto);
+	}
+	
+	//방명록 좋아요 취소
+	@GetMapping("/user/guestlikedelete")
+	@ResponseBody
+	public void deleteGuestLike(String guest_num,String user_num) {
+		
+		glservice.deleteGuestLike(guest_num, user_num);
 	}
 	
 	//팔로우 하기
@@ -372,9 +406,10 @@ public class UserController {
 	//팔로우 취소
 	@ResponseBody
 	@GetMapping("/user/unfollowing")
-	public void unfollowing(String to_user)
-	{
-		fservice.deleteFollowing(to_user);
+	public void followingdelete(String to_user, HttpSession session) {
+
+		fservice.deleteFollowing((String)session.getAttribute("user_num"),to_user);
+
 	}
 	
 	//방명록 작성
@@ -414,6 +449,62 @@ public class UserController {
 		    
 		}
 	
+	//방명록 삭제
+	@ResponseBody
+	@GetMapping("/user/deleteguestbook")
+	public void deleteGuestBook(String guest_num)
+	{
+		uservice.deleteGuestBook(guest_num);
+	}
+	
+	
+	 //방명록 수정
+	 @ResponseBody
+	 @PostMapping("/user/updateguestbook")
+	 public void updateguestbook(@ModelAttribute GuestbookDto dto,HttpSession session,@RequestParam(required = false) List<MultipartFile> photo)
+		{
+			
+			String path = session.getServletContext().getRealPath("/guest_file");
+		    
+		    int idx = 1;
+		    String uploadName = "";
+		    
+		    if (photo != null) {
+		      
+		        for (MultipartFile f : photo) {
+		    	    
+		            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+		            String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
+		            uploadName += fileName + ",";
+		            
+		            try {
+		            	
+		                f.transferTo(new File(path + "\\" + fileName));
+		                
+		            } catch (IllegalStateException | IOException e) {
+		                e.printStackTrace();
+		            }
+		        }
+		        //콤마 제거
+		        uploadName = uploadName.substring(0, uploadName.length() - 1);
+		        
+			    dto.setGuest_file(uploadName);
+		    }
+		    
+		    uservice.updateGuestBook(dto);
+		}
+	 
+	
+	//방명록 수정 값 불러오기
+	@ResponseBody
+	@GetMapping("/user/updateguestform")
+	public GuestbookDto getDataByGuestNum(String guest_num)
+	{
+		GuestbookDto dto=uservice.getDataByGuestNum(guest_num);
+
+		return dto;
+	}
+	
 	//정보 페이지 이동
 	@GetMapping("/user/info")
 	public String info()
@@ -428,5 +519,11 @@ public class UserController {
 		return "/sub/user/friend";
 	}
 
-	
+	@GetMapping("/user/userdelete")
+	public String userdelete(String user_num, HttpSession session) {
+		uservice.userDelete(user_num);
+		session.removeAttribute("loginok");
+		session.invalidate(); // 세션의 모든 속성을 삭제
+		return "redirect:/";
+	}
 }

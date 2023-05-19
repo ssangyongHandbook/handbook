@@ -118,7 +118,24 @@ public class UserService implements UserServiceInter {
 		// TODO Auto-generated method stub
 		return mapperInter.getGuestPost(owner_num);
 	}
-
+	
+	@Override
+	public void deleteGuestBook(String guest_num) {
+		// TODO Auto-generated method stub
+		mapperInter.deleteGuestBook(guest_num);
+	}
+	
+	@Override
+	public void updateGuestBook(GuestbookDto dto) {
+		// TODO Auto-generated method stub
+		mapperInter.updateGuestBook(dto);
+	}
+	
+	@Override
+	public GuestbookDto getDataByGuestNum(String guest_num) {
+		// TODO Auto-generated method stub
+		return mapperInter.getDataByGuestNum(guest_num);
+	}
 	
 	//우형 끝	
 	
@@ -199,6 +216,16 @@ public class UserService implements UserServiceInter {
 		map.put("user_hp", user_hp);
 		return mapperInter.getUserEmailBynamehp(map);
 	}
+	
+	@Override
+	public int loginIdCheck(String user_id) {
+		return mapperInter.loginIdCheck(user_id);
+	}
+	
+	@Override
+	public void userDelete(String user_num) {
+		mapperInter.userDelete(user_num);
+	}
 	// 희수 끝
 
 	//예지
@@ -208,6 +235,4 @@ public class UserService implements UserServiceInter {
 		return mapperInter.getUserByName(user_name);
 	}
 
-	
-	
 }

@@ -29,6 +29,9 @@ public interface UserMapperInter {
 	public List<FollowingDto> getFollowList(Map<String, Object> map);
 	public void insertGuestBook(GuestbookDto dto);
 	public List<GuestbookDto> getGuestPost(String owner_num);
+	public void deleteGuestBook(String guest_num);
+	public void updateGuestBook(GuestbookDto dto);
+	public GuestbookDto getDataByGuestNum(String guest_num);
 	//우형 끝
 	
 	//희수 시작
@@ -38,6 +41,8 @@ public interface UserMapperInter {
 	public String getUserIdByEmail(String user_email);
 	public void updatePassword(Map<String, String> map);
 	public String getUserEmailBynamehp(Map<String ,String> map);
+	public int loginIdCheck(String user_id);
+	public void userDelete(String user_num);
 	//희수 끝
 
 	//예지

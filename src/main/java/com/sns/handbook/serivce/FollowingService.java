@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,9 +45,14 @@ public class FollowingService implements FollowingServiceInter {
 	}
 	
 	@Override
-	public void deleteFollowing(String to_user) {
+	public void deleteFollowing(String from_user, String to_user) {
 		// TODO Auto-generated method stub
-		mapper.deleteFollowing(to_user);
+		Map<String, String> map = new HashMap<>();
+		
+		map.put("from_user", from_user);
+		map.put("to_user", to_user);
+		
+		mapper.deleteFollowing(map);
 	}
 	
 	@Override
@@ -102,24 +109,14 @@ public class FollowingService implements FollowingServiceInter {
 	}
 
 	@Override
-	public List<FollowingDto> followRecommend(String from_user, int offset) {
+	public List<UserDto> followRecommend(String from_user, String searchword, int offset) {
 		// TODO Auto-generated method stub
 		Map<String, Object> map = new HashMap<>();
 		
 		map.put("from_user", from_user);
+		map.put("searchword", searchword);
 		map.put("offset", offset);
 		return mapper.followRecommend(map);
 	}
 
-	@Override
-	public List<UserDto> followRandom(String from_user, int offset) {
-		// TODO Auto-generated method stub
-		Map<String, Object> map = new HashMap<>();
-		
-		map.put("from_user", from_user);
-		map.put("offset", offset);
-		
-		
-		return mapper.followRandom(map);
-	}
 }

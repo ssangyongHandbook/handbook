@@ -54,11 +54,11 @@ public class PostController {
 
 	@GetMapping("/post/timeline")
 	@ResponseBody
-	public ModelAndView list(@RequestParam(defaultValue = "0") int offset, HttpSession session,
+	public ModelAndView list(@RequestParam(defaultValue = "0") int offset,@RequestParam(defaultValue = "0") int commentoffset, HttpSession session,
 			@RequestParam(required = false) String searchcolumn, @RequestParam(required = false) String searchword,
 			FollowingDto fdto) {
 
-		List<PostDto> list = pservice.postList(searchcolumn, searchword, offset);
+		List<PostDto> list = pservice.postList((String)session.getAttribute("user_num"),searchcolumn, searchword, offset);
 		for (int i = 0; i < list.size(); i++) {
 			UserDto dto = uservice.getUserByNum(list.get(i).getUser_num()); // 여러가지 수많은 데이터에서 i번째 데이터만 가져오기, 여기서 필요한 상대방
 																			// num을 list에서 뽑아옴
@@ -125,7 +125,9 @@ public class PostController {
 		String login_name = uservice.getUserByNum((String) session.getAttribute("user_num")).getUser_name();
 		ModelAndView model = new ModelAndView();
 		int totalCount = pservice.getTotalCount();
+		
 		model.addObject("offset", offset);
+		model.addObject("commentoffset", commentoffset);
 		model.addObject("searchcolumn", searchcolumn);
 		model.addObject("total", totalCount);
 		model.addObject("list", list);
@@ -137,31 +139,38 @@ public class PostController {
 
 	@PostMapping("/post/insertpost")
 	@ResponseBody
-	public void insertPost(@ModelAttribute PostDto dto, @RequestParam(required = false) MultipartFile photo,
-			HttpSession session) {
-
-		String path = session.getServletContext().getRealPath("/post_file");
-
-		if (photo == null) {
-			dto.setPost_file("no");
-			pservice.insertPost(dto);
-
-		} else {// upload 한 경우
-
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
-			String fileName = "f_" + sdf.format(new Date()) + photo.getOriginalFilename();
-
-			dto.setPost_file(fileName);
-
-			try {
-				photo.transferTo(new File(path + "\\" + fileName));
-			} catch (IllegalStateException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			pservice.insertPost(dto);
-		}
+	public void insertPost(@ModelAttribute PostDto dto, @RequestParam(required = false) List<MultipartFile> photo, HttpSession session) {
+		
+	    String path = session.getServletContext().getRealPath("/post_file");
+	    
+	    int idx = 1;
+	    String uploadName = "";
+	    
+	    if (photo == null) {
+	        dto.setPost_file("no");
+	        pservice.insertPost(dto);
+	        
+	    } else {
+	    	
+	        for (MultipartFile f : photo) {
+	            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+	            String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
+	            uploadName += fileName + ",";
+	            
+	            try {
+	                f.transferTo(new File(path + "\\" + fileName));
+	            } catch (IllegalStateException | IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	        //콤마 제거
+	        uploadName = uploadName.substring(0, uploadName.length() - 1);
+	        
+		    dto.setPost_file(uploadName);
+		    pservice.insertPost(dto);
+		    
+	    }
+	    
 	}
 
 	// delete
@@ -212,9 +221,10 @@ public class PostController {
 	@GetMapping("/post/scroll")
 	@ResponseBody
 	public List<PostDto> scroll(int offset, @RequestParam(required = false) String searchcolumn,
-			@RequestParam(required = false) String searchword) {
+			@RequestParam(required = false) String searchword,
+			String user_num) {
 
-		List<PostDto> list = pservice.postList(searchcolumn, searchword, offset);
+		List<PostDto> list = pservice.postList(user_num,searchcolumn, searchword, offset);
 
 		return list;
 	}
@@ -253,9 +263,9 @@ public class PostController {
 
 	@GetMapping("/post/followingdelete")
 	@ResponseBody
-	public void followingdelete(String to_user) {
+	public void followingdelete(String to_user, HttpSession session) {
 
-		fservice.deleteFollowing(to_user);
+		fservice.deleteFollowing((String)session.getAttribute("user_num"),to_user);
 
 	}
 
