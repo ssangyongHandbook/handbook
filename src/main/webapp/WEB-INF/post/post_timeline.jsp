@@ -1165,6 +1165,7 @@ body {
 	display: flex;
 	justify-content: space-around;
 	align-content: center;
+
 }
 
 /* 사용자 이름  */
