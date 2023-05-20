@@ -1414,13 +1414,27 @@ $(function(){
       
          <div style="float:right; margin-right: 3%; margin-top: 2%;">
                   <c:if test="${sessionScope.user_num!=dto.user_num && checkfollowing !=1 }">
-                     <button type="button" class="btnfollow" id="btnfollow" from_user="${sessionScope.user_num }" to_user="${dto.user_num }">
-                     <i class="fa-solid fa-user-group"></i>&nbsp;팔로우 추가</button>
+                  	<c:if test="${checkfollower ==1 }">
+                  		<button type="button" class="btnfollow" id="btnfollow" from_user="${sessionScope.user_num }" to_user="${dto.user_num }">
+                     	<i class="fa-solid fa-user-group"></i>&nbsp;맞팔로우 하기</button>
+                  	</c:if>
+                  	
+                  	<c:if test="${checkfollower !=1 }">
+                     	<button type="button" class="btnfollow" id="btnfollow" from_user="${sessionScope.user_num }" to_user="${dto.user_num }">
+                     	<i class="fa-solid fa-user-group"></i>&nbsp;팔로우 하기</button>
+                     </c:if>
                  </c:if>
-                 
+         
                  <c:if test="${sessionScope.user_num!=dto.user_num && checkfollowing ==1 }">
-                     <button type="button" class="btnunfollow" id="btnunfollow" to_user="${dto.user_num }">
-                     <i class="fa-solid fa-user-group"></i>&nbsp;팔로우 취소</button>
+                 	<c:if test="${checkfollower ==1 }">
+                     	<button type="button" class="btnunfollow" id="btnunfollow" to_user="${dto.user_num }">
+                     	<i class="fa-solid fa-user-group"></i>&nbsp;맞팔로우 취소</button>
+                    </c:if>
+                    
+                    <c:if test="${checkfollower !=1 }">
+                     	<button type="button" class="btnunfollow" id="btnunfollow" to_user="${dto.user_num }">
+                     	<i class="fa-solid fa-user-group"></i>&nbsp;팔로우 취소</button>
+                    </c:if>
                  </c:if>
                  
                  <button type="button" class="btnmessage"><i class="fa-solid fa-comment"></i>&nbsp;메시지 보내기</button>
