@@ -27,4 +27,7 @@ public interface CommentMapperInter {
 	public void deleteLike(Map<String, String> map);
 	public int getTotalLikes(String comment_num);
 	public int getLikeCheck(Map<String, String> map);
+	
+	
+	public int getTotalCount(String post_num);
 }

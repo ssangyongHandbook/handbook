@@ -102,6 +102,30 @@
          $("#" + likehide1_num).toggle();
 
       });
+      
+      
+      $(document).on("click", ".follow", function() {
+
+          var followpost_num = $(this).attr("followpost_num");
+          var unfollowpost_num= $(this).attr("unfollowpost_num");
+
+          $("#" + followpost_num).toggle();
+          $("#" + unfollowpost_num).toggle();
+
+       });
+      
+      $(document).on("click", ".unfollow", function() {
+
+          var followpost_num = $(this).attr("followpost_num");
+          var unfollowpost_num= $(this).attr("unfollowpost_num");
+
+          $("#" + followpost_num).toggle();
+          $("#" + unfollowpost_num).toggle();
+
+       });
+      
+      
+      
 
       $(document).on("click", ".liketoggle2", function() {
 
@@ -165,23 +189,7 @@
                   "#updatetbtn",
                   function() {
 
-                   /*   var update_access = $("#update_access").val();
-                     var update_content = $("#update_content").val();
-
-                     var data = "post_num=" + updatenum
-                           + "&post_access=" + update_access
-                           + "&post_content=" + update_content;
-
-                     $.ajax({
-
-                        type : "post",
-                        dataType : "text",
-                        data : data,
-                        url : "update",
-                        success : function() {
-                           location.reload();
-                        }
-                     }); */
+                  
                      var update_access=$("#update_access").val();
                      var update_content=$("#update_content").val();
                      
@@ -242,8 +250,10 @@
             }
          })
       });
+      
 
-      $(document).on("click", "#postfollow", function() {
+      $(document).on("click", ".follow", function() {
+
          var from_user = $(this).attr("from_user");
          var to_user = $(this).attr("to_user");
 
@@ -256,12 +266,12 @@
                "to_user" : to_user
             },
             success : function() {
-               location.reload();
+
             }
          })
       })
 
-      $(document).on("click", "#postunfollow", function() {
+      $(document).on("click", ".unfollow", function() {
          var to_user = $(this).attr("to_user");
          $.ajax({
             type : "get",
@@ -271,7 +281,7 @@
                "to_user" : to_user
             },
             success : function() {
-               location.reload();
+
             }
          })
       })
@@ -756,13 +766,15 @@
                   
                   s += '<div style="height: 0; width: 450px; position: relative; left: -30px; top: 30px;">';
                   s += '<img src="../image/add.png" class="ulimg" style="width: 20px; float: right;" comment_num="'+item.comment_num+'">';
-                  s += '<ul class="list-group commentul" id="ul'+item.comment_num+'">';
-                  s += '<li class="list-group-item list-group-item-success commentmod" comment_num="'+item.comment_num+'">수정</li>';
-                  s += '<li class="list-group-item list-group-item-danger commentdel" comment_num="'+item.comment_num+'">삭제</li>';
+                  s += '<ul class="list-group commentul" style="height:0;" id="ul'+item.comment_num+'">';
+                  if(item.user_num == ${sessionScope.user_num})
+                  	s += '<li class="list-group-item commentmod" comment_num="'+item.comment_num+'">수정</li>';
+                  s += '<li class="list-group-item commentdel" comment_num="'+item.comment_num+'">삭제</li>';
                   s += '</ul>';
-                  s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display: none; width: 447px; position: relative; left: 31px; bottom: 31px;">';
-                  s += '<img src="/photo/'+item.user_photo+'" class="profile">';
-                  s += '<b class="user_name">'+item.user_name+'</b>';
+                  s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display:flex; flex-wrap:wrap; visibility: hidden; position:relative; left: 31px; bottom: 31px;">';
+                  s += '<span class="glyphicon glyphicon-remove modclose" comment_num="'+item.comment_num+'" style="position: relative; left:400px;"></span>';
+                  s += '<div><img src="/photo/'+item.user_photo+'" class="profile"></div>';
+                  s += '<div><b class="user_name">'+item.user_name+'</b>';
                   s += '<br>';
                   s += '<input type="text" class="inputmod" style="width: 200px;" comment_num="'+item.comment_num+'" value="'+item.comment_content+'">';
                   s += '</div>';
@@ -1120,125 +1132,162 @@ body {
    width: 500px;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* comment */
-.commentmodal-content{
-   overflow-y: initial !important
+.commentmodal-content {
+	overflow-y: initial !important;
 }
 
-.commentmodal-body{
-   height: 740px;
-   overflow-y: auto;
+.commentmodal-body {
+	height: 740px;
+	overflow-y: auto;
 }
 
 .comment {
-   width: 450px;
-   border: 1px solid gray;
-   border-radius: 40px;
-   background-color: #EEEEEE;
-   padding-left: 85px;
+	width: 450px;
+	border-radius: 20px;
+	background-color: #F6F6F6;
+	padding: 10px;
+	margin-bottom: 10px;
 }
 
-/* 사용자 프로필  */
 .profile {
-   width: 60px;
-   margin-left: -75px;
-   border-radius: 100px;
-   margin-right: 20px;
-   position: relative;
-   top: 10px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	margin-right: 20px;
+
 }
 
 /* 좋아요,댓글,날짜 */
 .cmlike {
-   width: 450px;
-   margin-top: 10px;
-   display: flex;
-   justify-content: space-around;
-   align-content: center;
+	width: 450px;
+	margin-top: 10px;
+	display: flex;
+	justify-content: space-around;
+	align-content: center;
+
 }
 
 /* 사용자 이름  */
 b.user_name {
-   font-size: 1.4em;
+	font-size: 14px;
+	font-weight: bold;
 }
 
 /* 사용자 댓글  */
 span.content {
-   font-size: 1.1em;
+	font-size: 16px;
 }
 
 #commentaddform {
-   margin-top: 7px;
-   height: 60px;
-   display: flex;
-   justify-content: space-between;
-   align-content: center;
+	margin-top: 7px;
+	height: 60px;
+	display: flex;
+	justify-content: space-between;
+	align-content: center;
 }
 
 #commentprofile {
-   width: 60px;
-   border: 1px solid gray;
-   border-radius: 100px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	margin-right: 10px;
 }
 
 .input {
-   width: 700px;
-   border: 1px solid gray;
-   border-radius: 40px;
-   background-color: #EEEEEE;
+	flex: 1;
+	height: 40px;
+	border: 1px solid #ddd;
+	border-radius: 20px;
+	padding: 5px 10px;
 }
 
 .mominput {
-   width: 700px;
-   border: 1px solid gray;
-   border-radius: 40px;
-   background-color: #EEEEEE;
+	width: 700px;
+	border: 1px solid gray;
+	border-radius: 40px;
 }
 
-.recontent {
-   cursor: pointer;
+.recontent, .nolike, .yeslike {
+	color: #777;
+	cursor: pointer;
 }
 
-.nolike {
-   cursor: pointer;
+.commentul {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  list-style: none;
+  display: none;
+  font-size: 0.7em;
+  width: 70px;
+  padding: 0;
+  margin: 0;
+  border: none;
 }
 
-.yeslike {
-   cursor: pointer;
+.commentul:before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  right: -1px;
+  border-top: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #e6f0fb;
+  border-left: 16px solid transparent;
+}
+
+.commentul li {
+  border: none;
+  background-color: #e6f0fb;
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: background-color 0.3s, color 0.3s;
+  text-align: center;
+}
+
+.commentul li:not(:last-child) {
+  margin-bottom: -1px;
+}
+
+.commentul li:hover {
+  background-color: #cfe0fa;
+  color: #3355a0;
 }
 
 .ulimg {
    cursor: pointer;
 }
 
-.commentul {
-   float: right;
-   list-style: none;
-   display: none;
-   font-size: 0.7em;
-   height: 70px;
+.commentmod, .commentdel {
+	padding: 5px;
+	font-size: 12px;
+	color: #555;
 }
 
+.commentmod:hover, .commentdel:hover {
+	color: #333;
+}
+
+.comment .allcomment {
+	margin-left: 50px;
+}
+
+.comment .comment {
+	margin-left: 50px;
+}
+
+.modclose {
+	cursor: pointer;
+}
+
+.unfollow{
+color: blue;
+}
+
+.follow{
+color: gray;
+}
 li{
    cursor:  pointer;
 }
@@ -1326,7 +1375,7 @@ li{
       <!-- 수정 Modal -->
 
 
-      <div class="modal fade" id="updatepost" role="dialog">
+           <div class="modal fade" id="updatepost" role="dialog">
          <div class="modal-dialog">
 
             <!-- Modal content-->
@@ -1364,10 +1413,8 @@ li{
 
          </div>
       </div>
-
-
-      <section>
-         <!-- 파일이 있을경우0 -->
+		<section>
+			    <!-- 파일이 있을경우0 -->
          <!--  동영상일 경우와 사진이 1장만 있을 경우도 .해주어야함   -->
 
          <c:forEach var="dto" items="${list }" varStatus="i">
@@ -1550,13 +1597,15 @@ li{
 
 
 
-                        <!-- comment -->
-                        <span class="bottom-right commentspan"  style="cursor: pointer;"  post_num="${dto.post_num }">
-                           <span style="font-size: 1.3em; color: gray;">
-                              <i class="fa-regular fa-comment"></i>
-                           </span>
-                           &nbsp;댓글
-                        </span>
+								<!-- comment -->
+								<span class="bottom-right commentspan" style="cursor: pointer;" user_name=${dto.user_name }
+									post_num="${dto.post_num }">
+									<span style="font-size: 1.3em; color: gray;">
+										<i class="fa-regular fa-comment"></i>
+									</span>
+									&nbsp;댓글 ${dto.comment_count }
+								</span>
+
 
                      </div>
 
@@ -1568,7 +1617,7 @@ li{
             </c:if>
 
             <!-- 파일이 없을 경우 -->
-            <c:if test="${dto.post_file=='no' }">
+             <c:if test="${dto.post_file=='no' }">
                <div class="shows" id="divs${dto.post_num }">
                   <div class="showtext">게시물을 숨겼습니다. 다시 보려면 게시물 보기를 눌러주세요.</div>
                   <button type="button" class="showbtn" divpost_num="div${dto.post_num }"
@@ -1718,15 +1767,15 @@ li{
                         </c:if>
 
 
+								<!-- comment -->
+								<span class="bottom-right2 commentspan" style="cursor: pointer;" user_name=${dto.user_name }
+									post_num="${dto.post_num }">
+									<span style="font-size: 1.2em; top: 3px; color: gray;">
+										<i class="fa-regular fa-comment"></i>
+									</span>
+									&nbsp;댓글 ${dto.comment_count }
+								</span>
 
-
-                        <!-- comment -->
-                        <span class="bottom-right2 commentspan" style="cursor: pointer;" post_num="${dto.post_num }">
-                           <span style="font-size: 1.2em; top: 3px; color: gray;">
-                              <i class="fa-regular fa-comment"></i>
-                           </span>
-                           &nbsp;댓글
-                        </span>
 
                      </div>
 
@@ -1742,23 +1791,6 @@ li{
          </c:forEach>
       </section>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
-
-      
 
      <button type="button" class="btn btn-info btn-lg cmmodalbtn hide" data-toggle="modal" data-target="#commentmodal"></button>
       <!-- comment -->
