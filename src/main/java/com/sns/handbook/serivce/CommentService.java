@@ -155,6 +155,12 @@ public class CommentService implements CommentServiceInter {
 		// TODO Auto-generated method stub
 		mapper.insertLike(dto);
 	}
+
+	@Override
+	public int getTotalCount(String post_num) {
+		// TODO Auto-generated method stub
+		return mapper.getTotalCount(post_num);
+	}
 	
 	
 	

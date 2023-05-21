@@ -23,4 +23,9 @@ public interface CommentServiceInter {
 	public void deleteLike(String user_num,String comment_num);
 	public int getTotalLikes(String comment_num);
 	public int getLikeCheck(String user_num,String comment_num);	
+	
+	
+	
+	public int getTotalCount(String post_num);
+
 }

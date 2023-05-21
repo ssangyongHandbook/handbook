@@ -41,8 +41,9 @@
 		delete from following where to_user=#{to_user} and from_user=#{from_user}
 	</delete>
 	
+	
 	<!-- 친구 검색 기능 -->
-	<select id="followSearch" resultType="FollowingDto" parameterType="Map">
+	<select id="followSearch" resultType="FollowingDto"  parameterType="Map">
 		select * from following 
 		where to_user = any(select user_num from user where user_name like concat('%', #{searchword}, '%')) <!-- 상대 이름 --> 
 		and from_user = #{from_user} <!-- 내 번호 -->

@@ -9,6 +9,7 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+<script src="https://kit.fontawesome.com/d178b85e81.js" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
@@ -44,6 +45,7 @@
 	border-radius: 100px;
 	float: left;
 	height: 80px;
+	width: 80px;
 }
 
 .un {
@@ -138,7 +140,7 @@
 	</div>
 	<section class = "section">
 		<c:forEach var = "dto" items = "${list }">
-			<div class="userbox">
+			<div class="userbox" >
 
 				<c:if test="${dto.user_photo!=null}">
 					<div class="up">
@@ -163,11 +165,28 @@
 					<div class="friendmenu" id="${dto.fing_num }">
 								
 								<div class = "detailbtn">
-								<button><span class="glyphicon glyphicon-star-empty" style="font-size: 15pt;">
-								<b style="color: black;">즐겨찾기</b></span></button></div>
+								<c:if test="${dto.bookmarkcheck==1 }">
+									<p>즐겨찾기 등록됨</p>
+								</c:if>
+								<button type="button" class="insbookbtn" bfriend_num = "${dto.to_user }"><b><span style="font-size: 15pt;">
+								<i class="fa-star fa-regular" style="color: #ffd43b;"></i> 
+								즐겨찾기</span></b></button></div>
+								
+								
+								
+								<!-- <i class="fa-solid fa-star" style="color: #ffd43b;"></i> -->
+								
+								
+								
+								
+								
+								
+								
+								
 								<div class = "detailbtn">
-								<button type = "button" class="fldelete"  to_user = ${dto.to_user }><span class="glyphicon glyphicon-remove" style="font-size: 15pt; color:red;">
-								<b style="color: black;">팔로우취소</b></span></button>
+								<button type = "button" class="fldelete"  to_user = ${dto.to_user }><b><span style="font-size: 15pt; margin-left: 4px;">
+								<i class="fa-solid fa-xmark" style="color: #cd2323;"></i>
+								팔로우취소</span></b></button>
 								</div>
 					</div>
 					</div>
@@ -190,6 +209,24 @@
 			var fing_num = $(this).attr("fing_num");
 			
 			$("#"+fing_num).toggle();
+		});
+		
+		$(document).on("click",".insbookbtn",function(){
+			
+			var owner_num = "${sessionScope.user_num}";
+			var bfriend_num = $(this).attr("bfriend_num");
+
+			 $.ajax({
+				dataType:"text",
+				url:"insertbookmark",
+				type:"get",
+				data:{"owner_num":owner_num,"bfriend_num":bfriend_num},
+				success:function(){
+					location.reload();
+				}
+			}); 
+			
+			
 		});
 		
 		
