@@ -766,15 +766,18 @@
                   
                   s += '<div style="height: 0; width: 450px; position: relative; left: -30px; top: 30px;">';
                   s += '<img src="../image/add.png" class="ulimg" style="width: 20px; float: right;" comment_num="'+item.comment_num+'">';
-                  s += '<ul class="list-group commentul" style="height:0;" id="ul'+item.comment_num+'">';
-                  if(item.user_num == ${sessionScope.user_num})
-                  	s += '<li class="list-group-item commentmod" comment_num="'+item.comment_num+'">수정</li>';
-                  s += '<li class="list-group-item commentdel" comment_num="'+item.comment_num+'">삭제</li>';
+                  
+                  
+                  s += '<ul class="list-group commentul" id="ul'+item.comment_num+'">';
+                  s += '<li class="list-group-item list-group-item-success commentmod" comment_num="'+item.comment_num+'">수정</li>';
+                  s += '<li class="list-group-item list-group-item-danger commentdel" comment_num="'+item.comment_num+'">삭제</li>';
                   s += '</ul>';
-                  s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display:flex; flex-wrap:wrap; visibility: hidden; position:relative; left: 31px; bottom: 31px;">';
-                  s += '<span class="glyphicon glyphicon-remove modclose" comment_num="'+item.comment_num+'" style="position: relative; left:400px;"></span>';
-                  s += '<div><img src="/photo/'+item.user_photo+'" class="profile"></div>';
-                  s += '<div><b class="user_name">'+item.user_name+'</b>';
+                  s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display: none; width: 447px; position: relative; left: 31px; bottom: 31px;">';
+                  s += '<img src="/photo/'+item.user_photo+'" class="profile">';
+                  s += '<b class="user_name">'+item.user_name+'</b>';
+                  
+                  
+                  
                   s += '<br>';
                   s += '<input type="text" class="inputmod" style="width: 200px;" comment_num="'+item.comment_num+'" value="'+item.comment_content+'">';
                   s += '</div>';
@@ -1288,6 +1291,7 @@ color: blue;
 .follow{
 color: gray;
 }
+
 li{
    cursor:  pointer;
 }
