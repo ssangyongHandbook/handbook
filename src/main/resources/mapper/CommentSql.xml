@@ -11,7 +11,7 @@
 	</update>
 	
 	<insert id="insert" parameterType="CommentDto">
-		insert into comment value(null,#{user_num},#{post_num},#{comment_content},#{comment_group},#{comment_step},#{comment_level},now())
+		insert into comment value(null,#{user_num},#{post_num},#{guest_num},#{comment_content},#{comment_group},#{comment_step},#{comment_level},now())
 	</insert>
 	
 	<delete id="delete" parameterType="String">
