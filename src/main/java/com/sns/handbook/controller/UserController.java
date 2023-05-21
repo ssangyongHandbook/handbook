@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -253,6 +254,7 @@ public class UserController {
 		model.addObject("followercount", followercount);
 		model.addObject("followcount", followcount);
 		model.addObject("checkfollowing", fservice.checkFollowing((String)session.getAttribute("user_num"), user_num));
+		model.addObject("checkfollower", fservice.checkFollower((String)session.getAttribute("user_num"), user_num));
 		model.addObject("tf_count", fservice.getTotalFollowing((String)session.getAttribute("user_num")));
 	
 		model.setViewName("/sub/user/mypage");
@@ -360,11 +362,22 @@ public class UserController {
 
 
 	
-	//게시물 삭제
+	//게시물 삭제(사진까지 삭제)
 	@ResponseBody
 	@GetMapping("/user/deletepost")
-	public void deletepost(String post_num)
+	public void deletepost(String post_num, HttpSession session)
 	{
+		String delPhoto=pservice.getDataByNum(post_num).getPost_file();
+		
+		if(delPhoto!="no") {
+			
+			String path=session.getServletContext().getRealPath("/post_file");
+			
+			File delFile=new File(path+"\\"+delPhoto);
+			
+			delFile.delete();
+		}
+		
 		pservice.deletePost(post_num);
 	}
 	
@@ -455,11 +468,22 @@ public class UserController {
 		    
 		}
 	
-	//방명록 삭제
+	//방명록 삭제(사진까지 삭제)
 	@ResponseBody
 	@GetMapping("/user/deleteguestbook")
-	public void deleteGuestBook(String guest_num)
+	public void deleteGuestBook(String guest_num,HttpSession session)
 	{
+		String delphoto=uservice.getDataByGuestNum(guest_num).getGuest_file();
+		
+		if(delphoto!="no") {
+			
+			String path=session.getServletContext().getRealPath("/guest_file");
+			
+			File delFile=new File(path+"\\"+delphoto);
+			
+			delFile.delete();
+		}
+		
 		uservice.deleteGuestBook(guest_num);
 	}
 	
@@ -546,6 +570,7 @@ public class UserController {
 		cservice.insertLike(dto);
 	}
 	
+	//댓글 좋아요 취소
 	@GetMapping("/user/commentlikedelete")
 	@ResponseBody
 	public void likedelete(String comment_num,HttpSession session) {
