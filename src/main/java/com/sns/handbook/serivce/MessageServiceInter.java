@@ -15,4 +15,5 @@ public interface MessageServiceInter {
 	public void deleteMessage(String mess_num);
 	public int selectMaxNum();
 	public int getCountOfMessage(String user_num,String other);
+	public void deleteMessageGroup(int mess_group);
 }

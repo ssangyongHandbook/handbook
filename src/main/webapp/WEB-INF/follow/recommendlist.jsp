@@ -104,7 +104,7 @@
 						success:function(){
 							btn.innerText="팔로워취소";
 						}
-					}) 
+					}); 
 				}else{
 					
 					$.ajax({

@@ -41,7 +41,7 @@ div.layout div.title {
 
 div.layout div.menu {
 	position: fixed;
-	margin-top: 80px;
+	margin-top: 40px;
 	/* width값 바꿈 */
 	width: 300px;
 	height: 100%;

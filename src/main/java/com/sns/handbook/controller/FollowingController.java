@@ -1,11 +1,5 @@
 package com.sns.handbook.controller;
 
-
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.sns.handbook.dto.FollowingDto;
 import com.sns.handbook.dto.UserDto;
+import com.sns.handbook.serivce.BookmarkService;
 import com.sns.handbook.serivce.FollowingService;
 import com.sns.handbook.serivce.UserService;
 
@@ -36,6 +31,10 @@ public class FollowingController {
 	
 	@Autowired
 	UserService uservice;
+	
+	@Autowired
+	BookmarkService bservice;
+	
 	
 	@GetMapping("/test")
 	public String test(Model model) {
@@ -87,6 +86,7 @@ public class FollowingController {
 			list.get(i).setUser_name(dto.getUser_name());// 위에서 dto에서 name photo를 뽑아내서 리스트에 set을 해줌
 			list.get(i).setUser_photo(dto.getUser_photo());
 			list.get(i).setTf_count(service.togetherFollow(dto.getUser_num(),(String)session.getAttribute("user_num")));
+			list.get(i).setBookmarkcheck(bservice.bookmarkCheck((String)session.getAttribute("user_num"),list.get(i).getTo_user()));
 
 		}
 		

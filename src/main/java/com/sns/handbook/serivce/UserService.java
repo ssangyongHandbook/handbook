@@ -119,10 +119,27 @@ public class UserService implements UserServiceInter {
 		// TODO Auto-generated method stub
 		return mapperInter.getGuestPost(owner_num);
 	}
-
-
-	//우형 끝
-
+	
+	@Override
+	public void deleteGuestBook(String guest_num) {
+		// TODO Auto-generated method stub
+		mapperInter.deleteGuestBook(guest_num);
+	}
+	
+	@Override
+	public void updateGuestBook(GuestbookDto dto) {
+		// TODO Auto-generated method stub
+		mapperInter.updateGuestBook(dto);
+	}
+	
+	@Override
+	public GuestbookDto getDataByGuestNum(String guest_num) {
+		// TODO Auto-generated method stub
+		return mapperInter.getDataByGuestNum(guest_num);
+	}
+	
+	//우형 끝	
+	
 	//희수 시작
 	@Override
 	public void insertUserInfo(UserDto dto) throws Exception {
@@ -266,6 +283,4 @@ public class UserService implements UserServiceInter {
 		// TODO Auto-generated method stub
 		return mapperInter.getUserByName(user_name);
 	}
-
-
 }

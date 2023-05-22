@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.sns.handbook.dto.CommentDto;
 import com.sns.handbook.dto.CommentlikeDto;
+import com.sns.handbook.dto.GuestbookDto;
+import com.sns.handbook.dto.PostDto;
 
 @Mapper
 public interface CommentMapperInter {
@@ -20,6 +22,7 @@ public interface CommentMapperInter {
 	public List<CommentDto> getDataGroupStep(Map<String, Integer> map);
 	public void update(CommentDto dto);
 	public List<CommentDto> selectScroll(Map<String, Object> map);
+	public List<CommentDto> selectGuestScroll(Map<String, Object> map);
 	public List<CommentDto> getAllDatas();
 	
 	//댓글 좋아요 부분
@@ -27,4 +30,9 @@ public interface CommentMapperInter {
 	public void deleteLike(Map<String, String> map);
 	public int getTotalLikes(String comment_num);
 	public int getLikeCheck(Map<String, String> map);
+	
+	
+	public int getTotalCount(String post_num);
+	public int getTotalGuestCount(String guest_num);
+	public GuestbookDto getDataByGuestNum(String guest_num);
 }

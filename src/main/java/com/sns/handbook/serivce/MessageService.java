@@ -150,4 +150,10 @@ public class MessageService implements MessageServiceInter {
 		return mapperInter.getCountOfMessage(map);
 	}
 
+	@Override
+	public void deleteMessageGroup(int mess_group) {
+		// TODO Auto-generated method stub
+		mapperInter.deleteMessageGroup(mess_group);
+	}
+
 }
