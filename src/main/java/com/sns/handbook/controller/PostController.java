@@ -27,6 +27,7 @@ import com.sns.handbook.dto.FollowingDto;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.PostlikeDto;
 import com.sns.handbook.dto.UserDto;
+import com.sns.handbook.serivce.CommentService;
 import com.sns.handbook.serivce.FollowingService;
 import com.sns.handbook.serivce.PostService;
 import com.sns.handbook.serivce.PostlikeService;
@@ -46,6 +47,9 @@ public class PostController {
 
 	@Autowired
 	FollowingService fservice;
+	
+	@Autowired
+	CommentService cservice;
 
 	@GetMapping("/post/write")
 	public String write() {
@@ -68,6 +72,7 @@ public class PostController {
 			// list.get(i).setUser_name(list.get(i).getUser_name());
 			// list.get(i).setUser_photo(list.get(i).getUser_photo());
 			list.get(i).setLike_count(plservice.getTotalLike(list.get(i).getPost_num()));
+			list.get(i).setComment_count(cservice.getTotalCount(list.get(i).getPost_num()));
 			list.get(i).setLikecheck(
 					plservice.checklike((String) session.getAttribute("user_num"), list.get(i).getPost_num()));
 			list.get(i).setChecklogin(
@@ -120,6 +125,7 @@ public class PostController {
 			}
 
 			list.get(i).setPost_time(preTime);
+			
 		}
 
 		String login_name = uservice.getUserByNum((String) session.getAttribute("user_num")).getUser_name();
@@ -176,8 +182,21 @@ public class PostController {
 	// delete
 	@GetMapping("/post/delete")
 	@ResponseBody
-	public void delete(@RequestParam String post_num ) {
+	public void delete(@RequestParam String post_num, HttpSession session ) {
 
+		//사진 이름 받기
+		String delPhoto=pservice.getDataByNum(post_num).getPost_file();
+		
+		if(delPhoto!="no") {
+			//사진이 존재한다면 삭제
+			String path=session.getServletContext().getRealPath("/post_file");
+			
+			File delFile=new File(path+"\\"+delPhoto);
+			
+			//파일(사진) 삭제
+			delFile.delete();
+		}
+		
 		pservice.deletePost(post_num);
 	}
 

@@ -337,6 +337,7 @@ $(function(){
       $(".modpost").click(function(){
          
          updatenum=$(this).attr("post_num");
+         updateusernum=$(this).attr("user_num");
          type=$(this).attr("type");
 			
          if(type=='post'){
@@ -360,6 +361,8 @@ $(function(){
                     $("#update_access").val(res.post_access);
                     $("#update_content").val(res.post_content);
                     $("#showmodimg").attr("src","/post_file/"+res.post_file);
+                    $("#btnupdate2").attr("num",updateusernum);
+                    $("#btnupdate2").attr("post_type",type);
                     
                     modalaccess.innerHTML=s;
                  }
@@ -381,6 +384,9 @@ $(function(){
                 	 
                     $("#update_content").val(res.guest_content);
                     $("#showmodimg").attr("src","/guest_file/"+res.guest_file);
+                    $("#btnupdate2").attr("num",updateusernum);
+                    $("#btnupdate2").attr("post_type",type);
+                    
                     modalaccess.innerHTML=s;
                  }
               })
@@ -395,6 +401,7 @@ $(function(){
          var update_content=$("#update_content").val();
          var write_num="${loginnum}";
          var owner_num=$(this).attr("num");
+         var post_type=$(this).attr("post_type");
          
          var form = new FormData();
 
@@ -402,14 +409,14 @@ $(function(){
          
          for (var i = 0; i < files.length; i++) {
               form.append("photo", files[i]);
-          }
-         
-         if(write_num==owner_num){
+          }        	 
+
+         if(write_num==owner_num && post_type=='guest'){
+
         	 
-             form.append("post_num",updatenum);
-             form.append("post_access",update_access);
-             form.append("post_content",update_content);
-             
+             form.append("guest_num",updatenum);
+             form.append("guest_content",update_content);
+
              $.ajax({
                 type: "post",
                 dataType: "text",
@@ -625,14 +632,208 @@ $(function(){
          $("#showimg").show();
          $("#showtext").show();
       })
+      
+      //댓글 창 호출
+      $(".img_comment").click(function(){
+    	  
+    	  var post_num=$(this).attr("post_num");
+    	  
+    	  $("#inputhidden-post_num").val(post_num);
+          $("#commentsection").empty();
+          scroll(0,post_num);
+    	  
+    	  $(".btncommentmodal").trigger("click");
+    	  
+      })
+      
+      //댓글 입력
+      $("#insertcommentbtn").click(function() {
 
+          var formdata = $("#form").serialize();
+          var post_num=$("#inputhidden-post_num").val();
+			
+          $.ajax({
+
+             type : "post",
+             dataType : "text",
+             url : "cinsert",
+             data : formdata,
+             success : function() {
+                $("#commentsection").empty();
+                $("#addcomment").hide();
+                $("#commentinput").val("");
+                commentoffset = 0;
+                scroll(commentoffset, post_num);
+                $("#addcomment").show();
+             }
+          })
+       });
+      
+      $(document).on("click", ".ulimg", function() {
+
+          var comment_num = $(this).attr("comment_num");
+          $("#ul" + comment_num).toggle();
+       })
+       
+       $(document).on("click", ".cminsert", function() {
+
+         var comment_num = $(this).attr("comment_num");
+         var comment_content = $("#input" + comment_num).val();
+         var post_num = $(this).attr("post_num");
+
+         $.ajax({
+
+            type : "post",
+            dataType : "text",
+            url : "cinsert",
+            data : {
+               "comment_num" : comment_num,
+               "comment_content" : comment_content,
+               "post_num" : post_num
+            },
+            success : function() {
+               $("#commentsection").empty();
+               $("#addcomment").hide();
+               $("#input" + comment_num).val("");
+               $("#input" + comment_num).hide();
+               commentoffset = 0;
+               scroll(commentoffset, post_num);
+               $("#addcomment").show();
+            }
+         })
+
+      })
+      
+        $(document).on("click", ".recontent", function() {
+
+         var comment_num = $(this).attr("comment_num");
+
+         $("#comment" + comment_num).toggle();
+      })
+      
+      //댓글 좋아요
+      $(document).on("click", "span.nolike", function() {
+
+         var comment_num = $(this).attr("comment_num");
+         var post_num=$("#inputhidden-post_num").val();
+
+         $.ajax({
+            type : "get",
+            dataType : "text",
+            url : "commentlikeinsert",
+            data : {
+               "comment_num" : comment_num
+            },
+            success : function() {
+               commentoffset = 0;
+               $("#commentsection").empty();
+               $("#addcomment").hide();
+               $("#input" + comment_num).val("");
+               $("#input" + comment_num).hide();
+               scroll(commentoffset, post_num);
+               $("#addcomment").show();
+            }
+         });
+
+      })
+      
+      //댓글 좋아요 취소
+       $(document).on("click", "span.yeslike", function() {
+
+         var comment_num = $(this).attr("comment_num");
+         var post_num=$("#inputhidden-post_num").val();
+
+         $.ajax({
+            type : "get",
+            dataType : "text",
+            url : "commentlikedelete",
+            data : {
+               "comment_num" : comment_num
+            },
+            success : function() {
+               commentoffset = 0;
+               $("#commentsection").empty();
+               $("#addcomment").hide();
+               $("#input" + comment_num).val("");
+               $("#input" + comment_num).hide();
+               scroll(commentoffset, post_num);
+               $("#addcomment").show();
+            }
+         });
+
+      })
+      
+       $(document).on("click",".commentdel",function(){
+         
+         var comment_num=$(this).attr("comment_num");
+         var post_num=$("#inputhidden-post_num").val();
+         $.ajax({
+            type:"get",
+            dataType:"text",
+            url:"cdelete",
+            data:{"comment_num":comment_num},
+            success:function(){
+               commentoffset=0;
+               $("#commentsection").empty();
+               $("#addcomment").hide();
+               $("#input" + comment_num).val("");
+               $("#input" + comment_num).hide();
+               scroll(commentoffset, post_num);
+               $("#addcomment").show();
+            }
+         })
+      })
+      
+      $(document).on("click",".commentmod",function(){
+         
+         var comment_num=$(this).attr("comment_num");
+         $("#div"+comment_num).hide();
+         $("#commentmod"+comment_num).show();
+      })
+      
+      $(document).on("keydown",".inputmod",function(){
+         
+         if (event.keyCode === 13) {
+            var comment_num=$(this).attr("comment_num");
+            var post_num=$("#inputhidden-post_num").val();
+            var comment_content=$(this).val();
+
+            $.ajax({
+               type:"post",
+               dataType:"text",
+               url:"commentupdate",
+               data:{"comment_num":comment_num,"comment_content":comment_content},
+               success:function(){
+                  commentoffset=0;
+                  $("#commentsection").empty();
+                  $("#addcomment").hide();
+                  $("#input" + comment_num).val("");
+                  $("#input" + comment_num).hide();
+                  scroll(commentoffset, post_num);
+                  $("#addcomment").show();
+               }
+            });
+         };
+      })
+      
+      $(document).on("click",".commentspan",function(){
+         
+         var post_num=$(this).attr("post_num");
+         //alert(post_num);
+         $("#inputhidden-post_num").val(post_num);
+         $("#commentsection").empty();
+         scroll(0,post_num);
+        $(".cmmodalbtn").trigger("click");
+        
+         
+      })
    })
 </script>
 
 <style type="text/css">
 
    html{
-      background-color: #F0F2F5;
+     	 background-color: #F0F2F5;
    }
 
    .cover{
@@ -873,6 +1074,36 @@ $(function(){
          height: 0px;
       }	
       
+      #commentprofile {
+   		width: 60px;
+   		border: 1px solid gray;
+ 	  	border-radius: 100px;
+	  }
+
+	  .mominput {
+	     width: 700px;
+	     border: 1px solid gray;
+	     border-radius: 40px;
+	     background-color: #EEEEEE;
+	  }
+	  
+	  #commentaddform {
+  		 margin-top: 7px;
+  		 height: 60px;
+  		 display: flex;
+  		 justify-content: space-between;
+  		 align-content: center;
+	  }
+	  
+	  .commentmodal-content{
+  		 overflow-y: initial !important
+	  }
+
+	  .commentmodal-body{
+  		 height: 740px;
+  		 overflow-y: auto;
+	  }
+	  
       
 
 </style>
@@ -982,6 +1213,7 @@ $(function(){
 
             <div class="modal-body">
             <div style="margin-bottom: 2%; display: flex; align-items: center;">
+            <c:if test="${sessionScope.user_num==dto.user_num }">
                <img alt="" src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
                <div style="margin-left: 2%;">
                    <span style="font-size: 11pt;"><b>${dto.user_name }</b></span><br>
@@ -989,6 +1221,17 @@ $(function(){
 	                  <div id="modalaccess"></div>
 	              
                   </div>
+                  </c:if>
+                  
+                  <c:if test="${sessionScope.user_num!=dto.user_num }">
+               <img alt="" src="${root }/photo/${sessionScope.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
+               <div style="margin-left: 2%;">
+                   <span style="font-size: 11pt;"><b>${sessionScope.name }</b></span><br>
+              
+	                  <div id="modalaccess"></div>
+	              
+                  </div>
+                  </c:if>
                   </div>
                <textarea id="update_content" placeholder="무슨 생각을 하고 계신가요?" style="width: 100%; height:100%; border: none; outline: none;  resize: none;"></textarea>
                         
@@ -1046,7 +1289,7 @@ $(function(){
                             <img src="${root }/photo/${sessionScope.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
                        
                      <div style="margin-left: 2%;">
-                      <span style="font-size: 11pt;"><b>${dto.user_name }</b></span><br>
+                      <span style="font-size: 11pt;"><b>${sessionScope.name }</b></span><br>
                       
                      <span style="border-radius: 5px; padding: 4px; background-color: #F0F2F5;"><b><i class="fa-solid fa-user-group"></i>팔로워 공개</b></span>
       
@@ -1077,6 +1320,43 @@ $(function(){
         </div>
         
       </div>
+      
+      <!-- 댓글 -->
+           <button type="button" class="btn btn-info btn-lg btncommentmodal hide" data-toggle="modal" data-target="#commentmodal"></button>
+      <!-- comment -->
+      <div id="commentmodal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+               <!-- Modal content-->
+               <div class="modal-content commentmodal-content">
+                  <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal">&times;</button>
+                     <h4 class="modal-title commenth4">${dto.user_name }의 게시물</h4>
+                  </div>
+                  <div class="modal-body commentmodal-body" style="max-height: 800px;">
+                     <!-- 타임라인 -->
+                     
+                     <br>
+                     <hr>
+                     <section1 id="commentsection">
+                        <!-- 댓글 나올 부분 -->
+                     </section1>
+                     <button type="button" class="btn btn-success" id="addcomment">댓글 더보기</button>
+                  </div>
+                  <div class="modal-footer" style="height: 80px; padding: 0;">
+                     <form method="post" class="form-inline" id="form">
+                        <input type="hidden" name="comment_num" value="0">
+                        <input type="hidden" name="post_num" id="inputhidden-post_num">
+                        <div id="commentaddform">
+                           <img src="/photo/${sessionScope.user_photo }" id="commentprofile">
+                           <input hidden="hidden" />
+                           <input type="text" class="mominput" name="comment_content" placeholder="댓글을 입력하세요" id="commentinput">
+                           <button type="button" id="insertcommentbtn" class="btn btn-info" style="margin-right: 20px;">입력</button>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
       
       <div class="mypage" >
       
@@ -1134,13 +1414,27 @@ $(function(){
       
          <div style="float:right; margin-right: 3%; margin-top: 2%;">
                   <c:if test="${sessionScope.user_num!=dto.user_num && checkfollowing !=1 }">
-                     <button type="button" class="btnfollow" id="btnfollow" from_user="${sessionScope.user_num }" to_user="${dto.user_num }">
-                     <i class="fa-solid fa-user-group"></i>&nbsp;팔로우 추가</button>
+                  	<c:if test="${checkfollower ==1 }">
+                  		<button type="button" class="btnfollow" id="btnfollow" from_user="${sessionScope.user_num }" to_user="${dto.user_num }">
+                     	<i class="fa-solid fa-user-group"></i>&nbsp;맞팔로우 하기</button>
+                  	</c:if>
+                  	
+                  	<c:if test="${checkfollower !=1 }">
+                     	<button type="button" class="btnfollow" id="btnfollow" from_user="${sessionScope.user_num }" to_user="${dto.user_num }">
+                     	<i class="fa-solid fa-user-group"></i>&nbsp;팔로우 하기</button>
+                     </c:if>
                  </c:if>
-                 
+         
                  <c:if test="${sessionScope.user_num!=dto.user_num && checkfollowing ==1 }">
-                     <button type="button" class="btnunfollow" id="btnunfollow" to_user="${dto.user_num }">
-                     <i class="fa-solid fa-user-group"></i>&nbsp;팔로우 취소</button>
+                 	<c:if test="${checkfollower ==1 }">
+                     	<button type="button" class="btnunfollow" id="btnunfollow" to_user="${dto.user_num }">
+                     	<i class="fa-solid fa-user-group"></i>&nbsp;맞팔로우 취소</button>
+                    </c:if>
+                    
+                    <c:if test="${checkfollower !=1 }">
+                     	<button type="button" class="btnunfollow" id="btnunfollow" to_user="${dto.user_num }">
+                     	<i class="fa-solid fa-user-group"></i>&nbsp;팔로우 취소</button>
+                    </c:if>
                  </c:if>
                  
                  <button type="button" class="btnmessage"><i class="fa-solid fa-comment"></i>&nbsp;메시지 보내기</button>
@@ -1252,15 +1546,15 @@ $(function(){
                            <div class="top">
                               <div class="top-user">
                                  <c:if test="${adto.type=='post' }">
-                                    <img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
+                                    <a href="${root }/user/mypage?user_num=${dto.user_num}"><img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
                                  </c:if>
                                  
                                  <c:if test="${adto.type=='guest' }">
-                                    <img alt="" src="${root }/photo/${adto.dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
-                                    
+                                    <a href="${root }/user/mypage?user_num=${adto.dto.user_num}"><img alt="" src="${root }/photo/${adto.dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
                                  </c:if>
                                     <div class="top-writeday">
-                                       <span><b>${adto.dto.user_name }<c:if test="${adto.type=='guest' }"><i class="fa-solid fa-caret-right"></i></c:if>${dto.user_name }<br></b>
+                                       <span><b><a href="${root }/user/mypage?user_num=${adto.dto.user_num}" style="color: black;">${adto.dto.user_name }</a><c:if test="${adto.type=='guest' }"><i class="fa-solid fa-caret-right"></i></c:if>
+                                       <a href="${root }/user/mypage?user_num=${dto.user_num}" style="color: black;">${dto.user_name }</a><br></b>
                                        ${adto.post_time }
                                        <b>
                                        <c:if test="${adto.post_access =='follower'}">
@@ -1284,7 +1578,7 @@ $(function(){
                                           <ul class="dropdown-menu dropdown-menu-right">
                                              <li><a href="#" class="delpost" post_num=${adto.post_num } num=${dto.user_num } type=${adto.type }>게시글 삭제</a></li>
                                              <c:if test="${adto.type!='guest' }">
-                                             	<li><a href="#" class="modpost" id="updatepost" data-toggle="modal" data-target="#updatepost" post_num=${adto.post_num } type=${adto.type }>게시글 수정</a></li>
+                                             	<li><a href="#" class="modpost" data-toggle="modal" data-target="#updatepost" post_num=${adto.post_num } type=${adto.type } user_num=${adto.user_num }>게시글 수정</a></li>
                                              </c:if>
                                            </ul>
                                        </div>
@@ -1295,7 +1589,7 @@ $(function(){
                                           <i class="fa-solid fa-ellipsis fa-2x - 2em" data-toggle="dropdown" style=" cursor: pointer;"></i>
                                           <ul class="dropdown-menu dropdown-menu-right">
                                              <li><a href="#" class="delpost" post_num=${adto.post_num } num=${dto.user_num } type=${adto.type }>게시글 삭제</a></li>
-                                             <li><a href="#" class="modpost" id="updatepost" data-toggle="modal" data-target="#updatepost" post_num=${adto.post_num } type=${adto.type }>게시글 수정</a></li>
+                                             <li><a href="#" class="modpost" id="updatepost" data-toggle="modal" data-target="#updatepost" post_num=${adto.post_num } type=${adto.type } user_num=${adto.user_num }>게시글 수정</a></li>
                                            </ul>
                                        </div>
                                     </c:if>
@@ -1325,7 +1619,7 @@ $(function(){
                            <hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
                            
                               <div class="bottom-up">
-                                 <div class="like">
+                                 <div class="like" style="margin-bottom: 1%;">
                                     <c:if test="${adto.likecheck ==0 }">
                                        <span class="bottom-left2 liketoggle" likehide1_num="likehide1${adto.post_num}"
                                        likeshow1_num="likeshow1${adto.post_num}" post_num="${adto.post_num }"> 
@@ -1391,11 +1685,11 @@ $(function(){
                                  </div>
                                  
                                  <div class="comment">
-                                    <span><i class="fa-regular fa-comment fa-2x - 2em" id="img_comment"></i>&nbsp;&nbsp;댓글달기</span>
+                                    <span><i class="img_comment fa-regular fa-comment fa-2x - 2em" style="cursor:pointer;" post_num=${adto.post_num }></i>&nbsp;&nbsp;댓글달기</span>
                                  </div>
                               </div>
                               
-                              <div class="bottom-down">
+                              <%-- <div class="bottom-down">
                                  <hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
                                     <div class="searcharea">
                                           <div style="width: 700px; display: inline-flex; align-items: center;">
@@ -1409,7 +1703,7 @@ $(function(){
                                              </div>
                                           </div>
                                     </div>
-                              </div>
+                              </div> --%>
                            </div>
                            
                         </div>

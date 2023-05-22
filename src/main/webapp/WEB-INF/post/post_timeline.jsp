@@ -102,6 +102,30 @@
          $("#" + likehide1_num).toggle();
 
       });
+      
+      
+      $(document).on("click", ".follow", function() {
+
+          var followpost_num = $(this).attr("followpost_num");
+          var unfollowpost_num= $(this).attr("unfollowpost_num");
+
+          $("#" + followpost_num).toggle();
+          $("#" + unfollowpost_num).toggle();
+
+       });
+      
+      $(document).on("click", ".unfollow", function() {
+
+          var followpost_num = $(this).attr("followpost_num");
+          var unfollowpost_num= $(this).attr("unfollowpost_num");
+
+          $("#" + followpost_num).toggle();
+          $("#" + unfollowpost_num).toggle();
+
+       });
+      
+      
+      
 
       $(document).on("click", ".liketoggle2", function() {
 
@@ -154,7 +178,6 @@
             success : function(res) {
                $("#update_access").val(res.post_access);
                $("#update_content").val(res.post_content);
-               $("#showmodimg").attr("src","/post_file/"+res.post_file);
 
             }
          })
@@ -166,23 +189,7 @@
                   "#updatetbtn",
                   function() {
 
-                   /*   var update_access = $("#update_access").val();
-                     var update_content = $("#update_content").val();
-
-                     var data = "post_num=" + updatenum
-                           + "&post_access=" + update_access
-                           + "&post_content=" + update_content;
-
-                     $.ajax({
-
-                        type : "post",
-                        dataType : "text",
-                        data : data,
-                        url : "update",
-                        success : function() {
-                           location.reload();
-                        }
-                     }); */
+                  
                      var update_access=$("#update_access").val();
                      var update_content=$("#update_content").val();
                      
@@ -240,59 +247,13 @@
                "user_num" : user_num
             },
             success : function() {
-
             }
          })
       });
-
-      
-      $(document).on("click", "#followbtn", function() {
-          var from_user = $(this).attr("from_user");
-          var to_user = $(this).attr("to_user");
-
-          $.ajax({
-             type : "get",
-             dataType : "text",
-             url : "followinginsert",
-             data : {
-                "from_user" : from_user,
-                "to_user" : to_user
-             },
-             success : function() {
-            	 
-            	 $("#followbtn").hide();
-             }
-          })
-       })
-       
-       
-        $(document).on("click", "#followbtns", function() {
-          var from_user = $(this).attr("from_user");
-          var to_user = $(this).attr("to_user");
-
-          $.ajax({
-             type : "get",
-             dataType : "text",
-             url : "followinginsert",
-             data : {
-                "from_user" : from_user,
-                "to_user" : to_user
-             },
-             success : function() {
-            	 
-            	 $("#followbtns").hide();
-             }
-          })
-       })
-      
-      
-      
-      
-      
-      
       
 
-      $(document).on("click", "#postfollow", function() {
+      $(document).on("click", ".follow", function() {
+
          var from_user = $(this).attr("from_user");
          var to_user = $(this).attr("to_user");
 
@@ -305,14 +266,12 @@
                "to_user" : to_user
             },
             success : function() {
-            	
-           	 $("#followbtn").hide();
 
             }
          })
       })
 
-      $(document).on("click", "#postunfollow", function() {
+      $(document).on("click", ".unfollow", function() {
          var to_user = $(this).attr("to_user");
          $.ajax({
             type : "get",
@@ -322,19 +281,22 @@
                "to_user" : to_user
             },
             success : function() {
-            	 $("#followbtn").show();
+
             }
          })
       })
 
       //사진 넘기면서 보기
       $(document).ready(
+
             function() {
+            	$(".sliders").each(function(){
+            		var itemId=this.id;
+            		var slider_num= itemId.split("-")[1];
+               $("#"+itemId).slick({
 
-               $('.slider').slick({
-
-                  prevArrow : '<img src="../image/left.png" class="prev">',
-                  nextArrow : '<img src="../image/right.png" class="next">',
+                  prevArrow : '<img id="prev-'+itemId+'" src="../image/left.png" class="prev" >',
+                  nextArrow : '<img id="next-'+itemId+'" src="../image/right.png" class="next">',
                   autoplay : false, // 자동 재생 여부
                   autoplaySpeed : 0, // 자동 재생 속도 (단위: ms)
                   dots : false, // 점 네비게이션 표시 여부
@@ -347,23 +309,20 @@
                });
 
                //마지막,처음 화살표 삭제
-               $('.slider').on('afterChange',
-                     function(event, slick, currentSlide) {
-                        if (currentSlide == 0) {
-                           $('.prev').css("visibility", "hidden");
-                        } else {
-                           $('.prev').css("visibility", "visible");
-                        }
-                        if (currentSlide == slick.slideCount - 1) {
-                           $('.next').css("visibility", "hidden");
-                        } else {
-                           $('.next').css("visibility", "visible");
+               $("#" + itemId).on('afterChange', function(event, slick, currentSlide) {
+      if (currentSlide == 0) {
+        $('#prev-' + itemId).css("visibility", "hidden");
+      } else {
+        $('#prev-' + itemId).css("visibility", "visible");
+      }
+      if (currentSlide == slick.slideCount - 1) {
+        $('#next-' + itemId).css("visibility", "hidden");
+      } else {
+        $('#next-' + itemId).css("visibility", "visible");
                         }
                      });
+            	})
             });
-      
-     
-      
       
       
       $("#btncontentphoto").click(function(){
@@ -376,8 +335,20 @@
           if($(this)[0].files[0]){
            var reader=new FileReader();
            reader.onload=function(e){
-            $("#showimg").attr("src",e.target.result);
-            $("#showtext").hide();
+        	$("#showtext").hide();
+        	   
+        	//영상 선택했을 경우 추가
+        	if((e.target.result).includes('video')){
+        		$("#showvideo").show();
+        		$("#showvideo").attr("src",e.target.result);
+        		$("#showimg").attr("src","");
+        		$("#showimg").hide();
+        	}else{
+        		$("#showimg").show();
+        		$("#showimg").attr("src",e.target.result);	
+        		$("#showvideo").attr("src","");
+        		$("#showvideo").hide();
+        	}
            }
            reader.readAsDataURL($(this)[0].files[0]);
           }
@@ -385,8 +356,7 @@
   
   
   $("#btncontentphoto").click(function(){
-         
-         $("#showimg").show();
+         //$("#showimg").show();
          $("#showtext").show();
       });
 
@@ -400,7 +370,7 @@
      $("#update_file").trigger("click");
   });
   
-  //게시물 수정 시 사진 미리보기 
+/*   //게시물 수정 시 사진 미리보기
   $("#update_file").change(function(){
      
       if($(this)[0].files[0]){
@@ -412,15 +382,43 @@
        reader.readAsDataURL($(this)[0].files[0]);
       }
   });
+   */
+
+   
+  $(document).ready(function() {
+		$("#btnmodcontentphoto").click(function() {
+			$("#update_file").click();
+		});
+		
+		$("#update_file").change(function() {
+			var file = this.files[0];
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				$("#showmodimg").attr("src", e.target.result);
+			};
+			reader.readAsDataURL(file);
+		});
+		
+		$("#remove_photo_btn").click(function() {
+			$("#update_file").val("");
+			$("#showmodimg").attr("src", "");
+		});
+	});
+   
   
   
   
   
   
- 
+  
+  
+  
+  
+      
+      
       
 
-      /*  window.onscroll = function(e) {
+     /*   window.onscroll = function(e) {
               if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
                  
                  offset=offset+2;
@@ -431,14 +429,42 @@
                    data:{"offset":offset},
                    success:function(res){
                       $.each(res,function(i,item){
-                      alert("hello");
                          
                          setTimeout(function(){
-                                
+                             var s = "";
+                             if(item.post_file!='no'){
+                            	 s += "<div class='show' id='divs" + item.post_num + "'>";
+                            	 s += "<div class='showtext'>게시물을 숨겼습니다. 다시보려면 게시물을 눌러주세요.</div>";
+                            	 s += "<button type='button' class='showbtn' divpost_num='div" + item.post_num + "' divspost_num='divs" + item.post_num + "'>게시물보기</button></div>";
+                            	 s += "<div class='divmain' id='div" + item.post_num + "'>";
+                            	 s += "<div class='top'>";
+                            	 s += "<div class='top-left'>";
+                            	 s += "<span style='float:left;'>";
+                            	 s += "<img src='${root}/photo/" + item.user_photo + "' class='userimg' user_num='" + item.user_num + "'></span>";
+								 
+                            	 s+="<span style='float :left; padding : 3%; margin-right: 5px;'><div>";
+								 s+="<b>"+item.user_name;
+								 if(item.post_access =='follower'){
+									 s+="<i class='fa-solid fa-user-group'></i>";
+								 }
+								 if(item.post_access =='all'){
+									 s+="<i class='fa-solid fa-earth-americas'></i>";
+								 }
+								 if(item.post_access =='only'){
+									 s+="<i class='fa-solid fa-lock'></i>";
+								 }
+								 
+								 s+="<b></div>";
+                            	 s+="<div>"+item.post_time+"</div></span></div>";
+                             }
+                                  
+                                  
+                                  
+                                  
                                   var addTimeline = document.createElement("div");
-                                  addTimeline.classList.add("divmain");
-                                 
-                                  addTimeline.innerHTML =
+                                  addTimeline.classList.add("divmain"); 
+                                  addTimeline.innerHTML =s;
+                                	  
                                    
                                    document.querySelector('section').appendChild(addTimeline);
                          }, 1000) 
@@ -448,8 +474,17 @@
                  
                
               }
-            }  */
-
+            }  
+ */
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
       
       /* comment */
@@ -478,60 +513,49 @@
          var comment_content = $("#input" + comment_num).val();
          var post_num = $(this).attr("post_num");
          //alert(comment_num + comment_content + post_num);
-         if(comment_content != ""){
-        	 
-	         $.ajax({
-	
-	            type : "post",
-	            dataType : "text",
-	            url : "cinsert",
-	            data : {
-	               "comment_num" : comment_num,
-	               "comment_content" : comment_content,
-	               "post_num" : post_num
-	            },
-	            success : function() {
-	               $("#commentsection").empty();
-	               $("#addcomment").hide();
-	               $("#input" + comment_num).val("");
-	               $("#input" + comment_num).hide();
-	               commentoffset = 0;
-	               scroll(commentoffset, post_num);
-	               $("#addcomment").show();
-	            }
-	         })
-         }else
-        	 alert("답글을 입력해주세요");
+         $.ajax({
+
+            type : "post",
+            dataType : "text",
+            url : "cinsert",
+            data : {
+               "comment_num" : comment_num,
+               "comment_content" : comment_content,
+               "post_num" : post_num
+            },
+            success : function() {
+               $("#commentsection").empty();
+               $("#addcomment").hide();
+               $("#input" + comment_num).val("");
+               $("#input" + comment_num).hide();
+               commentoffset = 0;
+               scroll(commentoffset, post_num);
+               $("#addcomment").show();
+            }
+         })
 
       })
 
       $("#insertcommentbtn").click(function() {
 
          var formdata = $("#form").serialize();
-         var inputdata=$("#commentinput").val();
-         //alert(inputdata);
          var post_num=$("#inputhidden-post_num").val();
-         
-         if(inputdata != ""){
-        	 
          //alert(formdata);
-	         $.ajax({
-	
-	            type : "post",
-	            dataType : "text",
-	            url : "cinsert",
-	            data : formdata,
-	            success : function() {
-	               $("#commentsection").empty();
-	               $("#addcomment").hide();
-	               $("#commentinput").val("");
-	               commentoffset = 0;
-	               scroll(commentoffset, post_num);
-	               $("#addcomment").show();
-	            }
-	         })
-         }else
-        	 alert("댓글을 입력해주세요.");
+         $.ajax({
+
+            type : "post",
+            dataType : "text",
+            url : "cinsert",
+            data : formdata,
+            success : function() {
+               $("#commentsection").empty();
+               $("#addcomment").hide();
+               $("#commentinput").val("");
+               commentoffset = 0;
+               scroll(commentoffset, post_num);
+               $("#addcomment").show();
+            }
+         })
       });
 
       $(document).on("click", "#addcomment", function() {
@@ -622,35 +646,8 @@
       $(document).on("click",".commentmod",function(){
          
          var comment_num=$(this).attr("comment_num");
-         var div=$("#div"+comment_num).css("visibility");
-         var divmod=$("#commentmod"+comment_num).css("visibility");
-		 if(div == "visible")	
-         	$("#div"+comment_num).css("visibility","hidden");
-		 else
-         	$("#div"+comment_num).css("visibility","visible");
-		 
-		 if(divmod == "hidden")	 
-         	$("#commentmod"+comment_num).css("visibility","visible");
-		 else
-         	$("#commentmod"+comment_num).css("visibility","hidden");
-		 $("#ul" + comment_num).toggle();
-		 
-      })
-      
-      $(document).on("click",".modclose",function(){
-    	  
-    	  var comment_num=$(this).attr("comment_num");
-          var div=$("#div"+comment_num).css("visibility");
-          var divmod=$("#commentmod"+comment_num).css("visibility");
- 		 if(div == "visible")	
-          	$("#div"+comment_num).css("visibility","hidden");
- 		 else
-          	$("#div"+comment_num).css("visibility","visible");
- 		 
- 		 if(divmod == "hidden")	 
-          	$("#commentmod"+comment_num).css("visibility","visible");
- 		 else
-          	$("#commentmod"+comment_num).css("visibility","hidden");
+         $("#div"+comment_num).hide();
+         $("#commentmod"+comment_num).show();
       })
       
       $(document).on("keydown",".inputmod",function(){
@@ -680,22 +677,70 @@
       
       
       $(document).on("click",".commentspan",function(){
-    	  
-    	  var post_num=$(this).attr("post_num");
-    	  var user_name=$(this).attr("user_name");
-    	  $("#inputhidden-post_num").val(post_num);
-    	  $(".commenth4").text(user_name+"님의 게시물");
-    	  $("#commentsection").empty();
-    	  scroll(0,post_num);
-		  $(".cmmodalbtn").trigger("click");
-
+         
+         var post_num=$(this).attr("post_num");
+         //alert(post_num);
+         $("#inputhidden-post_num").val(post_num);
+         $("#commentsection").empty();
+         scroll(0,post_num);
+        $(".cmmodalbtn").trigger("click");
+        
+         
       })
+      
+      //예지 비디오 부분 시작
+      
+      //처음 화면 로딩됐을 때 영상 위치 확인
+      $(".fileimg video").each(function(i,ele){
+    	  videoStatus($(ele));
+      })
+      
+      //스크롤 할 때마다 영상 위치 확인
+      $(window).scroll(function(){
+    	  $(".fileimg video").each(function(i,ele){
+        	  if(videoStatus($(ele))){
+        		  return;
+        	  }
+          })
+      })
+      
+      //예지 비디오 부분 끝
       
       
    })
    
    
-   
+   /* 예지: 영상 화면에 보일 시 자동재생 */
+   function videoStatus(video){
+	   var viewHeight=$(window).height();
+	   var scrollTop=$(window).scrollTop();
+	   var y=video.offset().top;
+	   var elementHeight=video.height();
+ 	  
+	   if(y<(viewHeight+scrollTop) && y>(scrollTop-elementHeight)){
+		   if(video.attr("onwindow")!="true"){
+			   video.get(0).play();
+			   video.attr("onwindow","true");    
+		   }
+		   
+		   return true;
+		}
+	   else if(y<(viewHeight+scrollTop) && video.attr("onwindow")!="true"){
+		   if(video.attr("onwindow")!="true"){
+			   video.get(0).play();
+			   video.attr("onwindow","true");  
+		   }  
+		   
+		   return true;
+		}
+	   else{
+		   video.get(0).pause();
+		   video.attr("onwindow","false"); 
+		   
+		   return false;
+		}
+	}
+   /* 예지 자동재생 끝 */
    
    /* 댓글 무한스크롤 */
    function scroll(commentoffset, post_num) {
@@ -725,25 +770,28 @@
                   
                   s += '<div style="height: 0; width: 450px; position: relative; left: -30px; top: 30px;">';
                   s += '<img src="../image/add.png" class="ulimg" style="width: 20px; float: right;" comment_num="'+item.comment_num+'">';
-                  s += '<ul class="list-group commentul" style="height:0; position:inherit;" id="ul'+item.comment_num+'">';
-                  if(item.user_num == ${sessionScope.user_num})
-                  	s += '<li class="list-group-item list-group-item-success commentmod" comment_num="'+item.comment_num+'">수정</li>';
+                  
+                  
+                  s += '<ul class="list-group commentul" id="ul'+item.comment_num+'">';
+                  s += '<li class="list-group-item list-group-item-success commentmod" comment_num="'+item.comment_num+'">수정</li>';
                   s += '<li class="list-group-item list-group-item-danger commentdel" comment_num="'+item.comment_num+'">삭제</li>';
                   s += '</ul>';
-                  s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display:flex; flex-wrap:wrap; visibility: hidden; position:relative; left: 31px; bottom: 31px;">';
-                  s += '<span class="glyphicon glyphicon-remove modclose" comment_num="'+item.comment_num+'" style="float:right"></span>';
-                  s += '<div><img src="/photo/'+item.user_photo+'" class="profile"></div>';
-                  s += '<div><b class="user_name">'+item.user_name+'</b>';
+                  s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display: none; width: 447px; position: relative; left: 31px; bottom: 31px;">';
+                  s += '<img src="/photo/'+item.user_photo+'" class="profile">';
+                  s += '<b class="user_name">'+item.user_name+'</b>';
+                  
+                  
+                  
                   s += '<br>';
-                  s += '<input type="text" class="inputmod form-control" style="width: 200px;" comment_num="'+item.comment_num+'" value="'+item.comment_content+'">';
-                  s += '</div></div>';
+                  s += '<input type="text" class="inputmod" style="width: 200px;" comment_num="'+item.comment_num+'" value="'+item.comment_content+'">';
+                  s += '</div>';
                   s += '</div>';
                }
                
-               s += "<div class='comment' style='display:flex; flex-wrap:wrap;' id='div"+item.comment_num+"'>";
-               s += "<div><img src='/photo/"+item.user_photo+"' class='profile'></div>";
-               s += "<div><b class='user_name'>" + item.user_name + "</b><br>";
-               s += "<span class='spancontent'>" + item.comment_content + "</span></div></div>";
+               s += "<div class='comment' id='div"+item.comment_num+"'>";
+               s += "<img src='/photo/"+item.user_photo+"' class='profile'>";
+               s += "<b class='user_name'>" + item.user_name + "</b><br>";
+               s += "<span class='spancontent'>" + item.comment_content + "</span></div>";
                s += "<div class='cmlike'>";
 
                if (item.like_check == 0) {
@@ -1072,7 +1120,13 @@ body {
 	obejct-fit: cover;
 }
 
-.slider {
+.fileimg video {
+	width: 100%;
+	height: 100%;
+	obejct-fit: cover;
+}
+
+.sliders {
 	width: 100%;
 	margin: 0 auto;
 	display: inline-flex;
@@ -1087,125 +1141,161 @@ body {
 
 /* comment */
 .commentmodal-content {
-  overflow-y: initial !important;
+	overflow-y: initial !important;
 }
 
 .commentmodal-body {
-  height: 740px;
-  overflow-y: auto;
+	height: 740px;
+	overflow-y: auto;
 }
 
 .comment {
-width: 450px;
-border-radius: 20px;
-background-color:    #F6F6F6;
-padding: 10px;
-margin-bottom: 10px;
+	width: 450px;
+	border-radius: 20px;
+	background-color: #F6F6F6;
+	padding: 10px;
+	margin-bottom: 10px;
 }
-
-
 
 .profile {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 20px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	margin-right: 20px;
 }
 
+/* 좋아요,댓글,날짜 */
 .cmlike {
-   width: 450px;
-   margin-top: 10px;
-   display: flex;
-   justify-content: space-around;
-   align-content: center;
+	width: 450px;
+	margin-top: 10px;
+	display: flex;
+	justify-content: space-around;
+	align-content: center;
 }
 
+/* 사용자 이름  */
 b.user_name {
-  font-size: 14px;
-  font-weight: bold;
+	font-size: 14px;
+	font-weight: bold;
 }
 
+/* 사용자 댓글  */
 span.content {
-  font-size: 16px;
+	font-size: 16px;
 }
 
 #commentaddform {
-   margin-top: 7px;
-   height: 60px;
-   display: flex;
-   justify-content: space-between;
-   align-content: center;
+	margin-top: 7px;
+	height: 60px;
+	display: flex;
+	justify-content: space-between;
+	align-content: center;
 }
 
 #commentprofile {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	margin-right: 10px;
 }
 
 .input {
-  flex: 1;
-  height: 40px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  padding: 5px 10px;
+	flex: 1;
+	height: 40px;
+	border: 1px solid #ddd;
+	border-radius: 20px;
+	padding: 5px 10px;
 }
 
 .mominput {
-   width: 700px;
-   border: 1px solid gray;
-   border-radius: 40px;
+	width: 700px;
+	border: 1px solid gray;
+	border-radius: 40px;
 }
 
-.recontent,
-.nolike,
-.yeslike {
-  color: #777;
-  cursor: pointer;
+.recontent, .nolike, .yeslike {
+	color: #777;
+	cursor: pointer;
 }
-
 
 .commentul {
-   float: right;
-   list-style: none;
-   display: none;
-   font-size: 0.7em;
-   height: 70px;
+	position: absolute;
+	top: 20px;
+	right: 0;
+	list-style: none;
+	display: none;
+	font-size: 0.7em;
+	width: 70px;
+	padding: 0;
+	margin: 0;
+	border: none;
 }
 
-li {
-  cursor: pointer;
+.commentul:before {
+	content: "";
+	position: absolute;
+	top: -15px;
+	right: -1px;
+	border-top: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 10px solid #e6f0fb;
+	border-left: 16px solid transparent;
+}
+
+.commentul li {
+	border: none;
+	background-color: #e6f0fb;
+	cursor: pointer;
+	padding: 8px 12px;
+	transition: background-color 0.3s, color 0.3s;
+	text-align: center;
+}
+
+.commentul li:not(:last-child) {
+	margin-bottom: -1px;
+}
+
+.commentul li:hover {
+	background-color: #cfe0fa;
+	color: #3355a0;
 }
 
 .ulimg {
-   cursor: pointer;
+	cursor: pointer;
 }
 
-
-
-.commentul ul li:hover {
-  background-color: #f5f5f5;
+.commentmod, .commentdel {
+	padding: 5px;
+	font-size: 12px;
+	color: #555;
 }
 
-.commentmod,
-.commentdel {
-  padding: 5px;
-  font-size: 12px;
-  color: #555;
-}
-
-.commentmod:hover,
-.commentdel:hover {
-  color: #333;
+.commentmod:hover, .commentdel:hover {
+	color: #333;
 }
 
 .comment .allcomment {
-  margin-left: 50px;
+	margin-left: 50px;
 }
 
 .comment .comment {
-  margin-left: 50px;
+	margin-left: 50px;
+}
+
+.modclose {
+	cursor: pointer;
+}
+
+.unfollow {
+	color: blue;
+}
+
+.follow {
+	color: gray;
+}
+
+li {
+	cursor: pointer;
 }
 </style>
 </head>
@@ -1270,6 +1360,9 @@ li {
 								<img id="showimg"
 									style="display: none; width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;">
 								<br>
+								<video id="showvideo"
+									style="display: none; width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"
+									controls="controls"></video>
 								<p id="showtext"
 									style="display: none; position: absolute; top: 65px; left: 190px; font-weight: bold;">사진/동영상
 									추가</p>
@@ -1294,71 +1387,42 @@ li {
 
 
 		<div class="modal fade" id="updatepost" role="dialog">
-			<div class="modal-dialog">
+	<div class="modal-dialog">
 
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">게시글 수정</h4>
-					</div>
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">게시글 수정</h4>
+			</div>
 
-
-
-					<div class="modal-body">
-						<div class="form-group" style="width: 150px;">
-							<select class="form-control" name="update_access" id="update_access" required="required">
-								<option value="all">전체공개</option>
-								<option value="follower">팔로워 공개</option>
-								<option value="onlyme">나만보기</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<textarea style="width: 550px; height: 150px;" name="update_content" class="form-control"
-								required="required" id="update_content" placeholder="내용을 입력해주세요"></textarea>
-						</div>
-						<div class="form-group" style="width: 500px; display: none;">
-							<input type="file" name="update_file" class="form-control" required="required"
-								multiple="multiple" id="update_file">
-						</div>
-						<div>
-                  <img  id="showmodimg" style="width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
-						</div>
-
-						<button type="button" id="btnmodcontentphoto">사진 선택</button>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal" id="updatetbtn">수정</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-					</div>
+			<div class="modal-body">
+				<div class="form-group" style="width: 150px;">
+					<select class="form-control" name="update_access" id="update_access" required="required">
+						<option value="all">전체공개</option>
+						<option value="follower">팔로워 공개</option>
+						<option value="onlyme">나만보기</option>
+					</select>
 				</div>
+				<div class="form-group">
+					<input type="file" name="update_file" class="form-control" required="required" multiple="multiple" id="update_file" style="display: none;">
+				</div>
+				<div class="form-group">
+					<textarea style="width: 550px; height: 150px;" name="update_content" class="form-control" required="required" id="update_content" placeholder="내용을 입력해주세요"></textarea>
+				</div>
+				<img src="" id="showmodimg" style="width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
+				<button type="button" id="btnmodcontentphoto">사진 선택</button>
+				<button type="button" class="btn btn-default" id="remove_photo_btn">사진 없애기</button>
+			</div>
 
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="updatetbtn">수정</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 			</div>
 		</div>
 
-
+	</div>
+</div>
 		<section>
 			<!-- 파일이 있을경우0 -->
 			<!--  동영상일 경우와 사진이 1장만 있을 경우도 .해주어야함   -->
@@ -1397,15 +1461,6 @@ li {
 								</span>
 							</div>
 							<span class="top-right">
-							
-							 <c:if test="${dto.user_num!=sessionScope.user_num && dto.checkfollowing !=1 }">
-							<button id="followbtns" from_user="${sessionScope.user_num }"  to_user="${dto.user_num }" >팔로우</button>
-							</c:if>  
-							<c:if test="${dto.checkfollowing ==1 }">
-							<button id="followbtn" from_user="${sessionScope.user_num }"  to_user="${dto.user_num }" style="display: none;" >팔로우</button>
-							</c:if>
-							
-							
 								<span class="postmenu dropdown" post_num="${dto.post_num }"
 									user_num="${sessionScope.user_num }" dtouser_num="${dto.user_num}">
 									<i class="fa-solid fa-ellipsis"></i>
@@ -1447,14 +1502,23 @@ li {
 						<div class="center">
 							<div class="center-up">${dto.post_content }</div>
 
-							<div class="center-down slider">
-								<c:forTokens items="${dto.post_file }" delims="," var="file">
-									<div class="fileimg">
-										<img src="/post_file/${file }">
-									</div>
-								</c:forTokens>
+							<div class="center-down sliders" id="dto-${i.index}">
 
-								<%-- <img src="/post_file/${dto.post_file }" class="fileimg"> --%>
+								<c:forTokens items="${dto.post_file }" delims="." var="filetype" begin="1">
+									<!-- 예지: 파일이 사진인지 영상인지 확인 -->
+									<c:if test="${filetype=='mp4' || filetype=='avi'}">
+										<div class="fileimg">
+											<video src="/post_file/${dto.post_file }" controls="controls" muted="muted"></video>
+										</div>
+									</c:if>
+									<c:if test="${filetype!='mp4' }">
+										<c:forTokens items="${dto.post_file }" delims="," var="file">
+											<div class="fileimg">
+												<img src="/post_file/${file }">
+											</div>
+										</c:forTokens>
+									</c:if>
+								</c:forTokens>
 
 							</div>
 						</div>
@@ -1540,12 +1604,14 @@ li {
 
 
 								<!-- comment -->
-								<span class="bottom-right commentspan" style="cursor: pointer;" user_name=${dto.user_name } post_num="${dto.post_num }">
+								<span class="bottom-right commentspan" style="cursor: pointer;" user_name=${dto.user_name }
+									post_num="${dto.post_num }">
 									<span style="font-size: 1.3em; color: gray;">
 										<i class="fa-regular fa-comment"></i>
 									</span>
-									&nbsp;댓글
+									&nbsp;댓글 ${dto.comment_count }
 								</span>
+
 
 							</div>
 
@@ -1590,13 +1656,6 @@ li {
 								</span>
 							</div>
 							<span class="top-right2">
-							<c:if test="${dto.checkfollowing !=1 }">
-							<button id="followbtn" from_user="${sessionScope.user_num }"  to_user="${dto.user_num }" style="display: none;">팔로우</button>
-							</c:if>
-							<c:if test="${dto.checkfollowing ==1 }">
-							<button id="followbtn" from_user="${sessionScope.user_num }"  to_user="${dto.user_num }" style="display: none;" >팔로우</button>
-							</c:if>
-							
 								<span class="postmenu dropdown" post_num="${dto.post_num }"
 									user_num="${sessionScope.user_num }" dtouser_num="${dto.user_num}">
 									<i class="fa-solid fa-ellipsis"></i>
@@ -1714,15 +1773,15 @@ li {
 								</c:if>
 
 
-
-
 								<!-- comment -->
-								<span class="bottom-right2 commentspan" style="cursor: pointer;" user_name=${dto.user_name } post_num="${dto.post_num }">
+								<span class="bottom-right2 commentspan" style="cursor: pointer;" user_name=${dto.user_name }
+									post_num="${dto.post_num }">
 									<span style="font-size: 1.2em; top: 3px; color: gray;">
 										<i class="fa-regular fa-comment"></i>
 									</span>
-									&nbsp;댓글
+									&nbsp;댓글 ${dto.comment_count }
 								</span>
+
 
 							</div>
 
@@ -1739,9 +1798,6 @@ li {
 		</section>
 
 
-
-
-
 		<button type="button" class="btn btn-info btn-lg cmmodalbtn hide" data-toggle="modal"
 			data-target="#commentmodal"></button>
 		<!-- comment -->
@@ -1751,7 +1807,7 @@ li {
 				<div class="modal-content commentmodal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title commenth4"></h4>
+						<h4 class="modal-title commenth4">${dto.user_name }의게시물</h4>
 					</div>
 					<div class="modal-body commentmodal-body" style="max-height: 800px;">
 						<!-- 타임라인 -->
@@ -1777,6 +1833,5 @@ li {
 			</div>
 		</div>
 	</div>
-
 </body>
 </html>
