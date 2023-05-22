@@ -13,8 +13,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
-	href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap"
-	rel="stylesheet">
+   href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap"
+   rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css" />
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
@@ -288,15 +288,12 @@
 
       //사진 넘기면서 보기
       $(document).ready(
-
             function() {
-            	$(".sliders").each(function(){
-            		var itemId=this.id;
-            		var slider_num= itemId.split("-")[1];
-               $("#"+itemId).slick({
 
-                  prevArrow : '<img id="prev-'+itemId+'" src="../image/left.png" class="prev" >',
-                  nextArrow : '<img id="next-'+itemId+'" src="../image/right.png" class="next">',
+               $('.slider').slick({
+
+                  prevArrow : '<img src="../image/left.png" class="prev">',
+                  nextArrow : '<img src="../image/right.png" class="next">',
                   autoplay : false, // 자동 재생 여부
                   autoplaySpeed : 0, // 자동 재생 속도 (단위: ms)
                   dots : false, // 점 네비게이션 표시 여부
@@ -309,19 +306,19 @@
                });
 
                //마지막,처음 화살표 삭제
-               $("#" + itemId).on('afterChange', function(event, slick, currentSlide) {
-      if (currentSlide == 0) {
-        $('#prev-' + itemId).css("visibility", "hidden");
-      } else {
-        $('#prev-' + itemId).css("visibility", "visible");
-      }
-      if (currentSlide == slick.slideCount - 1) {
-        $('#next-' + itemId).css("visibility", "hidden");
-      } else {
-        $('#next-' + itemId).css("visibility", "visible");
+               $('.slider').on('afterChange',
+                     function(event, slick, currentSlide) {
+                        if (currentSlide == 0) {
+                           $('.prev').css("visibility", "hidden");
+                        } else {
+                           $('.prev').css("visibility", "visible");
+                        }
+                        if (currentSlide == slick.slideCount - 1) {
+                           $('.next').css("visibility", "hidden");
+                        } else {
+                           $('.next').css("visibility", "visible");
                         }
                      });
-            	})
             });
       
       
@@ -370,7 +367,7 @@
      $("#update_file").trigger("click");
   });
   
-/*   //게시물 수정 시 사진 미리보기
+  //게시물 수정 시 사진 미리보기
   $("#update_file").change(function(){
      
       if($(this)[0].files[0]){
@@ -382,29 +379,56 @@
        reader.readAsDataURL($(this)[0].files[0]);
       }
   });
-   */
+  
+  $(".modpost").click(function(){
+      
+      updatenum=$(this).attr("post_num");
 
+      $.ajax({
+         type : "get",
+         dataType : "json",
+         url : "updateform",
+         data : {"post_num" : updatenum},      
+         success : function(res) {
+            $("#update_access").val(res.post_access);
+            $("#update_content").val(res.post_content);
+            $("#showmodimg").attr("src","/post_file/"+res.post_file);
+         }
+      })
+   })
    
-  $(document).ready(function() {
-		$("#btnmodcontentphoto").click(function() {
-			$("#update_file").click();
-		});
-		
-		$("#update_file").change(function() {
-			var file = this.files[0];
-			var reader = new FileReader();
-			reader.onload = function(e) {
-				$("#showmodimg").attr("src", e.target.result);
-			};
-			reader.readAsDataURL(file);
-		});
-		
-		$("#remove_photo_btn").click(function() {
-			$("#update_file").val("");
-			$("#showmodimg").attr("src", "");
-		});
-	});
+   //게시물 수정      
+   $("#btnupdate2").click(function(){
+      
+      var update_access=$("#update_access").val();
+      var update_content=$("#update_content").val();
+      
+      var form = new FormData();
+
+      var files=$("#update_file")[0].files;
+      
+      for (var i = 0; i < files.length; i++) {
+           form.append("photo", files[i]);
+       }
+      form.append("post_num",updatenum);
+      form.append("post_access",update_access);
+      form.append("post_content",update_content);
+      
+      $.ajax({
+         type: "post",
+         dataType: "text",
+         url: "updatepost",
+         processData: false,
+         contentType: false,
+         data: form,
+         success: function(){
+            location.reload();
+         }
+      });
+      
+   })
    
+  
   
   
   
@@ -418,7 +442,7 @@
       
       
 
-       window.onscroll = function(e) {
+      /*  window.onscroll = function(e) {
               if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
                  
                  offset=offset+2;
@@ -429,70 +453,14 @@
                    data:{"offset":offset},
                    success:function(res){
                       $.each(res,function(i,item){
+                      alert("hello");
                          
                          setTimeout(function(){
-                             var s = "";
-                             if(item.post_file!='no'){
-                            	 s += "<div class='show' id='divs" + item.post_num + "'>";
-                            	 s += "<div class='showtext'>게시물을 숨겼습니다. 다시보려면 게시물을 눌러주세요.</div>";
-                            	 s += "<button type='button' class='showbtn' divpost_num='div" + item.post_num + "' divspost_num='divs" + item.post_num + "'>게시물보기</button></div>";
-                            	 s += "<div class='divmain' id='div" + item.post_num + "'>";
-                            	 s += "<div class='top'>";
-                            	 s += "<div class='top-left'>";
-                            	 s += "<span style='float:left;'>";
-                            	 s += "<img src='${root}/photo/" + item.user_photo + "' class='userimg' user_num='" + item.user_num + "'></span>";
-								 
-                            	 s+="<span style='float :left; padding : 3%; margin-right: 5px;'><div>";
-								 s+="<b>"+item.user_name;
-								 if(item.post_access =='follower'){
-									 s+="<i class='fa-solid fa-user-group'></i>";
-								 }
-								 if(item.post_access =='all'){
-									 s+="<i class='fa-solid fa-earth-americas'></i>";
-								 }
-								 if(item.post_access =='onlyme'){
-									 s+="<i class='fa-solid fa-lock'></i>";
-								 }
-								 s += "<b></div>";
-								 s += "<div>" + item.post_time + "</div></span></div>";
-								 s += "<span class='top-right'>";
-								 
-								  /* if (item.user_num != sessionScope.user_num && item.checkfollowing != 1) {
-									    s += "<span class='follow' id='follow" + item.post_num + "' followpost_num='follow" + item.post_num + "' unfollowpost_num='unfollow" + item.user_num + "' from_user='${sessionScope.user_num}' to_user='" + item.user_num + "'>팔로우하기</span> ";
-									    s += "<span class='unfollow' id='unfollow" + item.post_num + "' followpost_num='follow" + item.post_num + "' unfollowpost_num='unfollow" + item.user_num + "' style='display:none;'>팔로우 끊기</span> ";
-									}
-								 
-								 if (item.user_num != sessionScope.user_num && item.checkfollowing == 1) {
-									    s += "<span class='unfollow' id='unfollow" + item.post_num + "' followpost_num='follow" + item.post_num + "' unfollowpost_num='unfollow" + item.user_num + "'>팔로우 끊기</span> ";
-									    s += "<span class='follow' id='follow" + item.post_num + "' followpost_num='follow" + item.post_num + "' unfollowpost_num='unfollow" + item.user_num + "' from_user='${sessionScope.user_num}' to_user='" + item.user_num + "' style='display:none;'>팔로우 하기</span> ";
-									}  */
-								 
-								 
-								 s += "<span class='postmenu dropdown' post_num='" + item.post_num + "' user_num='${sessionScope.user_num}' dtouser_num='" + item.user_num + "'>";
-								 
-								 s+="<i class='fa-solid fa-ellipsis'>";
-								 
-								 if (item.checklogin == 1) {
-									    s += "<ul id='" + item.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20pt; line-height: 1.5em; display: none;'>";
-									     s+="<li id='postupdate' class='postdetail' data-toggle='modal' data-target='#updatepost' post_num='"+item.post_num+"' user_num='"+item.user_num+"'>게시물 수정</li>";
-									     s+="<li id='postdelete' class='postdetail' user_num='"+item.user_num+"' post_num='"+item.post_num+"'>게시물 삭제</li></ul></div>";
-									}
-								 if(item.checklogin != 1){
-									 s+="<ul id='"+item.post_num+"' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 25px; line-height:1.5em;display:none;'>";
-									 s+="<li class='postdetail posthide' divpost_num='div"+item.post_num+"' divpost_num='divs"+item.post_num+"'>게시물 숨김</li></ul>";
-									 
-								 }
-									 s+="</span></span></div></div>";
-									 
-								 }
-                                  
-                                  
-                                  
-                                  
+                                
                                   var addTimeline = document.createElement("div");
-                                  addTimeline.classList.add("divmain"); 
-                                  addTimeline.innerHTML =s;
-                                	  
+                                  addTimeline.classList.add("divmain");
+                                 
+                                  addTimeline.innerHTML =
                                    
                                    document.querySelector('section').appendChild(addTimeline);
                          }, 1000) 
@@ -502,8 +470,8 @@
                  
                
               }
-            }  
- 
+            }  */
+
             
             
             
@@ -798,18 +766,15 @@
                   
                   s += '<div style="height: 0; width: 450px; position: relative; left: -30px; top: 30px;">';
                   s += '<img src="../image/add.png" class="ulimg" style="width: 20px; float: right;" comment_num="'+item.comment_num+'">';
-                  
-                  
-                  s += '<ul class="list-group commentul" id="ul'+item.comment_num+'">';
-                  s += '<li class="list-group-item list-group-item-success commentmod" comment_num="'+item.comment_num+'">수정</li>';
-                  s += '<li class="list-group-item list-group-item-danger commentdel" comment_num="'+item.comment_num+'">삭제</li>';
+                  s += '<ul class="list-group commentul" style="height:0;" id="ul'+item.comment_num+'">';
+                  if(item.user_num == ${sessionScope.user_num})
+                  	s += '<li class="list-group-item commentmod" comment_num="'+item.comment_num+'">수정</li>';
+                  s += '<li class="list-group-item commentdel" comment_num="'+item.comment_num+'">삭제</li>';
                   s += '</ul>';
-                  s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display: none; width: 447px; position: relative; left: 31px; bottom: 31px;">';
-                  s += '<img src="/photo/'+item.user_photo+'" class="profile">';
-                  s += '<b class="user_name">'+item.user_name+'</b>';
-                  
-                  
-                  
+                  s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display:flex; flex-wrap:wrap; visibility: hidden; position:relative; left: 31px; bottom: 31px;">';
+                  s += '<span class="glyphicon glyphicon-remove modclose" comment_num="'+item.comment_num+'" style="position: relative; left:400px;"></span>';
+                  s += '<div><img src="/photo/'+item.user_photo+'" class="profile"></div>';
+                  s += '<div><b class="user_name">'+item.user_name+'</b>';
                   s += '<br>';
                   s += '<input type="text" class="inputmod" style="width: 200px;" comment_num="'+item.comment_num+'" value="'+item.comment_content+'">';
                   s += '</div>';
@@ -857,314 +822,314 @@
 
 <style type="text/css">
 body {
-	background-color: #F0F2F5;
+   background-color: #F0F2F5;
 }
 
 .allmain {
-	width: 1000px;
-	height: 100%;
-	background-color: #F0F2F5;
+   width: 1000px;
+   height: 100%;
+   background-color: #F0F2F5;
 }
 
 .divmain {
-	margin: 0 auto;
-	max-width: 750px;
-	min-width: 650px;
-	height: 600px;
-	border-radius: 10px 10px;
-	background-color: white;
+   margin: 0 auto;
+   max-width: 750px;
+   min-width: 650px;
+   height: 600px;
+   border-radius: 10px 10px;
+   background-color: white;
 }
 
 .top {
-	width: 100%;
-	height: 10%;
+   width: 100%;
+   height: 10%;
 }
 
 .top-left {
-	float: left;
-	width: 50%;
-	height: 100%;
+   float: left;
+   width: 50%;
+   height: 100%;
 }
 
 .top-right {
-	text-align: right;
-	float: right;
-	width: 50%;
-	height: 100%;
+   text-align: right;
+   float: right;
+   width: 50%;
+   height: 100%;
 }
 
 .center {
-	width: 100%;
-	height: 78.5%;
+   width: 100%;
+   height: 78.5%;
 }
 
 .center-up {
-	width: 100%;
-	height: 20%;
+   width: 100%;
+   height: 20%;
 }
 
 .center-down {
-	text-align: center;
-	width: 100%;
-	height: 80%;
-	overflow: hidden;
+   text-align: center;
+   width: 100%;
+   height: 80%;
+   overflow: hidden;
 }
 
 .bottom {
-	width: 100%;
-	height: 6.5%;
+   width: 100%;
+   height: 6.5%;
 }
 
 .bottom-up {
-	width: 100%;
-	height: 10%;
+   width: 100%;
+   height: 10%;
 }
 
 .bottom-left {
-	text-align: center;
-	font-size: 1.2em;
-	float: left;
-	width: 50%;
-	height: 100%;
+   text-align: center;
+   font-size: 1.2em;
+   float: left;
+   width: 50%;
+   height: 100%;
 }
 
 .bottom-right {
-	text-align: center;
-	font-size: 1.2em;
-	float: right;
-	width: 50%;
-	height: 100%;
+   text-align: center;
+   font-size: 1.2em;
+   float: right;
+   width: 50%;
+   height: 100%;
 }
 
 .bottom-down {
-	width: 100%;
-	height: 10%;
+   width: 100%;
+   height: 10%;
 }
 
 /* 파일 없을 경우  */
 .divmain2 {
-	margin: 0 auto;
-	max-width: 750px;
-	min-width: 550px;
-	height: 300px;
-	border-radius: 10px 10px;
-	background-color: white;
+   margin: 0 auto;
+   max-width: 750px;
+   min-width: 550px;
+   height: 300px;
+   border-radius: 10px 10px;
+   background-color: white;
 }
 
 .top2 {
-	width: 100%;
-	height: 20%;
+   width: 100%;
+   height: 20%;
 }
 
 .top-left2 {
-	float: left;
-	width: 50%;
-	height: 100%;
+   float: left;
+   width: 50%;
+   height: 100%;
 }
 
 .top-right2 {
-	text-align: right;
-	float: right;
-	width: 50%;
-	height: 100%;
+   text-align: right;
+   float: right;
+   width: 50%;
+   height: 100%;
 }
 
 .center2 {
-	width: 100%;
-	height: 57%;
+   width: 100%;
+   height: 57%;
 }
 
 .center-up2 {
-	width: 100%;
-	height: 100%;
+   width: 100%;
+   height: 100%;
 }
 
 .bottom2 {
-	width: 100%;
-	height: 13%;
+   width: 100%;
+   height: 13%;
 }
 
 .bottom-up2 {
-	width: 100%;
-	height: 10%;
+   width: 100%;
+   height: 10%;
 }
 
 .bottom-left2 {
-	text-align: center;
-	font-size: 1.2em;
-	float: left;
-	width: 50%;
-	height: 100%;
+   text-align: center;
+   font-size: 1.2em;
+   float: left;
+   width: 50%;
+   height: 100%;
 }
 
 .bottom-right2 {
-	text-align: center;
-	font-size: 1.2em;
-	float: right;
-	width: 50%;
-	height: 100%;
+   text-align: center;
+   font-size: 1.2em;
+   float: right;
+   width: 50%;
+   height: 100%;
 }
 
 .bottom-down2 {
-	width: 100%;
-	height: 90%;
+   width: 100%;
+   height: 90%;
 }
 
 .postmenu {
-	cursor: pointer;
-	font-size: 2.5em;
-	margin-right: 3%;
-	color: gray;
+   cursor: pointer;
+   font-size: 2.5em;
+   margin-right: 3%;
+   color: gray;
 }
 
 .postsubmenu {
-	font-size: 1.5em;
+   font-size: 1.5em;
 }
 
 .postdetail:hover {
-	text-decoration: underline;
+   text-decoration: underline;
 }
 
 .postdetail {
-	font-size: 0.8em;
-	color: black;
+   font-size: 0.8em;
+   color: black;
 }
 
 .userimg {
-	cursor: pointer;
-	width: 40px;
-	height: 40px;
-	border: 1px solid gray;
-	border-radius: 20px;
-	margin: 10px;
+   cursor: pointer;
+   width: 40px;
+   height: 40px;
+   border: 1px solid gray;
+   border-radius: 20px;
+   margin: 10px;
 }
 
 .contentmodal {
-	/* background: #F0F2F5; */
-	border-radius: 60px;
-	margin: 0 auto;
-	max-width: 750px;
-	min-width: 550px;
+   /* background: #F0F2F5; */
+   border-radius: 60px;
+   margin: 0 auto;
+   max-width: 750px;
+   min-width: 550px;
 }
 
 #writeinput {
-	width: 100%;
-	border-radius: 30px;
-	text-align: left;
-	outline: none;
-	border: none;
-	font-size: 15pt;
-	background: #F0F2F5;
-	padding: 1.2%;
+   width: 100%;
+   border-radius: 30px;
+   text-align: left;
+   outline: none;
+   border: none;
+   font-size: 15pt;
+   background: #F0F2F5;
+   padding: 1.2%;
 }
 
 #coverinput {
-	background: white;
-	height: 65px;
-	width: 100%;
-	border-radius: 10px;
-	padding: 1.5%;
-	padding-top: 2%;
+   background: white;
+   height: 65px;
+   width: 100%;
+   border-radius: 10px;
+   padding: 1.5%;
+   padding-top: 2%;
 }
 
 .writeimg {
-	width: 35px;
-	height: 35px;
-	border: 1px solid gray;
-	border-radius: 20px;
+   width: 35px;
+   height: 35px;
+   border: 1px solid gray;
+   border-radius: 20px;
 }
 
 .postimg {
-	width: 35px;
-	height: 35px;
-	border: 1px solid gray;
-	border-radius: 20px;
+   width: 35px;
+   height: 35px;
+   border: 1px solid gray;
+   border-radius: 20px;
 }
 
 .shows {
-	display: none;
-	background-color: white;
-	margin: 0 auto;
-	max-width: 750px;
-	min-width: 650px;
-	height: 50px;
-	border-radius: 10px 10px;
-	padding: 0.6%;
-	font-size: 18px;
-	text-align: center;
+   display: none;
+   background-color: white;
+   margin: 0 auto;
+   max-width: 750px;
+   min-width: 650px;
+   height: 50px;
+   border-radius: 10px 10px;
+   padding: 0.6%;
+   font-size: 18px;
+   text-align: center;
 }
 
 .showtext {
-	float: left;
-	padding: 1%;
-	margin-left: 10%;
+   float: left;
+   padding: 1%;
+   margin-left: 10%;
 }
 
 .showbtn {
-	border-radius: 5px 5px;
-	background-color: #F0F2F5;
-	border: 0.5px solid gray;
-	float: right;
-	height: 37px;
+   border-radius: 5px 5px;
+   background-color: #F0F2F5;
+   border: 0.5px solid gray;
+   float: right;
+   height: 37px;
 }
 
 .commentarrow {
-	width: 30px;
-	height: 30px;
-	margin-right: 3%;
-	cursor: pointer;
+   width: 30px;
+   height: 30px;
+   margin-right: 3%;
+   cursor: pointer;
 }
 
 .prev {
-	float: left;
-	position: relative;
-	z-index: 1;
-	border: none;
-	width: 10%;
-	height: 10%;
-	cursor: pointer;
-	visibility: hidden;
+   float: left;
+   position: relative;
+   z-index: 1;
+   border: none;
+   width: 10%;
+   height: 10%;
+   cursor: pointer;
+   visibility: hidden;
 }
 
 .next {
-	float: right;
-	border: none;
-	position: relative;
-	z-index: 1;
-	width: 10%;
-	height: 10%;
-	cursor: pointer;
+   float: right;
+   border: none;
+   position: relative;
+   z-index: 1;
+   width: 10%;
+   height: 10%;
+   cursor: pointer;
 }
 
 .fileimg {
-	text-align: center;
-	width: 60%;
-	height: 350px;
+   text-align: center;
+   width: 60%;
+   height: 350px;
 }
 
 .fileimg img {
-	width: 100%;
-	height: 100%;
-	obejct-fit: cover;
+   width: 100%;
+   height: 100%;
+   obejct-fit: cover;
 }
 
 .fileimg video {
-	width: 100%;
-	height: 100%;
-	obejct-fit: cover;
+   width: 100%;
+   height: 100%;
+   obejct-fit: cover;
 }
 
-.sliders {
-	width: 100%;
-	margin: 0 auto;
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
+.slider {
+   width: 100%;
+   margin: 0 auto;
+   display: inline-flex;
+   justify-content: center;
+   align-items: center;
 }
 
 .slick-list {
-	float: left;
-	width: 500px;
+   float: left;
+   width: 500px;
 }
 
 /* comment */
@@ -1190,6 +1155,7 @@ body {
 	height: 40px;
 	border-radius: 50%;
 	margin-right: 20px;
+
 }
 
 /* 좋아요,댓글,날짜 */
@@ -1199,6 +1165,7 @@ body {
 	display: flex;
 	justify-content: space-around;
 	align-content: center;
+
 }
 
 /* 사용자 이름  */
@@ -1247,49 +1214,49 @@ span.content {
 }
 
 .commentul {
-	position: absolute;
-	top: 20px;
-	right: 0;
-	list-style: none;
-	display: none;
-	font-size: 0.7em;
-	width: 70px;
-	padding: 0;
-	margin: 0;
-	border: none;
+  position: absolute;
+  top: 20px;
+  right: 0;
+  list-style: none;
+  display: none;
+  font-size: 0.7em;
+  width: 70px;
+  padding: 0;
+  margin: 0;
+  border: none;
 }
 
 .commentul:before {
-	content: "";
-	position: absolute;
-	top: -15px;
-	right: -1px;
-	border-top: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-bottom: 10px solid #e6f0fb;
-	border-left: 16px solid transparent;
+  content: "";
+  position: absolute;
+  top: -15px;
+  right: -1px;
+  border-top: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #e6f0fb;
+  border-left: 16px solid transparent;
 }
 
 .commentul li {
-	border: none;
-	background-color: #e6f0fb;
-	cursor: pointer;
-	padding: 8px 12px;
-	transition: background-color 0.3s, color 0.3s;
-	text-align: center;
+  border: none;
+  background-color: #e6f0fb;
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: background-color 0.3s, color 0.3s;
+  text-align: center;
 }
 
 .commentul li:not(:last-child) {
-	margin-bottom: -1px;
+  margin-bottom: -1px;
 }
 
 .commentul li:hover {
-	background-color: #cfe0fa;
-	color: #3355a0;
+  background-color: #cfe0fa;
+  color: #3355a0;
 }
 
 .ulimg {
-	cursor: pointer;
+   cursor: pointer;
 }
 
 .commentmod, .commentdel {
@@ -1314,16 +1281,15 @@ span.content {
 	cursor: pointer;
 }
 
-.unfollow {
-	color: blue;
+.unfollow{
+color: blue;
 }
 
-.follow {
-	color: gray;
+.follow{
+color: gray;
 }
-
-li {
-	cursor: pointer;
+li{
+   cursor:  pointer;
 }
 </style>
 </head>
@@ -1332,315 +1298,302 @@ li {
 
 <body>
 
-	<c:set var="root" value="<%=request.getContextPath()%>" />
+   <c:set var="root" value="<%=request.getContextPath()%>" />
 
-	<div class="allmain">
-		<br>
-		<!-- writemodal -->
+   <div class="allmain">
+      <br>
+      <!-- writemodal -->
 
-		<div class="contentmodal">
-			<div id="coverinput">
-				<div>
-					<span style="float: left; width: 8%; top: 50%;">
-						<img src="${root }/photo/${user_photo}" class="writeimg">
-					</span>
-					<span style="float: right; width: 92%;">
-						<input type="button" data-toggle="modal" data-target="#contentwrite" name="contentwirte"
-							id="writeinput" value="무슨 생각을 하고 계신가요?">
-					</span>
-				</div>
-			</div>
-		</div>
+      <div class="contentmodal">
+         <div id="coverinput">
+            <div>
+               <span style="float: left; width: 8%; top: 50%;">
+                  <img src="${root }/photo/${user_photo}" class="writeimg">
+               </span>
+               <span style="float: right; width: 92%;">
+                  <input type="button" data-toggle="modal" data-target="#contentwrite" name="contentwirte"
+                     id="writeinput" value="무슨 생각을 하고 계신가요?">
+               </span>
+            </div>
+         </div>
+      </div>
 
-		<br>
-		<!-- Modal -->
-		<div class="modal fade" id="contentwrite" role="dialog">
-			<div class="modal-dialog">
+      <br>
+       <!-- Modal -->
+      <div class="modal fade" id="contentwrite" role="dialog">
+         <div class="modal-dialog">
 
-				<!-- Modal content-->
-				<form method="post" enctype="multipart/form-data" id="postInsert">
+            <!-- Modal content-->
+            <form method="post" enctype="multipart/form-data" id="postInsert">
 
-					<input type="hidden" name="user_num" id="user_num" value="${sessionScope.user_num }">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h4 class="modal-title">게시글 만들기</h4>
-						</div>
-						<div class="modal-body">
-							<div class="form-group" style="width: 500px;">
-								<img alt="" src="${root }/photo/${user_photo}"
-									style="width: 40px; height: 40px; border-radius: 20px;">
-								<span>${login_name}</span>
-							</div>
-							<select class="form-control" name="post_access" style="width: 150px;" id="post_access">
-								<option value="all">전체공개</option>
-								<option value="follower">팔로워 공개</option>
-								<option value="onlyme">나만보기</option>
-							</select>
+               <input type="hidden" name="user_num" id="user_num" value="${sessionScope.user_num }">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal">&times;</button>
+                     <h4 class="modal-title">게시글 만들기</h4>
+                  </div>
+                  <div class="modal-body">
+                     <div class="form-group" style="width: 500px;">
+                        <img alt="" src="${root }/photo/${user_photo}"
+                           style="width: 40px; height: 40px; border-radius: 20px;">
+                        <span>${login_name}</span>
+                     </div>
+                      <select class="form-control" name="post_access" style="width: 150px;"
+                        id="post_access">
+                        <option value="all">전체공개</option>
+                        <option value="follower">팔로워 공개</option>
+                        <option value="onlyme">나만보기</option>
+                     </select>
+                     
+                     <div class="form-group">
+                        <textarea style="width: 550px; height: 150px;" name="post_content" class="form-control"
+                           required="required" id="post_content" placeholder="내용을 입력해주세요"></textarea>
+                           
+                     </div>
+                     
+                     <div class="show" id="show" style="position: relative;">
+                 <img id="showimg" style="display:none; width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
+                 <video id="showvideo" style="display:none; width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;" controls="controls"></video>
+                 <p id="showtext" style="display:none; position: absolute; top: 65px; left: 190px; font-weight: bold;">사진/동영상 추가</p>
+              </div>
+                     
+                     
+                     <input type="file" multiple="multiple" id="post_file" name="post_file"  style="display: none;">
+              <button type="button" id="btncontentphoto"style="margin-top: 1%;">사진 선택</button>
+                  </div>
+                  
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal" id="insertbtn">게시</button>
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+               </div>
+            </form>
 
-							<div class="form-group">
-								<textarea style="width: 550px; height: 150px;" name="post_content" class="form-control"
-									required="required" id="post_content" placeholder="내용을 입력해주세요"></textarea>
+         </div>
+      </div>
 
-							</div>
-
-							<div class="show" id="show" style="position: relative;">
-								<img id="showimg"
-									style="display: none; width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;">
-								<br>
-								<video id="showvideo"
-									style="display: none; width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"
-									controls="controls"></video>
-								<p id="showtext"
-									style="display: none; position: absolute; top: 65px; left: 190px; font-weight: bold;">사진/동영상
-									추가</p>
-							</div>
-
-
-							<input type="file" multiple="multiple" id="post_file" name="post_file" style="display: none;">
-							<button type="button" id="btncontentphoto" style="margin-top: 1%;">사진 선택</button>
-						</div>
-
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal" id="insertbtn">게시</button>
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						</div>
-					</div>
-				</form>
-
-			</div>
-		</div>
-
-		<!-- 수정 Modal -->
+      <!-- 수정 Modal -->
 
 
-		<div class="modal fade" id="updatepost" role="dialog">
-			<div class="modal-dialog">
+           <div class="modal fade" id="updatepost" role="dialog">
+         <div class="modal-dialog">
 
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">게시글 수정</h4>
-					</div>
+            <!-- Modal content-->
+            <div class="modal-content">
+               <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">게시글 수정</h4>
+               </div>
 
-					<div class="modal-body">
-						<div class="form-group" style="width: 150px;">
-							<select class="form-control" name="update_access" id="update_access" required="required">
-								<option value="all">전체공개</option>
-								<option value="follower">팔로워 공개</option>
-								<option value="onlyme">나만보기</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<input type="file" name="update_file" class="form-control" required="required"
-								multiple="multiple" id="update_file" style="display: none;">
-						</div>
-						<div class="form-group">
-							<textarea style="width: 550px; height: 150px;" name="update_content" class="form-control"
-								required="required" id="update_content" placeholder="내용을 입력해주세요"></textarea>
-						</div>
-						<img src="" id="showmodimg"
-							style="width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;">
-						<br>
-						<button type="button" id="btnmodcontentphoto">사진 선택</button>
-						<button type="button" class="btn btn-default" id="remove_photo_btn">사진 없애기</button>
-					</div>
 
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal" id="updatetbtn">수정</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					</div>
-				</div>
 
-			</div>
-		</div>
+               <div class="modal-body">
+                  <div class="form-group" style="width: 150px;">
+                     <select class="form-control" name="update_access" id="update_access" required="required">
+                        <option value="all">전체공개</option>
+                        <option value="follower">팔로워 공개</option>
+                        <option value="onlyme">나만보기</option>
+                     </select>
+                  </div>
+                  <div class="form-group" style="width: 500px;">
+                     <input type="file" name="update_file" class="form-control" required="required"
+                        multiple="multiple" id="update_file">
+                  </div>
+                  <div class="form-group">
+                     <textarea style="width: 550px; height: 150px;" name="update_content" class="form-control"
+                        required="required" id="update_content" placeholder="내용을 입력해주세요"></textarea>
+                  </div>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal" id="updatetbtn">수정</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+               </div>
+            </div>
+
+         </div>
+      </div>
 		<section>
-			<!-- 파일이 있을경우0 -->
-			<!--  동영상일 경우와 사진이 1장만 있을 경우도 .해주어야함   -->
+			    <!-- 파일이 있을경우0 -->
+         <!--  동영상일 경우와 사진이 1장만 있을 경우도 .해주어야함   -->
 
-			<c:forEach var="dto" items="${list }" varStatus="i">
-				<c:if test="${dto.post_file!='no' }">
+         <c:forEach var="dto" items="${list }" varStatus="i">
+            <c:if test="${dto.post_file!='no' }">
 
-					<div class="shows" id="divs${dto.post_num }">
-						<div class="showtext">게시물을 숨겼습니다. 다시 보려면 게시물 보기를 눌러주세요.</div>
-						<button type="button" class="showbtn" divpost_num="div${dto.post_num }"
-							divspost_num="divs${dto.post_num }">게시물 보기</button>
-					</div>
-					<div class="divmain" id="div${dto.post_num }">
-						<div class="top">
-							<div class="top-left">
-								<span style="float: left;">
-									<img src="${root }/photo/${dto.user_photo}" class="userimg" user_num="${dto.user_num }">
-								</span>
-								<span style="float: left; padding: 3%; margin-right: 5px;">
-									<div>
-										<b>${dto.user_name }
-											<c:if test="${dto.post_access =='follower'}">
-												<i class="fa-solid fa-user-group"></i>
-											</c:if>
-											<c:if test="${dto.post_access =='all'}">
-												<i class="fa-solid fa-earth-americas"></i>
-											</c:if>
-											<c:if test="${dto.post_access =='onlyme'}">
-												<i class="fa-solid fa-lock"></i>
-											</c:if>
+               <div class="shows" id="divs${dto.post_num }">
+                  <div class="showtext">게시물을 숨겼습니다. 다시 보려면 게시물 보기를 눌러주세요.</div>
+                  <button type="button" class="showbtn" divpost_num="div${dto.post_num }"
+                     divspost_num="divs${dto.post_num }">게시물 보기</button>
+               </div>
+               <div class="divmain" id="div${dto.post_num }">
+                  <div class="top">
+                     <div class="top-left">
+                        <span style="float: left;">
+                           <img src="${root }/photo/${dto.user_photo}" class="userimg" user_num="${dto.user_num }">
+                        </span>
+                        <span style="float: left; padding: 3%; margin-right: 5px;">
+                           <div>
+                              <b>${dto.user_name }
+                                 <c:if test="${dto.post_access =='follower'}">
+                                    <i class="fa-solid fa-user-group"></i>
+                                 </c:if>
+                                 <c:if test="${dto.post_access =='all'}">
+                                    <i class="fa-solid fa-earth-americas"></i>
+                                 </c:if>
+                                 <c:if test="${dto.post_access =='onlyme'}">
+                                    <i class="fa-solid fa-lock"></i>
+                                 </c:if>
 
-										</b>
-									</div>
+                              </b>
+                           </div>
 
-									<div>${dto.post_time }</div>
-								</span>
-							</div>
-							<span class="top-right">
-								<c:if test="${dto.user_num!=sessionScope.user_num &&dto.checkfollowing !=1 }">
-									<span class="follow" id="follow${dto.post_num}" followpost_num="follow${dto.post_num }"
-										unfollowpost_num="unfollow${dto.post_num }" from_user="${sessionScope.user_num }"
-										to_user="${dto.user_num }">팔로우 하기</span>
+                           <div>${dto.post_time }</div>
+                        </span>
+                     </div>
+                     <span class="top-right">
+                        <span class="postmenu dropdown" post_num="${dto.post_num }"
+                           user_num="${sessionScope.user_num }" dtouser_num="${dto.user_num}">
+                           <i class="fa-solid fa-ellipsis"></i>
+                           <c:if test="${dto.checklogin ==1 }">
 
-									<span class="unfollow" id="unfollow${dto.post_num }"
-										followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }"
-										to_user="${dto.user_num }" style="display: none;">팔로우 끊기</span>
-								</c:if>
-								<c:if test="${dto.user_num!=sessionScope.user_num && dto.checkfollowing ==1 }">
-									<span class="unfollow" id="unfollow${dto.post_num }"
-										followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }"
-										to_user="${dto.user_num }">팔로우 끊기</span>
-									<span class="follow" id="follow${dto.post_num}" followpost_num="follow${dto.post_num }"
-										unfollowpost_num="unfollow${dto.post_num }" from_user="${sessionScope.user_num }"
-										to_user="${dto.user_num }" style="display: none;">팔로우 하기</span>
-								</c:if>
-								<span class="postmenu dropdown" post_num="${dto.post_num }"
-									user_num="${sessionScope.user_num }" dtouser_num="${dto.user_num}">
-									<i class="fa-solid fa-ellipsis"></i>
-									<c:if test="${dto.checklogin ==1 }">
-
-										<ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu "
-											style="font-size: 20pt; line-height: 1.5em; display: none;">
+                              <ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu "
+                                 style="font-size: 20pt; line-height: 1.5em; display: none;">
 
 
-											<li id="postupdate" class="postdetail" data-toggle="modal" data-target="#updatepost"
-												post_num="${dto.post_num }" user_num="${dto.user_num }">게시물 수정</li>
-											<li id="postdelete" class="postdetail" user_num="${dto.user_num }"
-												post_num="${dto.post_num }">게시물 삭제</li>
-										</ul>
-									</c:if>
-									<c:if test="${dto.checklogin !=1 }">
-										<ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu"
-											style="font-size: 25pt; line-height: 1.5em; display: none;">
-											<li class="postdetail posthide" divpost_num="div${dto.post_num }"
-												divspost_num="divs${dto.post_num }">게시물 숨김</li>
-										</ul>
-									</c:if>
-								</span>
-							</span>
+                                 <li id="postupdate" class="postdetail" data-toggle="modal" data-target="#updatepost"
+                                    post_num="${dto.post_num }" user_num="${dto.user_num }">게시물 수정</li>
+                                 <li id="postdelete" class="postdetail" user_num="${dto.user_num }"
+                                    post_num="${dto.post_num }">게시물 삭제</li>
+                              </ul>
+                           </c:if>
+                           <c:if test="${dto.checklogin !=1 }">
+                              <ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu"
+                                 style="font-size: 25pt; line-height: 1.5em; display: none;">
+                                 <li class="postdetail posthide" divpost_num="div${dto.post_num }"
+                                    divspost_num="divs${dto.post_num }">게시물 숨김</li>
+                                 <!--  이부분 팔로일땐 팔로우하기 or 팔로우 하고 있을 땐 팔로우 끊기 -->
+                                 <c:if test="${dto.checkfollowing !=1 }">
+                                    <li class="postdetail" id="postfollow" from_user="${sessionScope.user_num }"
+                                       to_user="${dto.user_num }">팔로우 하기</li>
+                                 </c:if>
+                                 <c:if test="${dto.checkfollowing ==1 }">
+                                    <li class="postdetail" id="postunfollow" to_user="${dto.user_num }">팔로우 끊기</li>
+                                 </c:if>
+                              </ul>
+                           </c:if>
+                        </span>
+                     </span>
 
-						</div>
+                  </div>
 
 
 
 
-						<div class="center">
-							<div class="center-up">${dto.post_content }</div>
+                  <div class="center">
+                     <div class="center-up">${dto.post_content }</div>
 
-							<div class="center-down sliders" id="dto-${i.index}">
+                     <div class="center-down slider" >
+                     	<c:forTokens items="${dto.post_file }" delims="." var="filetype" begin="1">
+                     	
+                     	<!-- 예지: 파일이 사진인지 영상인지 확인 -->
+                     		<c:if test="${filetype=='mp4' || filetype=='avi'}">
+                     			<div class="fileimg">
+                     				<video src="/post_file/${dto.post_file }" controls="controls" muted="muted"></video>
+                     			</div>
+                     		</c:if>
+                     		<c:if test="${filetype!='mp4' }">
+                     			<c:forTokens items="${dto.post_file }" delims="," var="file">
+		                           <div class="fileimg">
+		                              <img src="/post_file/${file }">
+		                           </div>
+		                        </c:forTokens>
+                     		</c:if>
+                     	</c:forTokens>
+                     	
+                     	<!-- 예지 끝 -->
 
-								<c:forTokens items="${dto.post_file }" delims="." var="filetype" begin="1">
-									<!-- 예지: 파일이 사진인지 영상인지 확인 -->
-									<c:if test="${filetype=='mp4' || filetype=='avi'}">
-										<div class="fileimg">
-											<video src="/post_file/${dto.post_file }" controls="controls" muted="muted"></video>
-										</div>
-									</c:if>
-									<c:if test="${filetype!='mp4' }">
-										<c:forTokens items="${dto.post_file }" delims="," var="file">
-											<div class="fileimg">
-												<img src="/post_file/${file }">
-											</div>
-										</c:forTokens>
-									</c:if>
-								</c:forTokens>
+                        <%-- <img src="/post_file/${dto.post_file }" class="fileimg"> --%>
 
-							</div>
-						</div>
+                     </div>
+                  </div>
 
 
-						<div class="bottom">
-							<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
-							<div class="bottom-up">
+                  <div class="bottom">
+                     <hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
+                     <div class="bottom-up">
 
-								<!-- 체크 안했으면 보이는거 -->
-								<c:if test="${dto.likecheck ==0 }">
-									<span class="bottom-left liketoggle" style="cursor: pointer"
-										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
-										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }">
-										<span class="like" id="likehide1${dto.post_num}" user_num="${sessionScope.user_num}"
-											likehide1_num="likehide1${dto.post_num}" likeshow1_num="likeshow1${dto.post_num}"
-											post_num="${dto.post_num }">
-											<span style="font-size: 1.2em; top: 3px; color: gray;">
-												<i class="fa-regular fa-thumbs-up"></i>
-											</span>
-											<c:if test="${dto.like_count==0 }">
+                        <!-- 체크 안했으면 보이는거 -->
+                        <c:if test="${dto.likecheck ==0 }">
+                           <span class="bottom-left liketoggle" style="cursor: pointer"
+                              user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
+                              likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }">
+                              <span class="like" id="likehide1${dto.post_num}" user_num="${sessionScope.user_num}"
+                                 likehide1_num="likehide1${dto.post_num}" likeshow1_num="likeshow1${dto.post_num}"
+                                 post_num="${dto.post_num }">
+                                 <span style="font-size: 1.2em; top: 3px; color: gray;">
+                                    <i class="fa-regular fa-thumbs-up"></i>
+                                 </span>
+                                 <c:if test="${dto.like_count==0 }">
                                  &nbsp;좋아요 ${dto.like_count}
                                  </c:if>
-											<c:if test="${dto.like_count !=0 }">
+                                 <c:if test="${dto.like_count !=0 }">
                                  &nbsp;좋아요 ${dto.like_count}명
                                  </c:if>
-										</span>
-										<span class="dlike" id="likeshow1${dto.post_num}" user_num="${sessionScope.user_num}"
-											post_num="${dto.post_num }" style="display: none;">
-											<span style="font-size: 1.2em; top: 3px; color: blue;">
-												<i class="fa-solid fa-thumbs-up"></i>
-											</span>
-											<c:if test="${dto.like_count==0 }">
+                              </span>
+                              <span class="dlike" id="likeshow1${dto.post_num}" user_num="${sessionScope.user_num}"
+                                 post_num="${dto.post_num }" style="display: none;">
+                                 <span style="font-size: 1.2em; top: 3px; color: blue;">
+                                    <i class="fa-solid fa-thumbs-up"></i>
+                                 </span>
+                                 <c:if test="${dto.like_count==0 }">
                                  &nbsp;좋아요 회원님 
                                  </c:if>
-											<c:if test="${dto.like_count !=0 }">
+                                 <c:if test="${dto.like_count !=0 }">
                                  &nbsp;좋아요 회원님 외${dto.like_count}명
                                  </c:if>
-										</span>
+                              </span>
 
-									</span>
+                           </span>
 
 
-								</c:if>
+                        </c:if>
 
-								<!-- 처음부터 체크되어있으면 보이는거  -->
-								<c:if test="${dto.likecheck !=0 }">
-									<span class="bottom-left liketoggle2" style="cursor: pointer"
-										likehide2_num="likehide2${dto.post_num}" likeshow2_num="likeshow2${dto.post_num}"
-										user_num="${sessionScope.user_num}" post_num="${dto.post_num }">
-										<span id="likehide2${dto.post_num}" class="dlike" user_num="${sessionScope.user_num}"
-											likehide1_num="likehide1${dto.post_num}" likeshow1_num="likeshow1${dto.post_num}"
-											post_num="${dto.post_num }">
-											<span style="font-size: 1.2em; top: 3px; color: blue;">
-												<i class="fa-solid fa-thumbs-up"></i>
-											</span>
+                        <!-- 처음부터 체크되어있으면 보이는거  -->
+                        <c:if test="${dto.likecheck !=0 }">
+                           <span class="bottom-left liketoggle2" style="cursor: pointer"
+                              likehide2_num="likehide2${dto.post_num}" likeshow2_num="likeshow2${dto.post_num}"
+                              user_num="${sessionScope.user_num}" post_num="${dto.post_num }">
+                              <span id="likehide2${dto.post_num}" class="dlike" user_num="${sessionScope.user_num}"
+                                 likehide1_num="likehide1${dto.post_num}" likeshow1_num="likeshow1${dto.post_num}"
+                                 post_num="${dto.post_num }">
+                                 <span style="font-size: 1.2em; top: 3px; color: blue;">
+                                    <i class="fa-solid fa-thumbs-up"></i>
+                                 </span>
 
-											<c:if test="${dto.like_count!= 1}">
+                                 <c:if test="${dto.like_count!= 1}">
                                  &nbsp;좋아요 회원님 외 ${dto.like_count-1}명
                                  </c:if>
-											<c:if test="${dto.like_count ==1 }">
+                                 <c:if test="${dto.like_count ==1 }">
                                  &nbsp;좋아요 회원님 
                                  </c:if>
-										</span>
-										<span user_num="${sessionScope.user_num}" id="likeshow2${dto.post_num}" class="like"
-											post_num="${dto.post_num }" style="display: none;">
-											<span style="font-size: 1.2em; top: 3px; color: gray;">
-												<i class="fa-regular fa-thumbs-up"></i>
-												<c:if test="${dto.like_count== 1}">
+                              </span>
+                              <span user_num="${sessionScope.user_num}" id="likeshow2${dto.post_num}" class="like"
+                                 post_num="${dto.post_num }" style="display: none;">
+                                 <span style="font-size: 1.2em; top: 3px; color: gray;">
+                                    <i class="fa-regular fa-thumbs-up"></i>
+                                    <c:if test="${dto.like_count== 1}">
                                  &nbsp;좋아요 0
                                  </c:if>
-												<c:if test="${dto.like_count!= 1}">
+                                    <c:if test="${dto.like_count!= 1}">
                                  &nbsp;좋아요 ${dto.like_count -1 }
                                  </c:if>
 
-											</span>
-										</span>
+                                 </span>
+                              </span>
 
 
-									</span>
-								</c:if>
+                           </span>
+                        </c:if>
 
 
 
@@ -1654,174 +1607,164 @@ li {
 								</span>
 
 
-							</div>
+                     </div>
 
-						</div>
+                  </div>
 
-					</div>
-					<br>
-					<br>
-				</c:if>
+               </div>
+               <br>
+               <br>
+            </c:if>
 
-				<!-- 파일이 없을 경우 -->
-				<c:if test="${dto.post_file=='no' }">
-					<div class="shows" id="divs${dto.post_num }">
-						<div class="showtext">게시물을 숨겼습니다. 다시 보려면 게시물 보기를 눌러주세요.</div>
-						<button type="button" class="showbtn" divpost_num="div${dto.post_num }"
-							divspost_num="divs${dto.post_num }">게시물 보기</button>
-					</div>
-					<div class="divmain2" id="div${dto.post_num }">
-						<div class="top2">
-							<div class="top-left2">
-								<span style="float: left;">
-									<img src="${root }/photo/${dto.user_photo}" class="userimg" user_num="${dto.user_num }">
-								</span>
-								<span style="float: left; padding: 3%; margin-right: 5px;">
-									<div>
-										<b>${dto.user_name }
-											<c:if test="${dto.post_access =='follower'}">
-												<i class="fa-solid fa-user-group"></i>
-											</c:if>
-											<c:if test="${dto.post_access =='all'}">
-												<i class="fa-solid fa-earth-americas"></i>
-											</c:if>
-											<c:if test="${dto.post_access =='onlyme'}">
-												<i class="fa-solid fa-lock"></i>
-											</c:if>
-
-
-										</b>
-									</div>
-
-									<div>${dto.post_time }</div>
-								</span>
-							</div>
-							<span class="top-right2">
-							<c:if test="${dto.user_num!=sessionScope.user_num &&dto.checkfollowing !=1 }">
-									<span class="follow" id="follow${dto.post_num}" followpost_num="follow${dto.post_num }"
-										unfollowpost_num="unfollow${dto.post_num }" from_user="${sessionScope.user_num }"
-										to_user="${dto.user_num }">팔로우 하기</span>
-
-									<span class="unfollow" id="unfollow${dto.post_num }"
-										followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }"
-										to_user="${dto.user_num }" style="display: none;">팔로우 끊기</span>
-								</c:if>
-								<c:if test="${dto.user_num!=sessionScope.user_num && dto.checkfollowing ==1 }">
-									<span class="unfollow" id="unfollow${dto.post_num }"
-										followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }"
-										to_user="${dto.user_num }">팔로우 끊기</span>
-									<span class="follow" id="follow${dto.post_num}" followpost_num="follow${dto.post_num }"
-										unfollowpost_num="unfollow${dto.post_num }" from_user="${sessionScope.user_num }"
-										to_user="${dto.user_num }" style="display: none;">팔로우 하기</span>
-								</c:if>
-								<span class="postmenu dropdown" post_num="${dto.post_num }"
-									user_num="${sessionScope.user_num }" dtouser_num="${dto.user_num}">
-									<i class="fa-solid fa-ellipsis"></i>
-									<c:if test="${dto.checklogin ==1 }">
-
-										<ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu"
-											style="font-size: 20pt; line-height: 1.5em; display: none;">
+            <!-- 파일이 없을 경우 -->
+             <c:if test="${dto.post_file=='no' }">
+               <div class="shows" id="divs${dto.post_num }">
+                  <div class="showtext">게시물을 숨겼습니다. 다시 보려면 게시물 보기를 눌러주세요.</div>
+                  <button type="button" class="showbtn" divpost_num="div${dto.post_num }"
+                     divspost_num="divs${dto.post_num }">게시물 보기</button>
+               </div>
+               <div class="divmain2" id="div${dto.post_num }">
+                  <div class="top2">
+                     <div class="top-left2">
+                        <span style="float: left;">
+                           <img src="${root }/photo/${dto.user_photo}" class="userimg" user_num="${dto.user_num }">
+                        </span>
+                        <span style="float: left; padding: 3%; margin-right: 5px;">
+                           <div>
+                              <b>${dto.user_name }
+                                 <c:if test="${dto.post_access =='follower'}">
+                                    <i class="fa-solid fa-user-group"></i>
+                                 </c:if>
+                                 <c:if test="${dto.post_access =='all'}">
+                                    <i class="fa-solid fa-earth-americas"></i>
+                                 </c:if>
+                                 <c:if test="${dto.post_access =='onlyme'}">
+                                    <i class="fa-solid fa-lock"></i>
+                                 </c:if>
 
 
-											<li id="postupdate" class="postdetail" data-toggle="modal" data-target="#updatepost"
-												post_num="${dto.post_num }" user_num="${dto.user_num }">게시물 수정</li>
-											<li id="postdelete" class="postdetail" user_num="${dto.user_num }"
-												post_num="${dto.post_num }">게시물 삭제</li>
-										</ul>
-									</c:if>
-									<c:if test="${dto.checklogin !=1 }">
-										<ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu"
-											style="font-size: 25pt; line-height: 1.5em; display: none;">
-											<li class="postdetail posthide" divpost_num="div${dto.post_num }"
-												divspost_num="divs${dto.post_num }">게시물 숨김</li>
-										</ul>
-									</c:if>
-								</span>
+                              </b>
+                           </div>
 
-							</span>
-						</div>
-						<div class="center2">
-							<div class="center-up2">${dto.post_content }</div>
+                           <div>${dto.post_time }</div>
+                        </span>
+                     </div>
+                     <span class="top-right2">
+                        <span class="postmenu dropdown" post_num="${dto.post_num }"
+                           user_num="${sessionScope.user_num }" dtouser_num="${dto.user_num}">
+                           <i class="fa-solid fa-ellipsis"></i>
+                           <c:if test="${dto.checklogin ==1 }">
 
-						</div>
-						<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
-						<div class="bottom2">
-							<div class="bottom-up2">
+                              <ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu"
+                                 style="font-size: 20pt; line-height: 1.5em; display: none;">
+
+
+                                 <li id="postupdate" class="postdetail" data-toggle="modal" data-target="#updatepost"
+                                    post_num="${dto.post_num }" user_num="${dto.user_num }">게시물 수정</li>
+                                 <li id="postdelete" class="postdetail" user_num="${dto.user_num }"
+                                    post_num="${dto.post_num }">게시물 삭제</li>
+                              </ul>
+                           </c:if>
+                           <c:if test="${dto.checklogin !=1 }">
+                              <ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu"
+                                 style="font-size: 25pt; line-height: 1.5em; display: none;">
+                                 <li class="postdetail posthide" divpost_num="div${dto.post_num }"
+                                    divspost_num="divs${dto.post_num }">게시물 숨김</li>
+                                 <c:if test="${dto.checkfollowing !=1 }">
+                                    <li class="postdetail" id="postfollow" from_user="${sessionScope.user_num }"
+                                       to_user="${dto.user_num }">팔로우 하기</li>
+                                 </c:if>
+                                 <c:if test="${dto.checkfollowing ==1 }">
+                                    <li class="postdetail" id="postunfollow" to_user="${dto.user_num }">팔로우 끊기</li>
+                                 </c:if>
+                              </ul>
+                           </c:if>
+                        </span>
+
+                     </span>
+                  </div>
+                  <div class="center2">
+                     <div class="center-up2">${dto.post_content }</div>
+
+                  </div>
+                  <hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
+                  <div class="bottom2">
+                     <div class="bottom-up2">
 
 
 
-								<!-- 체크 안했으면 보이는거 -->
-								<c:if test="${dto.likecheck ==0 }">
-									<span class="bottom-left2 liketoggle" style="cursor: pointer"
-										user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
-										likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }">
-										<span class="like" id="likehide1${dto.post_num}" user_num="${sessionScope.user_num}"
-											likehide1_num="likehide1${dto.post_num}" likeshow1_num="likeshow1${dto.post_num}"
-											post_num="${dto.post_num }">
-											<span style="font-size: 1.2em; top: 3px; color: gray;">
-												<i class="fa-regular fa-thumbs-up"></i>
-											</span>
-											<c:if test="${dto.like_count==0 }">
+                        <!-- 체크 안했으면 보이는거 -->
+                        <c:if test="${dto.likecheck ==0 }">
+                           <span class="bottom-left2 liketoggle" style="cursor: pointer"
+                              user_num="${sessionScope.user_num}" likehide1_num="likehide1${dto.post_num}"
+                              likeshow1_num="likeshow1${dto.post_num}" post_num="${dto.post_num }">
+                              <span class="like" id="likehide1${dto.post_num}" user_num="${sessionScope.user_num}"
+                                 likehide1_num="likehide1${dto.post_num}" likeshow1_num="likeshow1${dto.post_num}"
+                                 post_num="${dto.post_num }">
+                                 <span style="font-size: 1.2em; top: 3px; color: gray;">
+                                    <i class="fa-regular fa-thumbs-up"></i>
+                                 </span>
+                                 <c:if test="${dto.like_count==0 }">
                                  &nbsp;좋아요 ${dto.like_count}
                                  </c:if>
-											<c:if test="${dto.like_count !=0 }">
+                                 <c:if test="${dto.like_count !=0 }">
                                  &nbsp;좋아요 ${dto.like_count}명
                                  </c:if>
-										</span>
-										<span class="dlike" id="likeshow1${dto.post_num}" user_num="${sessionScope.user_num}"
-											post_num="${dto.post_num }" style="display: none;">
-											<span style="font-size: 1.2em; top: 3px; color: blue;">
-												<i class="fa-solid fa-thumbs-up"></i>
-											</span>
-											<c:if test="${dto.like_count==0 }">
+                              </span>
+                              <span class="dlike" id="likeshow1${dto.post_num}" user_num="${sessionScope.user_num}"
+                                 post_num="${dto.post_num }" style="display: none;">
+                                 <span style="font-size: 1.2em; top: 3px; color: blue;">
+                                    <i class="fa-solid fa-thumbs-up"></i>
+                                 </span>
+                                 <c:if test="${dto.like_count==0 }">
                                  &nbsp;좋아요 회원님 
                                  </c:if>
-											<c:if test="${dto.like_count !=0 }">
+                                 <c:if test="${dto.like_count !=0 }">
                                  &nbsp;좋아요 회원님 외${dto.like_count}명
                                  </c:if>
-										</span>
+                              </span>
 
-									</span>
+                           </span>
 
 
-								</c:if>
+                        </c:if>
 
-								<!-- 처음부터 체크되어있으면 보이는거  -->
-								<c:if test="${dto.likecheck !=0 }">
-									<span class="bottom-left2 liketoggle2" style="cursor: pointer"
-										likehide2_num="likehide2${dto.post_num}" likeshow2_num="likeshow2${dto.post_num}"
-										user_num="${sessionScope.user_num}" post_num="${dto.post_num }">
-										<span id="likehide2${dto.post_num}" class="dlike" user_num="${sessionScope.user_num}"
-											likehide1_num="likehide1${dto.post_num}" likeshow1_num="likeshow1${dto.post_num}"
-											post_num="${dto.post_num }">
-											<span style="font-size: 1.2em; top: 3px; color: blue;">
-												<i class="fa-solid fa-thumbs-up"></i>
-											</span>
+                        <!-- 처음부터 체크되어있으면 보이는거  -->
+                        <c:if test="${dto.likecheck !=0 }">
+                           <span class="bottom-left2 liketoggle2" style="cursor: pointer"
+                              likehide2_num="likehide2${dto.post_num}" likeshow2_num="likeshow2${dto.post_num}"
+                              user_num="${sessionScope.user_num}" post_num="${dto.post_num }">
+                              <span id="likehide2${dto.post_num}" class="dlike" user_num="${sessionScope.user_num}"
+                                 likehide1_num="likehide1${dto.post_num}" likeshow1_num="likeshow1${dto.post_num}"
+                                 post_num="${dto.post_num }">
+                                 <span style="font-size: 1.2em; top: 3px; color: blue;">
+                                    <i class="fa-solid fa-thumbs-up"></i>
+                                 </span>
 
-											<c:if test="${dto.like_count!= 1}">
+                                 <c:if test="${dto.like_count!= 1}">
                                  &nbsp;좋아요 회원님 외 ${dto.like_count-1}명
                                  </c:if>
-											<c:if test="${dto.like_count ==1 }">
+                                 <c:if test="${dto.like_count ==1 }">
                                  &nbsp;좋아요 회원님 
                                  </c:if>
-										</span>
-										<span user_num="${sessionScope.user_num}" id="likeshow2${dto.post_num}" class="like"
-											post_num="${dto.post_num }" style="display: none;">
-											<span style="font-size: 1.2em; top: 3px; color: gray;">
-												<i class="fa-regular fa-thumbs-up"></i>
-												<c:if test="${dto.like_count== 1}">
+                              </span>
+                              <span user_num="${sessionScope.user_num}" id="likeshow2${dto.post_num}" class="like"
+                                 post_num="${dto.post_num }" style="display: none;">
+                                 <span style="font-size: 1.2em; top: 3px; color: gray;">
+                                    <i class="fa-regular fa-thumbs-up"></i>
+                                    <c:if test="${dto.like_count== 1}">
                                  &nbsp;좋아요 0
                                  </c:if>
-												<c:if test="${dto.like_count!= 1}">
+                                    <c:if test="${dto.like_count!= 1}">
                                  &nbsp;좋아요 ${dto.like_count -1 }
                                  </c:if>
 
-											</span>
-										</span>
+                                 </span>
+                              </span>
 
 
-									</span>
-								</c:if>
+                           </span>
+                        </c:if>
 
 
 								<!-- comment -->
@@ -1834,55 +1777,56 @@ li {
 								</span>
 
 
-							</div>
+                     </div>
 
 
-						</div>
+                  </div>
 
 
-					</div>
+               </div>
 
-					<br>
-					<br>
-				</c:if>
-			</c:forEach>
-		</section>
+               <br>
+               <br>
+            </c:if>
+         </c:forEach>
+      </section>
 
 
-		<button type="button" class="btn btn-info btn-lg cmmodalbtn hide" data-toggle="modal"
-			data-target="#commentmodal"></button>
-		<!-- comment -->
-		<div id="commentmodal" class="modal fade" role="dialog">
-			<div class="modal-dialog modal-lg">
-				<!-- Modal content-->
-				<div class="modal-content commentmodal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title commenth4">${dto.user_name }의게시물</h4>
-					</div>
-					<div class="modal-body commentmodal-body" style="max-height: 800px;">
-						<!-- 타임라인 -->
-
-						<br>
-						<hr>
-						<section1 id="commentsection"> <!-- 댓글 나올 부분 --> </section1>
-						<button type="button" class="btn btn-success" id="addcomment">댓글 더보기</button>
-					</div>
-					<div class="modal-footer" style="height: 80px; padding: 0;">
-						<form method="post" class="form-inline" id="form">
-							<input type="hidden" name="comment_num" value="0"> <input type="hidden"
-								name="post_num" id="inputhidden-post_num">
-							<div id="commentaddform">
-								<img src="/photo/${sessionScope.user_photo }" id="commentprofile">
-								<input hidden="hidden" /> <input type="text" class="mominput" name="comment_content"
-									placeholder="댓글을 입력하세요" id="commentinput">
-								<button type="button" id="insertcommentbtn" class="btn btn-info" style="margin-right: 20px;">입력</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+     <button type="button" class="btn btn-info btn-lg cmmodalbtn hide" data-toggle="modal" data-target="#commentmodal"></button>
+      <!-- comment -->
+      <div id="commentmodal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+               <!-- Modal content-->
+               <div class="modal-content commentmodal-content">
+                  <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal">&times;</button>
+                     <h4 class="modal-title commenth4">${dto.user_name }의게시물</h4>
+                  </div>
+                  <div class="modal-body commentmodal-body" style="max-height: 800px;">
+                     <!-- 타임라인 -->
+                     
+                     <br>
+                     <hr>
+                     <section1 id="commentsection">
+                        <!-- 댓글 나올 부분 -->
+                     </section1>
+                     <button type="button" class="btn btn-success" id="addcomment">댓글 더보기</button>
+                  </div>
+                  <div class="modal-footer" style="height: 80px; padding: 0;">
+                     <form method="post" class="form-inline" id="form">
+                        <input type="hidden" name="comment_num" value="0">
+                        <input type="hidden" name="post_num" id="inputhidden-post_num">
+                        <div id="commentaddform">
+                           <img src="/photo/${sessionScope.user_photo }" id="commentprofile">
+                           <input hidden="hidden" />
+                           <input type="text" class="mominput" name="comment_content" placeholder="댓글을 입력하세요" id="commentinput">
+                           <button type="button" id="insertcommentbtn" class="btn btn-info" style="margin-right: 20px;">입력</button>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+   </div>
 </body>
 </html>
