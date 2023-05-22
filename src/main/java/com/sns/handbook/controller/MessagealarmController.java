@@ -49,25 +49,26 @@ public class MessagealarmController{
 	}
 	
 	//알림받아오기
-	   @GetMapping("/messagealarmget")
-	   public Map<String, Object> messagealarmGet(HttpSession session)
-	   {
-	      Map<String, Object> map=new HashMap<>();
-	      
-	      //내 num
-	      String user_num=(String)session.getAttribute("user_num");
-	      
-	      //알림개수 세기
-	      int msgalCount=maserive.getTotalCountMessAlarm(user_num);
-	      
-	      if(msgalCount!=0) {
-	         //메시지 알림 목록(최근대화목록)
-	         List<MessageDto> list=maserive.getAllMessAlarm(user_num);
-	         
-	         map.put("totalCount", maserive.getTotalCountMessAlarm(user_num));
-	         map.put("list", list);
-	      }
-	      
-	      return map;
-	   }
+
+	@GetMapping("/messagealarmget")
+	public Map<String, Object> messagealarmGet(HttpSession session)
+	{
+		Map<String, Object> map=new HashMap<>();
+		
+		//내 num
+		String user_num=(String)session.getAttribute("user_num");
+		
+		//알림개수 세기
+		int msgalCount=maserive.getTotalCountMessAlarm(user_num);
+		
+		if(msgalCount!=0) {
+			//메시지 알림 목록(최근대화목록)
+			List<MessageDto> list=maserive.getAllMessAlarm(user_num);
+			
+			map.put("totalCount", maserive.getTotalCountMessAlarm(user_num));
+			map.put("list", list);
+		}
+		
+		return map;
+	}
 }

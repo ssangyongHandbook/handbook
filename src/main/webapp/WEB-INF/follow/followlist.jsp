@@ -123,6 +123,8 @@
 	margin-top: 30px;
 	margin: 0 auto;
 }
+
+
 </style>
 </head>
 <body>
@@ -165,24 +167,21 @@
 					<div class="friendmenu" id="${dto.fing_num }">
 								
 								<div class = "detailbtn">
-								<c:if test="${dto.bookmarkcheck==1 }">
-									<p>즐겨찾기 등록됨</p>
-								</c:if>
+								 
+								<c:if test="${dto.bookmarkcheck!=1 }">
 								<button type="button" class="insbookbtn" bfriend_num = "${dto.to_user }"><b><span style="font-size: 15pt;">
 								<i class="fa-star fa-regular" style="color: #ffd43b;"></i> 
-								즐겨찾기</span></b></button></div>
+								즐겨찾기추가</span></b></button>
+								</c:if>
 								
-								
+								<c:if test="${dto.bookmarkcheck==1 }">
+								<button type="button" class="delbookbtn" bfriend_num = "${dto.to_user }"><b><span style="font-size: 15pt;">
+								<i class="fa-solid fa-star" style="color: #ffd43b;"></i> 
+								즐겨찾기취소</span></b></button>
+								</c:if>
+								</div>
 								
 								<!-- <i class="fa-solid fa-star" style="color: #ffd43b;"></i> -->
-								
-								
-								
-								
-								
-								
-								
-								
 								<div class = "detailbtn">
 								<button type = "button" class="fldelete"  to_user = ${dto.to_user }><b><span style="font-size: 15pt; margin-left: 4px;">
 								<i class="fa-solid fa-xmark" style="color: #cd2323;"></i>
@@ -211,27 +210,43 @@
 			$("#"+fing_num).toggle();
 		});
 		
-		$(document).on("click",".insbookbtn",function(){
-			
-			var owner_num = "${sessionScope.user_num}";
-			var bfriend_num = $(this).attr("bfriend_num");
+		$(document).on("click", ".insbookbtn", function(){
+		    var owner_num = "${sessionScope.user_num}";
+		    var bfriend_num = $(this).attr("bfriend_num");
+		    var clickedElement = $(this);
 
-			 $.ajax({
-				dataType:"text",
-				url:"insertbookmark",
-				type:"get",
-				data:{"owner_num":owner_num,"bfriend_num":bfriend_num},
-				success:function(){
-					location.reload();
-				}
-			}); 
-			
-			
+		    $.ajax({
+		        dataType: "text",
+		        url: "insertbookmark",
+		        type: "get",
+		        data: {"owner_num": owner_num, "bfriend_num": bfriend_num},
+		        success: function(){ 
+		            clickedElement.removeClass("insbookbtn");
+		            clickedElement.addClass("delbookbtn");
+		            location.reload();
+		        }
+		    });
+		});
+
+		$(document).on("click", ".delbookbtn", function(){
+		    var owner_num = "${sessionScope.user_num}";
+		    var bfriend_num = $(this).attr("bfriend_num");
+		    var clickedElement = $(this);
+
+		    $.ajax({
+		        dataType: "text",
+		        url: "deletebookmark",
+		        type: "get",
+		        data: {"owner_num": owner_num, "bfriend_num": bfriend_num},
+		        success: function(){
+		            clickedElement.removeClass("delbookbtn");
+		            clickedElement.addClass("insbookbtn");
+		            location.reload();
+		        }
+		    });
 		});
 		
-		
-		
-		$(document).on("click",".fldelete",function(){
+		$(document).on("click",".fldelete",function(){ 
 			
 			$.ajax({
 				dataType:"text",
@@ -274,7 +289,7 @@
 		    		        		s += "</div>";
 		    		        		s += "<div class='btndiv' style='margin: auto 0;'><button type='button' class='addbtn' fing_num = "+item.fing_num+"><img src='../image/add.png'></button></div>";
 		    		        		s += "<ul class='friendmenu' id="+item.fing_num+" style='float: left; margin: auto 0; padding: 0; display:none;'>";
-		    		        		s += "<li class = 'followbookmark'><button><span class='glyphicon glyphicon-star-empty' style='font-size: 17pt;'>&nbsp;즐겨찾기</span></button></li>"
+		    		        		s += "<li class = 'followbookmark'><button><i class='fa-star fa-regular' style='color: #ffd43b;''></i> &nbsp;즐겨찾기</span></button></li>"
 		    		       			s += "<li class = 'followcancel'><button type = 'button' to_user = "+item.to_user+"><span class='glyphicon glyphicon-remove' style='font-size: 17pt;'>&nbsp;팔로우취소</span></button></li></ul></div></div>"
 		    		        		
 		    		        		
