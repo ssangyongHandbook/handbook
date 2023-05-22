@@ -11,7 +11,7 @@
 	</update>
 	
 	<insert id="insert" parameterType="CommentDto">
-		insert into comment value(null,#{user_num},#{post_num},#{comment_content},#{comment_group},#{comment_step},#{comment_level},now())
+		insert into comment value(null,#{user_num},#{post_num},#{guest_num},#{comment_content},#{comment_group},#{comment_step},#{comment_level},now())
 	</insert>
 	
 	<delete id="delete" parameterType="String">
@@ -36,6 +36,10 @@
 	
 	<select id="selectScroll" parameterType="Map" resultType="CommentDto">
 		select * from comment where post_num=#{post_num} order by comment_group desc,comment_step asc limit 8 offset #{offset}
+	</select>
+	
+	<select id="selectGuestScroll" parameterType="Map" resultType="CommentDto">
+		select * from comment where guest_num=#{guest_num} order by comment_group desc,comment_step asc limit 8 offset #{offset}
 	</select>
 	
 	<select id="getAllDatas"  resultType="CommentDto">
