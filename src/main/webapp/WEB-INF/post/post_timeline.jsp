@@ -29,6 +29,7 @@
 
       offset = ${offset};
       commentoffset = ${commentoffset};
+      $("#showmodimg_insert").hide();
 
       $("#insertbtn").click(function() {
 
@@ -185,8 +186,17 @@
                var filename="";
                
                $.each(files,function(i,ele){
-                  filename+="<img style='height: 250px'";
-                  filename+="src='/post_file/"+ele+"'>";
+            	   if(ele.includes(".mp4")){
+            		   filename+="<video style='width: 95%; max-height:350px; object-fit:cover;' controls=\"controls\" src='/post_file/"+ele+"'>";
+            	   }else{
+            		   filename+="<img style='width: 95%; max-height:350px; object-fit:cover;'";
+                	   filename+="src='/post_file/"+ele+"'>";   
+            	   }
+            	   
+            	   if(ele=="no"){
+            		   filename="";
+            		   $("#showmodimg").hide();
+            	   }
                })
                
                $("#showmodimg").html(filename);
@@ -214,6 +224,7 @@
                      form.append("post_num",updatenum);
                      form.append("post_access",update_access);
                      form.append("post_content",update_content);
+                     form.append("photodel",$("#update_file").attr("photodel"));
                      
                      $.ajax({
                         type: "post",
@@ -337,38 +348,51 @@
       
       
       $("#btncontentphoto").click(function(){
-      
-      $("#post_file").trigger("click");
-   });
+    	  $("#post_file").trigger("click");
+    });
 
       $("#post_file").change(function(){
-          
-          if($(this)[0].files[0]){
-           var reader=new FileReader();
-           reader.onload=function(e){
-           $("#showtext").hide();
-              
-           //영상 선택했을 경우 추가
-           if((e.target.result).includes('video')){
-              $("#showvideo").show();
-              $("#showvideo").attr("src",e.target.result);
-              $("#showimg").attr("src","");
-              $("#showimg").hide();
-           }else{
-              $("#showimg").show();
-              $("#showimg").attr("src",e.target.result);   
-              $("#showvideo").attr("src","");
-              $("#showvideo").hide();
-           }
-           }
-           reader.readAsDataURL($(this)[0].files[0]);
-          }
+      		////array로
+			var fileArr = Array.from(this.files);
+			
+			var s="";
+			var videoCount=0;
+			
+			$.each(fileArr,function(i,ele){
+				var file = ele;
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					if((e.target.result).includes("video/mp4")){
+						s+="<video style='width: 95%; max-height:350px; object-fit:cover;' controls=\"controls\" src='"+e.target.result+"'>";
+						videoCount=videoCount+1;
+					}else{
+						s+="<img style='width: 95%; max-height:350px; object-fit:cover;' src='"+e.target.result+"'>";	
+					}
+					
+					$("#showmodimg_insert").html(s);
+					
+					if(s.includes("video/mp4")&&s.includes("image/")){
+						alert("동영상과 사진은 함께 올릴 수 없습니다.");
+						$("#post_file").val(null);
+						$("#showmodimg_insert").html("");
+						$("#showmodimg_insert").hide();
+					}else if(videoCount>=2){
+						alert("동영상은 한 개만 올릴 수 있습니다.");
+						$("#post_file").val(null);
+						$("#showmodimg_insert").html("");
+						$("#showmodimg_insert").hide();
+					}
+				};
+				reader.readAsDataURL(file);
+			})
+			
+			$("#showmodimg_insert").html(s);
+			$("#showmodimg_insert").show();
       });
   
   
   $("#btncontentphoto").click(function(){
          //$("#showimg").show();
-         $("#showtext").show();
       });
 
       
@@ -397,30 +421,67 @@
 
    
   $(document).ready(function() {
-      $("#btnmodcontentphoto").click(function() {
-         $("#update_file").click();
-      });
-      
-      $("#update_file").change(function() {
-         var s="";
-         var file = this.files[0];
-         var reader = new FileReader();
-         reader.onload = function(e) {
-            s+="<img style='height: 250px' src='"+e.target.result+"'>";
-            $("#showmodimg").html(s);
-            //$("#showmodimg").attr("src", e.target.result);
-         };
-         $("#showmodimg").html(s);
-         reader.readAsDataURL(file);
-      });
-      
-      $("#remove_photo_btn").click(function() {
-         $("#update_file").val("");
-         $("#showmodimg").html("");
-         $("#update_file").val(null);
-         //$("#showmodimg").attr("src", "");
-      });
-   });
+		$("#btnmodcontentphoto").click(function() {
+			$("#update_file").click();
+		});
+		
+		$("#update_file").change(function() {
+			////array로
+			var fileArr = Array.from(this.files);
+			
+			var s="";
+			var videoCount=0;
+			
+			$.each(fileArr,function(i,ele){
+				var file = ele;
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					if((e.target.result).includes("video/mp4")){
+						s+="<video style='width: 95%; max-height:350px; object-fit:cover;' controls=\"controls\" src='"+e.target.result+"'>";
+						videoCount=videoCount+1;
+					}else{
+						s+="<img style='width: 95%; max-height:350px; object-fit:cover;' src='"+e.target.result+"'>";	
+					}
+					$("#showmodimg").html(s);
+					
+					if(s.includes("video/mp4")&&s.includes("image/")){
+						alert("동영상과 사진은 함께 올릴 수 없습니다.");
+						$("#update_file").val(null);
+						$("#showmodimg").html("");
+						$("#showmodimg").hide();
+					}else if(videoCount>=2){
+						alert("동영상은 한 개만 올릴 수 있습니다.");
+						$("#update_file").val(null);
+						$("#showmodimg").html("");
+						$("#showmodimg").hide();
+					}
+				};
+				reader.readAsDataURL(file);
+			})
+			
+			$("#showmodimg").html(s);
+			$("#showmodimg").show();
+		});
+		
+		$("#remove_photo_btn").click(function() {
+			$("#update_file").val("");
+			$("#showmodimg").html("");
+			$("#update_file").val(null);
+			$("#update_file").attr("photodel","true");
+			$("#showmodimg").hide();
+			//$("#showmodimg").attr("src", "");
+		});
+		
+		$("#remove_contentphoto_btn").click(function() {
+			$("#post_file").val("");
+			$("#showmodimg_insert").html("");
+			$("#post_file").val(null);
+			$("#showmodimg_insert").hide();
+			//$("#showmodimg").attr("src", "");
+		});
+	});
+
+
    
   
   
@@ -533,7 +594,6 @@
                          if(dto.like_count!=0){
                             s+="&nbsp;좋아요 "+dto.like_count+"명";
                          }
-                             
                              
                              
                              }
@@ -1163,11 +1223,11 @@ body {
 }
 
 .contentmodal {
-   /* background: #F0F2F5; */
-   border-radius: 60px;
-   margin: 0 auto;
-   /* width바꿈 100%로 */
-   width: 100%;
+	/* background: #F0F2F5; */
+	border-radius: 60px;
+	margin: 0 auto;
+	/* width바꿈 100%로 */
+	width: 85%;
 }
 
 #writeinput {
@@ -1186,16 +1246,17 @@ body {
 }
 
 #coverinput {
-   background: white;
-   height: 65px;
-   width: 100%;
-   border-radius: 10px;
-   display: inline-flex;
-   align-items: center;
-   justify-content: center;
-   padding-left: 15px;
-   padding-right: 15px;
-   box-shadow: 0px 0px 5px lightgray;
+	background: white;
+	height: 65px;
+	width: 100%;
+	margin: 0 auto;
+	border-radius: 10px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-left: 15px;
+	padding-right: 15px;
+	box-shadow: 0px 0px 5px lightgray;
 }
 
 .writeimgdiv{
@@ -1295,11 +1356,13 @@ body {
 }
 
 .sliders {
-   width: 100%;
-   margin: 0 auto;
-   display: inline-flex;
-   justify-content: center;
-   align-items: center;
+	width: 100%;
+	height: 450px;
+	overflow: hidden;
+	margin: 0 auto;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .slick-list {
@@ -1470,6 +1533,48 @@ span.content {
 li {
    cursor: pointer;
 }
+
+#update_userphoto, #insert_userphoto{
+	width: 40px;
+	height: 40px;
+	overflow: hidden;
+	border-radius: 100px;
+}
+
+#update_userphoto img, #insert_userphoto img{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+#update_username,#insert_username{
+	font-size: 11pt;
+	font-weight: bold;
+}
+
+#update_header,#insert_header{
+	display: inline-flex;
+	align-items: center;
+	width: 100%;
+}
+
+#update_userbox,#insert_userbox{
+	display: inline-flex;
+	flex-direction: column;
+	margin-left: 10px;
+}
+
+#update_access, #post_access{
+	font-size: 10pt;
+	font-weight: bold;
+	height: 100%;
+	padding: 5px;
+	outline: none;
+	border-radius: 5px;
+	background-color: #F0F2F5;
+	border: none;
+}
+
 </style>
 </head>
 
@@ -1502,54 +1607,54 @@ li {
 
             <!-- Modal content-->
             <form method="post" enctype="multipart/form-data" id="postInsert">
+					<input type="hidden" name="user_num" id="user_num" value="${sessionScope.user_num }">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title" align="center"><b>게시글 만들기</b></h4>
+						</div>
+						<div class="modal-body">
+							<div class="form-group" style="width: 500px;">
+								<div id="insert_header">
+									<div id="insert_userphoto">
+										<c:if test="${sessionScope.user_photo==null }">
+											<img src="/image/noimg.png">
+										</c:if>
+										<c:if test="${sessionScope.user_photo!=null }">
+											<img src="/photo/${sessionScope.user_photo }">
+										</c:if>									
+									</div>
+									<div id="insert_userbox">
+										<span id="insert_username">${login_name}</span>
+										<select name="post_access" id="post_access">
+											<option value="all">전체공개</option>
+											<option value="follower">팔로워 공개</option>
+											<option value="onlyme">나만보기</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<textarea style="width: 100%; height: 90px; outline: none; border: none; font-size: 12pt" 
+								name="post_content" required="required" id="post_content" placeholder="내용을 입력해주세요"></textarea>
 
-               <input type="hidden" name="user_num" id="user_num" value="${sessionScope.user_num }">
-               <div class="modal-content">
-                  <div class="modal-header">
-                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                     <h4 class="modal-title">게시글 만들기</h4>
-                  </div>
-                  <div class="modal-body">
-                     <div class="form-group" style="width: 500px;">
-                        <img alt="" src="${root }/photo/${user_photo}"
-                           style="width: 40px; height: 40px; border-radius: 20px;">
-                        <span>${login_name}</span>
-                     </div>
-                     <select class="form-control" name="post_access" style="width: 150px;" id="post_access">
-                        <option value="all">전체공개</option>
-                        <option value="follower">팔로워 공개</option>
-                        <option value="onlyme">나만보기</option>
-                     </select>
+								<div id="showmodimg_insert" style="width: 95%; height: 300px; border-radius: 10px; overflow-y: auto; display: 
+								inline-flex; flex-direction: column; text-align: center;">
+								</div>
+							</div>
 
-                     <div class="form-group">
-                        <textarea style="width: 550px; height: 150px;" name="post_content" class="form-control"
-                           required="required" id="post_content" placeholder="내용을 입력해주세요"></textarea>
-
-                     </div>
-
-                     <div class="show" id="show" style="position: relative;">
-                        <img id="showimg"
-                           style="display: none; width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;">
-                        <br>
-                        <video id="showvideo"
-                           style="display: none; width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"
-                           controls="controls"></video>
-                        <p id="showtext"
-                           style="display: none; position: absolute; top: 65px; left: 190px; font-weight: bold;">사진/동영상
-                           추가</p>
-                     </div>
-
-
-                     <input type="file" multiple="multiple" id="post_file" name="post_file" style="display: none;">
-                     <button type="button" id="btncontentphoto" style="margin-top: 1%;">사진 선택</button>
-                  </div>
-
-                  <div class="modal-footer">
-                     <button type="button" class="btn btn-default" data-dismiss="modal" id="insertbtn">게시</button>
-                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
-               </div>
-            </form>
+							<input type="file" multiple="multiple" id="post_file" name="post_file" style="display: none;">
+							<br>
+							<button type="button" id="btncontentphoto" class="btn btn-default">사진 선택</button>
+							<button type="button" class="btn btn-default" id="remove_contentphoto_btn" style="outline: none;">사진 모두 지우기</button>
+						
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal" id="insertbtn" 
+							style="width: 100%; height: 55px; font-size: 16pt; font-weight: bold;">게시</button>
+						</div>
+					</div>
+				</form>
 
          </div>
       </div>
@@ -1559,49 +1664,63 @@ li {
 
       <div class="modal fade" id="updatepost" role="dialog">
          <div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title" align="center"><b>게시글 수정</b></h4>
+					</div>
 
-            <!-- Modal content-->
-            <div class="modal-content">
-               <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">게시글 수정</h4>
-               </div>
+					<div class="modal-body">
+						<div class="form-group" style="width: 100%;">
+							<div id="update_header">
+								<div id="update_userphoto">
+									<c:if test="${sessionScope.user_photo==null }">
+										<img src="/image/noimg.png">
+									</c:if>
+									<c:if test="${sessionScope.user_photo!=null }">
+										<img src="/photo/${sessionScope.user_photo }">
+									</c:if>
+								</div>
+								<div id="update_userbox">
+									<span id="update_username">${sessionScope.name }</span>
+									<select name="update_access" id="update_access" required="required">
+										<option value="all">전체공개</option>
+										<option value="follower">팔로워 공개</option>
+										<option value="onlyme">나만보기</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<input type="file" name="update_file" class="form-control" required="required"
+								multiple="multiple" id="update_file" style="display: none;">
+						</div>
+						<div class="form-group">
+							<textarea style="width: 100%; height: 90px; outline: none; border: none; font-size: 12pt" name="update_content"
+								required="required" id="update_content" placeholder="내용을 입력해주세요"></textarea>
+						</div>
+						<div id="showmodimg" style="width: 95%; height: 300px; border-radius: 10px; overflow-y: auto; display: 
+						inline-flex; flex-direction: column; text-align: center;">
+						</div>
+						<br>
+						<button type="button" class="btn btn-default" id="btnmodcontentphoto" style="outline: none;">사진 선택</button>
+						<button type="button" class="btn btn-default" id="remove_photo_btn" style="outline: none;">사진 모두 지우기</button>
+					</div>
 
-               <div class="modal-body">
-                  <div class="form-group" style="width: 150px;">
-                     <select class="form-control" name="update_access" id="update_access" required="required">
-                        <option value="all">전체공개</option>
-                        <option value="follower">팔로워 공개</option>
-                        <option value="onlyme">나만보기</option>
-                     </select>
-                  </div>
-                  <div class="form-group">
-                     <input type="file" name="update_file" class="form-control" required="required"
-                        multiple="multiple" id="update_file" style="display: none;">
-                  </div>
-                  <div class="form-group">
-                     <textarea style="width: 550px; height: 150px;" name="update_content" class="form-control"
-                        required="required" id="update_content" placeholder="내용을 입력해주세요"></textarea>
-                  </div>
-                  <div id="showmodimg" style="width: 500px; height: 400px; border-radius: 10px; overflow: scroll; display: inline-flex; flex-direction: column;">
-                  </div>
-                  <br>
-                  <button type="button" id="btnmodcontentphoto">사진 선택</button>
-                  <button type="button" class="btn btn-default" id="remove_photo_btn">사진 없애기</button>
-               </div>
-
-               <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal" id="updatetbtn">수정</button>
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-               </div>
-            </div>
+					<div class="modal-footer" style="text-align: center;">
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="updatetbtn" 
+						style="width: 100%; height: 55px; font-size: 16pt; font-weight: bold;">수정</button>
+						<!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+					</div>
+				</div>
 
 
-         </div>
-      </div>
-      <section>
-         <!-- 파일이 있을경우0 -->
-         <!--  동영상일 경우와 사진이 1장만 있을 경우도 .해주어야함   -->
+			</div>
+		</div>
+		<section style="width: 85%; margin: 0 auto;">
+			<!-- 파일이 있을경우0 -->
+			<!--  동영상일 경우와 사진이 1장만 있을 경우도 .해주어야함   -->
 
          <c:forEach var="dto" items="${list }" varStatus="i">
             <c:if test="${dto.post_file!='no' }">
@@ -1688,22 +1807,23 @@ li {
                      <div class="center-up">${dto.post_content }</div>
 
                      <div class="center-down sliders" id="dto-${dto.post_num}">
-
-                        <!-- 예지: 파일이 사진인지 영상인지 확인 -->
-                        <c:if test="${fn:contains(dto.post_file, '.mp4')}">
-                           <div class="fileimg">
-                              <video src="/post_file/${dto.post_file }" controls="controls" muted="muted"></video>
-                           </div>
-                        </c:if>
-                        <c:if test="${!fn:contains(dto.post_file, '.mp4')}">
-                           <c:forTokens items="${dto.post_file }" delims="," var="file">
-                              <div class="fileimg">
-                                 <img src="/post_file/${file }">
-                              </div>
-                           </c:forTokens>
-                        </c:if>
-                     </div>
-                  </div>
+								<!-- 예지: 파일이 사진인지 영상인지 확인 -->
+								<c:if test="${fn:contains(dto.post_file, '.mp4')}">
+									<div class="fileimg">
+										<video src="/post_file/${dto.post_file }" controls="controls" muted="muted"></video>
+									</div>
+								</c:if>
+								<c:if test="${!fn:contains(dto.post_file, '.mp4')}">
+									<c:forTokens items="${dto.post_file }" delims="," var="file">
+										<div class="fileimg">
+											<a href="/post_file/${file }" target="_new" style="text-decoration: none; outline: none;">
+												<img src="/post_file/${file }">
+											</a>
+										</div>
+									</c:forTokens>
+								</c:if>
+							</div>
+						</div>
 
 
 
