@@ -533,7 +533,7 @@
                          if(dto.like_count!=0){
                             s+="&nbsp;좋아요 "+dto.like_count+"명";
                          }
-                             s+=
+                             
                              
                              
                              }
