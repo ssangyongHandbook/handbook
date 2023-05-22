@@ -435,7 +435,7 @@
       
       
 
-       window.onscroll = function(e) {
+    /*    window.onscroll = function(e) {
               if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
                  
                  offset=offset+2;
@@ -523,10 +523,17 @@
 								 s+="<div class='bottom=up'>";
 								 
 								 if(dto.likecheck ==0){
-									 
+									 s += "<span class='bottom-left liketoggle' style='cursor:pointer' user_num='${sessionScope.user_num}' likehide1_num='likehide1" + dto.post_num + "' likeshow1_num='likeshow1" + dto.post_num + "' post_num='" + dto.post_num + "'>";
+									 s += "<span class='like' id='likehide1" + dto.post_num + "' user_num='${sessionScope.user_num}' likehide1_num='likehide1" + dto.post_num + "' likeshow1_num='likeshow1" + dto.post_num + "' post_num='" + dto.post_num + "'>";
+									s+="<span style='font-size: 1.2em; top: 3px; color: gray;'><i class='fa-regular fa-thumbs-up'></i></span>";									 
+									 }
+								 if(dto.like_count==0){
+									 s+="&nbsp;좋아요 "+dto.like_count;
 								 }
-								
-                             
+								 if(dto.like_count!=0){
+									 s+="&nbsp;좋아요 "+dto.like_count+"명";
+								 }
+                             s+=
                              
                              
                              }
@@ -550,7 +557,7 @@
               }
             }  
  
-            
+             */
             
             
             
@@ -587,51 +594,60 @@
          var comment_content = $("#input" + comment_num).val();
          var post_num = $(this).attr("post_num");
          //alert(comment_num + comment_content + post_num);
-         $.ajax({
-
-            type : "post",
-            dataType : "text",
-            url : "cinsert",
-            data : {
-               "comment_num" : comment_num,
-               "comment_content" : comment_content,
-               "post_num" : post_num
-            },
-            success : function() {
-               $("#commentsection").empty();
-               $("#addcomment").hide();
-               $("#input" + comment_num).val("");
-               $("#input" + comment_num).hide();
-               commentoffset = 0;
-               scroll(commentoffset, post_num);
-               $("#addcomment").show();
-            }
-         })
+ 		 if(comment_content != ""){
+        	 
+	         $.ajax({
+	
+	            type : "post",
+	            dataType : "text",
+	            url : "cinsert",
+	            data : {
+	               "comment_num" : comment_num,
+	               "comment_content" : comment_content,
+	               "post_num" : post_num
+	            },
+	            success : function() {
+	               $("#commentsection").empty();
+	               $("#addcomment").hide();
+	               $("#input" + comment_num).val("");
+	               $("#input" + comment_num).hide();
+	               commentoffset = 0;
+	               scroll(commentoffset, post_num);
+	               commentCount(post_num);
+	            }
+	         })
+         }else
+        	 alert("답글을 입력해주세요");
 
       })
 
       $("#insertcommentbtn").click(function() {
-
          var formdata = $("#form").serialize();
+         var inputdata=$("#commentinput").val();
+         //alert(inputdata);
          var post_num=$("#inputhidden-post_num").val();
+         
+         if(inputdata != ""){
+        	 
          //alert(formdata);
-         $.ajax({
-
-            type : "post",
-            dataType : "text",
-            url : "cinsert",
-            data : formdata,
-            success : function() {
-               $("#commentsection").empty();
-               $("#addcomment").hide();
-               $("#commentinput").val("");
-               commentoffset = 0;
-               scroll(commentoffset, post_num);
-               $("#addcomment").show();
-            }
-         })
+	         $.ajax({
+	
+	            type : "post",
+	            dataType : "text",
+	            url : "cinsert",
+	            data : formdata,
+	            success : function() {
+	               $("#commentsection").empty();
+	               $("#addcomment").hide();
+	               $("#commentinput").val("");
+	               commentoffset = 0;
+	               scroll(commentoffset, post_num);
+	               commentCount(post_num);
+	            }
+	         })
+         }else
+        	 alert("댓글을 입력해주세요.");
       });
-
       $(document).on("click", "#addcomment", function() {
         var post_num=$("#inputhidden-post_num").val(); 
          commentoffset = commentoffset + 8;
@@ -664,7 +680,7 @@
                $("#input" + comment_num).val("");
                $("#input" + comment_num).hide();
                scroll(commentoffset, post_num);
-               $("#addcomment").show();
+               commentCount(post_num);
             }
          });
 
@@ -689,7 +705,7 @@
                $("#input" + comment_num).val("");
                $("#input" + comment_num).hide();
                scroll(commentoffset, post_num);
-               $("#addcomment").show();
+               commentCount(post_num);
             }
          });
 
@@ -711,18 +727,47 @@
                $("#input" + comment_num).val("");
                $("#input" + comment_num).hide();
                scroll(commentoffset, post_num);
-               $("#addcomment").show();
+               commentCount(post_num);
             }
          })
       })
       
-      
       $(document).on("click",".commentmod",function(){
          
          var comment_num=$(this).attr("comment_num");
-         $("#div"+comment_num).hide();
-         $("#commentmod"+comment_num).show();
+         var div=$("#div"+comment_num).css("visibility");
+         var divmod=$("#commentmod"+comment_num).css("visibility");
+         
+		 if(div == "visible")	
+         	$("#div"+comment_num).css("visibility","hidden");
+		 else
+         	$("#div"+comment_num).css("visibility","visible");
+		 
+		 if(divmod == "hidden")	 
+         	$("#commentmod"+comment_num).css("visibility","visible");
+		 else
+         	$("#commentmod"+comment_num).css("visibility","hidden");
+		 $("#ul" + comment_num).toggle();
+		 
       })
+      
+      $(document).on("click",".modclose",function(){
+    	  
+    	  var comment_num=$(this).attr("comment_num");
+          var div=$("#div"+comment_num).css("visibility");
+          var divmod=$("#commentmod"+comment_num).css("visibility");
+ 		 if(div == "visible")	
+          	$("#div"+comment_num).css("visibility","hidden");
+ 		 else
+          	$("#div"+comment_num).css("visibility","visible");
+ 		 
+ 		 if(divmod == "hidden")	 
+          	$("#commentmod"+comment_num).css("visibility","visible");
+ 		 else
+          	$("#commentmod"+comment_num).css("visibility","hidden");
+
+      })
+      
       
       $(document).on("keydown",".inputmod",function(){
          
@@ -743,7 +788,7 @@
                   $("#input" + comment_num).val("");
                   $("#input" + comment_num).hide();
                   scroll(commentoffset, post_num);
-                  $("#addcomment").show();
+                  commentCount(post_num);
                }
             });
          };
@@ -752,12 +797,14 @@
       
       $(document).on("click",".commentspan",function(){
          
-         var post_num=$(this).attr("post_num");
-         //alert(post_num);
-         $("#inputhidden-post_num").val(post_num);
-         $("#commentsection").empty();
-         scroll(0,post_num);
-        $(".cmmodalbtn").trigger("click");
+    	  var post_num=$(this).attr("post_num");
+    	  var user_name=$(this).attr("user_name");
+    	  $("#inputhidden-post_num").val(post_num);
+    	  $(".commenth4").text(user_name+"님의 게시물");
+    	  $("#commentsection").empty();
+    	  scroll(0,post_num);
+    	  commentCount(post_num);
+		  $(".cmmodalbtn").trigger("click");
         
          
       })
@@ -782,6 +829,24 @@
       
       
    })
+   
+   //댓글갯수 불러오기 
+   function commentCount(post_num){
+	   $.ajax({
+		   type : "get",
+	       dataType : "json",
+	       url : "commentcount",
+	       data : {"post_num" : post_num},
+	       success :function(res){
+	    	   
+	    	   if(res>8)
+	    		   $("#addcomment").show();
+	    	   else
+	    		   $("#addcomment").hide();
+	    		   
+	       }
+	   });
+   }
    
    
    /* 예지: 영상 화면에 보일 시 자동재생 */
@@ -842,30 +907,27 @@
                
                if(item.post_user_num ==${sessionScope.user_num} || item.user_num == ${sessionScope.user_num}){
                   
-                  s += '<div style="height: 0; width: 450px; position: relative; left: -30px; top: 30px;">';
-                  s += '<img src="../image/add.png" class="ulimg" style="width: 20px; float: right;" comment_num="'+item.comment_num+'">';
-                  
-                  
-                  s += '<ul class="list-group commentul" id="ul'+item.comment_num+'">';
-                  s += '<li class="list-group-item list-group-item-success commentmod" comment_num="'+item.comment_num+'">수정</li>';
-                  s += '<li class="list-group-item list-group-item-danger commentdel" comment_num="'+item.comment_num+'">삭제</li>';
-                  s += '</ul>';
-                  s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display: none; width: 447px; position: relative; left: 31px; bottom: 31px;">';
-                  s += '<img src="/photo/'+item.user_photo+'" class="profile">';
-                  s += '<b class="user_name">'+item.user_name+'</b>';
-                  
-                  
-                  
-                  s += '<br>';
-                  s += '<input type="text" class="inputmod" style="width: 200px;" comment_num="'+item.comment_num+'" value="'+item.comment_content+'">';
-                  s += '</div>';
+            	   s += '<div style="height: 0; width: 450px; position: relative; left: -30px; top: 30px;">';
+                   s += '<img src="../image/add.png" class="ulimg" style="width: 20px; float: right;" comment_num="'+item.comment_num+'">';
+                   s += '<ul class="list-group commentul" style="height:0;" id="ul'+item.comment_num+'">';
+                   if(item.user_num == ${sessionScope.user_num})
+                   	s += '<li class="list-group-item commentmod" comment_num="'+item.comment_num+'">수정</li>';
+                   s += '<li class="list-group-item commentdel" comment_num="'+item.comment_num+'">삭제</li>';
+                   s += '</ul>';
+                   s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display:flex; flex-wrap:wrap; visibility: hidden; position:relative; left: 31px; bottom: 31px;">';
+                   s += '<span class="glyphicon glyphicon-remove modclose" comment_num="'+item.comment_num+'" style="position: relative; left:400px;"></span>';
+                   s += '<div><img src="/photo/'+item.user_photo+'" class="profile"></div>';
+                   s += '<div><b class="user_name">'+item.user_name+'</b>';
+                   s += '<br>';
+                  s += '<input type="text" class="inputmod form-control" style="width: 200px;" comment_num="'+item.comment_num+'" value="'+item.comment_content+'">';
+                  s += '</div></div>';
                   s += '</div>';
                }
                
-               s += "<div class='comment' id='div"+item.comment_num+"'>";
-               s += "<img src='/photo/"+item.user_photo+"' class='profile'>";
-               s += "<b class='user_name'>" + item.user_name + "</b><br>";
-               s += "<span class='spancontent'>" + item.comment_content + "</span></div>";
+               s += "<div class='comment' style='display:flex; flex-wrap:wrap;' visibility: visible; id='div"+item.comment_num+"'>";
+               s += "<div><img src='/photo/"+item.user_photo+"' class='profile'></div>";
+               s += "<div><b class='user_name'>" + item.user_name + "</b><br>";
+               s += "<span class='spancontent'>" + item.comment_content + "</span></div></div>";
                s += "<div class='cmlike'>";
 
                if (item.like_check == 0) {

@@ -305,6 +305,15 @@ public class CommentController {
 		return list;
 
 	}
+	
+	@GetMapping("post/commentcount")
+	@ResponseBody
+	public int commentcount(String post_num) {
+		
+		int count=service.getTotalCount(post_num);
+		
+		return count;
+	}
 
 
 	@GetMapping("post/commentlikeinsert")
