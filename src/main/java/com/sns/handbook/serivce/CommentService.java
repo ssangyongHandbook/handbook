@@ -112,6 +112,18 @@ public class CommentService implements CommentServiceInter {
 	}
 	
 	@Override
+	public List<CommentDto> selectGuestScroll(String guest_num, int offset) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map=new HashMap<>();
+		
+		map.put("guest_num", guest_num);
+		map.put("offset",offset);
+		
+		
+		return mapper.selectGuestScroll(map);
+	}
+	
+	@Override
 	public List<CommentDto> getAllDatas() {
 		// TODO Auto-generated method stub
 		return mapper.getAllDatas();
@@ -161,6 +173,7 @@ public class CommentService implements CommentServiceInter {
 		// TODO Auto-generated method stub
 		return mapper.getTotalCount(post_num);
 	}
+	
 	
 	
 	
