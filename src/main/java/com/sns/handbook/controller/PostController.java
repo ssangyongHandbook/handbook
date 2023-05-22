@@ -232,7 +232,9 @@ public class PostController {
 	// 수정
 	@PostMapping("/post/update")
 	@ResponseBody
-	public void update(@ModelAttribute PostDto dto,HttpSession session,@RequestParam(required = false) List<MultipartFile> photo)
+	public void update(@ModelAttribute PostDto dto,HttpSession session,
+			@RequestParam(required = false) List<MultipartFile> photo,
+			@RequestParam String photodel)
 	{
 		
 		String path = session.getServletContext().getRealPath("/post_file");
@@ -264,7 +266,7 @@ public class PostController {
 		    
 		    pservice.updatePhoto(dto.getPost_num(), uploadName);
 		    
-	    }else {
+	    }else if(photodel.equals("true")) {
 	    	pservice.updatePhoto(dto.getPost_num(), "no");
 	    }
 	    
