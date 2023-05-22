@@ -29,7 +29,8 @@ public interface UserServiceInter {
 	//우형 끝	
 
 	//희수 시작
-	public void insertUserInfo(UserDto dto);
+	public void insertUserInfo(UserDto dto) throws Exception;
+	public void insertOauthUserInfo(UserDto dto);
 	public UserDto getUserDtoById(String user_id);
 	public int loginEmailCheck(String user_email);
 
@@ -41,6 +42,9 @@ public interface UserServiceInter {
 	public String getUserEmailBynamehp(String user_name, String user_hp);
 	public int loginIdCheck(String user_id);
 	public void userDelete(String user_num);
+	public int updateMailKey(UserDto dto) throws Exception;
+	public int updateMailAuth(UserDto dto) throws Exception;
+	public int emailAuthFail(String user_num) throws Exception;
 	//희수 끝
 	
 	//예지

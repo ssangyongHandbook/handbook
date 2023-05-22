@@ -48,7 +48,7 @@ public class LoginController {
 	PasswordEncoder passwordEncoder;
 
 	@PostMapping("/login/loginprocess")
-	public String loginproc(@RequestParam String user_id, @RequestParam String user_pass, HttpSession session) {
+	public String loginproc(@RequestParam String user_id, @RequestParam String user_pass, HttpSession session) throws Exception {
 		int idCheck = service.loginIdCheck(user_id);
 
 		if (idCheck == 0) {
@@ -56,9 +56,15 @@ public class LoginController {
 			return "/login/passfail";
 		}
 
+
 		UserDto user = service.getUserById(user_id); // 암호화된 유저의 비밀번호 가져오기 위함.
 		int inputIdPassCheck = service.loginIdPassCheck(user_id, user_pass); // 입력한 아이디 비번에 맞는 계정 있는지 없는지 확인
 		boolean matches = passwordEncoder.matches(user_pass, user.getUser_pass()); // 유저가 적은 비밀번호와, 저장되어있는 암호화된 비밀번호가 같은지
+
+		//아이디 비번 친 유저가 이메일 인증을 안했을 경우.
+		if(!user.getMail_auth().equals("1")) {
+			return "/login/emailAuthFail";
+		}
 
 		if (matches == true) {// 암호화 비번 비교
 			System.out.println("암호화 password login");
@@ -70,9 +76,10 @@ public class LoginController {
 			session.setAttribute("name", dto.getUser_name());
 			session.setAttribute("user_num", dto.getUser_num());
 			session.setAttribute("user_photo", dto.getUser_photo());
+			session.setAttribute("mail_auth", dto.getMail_auth());
 
 			return "redirect:../post/timeline";
-		} else if (inputIdPassCheck == 1) { // 계정 있으면(기존), 암호화 안됨.
+		} else if (inputIdPassCheck == 1) { // 계정 있으면(기존), 암호화 안된 계정으로 로그인할 때.
 			System.out.println("기존 login");
 			UserDto dto = service.getUserDtoById(user_id);
 			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
@@ -82,6 +89,12 @@ public class LoginController {
 			session.setAttribute("name", dto.getUser_name());
 			session.setAttribute("user_num", dto.getUser_num()); // session에 num값 넣음.
 			session.setAttribute("user_photo", dto.getUser_photo());// session에 photo 넣음.
+			session.setAttribute("mail_auth", dto.getMail_auth());
+
+//			//이메일 인증 했는지 확인
+//			if (service.emailAuthFail(user.getUser_num()) != 1) {
+//				return "/login/emailAuthFail";
+//			}
 
 			return "redirect:../post/timeline"; // 로그인 하면 타임라인으로 넘어감.
 		} else { // 로그인 실패시
@@ -166,11 +179,11 @@ public class LoginController {
 			user.setUser_id(user_id);
 			user.setUser_name(name);
 			user.setUser_pass("naver");
-			
-			service.insertUserInfo(user);
-			
+
+			service.insertOauthUserInfo(user);
+
 			UserDto user1 = service.getUserById(user_id);
-			
+
 			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
 			session.setAttribute("signIn", apiResult);
 			session.setAttribute("email", user1.getUser_email());
@@ -238,9 +251,9 @@ public class LoginController {
 			user.setUser_name(name);
 			user.setUser_pass("kakao");
 
-			service.insertUserInfo(user);
+			service.insertOauthUserInfo(user);
 			UserDto user1 = service.getUserById(user_id);
-			
+
 			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
 			session.setAttribute("signIn", apiResult);
 			session.setAttribute("email", user1.getUser_email());
@@ -256,7 +269,7 @@ public class LoginController {
 
 	@GetMapping("/googlecallback")
 	public String googlecallback(Model model, @RequestParam String code, @RequestParam String state,
-			HttpSession session) throws Exception {
+								 HttpSession session) throws Exception {
 		OAuth2AccessToken oauthToken;
 		oauthToken = googleLoginBO.getAccessToken(session, code, state);
 		// 로그인 사용자 정보를 읽어온다
@@ -299,8 +312,8 @@ public class LoginController {
 			user.setUser_name(name);
 			user.setUser_pass("google");
 
-			service.insertUserInfo(user);
-			
+			service.insertOauthUserInfo(user);
+
 			UserDto user1= service.getUserById(user_id);
 			session.setMaxInactiveInterval(60 * 60 * 8);
 			session.setAttribute("signIn", apiResult);

@@ -68,6 +68,11 @@
 	<insert id="insertUserInfo" parameterType="UserDto">
 		insert into user (user_id,user_pass,user_name,user_hp,user_addr,user_email,user_joindate,user_gender,user_birth) values(#{user_id},#{user_pass},#{user_name},#{user_hp},#{user_addr},#{user_email},now(),#{user_gender},#{user_birth});
 	</insert>
+
+	<!-- Oauth 회원 가입 -->
+	<insert id="insertOauthUserInfo" parameterType="UserDto">
+		insert into user (user_id,user_pass,user_name,user_hp,user_addr,user_email,user_joindate,user_gender,user_birth) values(#{user_id},#{user_pass},#{user_name},#{user_hp},#{user_addr},#{user_email},now(),#{user_gender},#{user_birth});
+	</insert>
 	
 	<!-- id로 dto 반환 -->
 	<select id="getUserDtoById" parameterType="String" resultType="UserDto">
@@ -103,7 +108,21 @@
 	<delete id="userDelete" parameterType="String">
 		delete from user where user_num = #{user_num}
 	</delete>
-	
+
+	<!-- 회원가입 시 이메일 인증을 위한 랜덤번호 user mail_key 컬럼에 저장 -->
+	<update id="updateMailKey" parameterType="UserDto">
+		update user set mail_key=#{mail_key} where user_email=#{user_email}
+	</update>
+
+	<!-- 메일 인증하면 mail_auth컬럼 1로 바꿈-->
+	<update id="updateMailAuth" parameterType="UserDto">
+		update user set mail_auth=1 where user_email=#{user_email} and mail_key=#{mail_key}
+	</update>
+
+	<!-- 이메일 인증 했으면 0반환, 로그인 할때 인증했는지 안했는지 체크하기 위해 -->
+	<select id="emailAuthFail" parameterType="String" resultType="int">
+		select count(*) from user where user_num=#{user_num} and mail_auth=1
+	</select>
 	<!-- 여기 위까지는 김희수가 구현함. -->
 	
 	<!-- 예지 -->
