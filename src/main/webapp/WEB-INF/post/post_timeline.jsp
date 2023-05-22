@@ -435,10 +435,10 @@
       
       
 
-    /*    window.onscroll = function(e) {
+        window.onscroll = function(e) {
               if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
                  
-                 offset=offset+2;
+                 offset=offset+10;
                  $.ajax({
                    type:"get",
                    dataType:"json",
@@ -447,103 +447,300 @@
                    success:function(res){
                 	   
                       $.each(res,function(i,dto){
-                         
+
                          setTimeout(function(){
                              var s = "";
-                             if(dto.post_file!='no'){
-                            	 s += "<div class='show' id='divs" + dto.post_num + "'>";
-                            	 s += "<div class='showtext'>게시물을 숨겼습니다. 다시보려면 게시물을 눌러주세요.</div>";
-                            	 s += "<button type='button' class='showbtn' divpost_num='div" + dto.post_num + "' divspost_num='divs" + dto.post_num + "'>게시물보기</button></div>";
-                            	 s += "<div class='divmain' id='div" + dto.post_num + "'>";
-                            	 s += "<div class='top'>";
-                            	 s += "<div class='top-left'>";
-                            	 s += "<span style='float:left;'>";
-                            	 s += "<img src='${root}/photo/" + dto.user_photo + "' class='userimg' user_num='" + dto.user_num + "'></span>";
-								 
-                            	 s+="<span style='float :left; padding : 3%; margin-right: 5px;'><div>";
-								 s+="<b>"+dto.user_name;
-								 if(dto.post_access =='follower'){
-									 s+="<i class='fa-solid fa-user-group'></i>";
-								 }
-								 if(dto.post_access =='all'){
-									 s+="<i class='fa-solid fa-earth-americas'></i>";
-								 }
-								 if(dto.post_access =='onlyme'){
-									 s+="<i class='fa-solid fa-lock'></i>";
-								 }
-								 s += "<b></div>";
-								 s += "<div>" + dto.post_time + "</div></span></div>";
-								 s += "<span class='top-right'>";
-								 
-								   if (dto.user_num != ${sessionScope.user_num} && dto.checkfollowing != 1) {
-									    s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "'>팔로우하기</span> ";
-									    s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "' style='display:none;'>팔로우 끊기</span> ";
-									}
-								 
-								 if (dto.user_num != ${sessionScope.user_num} && dto.checkfollowing == 1) {
-									    s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "'>팔로우 끊기</span> ";
-									    s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "' style='display:none;'>팔로우 하기</span> ";
-									} 
-								 
-								 
-								 s += "<span class='postmenu dropdown' post_num='" + dto.post_num + "' user_num='${sessionScope.user_num}' dtouser_num='" + dto.user_num + "'>";
-								 
-								 s+="<i class='fa-solid fa-ellipsis'>";
-								 
-								 if (dto.checklogin == 1) {
-									    s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20pt; line-height: 1.5em; display: none;'>";
-									     s+="<li id='postupdate' class='postdetail' data-toggle='modal' data-target='#updatepost' post_num='"+dto.post_num+"' user_num='"+dto.user_num+"'>게시물 수정</li>";
-									     s+="<li id='postdelete' class='postdetail' user_num='"+dto.user_num+"' post_num='"+dto.post_num+"'>게시물 삭제</li></ul></div>";
-									}
-								 if(dto.checklogin != 1){
-									 s+="<ul id='"+dto.post_num+"' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 25px; line-height:1.5em;display:none;'>";
-									 s+="<li class='postdetail posthide' divpost_num='div"+dto.post_num+"' divpost_num='divs"+dto.post_num+"'>게시물 숨김</li></ul>";
-									 
-								 }
-									
-									 
-								 s += "</span></span></div>";
-								 s += "<div class='center'>";
-								 s += "<div class='center-up'>" + dto.post_content + "</div>";
-								 s += "<div class='center-down sliders' id='dto-" + dto.post_num + "'>";
+                             
+                             if (dto.post_file != 'no') {
+                            	  s += "<div class='shows' id='divs" + dto.post_num + "'>";
+                            	  s += "<div class='showtext'>게시물을 숨겼습니다. 다시보려면 게시물을 눌러주세요.</div>";
+                            	  s += "<button type='button' class='showbtn' divpost_num='div" + dto.post_num + "' divspost_num='divs" + dto.post_num + "'>게시물보기</button></div>";
+                            	  s += "<div class='divmain' id='div" + dto.post_num + "'>";
+                            	  s += "<div class='top'>";
+                            	  s += "<div class='top-left'>";
+                            	  s += "<span style='float:left;'>";
+                            	  s += '<div style="float: left;" class="userimgdiv">';
+                            	  s += "<img src='${root}/photo/" + dto.user_photo + "' class='userimg' user_num='" + dto.user_num + "'></span></div>";
 
-								 if (${fn:contains(dto.post_file, '.mp4')}) {
-								   s += "<div class='fileimg'> <video src='/post_file/" + dto.post_file + "' controls='controls' muted='muted'></video> </div>";
-								 }
+                            	  s += "<span style='float :left; padding : 3%; margin-right: 5px;'><div>";
+                            	  s += "<b>" + dto.user_name;
 
-								 if (${!fn:contains(dto.post_file, '.mp4')}) {
-								   s += "<c:forTokens items='" + dto.post_file + "' delims=',' var='file'> <div class='fileimg'> <img src='/post_file/${file}'></div> </c:forTokens>";
-								 }
+                            	  if (dto.post_access == 'follower') {
+                            	    s += "<i class='fa-solid fa-user-group'></i>";
+                            	  }
+                            	  if (dto.post_access == 'all') {
+                            	    s += "<i class='fa-solid fa-earth-americas'></i>";
+                            	  }
+                            	  if (dto.post_access == 'onlyme') {
+                            	    s += "<i class='fa-solid fa-lock'></i>";
+                            	  }
+                            	  s += "<b></div>";
+                            	  s += "<div>" + dto.post_time + "</div></span></div>";
+                            	  s += "<span class='top-right'>";
 
-								 s += "</div>";
-								 s += "</div>";
-								 
-								 s+="<div class='bottom'>";
-								 s+="<hr style='border:1px solid #ced0d4; margin-bottom: 1%;'>";
-								 s+="<div class='bottom=up'>";
-								 
-								 if(dto.likecheck ==0){
-									 s += "<span class='bottom-left liketoggle' style='cursor:pointer' user_num='${sessionScope.user_num}' likehide1_num='likehide1" + dto.post_num + "' likeshow1_num='likeshow1" + dto.post_num + "' post_num='" + dto.post_num + "'>";
-									 s += "<span class='like' id='likehide1" + dto.post_num + "' user_num='${sessionScope.user_num}' likehide1_num='likehide1" + dto.post_num + "' likeshow1_num='likeshow1" + dto.post_num + "' post_num='" + dto.post_num + "'>";
-									s+="<span style='font-size: 1.2em; top: 3px; color: gray;'><i class='fa-regular fa-thumbs-up'></i></span>";									 
-									 }
-								 if(dto.like_count==0){
-									 s+="&nbsp;좋아요 "+dto.like_count;
-								 }
-								 if(dto.like_count!=0){
-									 s+="&nbsp;좋아요 "+dto.like_count+"명";
-								 }
-                             s+=
+                            	  if (dto.user_num != ${sessionScope.user_num} && dto.checkfollowing != 1) {
+                            	    s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "'>팔로우하기</span> ";
+                            	    s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "' style='display:none;'>팔로우 끊기</span> ";
+                            	  }
+
+                            	  if (dto.user_num != ${sessionScope.user_num} && dto.checkfollowing == 1) {
+                            	    s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "'>팔로우 끊기</span> ";
+                            	    s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "' style='display:none;'>팔로우 하기</span> ";
+                            	  }
+
+                            	  s += "<span class='postmenu dropdown' post_num='" + dto.post_num + "' user_num='${sessionScope.user_num}' dtouser_num='" + dto.user_num + "'>";
+
+                            	  s += "<i class='fa-solid fa-ellipsis'>";
+
+                            	  if (dto.checklogin == 1) {
+                            	    s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20pt; line-height: 1.5em; display: none;'>";
+                            	    s += "<li id='postupdate' class='postdetail' data-toggle='modal' data-target='#updatepost' post_num='" + dto.post_num + "' user_num='" + dto.user_num + "'>게시물 수정</li>";
+                            	    s += "<li id='postdelete' class='postdetail' user_num='" + dto.user_num + "' post_num='" + dto.post_num + "'>게시물 삭제</li></ul></div>";
+                            	  }
+                            	  if (dto.checklogin != 1) {
+                            	    s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 25px; line-height:1.5em;display:none;'>";
+                            	    s += "<li class='postdetail posthide' divpost_num='div" + dto.post_num + "' divpost_num='divs" + dto.post_num + "'>게시물 숨김</li></ul>";
+
+                            	  }
+
+                            	  s += "</span></span></div>";
+                            	  
+                            	  s += "<div class='center'>";
+                            	  s += "<div class='center-up'>" + dto.post_content + "</div>";
+                            	  s += "<div class='center-down sliders' id='dto-" + dto.post_num + "'>";
+
+                            	  if (${fn:contains(dto.post_file, '.mp4')}) {
+                            	    s += "<div class='fileimg'> <video src='/post_file/" + dto.post_file + "' controls='controls' muted='muted'></video> </div>";
+                            	  }
+
+                            	  if (${!fn:contains(dto.post_file, '.mp4')}) {
+                            	    s += "<c:forTokens items='" + dto.post_file + "' delims=',' var='file'> <div class='fileimg'> <img src='/post_file/${file}'></div> </c:forTokens>";
+                            	  }
+
+                            	  s += "</div>";
+                            	  s += "</div>";
+
+                            	  s += "<div class='bottom'>";
+                            	  s += "<hr style='border:1px solid #ced0d4; margin-bottom: 1%;'>";
+                            	  s += "<div class='bottom-up'>";
+
+                            	  if (dto.likecheck == 0) {
+                            	    s += "<span class='bottom-left liketoggle' style='cursor:pointer' user_num='${sessionScope.user_num}' likehide1_num='likehide1" + dto.post_num + "' likeshow1_num='likeshow1" + dto.post_num + "' post_num='" + dto.post_num + "'>";
+                            	    s += "<span class='like' id='likehide1" + dto.post_num + "' user_num='${sessionScope.user_num}' likehide1_num='likehide1" + dto.post_num + "' likeshow1_num='likeshow1" + dto.post_num + "' post_num='" + dto.post_num + "'>";
+                            	    s += "<span style='font-size: 1.2em; top: 3px; color: gray;'><i class='fa-regular fa-thumbs-up'></i></span>";
+
+                            	    if (dto.like_count == 0) {
+                            	      s += "&nbsp;좋아요 " + dto.like_count;
+                            	    }
+                            	    if (dto.like_count != 0) {
+                            	      s += "&nbsp;좋아요 " + dto.like_count + "명";
+                            	    }
+                            	    s += "</span>";
+                            	    s += "<span class='dlike' id='likeshow1" + dto.post_num + "' user_num='${sessionScope.user_num}'";
+                            	    s += 'post_num="' + dto.post_num + '" style="display: none;">';
+                            	    s += '<span style="font-size: 1.2em; top: 3px; color: blue;">';
+                            	    s += '<i class="fa-solid fa-thumbs-up"></i>';
+                            	    s += '</span>';
+                            	    if (dto.like_count == 0) {
+                            	      s += ' &nbsp;좋아요 회원님 ';
+                            	    }
+
+                            	    if (dto.like_count != 0) {
+                            	      s += '&nbsp;좋아요 회원님 외' + dto.like_count + '명';
+                            	    }
+
+                            	    s += '</span></span>'
+
+                            	  }
+
+
+                            	  if (dto.likecheck != 0) {
+
+                            	    s += '<span class="bottom-left liketoggle2" style="cursor: pointer" ';
+                            	    s += 'likehide2_num="likehide2' + dto.post_num + '" likeshow2_num="likeshow2' + dto.post_num + '" ';
+                            	    s += 'user_num="${sessionScope.user_num}" post_num="' + dto.post_num + '">';
+                            	    s += '<span id="likehide2' + dto.post_num + '" class="dlike" user_num="${sessionScope.user_num}" ';
+                            	    s += 'likehide1_num="likehide1' + dto.post_num + '" likeshow1_num="likeshow1' + dto.post_num + '" ';
+                            	    s += 'post_num="' + dto.post_num + '">';
+                            	    s += '<span style="font-size: 1.2em; top: 3px; color: blue;">';
+                            	    s += '<i class="fa-solid fa-thumbs-up"></i>';
+                            	    s += '</span>';
+
+
+                            	    if (dto.like_count != 1) {
+                            	      s += '&nbsp;좋아요 회원님 외 ' + (dto.like_count - 1) + '명';
+                            	    }
+                            	    if (dto.like_count == 1) {
+                            	      s += '&nbsp;좋아요 회원님 ';
+                            	    }
+                            	    s += '</span>';
+                            	    s += '<span user_num="${sessionScope.user_num}" id="likeshow2+' + dto.post_num + '" class="like"';
+                            	    s += 'post_num="' + dto.post_num + '" style="display: none;">';
+                            	    s += '<span style="font-size: 1.2em; top: 3px; color: gray;">';
+                            	    s += '<i class="fa-regular fa-thumbs-up"></i>';
+                            	    if (dto.like_count == 1) {
+                            	      s += '&nbsp;좋아요 회원님 ';
+                            	      s += '&nbsp;좋아요 ' + (dto.like_count - 1) + '명';
+                            	    }
+                            	    s += '</span></span></span>';
+
+
+                            	  }
+                            	    s += '<span class="bottom-right commentspan" style="cursor: pointer;" user_name="' + dto.user_name + '"';
+                            	    s += 'post_num="' + dto.post_num + '">';
+                            	    s += '<span style="font-size: 1.3em; color: gray;">';
+                            	    s += '<i class="fa-regular fa-comment"></i>';
+                            	    s += '</span>';
+                            	    s += '&nbsp;댓글 ' + dto.comment_count;
+                            	    s += '</span></div></div></div><br><br>';
+
+                            
+
+                            	}else{
+                            	  s += "<div class='shows' id='divs" + dto.post_num + "'>";
+                            	  s += "<div class='showtext'>게시물을 숨겼습니다. 다시보려면 게시물을 눌러주세요.</div>";
+                            	  s += "<button type='button' class='showbtn' divpost_num='div" + dto.post_num + "' divspost_num='divs" + dto.post_num + "'>게시물보기</button></div>";
+                            	  s += "<div class='divmain2' id='div" + dto.post_num + "'>";
+                            	  s += "<div class='top2'>";
+                            	  s += "<div class='top-left2'>";
+                            	  s += "<span style='float:left;'>";
+                            	  s += '<div style="float: left;" class="userimgdiv">';
+                            	  s += "<img src='${root}/photo/" + dto.user_photo + "' class='userimg' user_num='" + dto.user_num + "'></span></div>";
+
+                            	  s += "<span style='float :left; padding : 3%; margin-right: 5px;'><div>";
+                            	  s += "<b>" + dto.user_name;
+
+                            	  if (dto.post_access == 'follower') {
+                            	    s += "<i class='fa-solid fa-user-group'></i>";
+                            	  }
+                            	  if (dto.post_access == 'all') {
+                            	    s += "<i class='fa-solid fa-earth-americas'></i>";
+                            	  }
+                            	  if (dto.post_access == 'onlyme') {
+                            	    s += "<i class='fa-solid fa-lock'></i>";
+                            	  }
+                            	  s += "<b></div>";
+                            	  s += "<div>" + dto.post_time + "</div></span></div>";
+                            	  s += "<span class='top-right'>";
+
+                            	  if (dto.user_num != ${sessionScope.user_num} && dto.checkfollowing != 1) {
+                            	    s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "'>팔로우하기</span> ";
+                            	    s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "' style='display:none;'>팔로우 끊기</span> ";
+                            	  }
+
+                            	  if (dto.user_num != ${sessionScope.user_num} && dto.checkfollowing == 1) {
+                            	    s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "'>팔로우 끊기</span> ";
+                            	    s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "' style='display:none;'>팔로우 하기</span> ";
+                            	  }
+
+                            	  s += "<span class='postmenu dropdown' post_num='" + dto.post_num + "' user_num='${sessionScope.user_num}' dtouser_num='" + dto.user_num + "'>";
+
+                            	  s += "<i class='fa-solid fa-ellipsis'>";
+
+                            	  if (dto.checklogin == 1) {
+                            	    s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20pt; line-height: 1.5em; display: none;'>";
+                            	    s += "<li id='postupdate' class='postdetail' data-toggle='modal' data-target='#updatepost' post_num='" + dto.post_num + "' user_num='" + dto.user_num + "'>게시물 수정</li>";
+                            	    s += "<li id='postdelete' class='postdetail' user_num='" + dto.user_num + "' post_num='" + dto.post_num + "'>게시물 삭제</li></ul></div>";
+                            	  }
+                            	  if (dto.checklogin != 1) {
+                            	    s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 25px; line-height:1.5em;display:none;'>";
+                            	    s += "<li class='postdetail posthide' divpost_num='div" + dto.post_num + "' divpost_num='divs" + dto.post_num + "'>게시물 숨김</li></ul>";
+
+                            	  }
+
+                            	  s += "</span></span></div>";
+                            	  s += "<div class='center2'>";
+                            	  s += "<div class='center-up2'>" + dto.post_content + "</div>";
+                            	  s += "</div>";
+
+                            	  s += "<div class='bottom2'>";
+                            	  s += "<hr style='border:1px solid #ced0d4; margin-bottom: 1%;'>";
+                            	  s += "<div class='bottom-up2'>";
+
+                            	  if (dto.likecheck == 0) {
+                            	    s += "<span class='bottom-left2 liketoggle' style='cursor:pointer' user_num='${sessionScope.user_num}' likehide1_num='likehide1" + dto.post_num + "' likeshow1_num='likeshow1" + dto.post_num + "' post_num='" + dto.post_num + "'>";
+                            	    s += "<span class='like' id='likehide1" + dto.post_num + "' user_num='${sessionScope.user_num}' likehide1_num='likehide1" + dto.post_num + "' likeshow1_num='likeshow1" + dto.post_num + "' post_num='" + dto.post_num + "'>";
+                            	    s += "<span style='font-size: 1.2em; top: 3px; color: gray;'><i class='fa-regular fa-thumbs-up'></i></span>";
+
+                            	    if (dto.like_count == 0) {
+                            	      s += "&nbsp;좋아요 " + dto.like_count;
+                            	    }
+                            	    if (dto.like_count != 0) {
+                            	      s += "&nbsp;좋아요 " + dto.like_count + "명";
+                            	    }
+                            	    s += "</span>";
+                            	    s += "<span class='dlike' id='likeshow1" + dto.post_num + "' user_num='${sessionScope.user_num}'";                            	    s += 'post_num="' + dto.post_num + '" style="display: none;">';
+                            	    s += '<span style="font-size: 1.2em; top: 3px; color: blue;">';
+                            	    s += '<i class="fa-solid fa-thumbs-up"></i>';
+                            	    s += '</span>';
+                            	    if (dto.like_count == 0) {
+                            	      s += ' &nbsp;좋아요 회원님 ';
+                            	    }
+
+                            	    if (dto.like_count != 0) {
+                            	      s += '&nbsp;좋아요 회원님 외' + dto.like_count + '명';
+                            	    }
+
+                            	    s += '</span></span>'
+
+                            	  }
+
+
+                            	  if (dto.likecheck != 0) {
+
+                            	    s += '<span class="bottom-left2 liketoggle2" style="cursor: pointer" ';
+                            	    s += 'likehide2_num="likehide2' + dto.post_num + '" likeshow2_num="likeshow2' + dto.post_num + '" ';
+                            	    s += 'user_num="${sessionScope.user_num}" post_num="' + dto.post_num + '">';
+                            	    s += '<span id="likehide2' + dto.post_num + '" class="dlike" user_num="${sessionScope.user_num}" ';
+                            	    s += 'likehide1_num="likehide1' + dto.post_num + '" likeshow1_num="likeshow1' + dto.post_num + '" ';
+                            	    s += 'post_num="' + dto.post_num + '">';
+                            	    s += '<span style="font-size: 1.2em; top: 3px; color: blue;">';
+                            	    s += '<i class="fa-solid fa-thumbs-up"></i>';
+                            	    s += '</span>';
+
+
+                            	    if (dto.like_count != 1) {
+                            	      s += '&nbsp;좋아요 회원님 외 ' + (dto.like_count - 1) + '명';
+                            	    }
+                            	    if (dto.like_count == 1) {
+                            	      s += '&nbsp;좋아요 회원님 ';
+                            	    }
+                            	    s += '</span>';
+                            	    s += '<span user_num="${sessionScope.user_num}" id="likeshow2+' + dto.post_num + '" class="like"';
+                            	    s += 'post_num="' + dto.post_num + '" style="display: none;">';
+                            	    s += '<span style="font-size: 1.2em; top: 3px; color: gray;">';
+                            	    s += '<i class="fa-regular fa-thumbs-up"></i>';
+                            	    if (dto.like_count == 1) {
+                            	      s += '&nbsp;좋아요 회원님 ';
+                            	      s += '&nbsp;좋아요 ' + (dto.like_count - 1) + '명';
+                            	    }
+                            	    s += '</span></span></span>';
+
+
+                            	  }
+                            	    s += '<span class="bottom-right2 commentspan" style="cursor: pointer;" user_name="' + dto.user_name + '"';
+                            	    s += 'post_num="' + dto.post_num + '">';
+                            	    s += '<span style="font-size: 1.3em; color: gray;">';
+                            	    s += '<i class="fa-regular fa-comment"></i>';
+                            	    s += '</span>';
+                            	    s += '&nbsp;댓글 ' + dto.comment_count;
+                            	    s += '</span></div></div></div><br><br>';
+
+                            	  s += "</div></div>";
+                            	  s += "</div></div>";
+
+                            	}
+
                              
                              
-                             }
+
 								 
 								 
                                   
                                   
                                   
                                   var addTimeline = document.createElement("div");
-                                  addTimeline.classList.add("divmain"); 
+                                  console.log(s);
                                   addTimeline.innerHTML =s;
                                 	  
                                    
@@ -557,7 +754,7 @@
               }
             }  
  
-             */
+             
             
             
             
@@ -1146,7 +1343,7 @@ body {
 	color: black;
 }
 
-.userimgdiv{
+.userimgdiv {
 	width: 40px;
 	height: 40px;
 	border-radius: 100px;
@@ -1159,7 +1356,7 @@ body {
 	cursor: pointer;
 	width: 100%;
 	height: 100%;
-	object-fit: cover; 
+	object-fit: cover;
 }
 
 .contentmodal {
@@ -1181,7 +1378,7 @@ body {
 	padding: 8px;
 }
 
-.writeinputdiv{
+.writeinputdiv {
 	width: 95%;
 }
 
@@ -1198,7 +1395,7 @@ body {
 	box-shadow: 0px 0px 5px lightgray;
 }
 
-.writeimgdiv{
+.writeimgdiv {
 	width: 40px;
 	height: 40px;
 	margin-right: 15px;
@@ -1210,7 +1407,7 @@ body {
 .writeimg {
 	width: 100%;
 	height: 100%;
-	object-fit: cover; 
+	object-fit: cover;
 }
 
 .postimg {
@@ -1307,7 +1504,7 @@ body {
 	width: 100%;
 }
 
-.slick-track{
+.slick-track {
 	display: inline-flex;
 	align-items: center;
 }
@@ -1583,7 +1780,8 @@ li {
 							<textarea style="width: 550px; height: 150px;" name="update_content" class="form-control"
 								required="required" id="update_content" placeholder="내용을 입력해주세요"></textarea>
 						</div>
-						<div id="showmodimg" style="width: 500px; height: 400px; border-radius: 10px; overflow: scroll; display: inline-flex; flex-direction: column;">
+						<div id="showmodimg"
+							style="width: 500px; height: 400px; border-radius: 10px; overflow: scroll; display: inline-flex; flex-direction: column;">
 						</div>
 						<br>
 						<button type="button" id="btnmodcontentphoto">사진 선택</button>
@@ -1685,25 +1883,25 @@ li {
 
 
 						<div class="center">
-                     <div class="center-up">${dto.post_content }</div>
+							<div class="center-up">${dto.post_content }</div>
 
-                     <div class="center-down sliders" id="dto-${dto.post_num}">
+							<div class="center-down sliders" id="dto-${dto.post_num}">
 
-                        <!-- 예지: 파일이 사진인지 영상인지 확인 -->
-                        <c:if test="${fn:contains(dto.post_file, '.mp4')}">
-                           <div class="fileimg">
-                              <video src="/post_file/${dto.post_file }" controls="controls" muted="muted"></video>
-                           </div>
-                        </c:if>
-                        <c:if test="${!fn:contains(dto.post_file, '.mp4')}">
-                           <c:forTokens items="${dto.post_file }" delims="," var="file">
-                              <div class="fileimg">
-                                 <img src="/post_file/${file }">
-                              </div>
-                           </c:forTokens>
-                        </c:if>
-                     </div>
-                  </div>
+								<!-- 예지: 파일이 사진인지 영상인지 확인 -->
+								<c:if test="${fn:contains(dto.post_file, '.mp4')}">
+									<div class="fileimg">
+										<video src="/post_file/${dto.post_file }" controls="controls" muted="muted"></video>
+									</div>
+								</c:if>
+								<c:if test="${!fn:contains(dto.post_file, '.mp4')}">
+									<c:forTokens items="${dto.post_file }" delims="," var="file">
+										<div class="fileimg">
+											<img src="/post_file/${file }">
+										</div>
+									</c:forTokens>
+								</c:if>
+							</div>
+						</div>
 
 
 
@@ -1839,7 +2037,7 @@ li {
 								</span>
 							</div>
 							<span class="top-right2">
-							<c:if test="${dto.user_num!=sessionScope.user_num &&dto.checkfollowing !=1 }">
+								<c:if test="${dto.user_num!=sessionScope.user_num &&dto.checkfollowing !=1 }">
 									<span class="follow" id="follow${dto.post_num}" followpost_num="follow${dto.post_num }"
 										unfollowpost_num="unfollow${dto.post_num }" from_user="${sessionScope.user_num }"
 										to_user="${dto.user_num }">팔로우 하기</span>
