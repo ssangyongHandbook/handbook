@@ -220,25 +220,6 @@ $(function(){
           }
       });
       
-      //강제 호출
-      $("#btncontentphoto").click(function(){
-         
-         $("#contentphoto").trigger("click");
-      });
-      
-      //게시글 작성 시 사진 미리보기하기
-      $("#contentphoto").change(function(){
-         
-          if($(this)[0].files[0]){
-           var reader=new FileReader();
-           reader.onload=function(e){
-            $("#showimg").attr("src",e.target.result);
-            $("#showtext").hide();
-           }
-           reader.readAsDataURL($(this)[0].files[0]);
-          }
-      });
-      
       //게시글,방명록 작성(다중 업로드)
       $("#btnwrite").click(function() {
 
@@ -335,64 +316,78 @@ $(function(){
       
       //게시물,방명록 수정 값 불러오기
       $(".modpost").click(function(){
-         
-         updatenum=$(this).attr("post_num");
-         updateusernum=$(this).attr("user_num");
-         type=$(this).attr("type");
-			
-         if(type=='post'){
-        	 
-             $.ajax({
-                 type : "get",
-                 dataType : "json",
-                 url : "updateform",
-                 data : {"post_num" : updatenum},      
-                 success : function(res) {    
-           	 
-                	var s="";
-                 	const modalaccess=document.getElementById("modalaccess");
-                 	s += ' <select class="form-control" name="update_access"'
-		               + 'id="update_access" required="required" >'
-	                   + '<option value="all">전체공개</option>'
-	                   + '<option value="follower">팔로워 공개</option>'
-	                   + ' <option value="onlyme">나만보기</option>'
-	                   + '   </select>';
-                 	
-                    $("#update_access").val(res.post_access);
-                    $("#update_content").val(res.post_content);
-                    $("#showmodimg").attr("src","/post_file/"+res.post_file);
-                    $("#btnupdate2").attr("num",updateusernum);
-                    $("#btnupdate2").attr("post_type",type);
-                    
-                    modalaccess.innerHTML=s;
-                 }
-              })
-        	 
-         }else{
-        	 
-        	 $.ajax({
-                 type : "get",
-                 dataType : "json",
-                 url : "updateguestform",
-                 data : {"guest_num" : updatenum},      
-                 success : function(res) {
-                	
-                	var s="";
-                	const modalaccess=document.getElementById("modalaccess");
-                	s += '<span style="border-radius: 5px; padding: 4px; background-color: #F0F2F5;"><b><i class="fa-solid fa-user-group">';
-                	s += '</i>팔로워 공개</b></span>';
-                	 
-                    $("#update_content").val(res.guest_content);
-                    $("#showmodimg").attr("src","/guest_file/"+res.guest_file);
-                    $("#btnupdate2").attr("num",updateusernum);
-                    $("#btnupdate2").attr("post_type",type);
-                    
-                    modalaccess.innerHTML=s;
-                 }
-              })
-         }
+    updatenum=$(this).attr("post_num");
+    updateusernum=$(this).attr("user_num");
+    type=$(this).attr("type");
 
-      })
+    if(type=='post'){
+        $.ajax({
+            type : "get",
+            dataType : "json",
+            url : "updateform",
+            data : {"post_num" : updatenum},      
+            success : function(res) {    
+                var s="";
+                const modalaccess=document.getElementById("modalaccess");
+                s += ' <select class="form-control" name="update_access" id="update_access" required="required">'
+                   + '<option value="all">전체공개</option>'
+                   + '<option value="follower">팔로워 공개</option>'
+                   + ' <option value="onlyme">나만보기</option>'
+                   + '</select>';
+                
+                $("#update_access").val(res.post_access);
+                $("#update_content").val(res.post_content);
+
+                // 사진 미리보기
+                if (res.post_file.endsWith('.mp4') || res.post_file.endsWith('.avi')) {
+                    $("#showmodvideo").attr("src","/post_file/"+res.post_file);
+                    $("#showmodimg").hide();
+                    $("#showmodvideo").show();
+                } else {
+                    $("#showmodimg").attr("src","/post_file/"+res.post_file);
+                    $("#showmodimg").show();
+                    $("#showmodvideo").hide();
+                }
+
+                $("#btnupdate2").attr("num",updateusernum);
+                $("#btnupdate2").attr("post_type",type);
+
+                modalaccess.innerHTML=s;
+            }
+        });
+    } else {
+        $.ajax({
+            type : "get",
+            dataType : "json",
+            url : "updateguestform",
+            data : {"guest_num" : updatenum},      
+            success : function(res) {
+                var s="";
+                const modalaccess=document.getElementById("modalaccess");
+                s += '<span style="border-radius: 5px; padding: 4px; background-color: #F0F2F5;"><b><i class="fa-solid fa-user-group">';
+                s += '</i>팔로워 공개</b></span>';
+                 
+                $("#update_content").val(res.guest_content);
+
+                // 사진 미리보기
+                if (res.guest_file.endsWith('.mp4') || res.guest_file.endsWith('.avi')) {
+                    $("#showmodvideo").attr("src","/guest_file/"+res.guest_file);
+                    $("#showmodimg").hide();
+                    $("#showmodvideo").show();
+                } else {
+                    $("#showmodimg").attr("src","/guest_file/"+res.guest_file);
+                    $("#showmodimg").show();
+                    $("#showmodvideo").hide();
+                }
+
+                $("#btnupdate2").attr("num",updateusernum);
+                $("#btnupdate2").attr("post_type",type);
+
+                modalaccess.innerHTML=s;
+            }
+        });
+    }
+});
       
       //게시물 수정      
       $("#btnupdate2").click(function(){
@@ -827,6 +822,52 @@ $(function(){
         
          
       })
+      
+      //처음 화면 로딩됐을 때 영상 위치 확인
+      $(".fileimg video").each(function(i,ele){
+    	  videoStatus($(ele));
+      })
+      
+      //스크롤 할 때마다 영상 위치 확인
+      $(window).scroll(function(){
+    	  $(".fileimg video").each(function(i,ele){
+        	  if(videoStatus($(ele))){
+        		  return;
+        	  }
+          })
+      })
+      
+      //영상 화면에 보일 시 자동재생
+      function videoStatus(video){
+   	   var viewHeight=$(window).height();
+   	   var scrollTop=$(window).scrollTop();
+   	   var y=video.offset().top;
+   	   var elementHeight=video.height();
+    	  
+   	   if(y<(viewHeight+scrollTop) && y>(scrollTop-elementHeight)){
+   		   if(video.attr("onwindow")!="true"){
+   			   video.get(0).play();
+   			   video.attr("onwindow","true");    
+   		   }
+   		   
+   		   return true;
+   		}
+   	   else if(y<(viewHeight+scrollTop) && video.attr("onwindow")!="true"){
+   		   if(video.attr("onwindow")!="true"){
+   			   video.get(0).play();
+   			   video.attr("onwindow","true");  
+   		   }  
+   		   
+   		   return true;
+   		}
+   	   else{
+   		   video.get(0).pause();
+   		   video.attr("onwindow","false"); 
+   		   
+   		   return false;
+   		}
+   	}
+      
    })
 </script>
 
@@ -975,7 +1016,15 @@ $(function(){
          height: 160px;
          border-radius: 10px;
          border: 1px solid gray;
-         margin: 1% 1% 0.25% 1%;
+         
+      }
+      
+      .galary-video{
+      	 width: 160px;
+         height: 160px;
+         border-radius: 10px;
+         border: 1px solid gray;
+         
       }
       
       .galary-photoall{
@@ -1224,22 +1273,23 @@ $(function(){
                   </c:if>
                   
                   <c:if test="${sessionScope.user_num!=dto.user_num }">
-               <img alt="" src="${root }/photo/${sessionScope.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
-               <div style="margin-left: 2%;">
-                   <span style="font-size: 11pt;"><b>${sessionScope.name }</b></span><br>
-              
-	                  <div id="modalaccess"></div>
-	              
-                  </div>
+		               <img alt="" src="${root }/photo/${sessionScope.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
+			               <div style="margin-left: 2%;">
+				                <span style="font-size: 11pt;"><b>${sessionScope.name }</b></span><br>
+				              
+					               <div id="modalaccess"></div>
+				              
+			               </div>
                   </c:if>
                   </div>
                <textarea id="update_content" placeholder="무슨 생각을 하고 계신가요?" style="width: 100%; height:100%; border: none; outline: none;  resize: none;"></textarea>
                         
-                  <img src="" id="showmodimg" style="width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
+                  <img src=""  id="showmodimg" style="width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
+                  <video src="" id="showmodvideo" style="width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"></video><br>
                
                <input type="file" name="update_file" class="form-control" required="required" multiple="multiple" id="update_file" style="display: none;">
                
-               <button type="button" id="btnmodcontentphoto">사진 선택</button>            
+               <button type="button" id="btnmodcontentphoto">사진/동영상 선택</button>            
             </div>
             
             <div class="modal-footer" style="text-align: center;">
@@ -1302,11 +1352,12 @@ $(function(){
                 </div>
               <div class="show" id="show" style="position: relative;">
                  <img id="showimg" style="display:none; width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"><br>
+                 <video id="showvideo" style="display: none; width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;" controls="controls"></video>
                  <p id="showtext" style="display:none; position: absolute; top: 65px; left: 190px; font-weight: bold;">사진/동영상 추가</p>
               </div>
               
               <input type="file" multiple="multiple" id="contentphoto" name="contentphoto" style="display: none;">
-              <button type="button" id="btncontentphoto"style="margin-top: 1%;">사진 선택</button>
+              <button type="button" id="btncontentphoto"style="margin-top: 1%;">사진/동영상 선택</button>
 
               </div>
               
@@ -1414,13 +1465,27 @@ $(function(){
       
          <div style="float:right; margin-right: 3%; margin-top: 2%;">
                   <c:if test="${sessionScope.user_num!=dto.user_num && checkfollowing !=1 }">
-                     <button type="button" class="btnfollow" id="btnfollow" from_user="${sessionScope.user_num }" to_user="${dto.user_num }">
-                     <i class="fa-solid fa-user-group"></i>&nbsp;팔로우 추가</button>
+                  	<c:if test="${checkfollower ==1 }">
+                  		<button type="button" class="btnfollow" id="btnfollow" from_user="${sessionScope.user_num }" to_user="${dto.user_num }">
+                     	<i class="fa-solid fa-user-group"></i>&nbsp;맞팔로우 하기</button>
+                  	</c:if>
+                  	
+                  	<c:if test="${checkfollower !=1 }">
+                     	<button type="button" class="btnfollow" id="btnfollow" from_user="${sessionScope.user_num }" to_user="${dto.user_num }">
+                     	<i class="fa-solid fa-user-group"></i>&nbsp;팔로우 하기</button>
+                     </c:if>
                  </c:if>
-                 
+         
                  <c:if test="${sessionScope.user_num!=dto.user_num && checkfollowing ==1 }">
-                     <button type="button" class="btnunfollow" id="btnunfollow" to_user="${dto.user_num }">
-                     <i class="fa-solid fa-user-group"></i>&nbsp;팔로우 취소</button>
+                 	<c:if test="${checkfollower ==1 }">
+                     	<button type="button" class="btnunfollow" id="btnunfollow" to_user="${dto.user_num }">
+                     	<i class="fa-solid fa-user-group"></i>&nbsp;맞팔로우 취소</button>
+                    </c:if>
+                    
+                    <c:if test="${checkfollower !=1 }">
+                     	<button type="button" class="btnunfollow" id="btnunfollow" to_user="${dto.user_num }">
+                     	<i class="fa-solid fa-user-group"></i>&nbsp;팔로우 취소</button>
+                    </c:if>
                  </c:if>
                  
                  <button type="button" class="btnmessage"><i class="fa-solid fa-comment"></i>&nbsp;메시지 보내기</button>
@@ -1456,14 +1521,24 @@ $(function(){
                </div>
                
                <div class="galary">
-                  <b style="font-size: 16pt;">사진</b>
+                  <b style="font-size: 16pt;">사진/동영상</b>
                      <div class="galary-photoall">
                         <c:forEach var="pdto" items="${postlist }" varStatus="i">
-                           <c:if test="${i.count <= 9 && pdto.post_file!='no'}">
-                              <c:forTokens items="${pdto.post_file }" delims="," var="file">
-                                 <img  class="galary-photo" src="${root }/post_file/${file }">
-                              </c:forTokens>
-                           </c:if>
+	                           <c:if test="${i.count <= 9 && pdto.post_file!='no'}">
+		                           <c:forTokens items="${pdto.post_file }" delims="." var="filetype" begin="1">
+			                           <c:if test="${filetype!='mp4' }">
+			                              <c:forTokens items="${pdto.post_file }" delims="," var="file">
+			                                 <a href="${root }/post_file/${file }"><img  class="galary-photo" src="${root }/post_file/${file }"></a>
+			                              </c:forTokens>
+			                           </c:if>
+		                           
+			                           <c:if test="${filetype=='mp4' || filetype=='avi'}">
+				                           <c:forTokens items="${pdto.post_file }" delims="," var="file">
+				                           	  <video class="galary-video" src="/post_file/${file }" controls="controls" muted="muted"></video>
+				                           </c:forTokens>
+			                           </c:if>
+		                           </c:forTokens>
+	                           </c:if>
                         </c:forEach>
                      </div>
                </div>
@@ -1584,21 +1659,35 @@ $(function(){
                            
                            <div class="center">
                               <div class="center-up">${adto.post_content }</div>
-                                 <c:if test="${adto.post_file!='no' && adto.type=='post'}">
-                                    <div class="slider center-down" >
-                                       <c:forTokens items="${adto.post_file }" delims="," var="file">
-                                          <img src="/post_file/${file }" style="width: 100%;height: 500px;">
-                                       </c:forTokens>
-                                    </div>
-                                 </c:if>
-                                 
-                                 <c:if test="${adto.post_file!='no' && adto.type=='guest'}">
-                                    <div class="slider center-down" >
-                                       <c:forTokens items="${adto.post_file }" delims="," var="file">
-                                          <img src="/guest_file/${file }" style="width: 100%;height: 500px;">
-                                       </c:forTokens>
-                                    </div>
-                                 </c:if>
+                              <div class="slider center-down" >
+	                              <c:forTokens items="${adto.post_file }" delims="." var="filetype" begin="1">
+	                              
+		                              	<c:if test="${filetype=='mp4' || filetype=='avi'}">
+			                              	<div class="fileimg">
+			                     				<video src="/post_file/${adto.post_file }" controls="controls" muted="muted"></video>
+			                     			</div>
+			                     		</c:if>
+			                     		
+			                     		<c:if test="${filetype!='mp4' }">
+			                                 <c:if test="${adto.post_file!='no' && adto.type=='post'}">                                   
+			                                       <c:forTokens items="${adto.post_file }" delims="," var="file">
+				                                       <div class="fileimg">
+				                                          <img src="/post_file/${file }" style="width: 100%;height: 500px;">
+				                                       </div>
+			                                       </c:forTokens> 
+			                                 </c:if>
+			                                 
+			                                 <c:if test="${adto.post_file!='no' && adto.type=='guest'}">
+			                                       <c:forTokens items="${adto.post_file }" delims="," var="file">
+				                                       	<div class="fileimg">
+				                                          	<img src="/guest_file/${file }" style="width: 100%;height: 500px;">
+				                                       	</div>
+			                                       </c:forTokens>                       
+			                                 </c:if>
+			                            </c:if>
+			                            
+		                           </c:forTokens>
+		                      </div>
                            </div>   
 
                            <div class="bottom">
@@ -1700,5 +1789,6 @@ $(function(){
          
       </div>
 
+<div></div>
 </body>
 </html>

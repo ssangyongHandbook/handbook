@@ -27,6 +27,7 @@ import com.sns.handbook.dto.FollowingDto;
 import com.sns.handbook.dto.PostDto;
 import com.sns.handbook.dto.PostlikeDto;
 import com.sns.handbook.dto.UserDto;
+import com.sns.handbook.serivce.CommentService;
 import com.sns.handbook.serivce.FollowingService;
 import com.sns.handbook.serivce.PostService;
 import com.sns.handbook.serivce.PostlikeService;
@@ -46,6 +47,9 @@ public class PostController {
 
 	@Autowired
 	FollowingService fservice;
+	
+	@Autowired
+	CommentService cservice;
 
 	@GetMapping("/post/write")
 	public String write() {
@@ -68,6 +72,7 @@ public class PostController {
 			// list.get(i).setUser_name(list.get(i).getUser_name());
 			// list.get(i).setUser_photo(list.get(i).getUser_photo());
 			list.get(i).setLike_count(plservice.getTotalLike(list.get(i).getPost_num()));
+			list.get(i).setComment_count(cservice.getTotalCount(list.get(i).getPost_num()));
 			list.get(i).setLikecheck(
 					plservice.checklike((String) session.getAttribute("user_num"), list.get(i).getPost_num()));
 			list.get(i).setChecklogin(
@@ -220,7 +225,7 @@ public class PostController {
 	@GetMapping("/post/updateform")
 	@ResponseBody
 	public PostDto getData(String post_num) {
-
+		
 		return pservice.getDataByNum(post_num);
 	}
 
@@ -259,6 +264,8 @@ public class PostController {
 		    
 		    pservice.updatePhoto(dto.getPost_num(), uploadName);
 		    
+	    }else {
+	    	pservice.updatePhoto(dto.getPost_num(), "no");
 	    }
 	    
 	    pservice.updatePost(dto);
