@@ -44,9 +44,190 @@ function findAddr(){
          }
      }).open();
  }
+ 
+ 
+/* 댓글 무한스크롤 */
+function scroll(commentoffset, post_num) {
+
+	
+   $.ajax({
+      type : "get",
+      dataType : "json",
+      url : "scrollcomment",
+      data : {
+         "commentoffset" : commentoffset,
+         "post_num" : post_num
+      },
+      success : function(res) {
+         $.each(res, function(i, item) {
+
+            var s = "";
+            var addContent = document.createElement("div");
+            s += "<div class='allcomment' style='margin-left:"+item.comment_level*50+"px;'>";
+            if (item.comment_level > 0) {
+               s += "<div style='position: relative; left: -50px; top: 30px; height: 0;' >";
+               s += "<img src='../image/re.png' style='width: 30px;\'>";
+               s += "</div>";
+            }
+            
+            if(item.post_user_num ==${sessionScope.user_num} || item.user_num == ${sessionScope.user_num}){
+               
+               s += '<div style="height: 0; width: 450px; position: relative; left: -30px; top: 30px;">';
+               s += '<img src="../image/add.png" class="ulimg" style="width: 20px; float: right;" comment_num="'+item.comment_num+'">';
+               
+               
+               s += '<ul class="list-group commentul" id="ul'+item.comment_num+'">';
+               s += '<li class="list-group-item list-group-item-success commentmod" comment_num="'+item.comment_num+'">수정</li>';
+               s += '<li class="list-group-item list-group-item-danger commentdel" comment_num="'+item.comment_num+'">삭제</li>';
+               s += '</ul>';
+               s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display: none; width: 447px; position: relative; left: 31px; bottom: 31px;">';
+               s += '<img src="/photo/'+item.user_photo+'" class="profile">';
+               s += '<b class="user_name">'+item.user_name+'</b>';
+               
+               
+               
+               s += '<br>';
+               s += '<input type="text" class="inputmod" style="width: 200px;" comment_num="'+item.comment_num+'" value="'+item.comment_content+'">';
+               s += '</div>';
+               s += '</div>';
+            }
+            
+            s += "<div class='comment' id='div"+item.comment_num+"'>";
+            s += "<img src='/photo/"+item.user_photo+"' class='profile'>";
+            s += "<b class='user_name'>" + item.user_name + "</b><br>";
+            s += "<span class='spancontent'>" + item.comment_content + "</span></div>";
+            s += "<div class='cmlike'>";
+
+            if (item.like_check == 0) {
+               s += '<span class="glyphicon glyphicon-heart-empty nolike" style="color: red;" comment_num="'+item.comment_num+'">' + item.like_count + '</span>';
+            } else {
+               s += '<span class="glyphicon glyphicon-heart yeslike" style="color: red;" comment_num="'+item.comment_num+'">' + item.like_count + '</span>';
+            }
+            
+            s += "<span class='recontent' comment_num='"+item.comment_num+"'>답글달기</span>";
+            s += "<span class='comment_writeday'>" + item.perTime + "</span></div>";
+            s += '<form method="post" class="form-inline" id="comment'+item.comment_num+'" style="display: none;">';
+            s += '<div id="commentaddform">';
+            s += '<img src="/photo/${sessionScope.user_photo }" id="commentprofile">';
+            s += '<input hidden="hidden" /> ';
+            s += '<input type="text" class="input" name="comment_content" placeholder="댓글을 입력하세요" id="input'+item.comment_num+'">';
+            s += '<button type="button" class="btn btn-info cminsert" comment_num="'+item.comment_num+'" guest_num="'+item.guest_num+'" post_num="'+item.post_num+'"  style="margin-right: 20px;">답글입력</button>';
+            s += '</div>';
+            s += '</form></div>';
+            console.log(s);
+            addContent.innerHTML = s;
+            document.querySelector('section1').appendChild(addContent);
+
+            var brcontent = document.createElement("div");
+            brcontent.innerHTML = "<br>";
+            document.querySelector('section1').appendChild(brcontent);
+
+         })
+      }
+   });
+}
+
+/* 댓글 무한스크롤 */
+function guestscroll(commentoffset, guest_num) {
+
+	
+   $.ajax({
+      type : "get",
+      dataType : "json",
+      url : "scrollguestcomment",
+      data : {
+         "commentoffset" : commentoffset,
+         "guest_num" : guest_num
+      },
+      success : function(res) {
+         $.each(res, function(i, item) {
+
+            var s = "";
+            var addContent = document.createElement("div");
+            s += "<div class='allcomment' style='margin-left:"+item.comment_level*50+"px;'>";
+            if (item.comment_level > 0) {
+               s += "<div style='position: relative; left: -50px; top: 30px; height: 0;' >";
+               s += "<img src='../image/re.png' style='width: 30px;\'>";
+               s += "</div>";
+            }
+            
+            if(item.post_user_num ==${sessionScope.user_num} || item.user_num == ${sessionScope.user_num}){
+               
+               s += '<div style="height: 0; width: 450px; position: relative; left: -30px; top: 30px;">';
+               s += '<img src="../image/add.png" class="ulimg" style="width: 20px; float: right;" comment_num="'+item.comment_num+'">';
+               
+               
+               s += '<ul class="list-group commentul" id="ul'+item.comment_num+'">';
+               s += '<li class="list-group-item list-group-item-success commentmod" comment_num="'+item.comment_num+'">수정</li>';
+               s += '<li class="list-group-item list-group-item-danger commentdel" comment_num="'+item.comment_num+'">삭제</li>';
+               s += '</ul>';
+               s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display: none; width: 447px; position: relative; left: 31px; bottom: 31px;">';
+               s += '<img src="/photo/'+item.user_photo+'" class="profile">';
+               s += '<b class="user_name">'+item.user_name+'</b>';
+               
+               
+               
+               s += '<br>';
+               s += '<input type="text" class="inputmod" style="width: 200px;" comment_num="'+item.comment_num+'" value="'+item.comment_content+'">';
+               s += '</div>';
+               s += '</div>';
+            }
+            
+            s += "<div class='comment' id='div"+item.comment_num+"'>";
+            s += "<img src='/photo/"+item.user_photo+"' class='profile'>";
+            s += "<b class='user_name'>" + item.user_name + "</b><br>";
+            s += "<span class='spancontent'>" + item.comment_content + "</span></div>";
+            s += "<div class='cmlike'>";
+
+            if (item.like_check == 0) {
+               s += '<span class="glyphicon glyphicon-heart-empty nolike" style="color: red;" comment_num="'+item.comment_num+'">' + item.like_count + '</span>';
+            } else {
+               s += '<span class="glyphicon glyphicon-heart yeslike" style="color: red;" comment_num="'+item.comment_num+'">' + item.like_count + '</span>';
+            }
+            
+            s += "<span class='recontent' comment_num='"+item.comment_num+"'>답글달기</span>";
+            s += "<span class='comment_writeday'>" + item.perTime + "</span></div>";
+            s += '<form method="post" class="form-inline" id="comment'+item.comment_num+'" style="display: none;">';
+            s += '<div id="commentaddform">';
+            s += '<img src="/photo/${sessionScope.user_photo }" id="commentprofile">';
+            s += '<input hidden="hidden" /> ';
+            s += '<input type="text" class="input" name="comment_content" placeholder="댓글을 입력하세요" id="input'+item.comment_num+'">';
+            s += '<button type="button" class="btn btn-info cminsert" comment_num="'+item.comment_num+'" post_num="'+item.post_num+'"  style="margin-right: 20px;">답글입력</button>';
+            s += '</div>';
+            s += '</form></div>';
+            console.log(s);
+            addContent.innerHTML = s;
+            document.querySelector('section1').appendChild(addContent);
+
+            var brcontent = document.createElement("div");
+            brcontent.innerHTML = "<br>";
+            document.querySelector('section1').appendChild(brcontent);
+
+         })
+      }
+   });
+}
 
 
 $(function(){
+	
+	offset=${offset};
+	commentoffset=${commentoffset};
+	
+		//스크롤 이벤트
+		$(window).scroll(function(){
+			var left_side=$(".left").height();
+			var scrollValue=$(document).scrollTop();
+			
+			console.log("left: "+left_side);
+			console.log("scroll: "+scrollValue);
+			
+			if(left_side<scrollValue+450){
+				$(".left").css("top",scrollValue-1200);		
+			}else{
+				$(".left").css("top",0);	
+			}
+		});
       
       //강제 호출
       $("#btnnewcover").click(function(){
@@ -213,12 +394,43 @@ $(function(){
           if($(this)[0].files[0]){
            var reader=new FileReader();
            reader.onload=function(e){
-            $("#showmodimg").attr("src",e.target.result);
+
             $("#showtext").hide();
+            
+        	if((e.target.result).includes('video')){
+        		$("#showmodvideo").show();
+        		$("#showmodvideo").attr("src",e.target.result);
+        		$("#showmodimg").attr("src","");
+        		$("#showmodimg").hide();
+        	}else{
+        		$("#showmodimg").show();
+        		$("#showmodimg").attr("src",e.target.result);	
+        		$("#showmodvideo").attr("src","");
+        		$("#showmodvideo").hide();
+        	}
            }
            reader.readAsDataURL($(this)[0].files[0]);
           }
       });
+      
+      //강제 호출
+      $("#btncontentphoto").click(function(){
+         
+         $("#contentphoto").trigger("click");
+      });
+      
+      //작성 시 사진 미리보기
+      $("#contentphoto").change(function(){
+    	  
+    	  if($(this)[0].files[0]){
+    		  var reader=new FileReader();
+    		  reader.onload=function(e){
+    			  $("#showimg").attr("src",e.target.result);
+    			  $("#showtext").hide();
+    		  }
+    		  reader.readAsDataURL($(this)[0].files[0]);
+    	  }
+      })
       
       //게시글,방명록 작성(다중 업로드)
       $("#btnwrite").click(function() {
@@ -278,41 +490,44 @@ $(function(){
                 }
              });
           }
-         
-
-      });
+      })
       
       //사진 넘기면서 보기
       $(document).ready(function() {
-         
-       $('.slider').slick({
-          
-             prevArrow: '<img src="../image/left.png" class="prev">',
-             nextArrow: '<img src="../image/right.png" class="next">',
-              autoplay: false,         // 자동 재생 여부
-              autoplaySpeed: 0,    // 자동 재생 속도 (단위: ms)
-              dots: false,             // 점 네비게이션 표시 여부
-              arrows: true,           // 화살표 네비게이션 표시 여부
-              infinite: false,         // 무한 슬라이드 여부
-              slidesToShow: 1,        // 한 화면에 보여줄 슬라이드 수
-              slidesToScroll: 1      // 한 번에 스크롤할 슬라이드 수
-   
-          });
-       
-     //마지막,처음 화살표 삭제
-		$('.slider').on('afterChange', function(event, slick, currentSlide) {
-					if(currentSlide == 0){
-					   $('.prev').css("visibility","hidden");
-					} else {
-					   $('.prev').css("visibility","visible");
-					}
-					if(currentSlide == slick.slideCount - 1){
-					   $('.next').css("visibility","hidden");
-					} else {
-					   $('.next').css("visibility","visible");
-					} 
-				});
-      });
+    	  
+            	$(".slider").each(function(){
+            		
+            		var itemId=this.id;
+            		var slider_num= itemId.split("-")[1];
+            		
+               $("#"+itemId).slick({
+
+                  prevArrow : '<img id="prev-'+itemId+'" src="../image/left.png" class="prev" >',
+                  nextArrow : '<img id="next-'+itemId+'" src="../image/right.png" class="next">',
+                  autoplay : false, // 자동 재생 여부
+                  autoplaySpeed : 0, // 자동 재생 속도 (단위: ms)
+                  dots : false, // 점 네비게이션 표시 여부
+                  arrows : true, // 화살표 네비게이션 표시 여부
+                  infinite : false, // 무한 슬라이드 여부
+                  slidesToShow : 1, // 한 화면에 보여줄 슬라이드 수
+                  slidesToScroll : 1 // 한 번에 스크롤할 슬라이드 수
+               });
+
+      //마지막,처음 화살표 삭제
+      $("#" + itemId).on('afterChange', function(event, slick, currentSlide) {
+      if (currentSlide == 0) {
+        $('#prev-' + itemId).css("visibility", "hidden");
+      } else {
+        $('#prev-' + itemId).css("visibility", "visible");
+      }
+      if (currentSlide == slick.slideCount - 1) {
+        $('#next-' + itemId).css("visibility", "hidden");
+      } else {
+        $('#next-' + itemId).css("visibility", "visible");
+                        }
+                     });
+            	})
+            });
       
       //게시물,방명록 수정 값 불러오기
       $(".modpost").click(function(){
@@ -629,13 +844,26 @@ $(function(){
       })
       
       //댓글 창 호출
-      $(".img_comment").click(function(){
+      $(document).on("click",".img_comment",function(){
     	  
     	  var post_num=$(this).attr("post_num");
+    	  type=$(this).attr("type");
+    	  $("#inputhidden-post_num").val("");
+    	  $("#inputhidden-guest_num").val("");
+
+    	  $("#insertcommentbtn").attr("writetype",type);
+		if(type=="post"){
+	    	  $("#inputhidden-post_num").val(post_num);
+    	  }else
+    		  $("#inputhidden-guest_num").val(post_num);
+
     	  
-    	  $("#inputhidden-post_num").val(post_num);
           $("#commentsection").empty();
-          scroll(0,post_num);
+          
+          if(type=="post")
+          	scroll(0,post_num);
+          else
+        	  guestscroll(0,post_num);
     	  
     	  $(".btncommentmodal").trigger("click");
     	  
@@ -644,24 +872,70 @@ $(function(){
       //댓글 입력
       $("#insertcommentbtn").click(function() {
 
-          var formdata = $("#form").serialize();
+          //var formdata = $("#form").serialize();
           var post_num=$("#inputhidden-post_num").val();
-			
-          $.ajax({
+          var guest_num=$("#inputhidden-guest_num").val();
+          var comment_content=$("#commentinput").val();
+          
+		
+          if(type=="post"){
+        	  $.ajax({
 
-             type : "post",
-             dataType : "text",
-             url : "cinsert",
-             data : formdata,
-             success : function() {
-                $("#commentsection").empty();
-                $("#addcomment").hide();
-                $("#commentinput").val("");
-                commentoffset = 0;
-                scroll(commentoffset, post_num);
-                $("#addcomment").show();
-             }
-          })
+                  type : "post",
+                  dataType : "text",
+                  url : "cinsert",
+                  data : {"post_num":post_num,"comment_num":"0","comment_content":comment_content},
+                  success : function() {
+                     $("#commentsection").empty();
+                     $("#addcomment").hide();
+                     $("#commentinput").val("");
+                     commentoffset = 0;
+                     scroll(commentoffset, post_num);
+                     $("#addcomment").show();
+                  }
+               })
+          }else{
+        	  
+        	  $.ajax({
+
+                  type : "post",
+                  dataType : "text",
+                  url : "cinsert",
+                  data : {"guest_num":guest_num,"comment_num":"0","comment_content":comment_content},
+                  success : function() {
+                     $("#commentsection").empty();
+                     $("#addcomment").hide();
+                     $("#commentinput").val("");
+                     commentoffset = 0;
+                     guestscroll(commentoffset, guest_num);
+                     $("#addcomment").show();
+                  }
+               })
+          }
+          
+       });
+      
+      $(document).on("click", "#addcomment", function() {
+          var post_num=$("#inputhidden-post_num").val(); 
+          var guest_num=$("#inputhidden-guest_num").val(); 
+           commentoffset = commentoffset + 8;
+           if(type=="post")
+         	   scroll(commentoffset, post_num);
+           else
+         	   guestscroll(commentoffset, guest_num);
+        })
+      
+      $('#commentinput').keydown(function() {
+          if (event.keyCode === 13) {
+             $("#insertcommentbtn").trigger("click");
+          };
+       });
+
+       $(document).on("keydown", ".input", function() {
+
+          if (event.keyCode === 13) {
+             $(this).next().trigger("click");
+          };
        });
       
       $(document).on("click", ".ulimg", function() {
@@ -675,27 +949,54 @@ $(function(){
          var comment_num = $(this).attr("comment_num");
          var comment_content = $("#input" + comment_num).val();
          var post_num = $(this).attr("post_num");
+         var guest_num = $(this).attr("guest_num");
 
-         $.ajax({
+         if(type=="psot"){
+        	 
+             $.ajax({
 
-            type : "post",
-            dataType : "text",
-            url : "cinsert",
-            data : {
-               "comment_num" : comment_num,
-               "comment_content" : comment_content,
-               "post_num" : post_num
-            },
-            success : function() {
-               $("#commentsection").empty();
-               $("#addcomment").hide();
-               $("#input" + comment_num).val("");
-               $("#input" + comment_num).hide();
-               commentoffset = 0;
-               scroll(commentoffset, post_num);
-               $("#addcomment").show();
-            }
-         })
+                 type : "post",
+                 dataType : "text",
+                 url : "cinsert",
+                 data : {
+                    "comment_num" : comment_num,
+                    "comment_content" : comment_content,
+                    "post_num" : post_num
+                 },
+                 success : function() {
+                    $("#commentsection").empty();
+                    $("#addcomment").hide();
+                    $("#input" + comment_num).val("");
+                    $("#input" + comment_num).hide();
+                    commentoffset = 0;
+                    scroll(commentoffset, post_num);
+                    $("#addcomment").show();
+                 }
+              })
+         }else{
+        	 
+             $.ajax({
+
+                 type : "post",
+                 dataType : "text",
+                 url : "cinsert",
+                 data : {
+                    "comment_num" : comment_num,
+                    "comment_content" : comment_content,
+                    "guest_num" : guest_num
+                 },
+                 success : function() {
+                    $("#commentsection").empty();
+                    $("#addcomment").hide();
+                    $("#input" + comment_num).val("");
+                    $("#input" + comment_num).hide();
+                    commentoffset = 0;
+                    guestscroll(commentoffset, guest_num);
+                    $("#addcomment").show();
+                 }
+              })
+         }
+
 
       })
       
@@ -711,24 +1012,48 @@ $(function(){
 
          var comment_num = $(this).attr("comment_num");
          var post_num=$("#inputhidden-post_num").val();
+         var guest_num=$("#inputhidden-guest_num").val();
 
-         $.ajax({
-            type : "get",
-            dataType : "text",
-            url : "commentlikeinsert",
-            data : {
-               "comment_num" : comment_num
-            },
-            success : function() {
-               commentoffset = 0;
-               $("#commentsection").empty();
-               $("#addcomment").hide();
-               $("#input" + comment_num).val("");
-               $("#input" + comment_num).hide();
-               scroll(commentoffset, post_num);
-               $("#addcomment").show();
-            }
-         });
+         if(type=="post"){
+        	 
+             $.ajax({
+                 type : "get",
+                 dataType : "text",
+                 url : "commentlikeinsert",
+                 data : {
+                    "comment_num" : comment_num
+                 },
+                 success : function() {
+                    commentoffset = 0;
+                    $("#commentsection").empty();
+                    $("#addcomment").hide();
+                    $("#input" + comment_num).val("");
+                    $("#input" + comment_num).hide();
+                    scroll(commentoffset, post_num);
+                    $("#addcomment").show();
+                 }
+              });
+         }else{
+        	 
+             $.ajax({
+                 type : "get",
+                 dataType : "text",
+                 url : "commentlikeinsert",
+                 data : {
+                    "comment_num" : comment_num
+                 },
+                 success : function() {
+                    commentoffset = 0;
+                    $("#commentsection").empty();
+                    $("#addcomment").hide();
+                    $("#input" + comment_num).val("");
+                    $("#input" + comment_num).hide();
+                    guestscroll(commentoffset, guest_num);
+                    $("#addcomment").show();
+                 }
+              });
+         }
+
 
       })
       
@@ -737,24 +1062,49 @@ $(function(){
 
          var comment_num = $(this).attr("comment_num");
          var post_num=$("#inputhidden-post_num").val();
+         var guest_num=$("#inputhidden-guest_num").val();
 
-         $.ajax({
-            type : "get",
-            dataType : "text",
-            url : "commentlikedelete",
-            data : {
-               "comment_num" : comment_num
-            },
-            success : function() {
-               commentoffset = 0;
-               $("#commentsection").empty();
-               $("#addcomment").hide();
-               $("#input" + comment_num).val("");
-               $("#input" + comment_num).hide();
-               scroll(commentoffset, post_num);
-               $("#addcomment").show();
-            }
-         });
+         if(type=="post"){
+        	 
+             $.ajax({
+                 type : "get",
+                 dataType : "text",
+                 url : "commentlikedelete",
+                 data : {
+                    "comment_num" : comment_num
+                 },
+                 success : function() {
+                    commentoffset = 0;
+                    $("#commentsection").empty();
+                    $("#addcomment").hide();
+                    $("#input" + comment_num).val("");
+                    $("#input" + comment_num).hide();
+                    scroll(commentoffset, post_num);
+                    $("#addcomment").show();
+                 }
+              });
+        	 
+         }else{
+        	 
+             $.ajax({
+                 type : "get",
+                 dataType : "text",
+                 url : "commentlikedelete",
+                 data : {
+                    "comment_num" : comment_num
+                 },
+                 success : function() {
+                    commentoffset = 0;
+                    $("#commentsection").empty();
+                    $("#addcomment").hide();
+                    $("#input" + comment_num).val("");
+                    $("#input" + comment_num).hide();
+                    guestscroll(commentoffset, guest_num);
+                    $("#addcomment").show();
+                 }
+              });
+         }
+
 
       })
       
@@ -762,6 +1112,8 @@ $(function(){
          
          var comment_num=$(this).attr("comment_num");
          var post_num=$("#inputhidden-post_num").val();
+         var guest_num=$("#inputhidden-guest_num").val();
+         
          $.ajax({
             type:"get",
             dataType:"text",
@@ -773,7 +1125,10 @@ $(function(){
                $("#addcomment").hide();
                $("#input" + comment_num).val("");
                $("#input" + comment_num).hide();
-               scroll(commentoffset, post_num);
+               if(type=="post")
+               		scroll(commentoffset, post_num);
+               else
+               		guestscroll(commentoffset, guest_num);
                $("#addcomment").show();
             }
          })
@@ -791,6 +1146,7 @@ $(function(){
          if (event.keyCode === 13) {
             var comment_num=$(this).attr("comment_num");
             var post_num=$("#inputhidden-post_num").val();
+            var guest_num=$("#inputhidden-guest_num").val();
             var comment_content=$(this).val();
 
             $.ajax({
@@ -804,7 +1160,11 @@ $(function(){
                   $("#addcomment").hide();
                   $("#input" + comment_num).val("");
                   $("#input" + comment_num).hide();
-                  scroll(commentoffset, post_num);
+                  if(type=="post")
+                 	  scroll(commentoffset, post_num);
+                  else
+                	  guestscroll(commentoffset, guest_num);
+                 
                   $("#addcomment").show();
                }
             });
@@ -822,6 +1182,24 @@ $(function(){
         
          
       })
+      
+/*       //댓글갯수 불러오기 
+      function commentCount(post_num){
+         $.ajax({
+            type : "get",
+             dataType : "json",
+             url : "commentcount",
+             data : {"post_num" : post_num},
+             success :function(res){
+                
+                if(res>8)
+                   $("#addcomment").show();
+                else
+                   $("#addcomment").hide();
+                   
+             }
+         });
+      } */
       
       //처음 화면 로딩됐을 때 영상 위치 확인
       $(".fileimg video").each(function(i,ele){
@@ -883,7 +1261,7 @@ $(function(){
          border-radius: 10px 10px;
       }
       
-      .profile{
+      .main-profile{
          width: 100%;
          height: 120px;
          background-color: white;
@@ -953,7 +1331,7 @@ $(function(){
       .left{
          width: 31%;
          float: left;
-         
+         position: relative;
       }
       
       .right{
@@ -1153,7 +1531,90 @@ $(function(){
   		 overflow-y: auto;
 	  }
 	  
-      
+	 .commentmod, .commentdel {
+		padding: 5px;
+		font-size: 12px;
+		color: #555;
+	  }
+	
+	  .comment .allcomment {
+		margin-left: 50px;
+	  }
+	
+	  .comment .comment {
+		margin-left: 50px;
+	  }
+	
+	  .modclose {
+		cursor: pointer;
+	  }
+	  
+     .ulimg {
+  		cursor: pointer;
+	  }
+	  
+	  .commentul li:not(:last-child) {
+		margin-bottom: -1px;
+	  }
+		
+	  .commentul li:hover {
+		 background-color: #cfe0fa;
+		 color: #3355a0;
+	  }
+	  
+	  .commentul:before {
+		  content: "";
+		  position: absolute;
+		  top: -15px;
+		  right: -1px;
+		  border-top: 10px solid transparent;
+		  border-right: 10px solid transparent;
+		  border-bottom: 10px solid #e6f0fb;
+		  border-left: 16px solid transparent;
+		}
+		
+		.commentul li {
+		  border: none;
+		  background-color: #e6f0fb;
+		  cursor: pointer;
+		  padding: 8px 12px;
+		  transition: background-color 0.3s, color 0.3s;
+		  text-align: center;
+		}
+		
+		.recontent, .nolike, .yeslike {
+			color: #777;
+			cursor: pointer;
+		}
+		
+		.commentul {
+		  position: absolute;
+		  top: 20px;
+		  right: 0;
+		  list-style: none;
+		  display: none;
+		  font-size: 0.7em;
+		  width: 70px;
+		  padding: 0;
+		  margin: 0;
+		  border: none;
+		}
+		
+		.input {
+			flex: 1;
+			height: 40px;
+			border: 1px solid #ddd;
+			border-radius: 20px;
+			padding: 5px 10px;
+		}
+		
+		.profile {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			margin-right: 20px;
+		
+		}		
 
 </style>
 </head>
@@ -1396,12 +1857,13 @@ $(function(){
                   <div class="modal-footer" style="height: 80px; padding: 0;">
                      <form method="post" class="form-inline" id="form">
                         <input type="hidden" name="comment_num" value="0">
-                        <input type="hidden" name="post_num" id="inputhidden-post_num">
+                        <input type="hidden" name="post_num" id="inputhidden-post_num" >
+                        <input type="hidden" name="guest_num" id="inputhidden-guest_num">
                         <div id="commentaddform">
                            <img src="/photo/${sessionScope.user_photo }" id="commentprofile">
                            <input hidden="hidden" />
                            <input type="text" class="mominput" name="comment_content" placeholder="댓글을 입력하세요" id="commentinput">
-                           <button type="button" id="insertcommentbtn" class="btn btn-info" style="margin-right: 20px;">입력</button>
+                           <button type="button" id="insertcommentbtn"  class="btn btn-info" style="margin-right: 20px;">입력</button>
                         </div>
                      </form>
                   </div>
@@ -1431,7 +1893,7 @@ $(function(){
                   </c:if>
          </div>
          
-         <div class="profile">                         
+         <div class="main-profile">                         
             <div class="dropdown">
             
                <input type="file" id="newphoto" style="display: none;" num="${dto.user_num }">
@@ -1659,7 +2121,7 @@ $(function(){
                            
                            <div class="center">
                               <div class="center-up">${adto.post_content }</div>
-                              <div class="slider center-down" >
+                              <div class="slider center-down" id="dto-${adto.post_num}">
 	                              <c:forTokens items="${adto.post_file }" delims="." var="filetype" begin="1">
 	                              
 		                              	<c:if test="${filetype=='mp4' || filetype=='avi'}">
@@ -1760,7 +2222,13 @@ $(function(){
                                  </div>
                                  
                                  <div class="comment">
-                                    <span><i class="img_comment fa-regular fa-comment fa-2x - 2em" style="cursor:pointer;" post_num=${adto.post_num }></i>&nbsp;&nbsp;댓글달기</span>
+                                    <%-- <span><i class="img_comment fa-regular fa-comment fa-2x - 2em" style="cursor:pointer;" post_num=${adto.post_num }></i>&nbsp;&nbsp;댓글달기</span> --%>
+                                    <span class="bottom-right2 img_comment" style="cursor: pointer;"  jong="2" user_name="${adto.user_name }" post_num="${adto.post_num }" type="${adto.type }">
+									<span style="font-size: 1.2em; top: 3px; color: gray;">
+										<i class="fa-regular fa-comment"></i>
+									</span>
+									&nbsp;댓글 ${adto.comment_count } 
+								</span>
                                  </div>
                               </div>
                               
@@ -1789,6 +2257,6 @@ $(function(){
          
       </div>
 
-<div></div>
+
 </body>
 </html>
