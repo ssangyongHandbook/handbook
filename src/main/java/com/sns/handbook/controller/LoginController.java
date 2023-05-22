@@ -48,7 +48,7 @@ public class LoginController {
 	PasswordEncoder passwordEncoder;
 
 	@PostMapping("/login/loginprocess")
-	public String loginproc(@RequestParam String user_id, @RequestParam String user_pass, HttpSession session) throws Exception {
+	public String loginproc(@RequestParam String user_id, @RequestParam String user_pass, HttpSession session, Model model) throws Exception {
 		int idCheck = service.loginIdCheck(user_id);
 
 		if (idCheck == 0) {
@@ -63,6 +63,7 @@ public class LoginController {
 
 		//아이디 비번 친 유저가 이메일 인증을 안했을 경우.
 		if(!user.getMail_auth().equals("1")) {
+			model.addAttribute("user_num", user.getUser_num());
 			return "/login/emailAuthFail";
 		}
 
