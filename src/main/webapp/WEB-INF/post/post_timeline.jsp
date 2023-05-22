@@ -402,13 +402,15 @@
 		});
 		
 		$("#update_file").change(function() {
+			var s="";
 			var file = this.files[0];
 			var reader = new FileReader();
 			reader.onload = function(e) {
-				var s="<img style='height: 250px' src='"+e.target.result+"'>";
+				s+="<img style='height: 250px' src='"+e.target.result+"'>";
 				$("#showmodimg").html(s);
 				//$("#showmodimg").attr("src", e.target.result);
 			};
+			$("#showmodimg").html(s);
 			reader.readAsDataURL(file);
 		});
 		
@@ -433,7 +435,7 @@
       
       
 
-     /*   window.onscroll = function(e) {
+       window.onscroll = function(e) {
               if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
                  
                  offset=offset+2;
@@ -465,13 +467,41 @@
 								 if(item.post_access =='all'){
 									 s+="<i class='fa-solid fa-earth-americas'></i>";
 								 }
-								 if(item.post_access =='only'){
+								 if(item.post_access =='onlyme'){
 									 s+="<i class='fa-solid fa-lock'></i>";
 								 }
+								 s += "<b></div>";
+								 s += "<div>" + item.post_time + "</div></span></div>";
+								 s += "<span class='top-right'>";
 								 
-								 s+="<b></div>";
-                            	 s+="<div>"+item.post_time+"</div></span></div>";
-                             }
+								  /* if (item.user_num != sessionScope.user_num && item.checkfollowing != 1) {
+									    s += "<span class='follow' id='follow" + item.post_num + "' followpost_num='follow" + item.post_num + "' unfollowpost_num='unfollow" + item.user_num + "' from_user='${sessionScope.user_num}' to_user='" + item.user_num + "'>팔로우하기</span> ";
+									    s += "<span class='unfollow' id='unfollow" + item.post_num + "' followpost_num='follow" + item.post_num + "' unfollowpost_num='unfollow" + item.user_num + "' style='display:none;'>팔로우 끊기</span> ";
+									}
+								 
+								 if (item.user_num != sessionScope.user_num && item.checkfollowing == 1) {
+									    s += "<span class='unfollow' id='unfollow" + item.post_num + "' followpost_num='follow" + item.post_num + "' unfollowpost_num='unfollow" + item.user_num + "'>팔로우 끊기</span> ";
+									    s += "<span class='follow' id='follow" + item.post_num + "' followpost_num='follow" + item.post_num + "' unfollowpost_num='unfollow" + item.user_num + "' from_user='${sessionScope.user_num}' to_user='" + item.user_num + "' style='display:none;'>팔로우 하기</span> ";
+									}  */
+								 
+								 
+								 s += "<span class='postmenu dropdown' post_num='" + item.post_num + "' user_num='${sessionScope.user_num}' dtouser_num='" + item.user_num + "'>";
+								 
+								 s+="<i class='fa-solid fa-ellipsis'>";
+								 
+								 if (item.checklogin == 1) {
+									    s += "<ul id='" + item.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20pt; line-height: 1.5em; display: none;'>";
+									     s+="<li id='postupdate' class='postdetail' data-toggle='modal' data-target='#updatepost' post_num='"+item.post_num+"' user_num='"+item.user_num+"'>게시물 수정</li>";
+									     s+="<li id='postdelete' class='postdetail' user_num='"+item.user_num+"' post_num='"+item.post_num+"'>게시물 삭제</li></ul></div>";
+									}
+								 if(item.checklogin != 1){
+									 s+="<ul id='"+item.post_num+"' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 25px; line-height:1.5em;display:none;'>";
+									 s+="<li class='postdetail posthide' divpost_num='div"+item.post_num+"' divpost_num='divs"+item.post_num+"'>게시물 숨김</li></ul>";
+									 
+								 }
+									 s+="</span></span></div></div>";
+									 
+								 }
                                   
                                   
                                   
@@ -490,7 +520,7 @@
                
               }
             }  
- */
+ 
             
             
             
@@ -1437,45 +1467,47 @@ li {
 
 
 		<div class="modal fade" id="updatepost" role="dialog">
-	<div class="modal-dialog">
+			<div class="modal-dialog">
 
-		<!-- Modal content-->
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">게시글 수정</h4>
-			</div>
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">게시글 수정</h4>
+					</div>
 
-			<div class="modal-body">
-				<div class="form-group" style="width: 150px;">
-					<select class="form-control" name="update_access" id="update_access" required="required">
-						<option value="all">전체공개</option>
-						<option value="follower">팔로워 공개</option>
-						<option value="onlyme">나만보기</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<input type="file" name="update_file" class="form-control" required="required" multiple="multiple" id="update_file" style="display: none;">
-				</div>
-				<div class="form-group">
-					<textarea style="width: 550px; height: 150px;" name="update_content" class="form-control" required="required" id="update_content" placeholder="내용을 입력해주세요"></textarea>
-				</div>
-				<!-- <img src="" id="showmodimg" style="width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;"> -->
-				<div src="" id="showmodimg" style="width: 500px; height: 400px; border-radius: 10px; overflow: scroll; display: inline-flex; flex-direction: column;">
-				</div>
-				<br>
-				<button type="button" id="btnmodcontentphoto">사진 선택</button>
-				<button type="button" class="btn btn-default" id="remove_photo_btn">사진 없애기</button>
-			</div>
+					<div class="modal-body">
+						<div class="form-group" style="width: 150px;">
+							<select class="form-control" name="update_access" id="update_access" required="required">
+								<option value="all">전체공개</option>
+								<option value="follower">팔로워 공개</option>
+								<option value="onlyme">나만보기</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<input type="file" name="update_file" class="form-control" required="required"
+								multiple="multiple" id="update_file" style="display: none;">
+						</div>
+						<div class="form-group">
+							<textarea style="width: 550px; height: 150px;" name="update_content" class="form-control"
+								required="required" id="update_content" placeholder="내용을 입력해주세요"></textarea>
+						</div>
+						<div id="showmodimg" style="width: 500px; height: 400px; border-radius: 10px; overflow: scroll; display: inline-flex; flex-direction: column;">
+						</div>
+						<br>
+						<button type="button" id="btnmodcontentphoto">사진 선택</button>
+						<button type="button" class="btn btn-default" id="remove_photo_btn">사진 없애기</button>
+					</div>
 
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal" id="updatetbtn">수정</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="updatetbtn">수정</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+
+
 			</div>
 		</div>
-
-	</div>
-</div>
 		<section>
 			<!-- 파일이 있을경우0 -->
 			<!--  동영상일 경우와 사진이 1장만 있을 경우도 .해주어야함   -->
@@ -1514,6 +1546,23 @@ li {
 								</span>
 							</div>
 							<span class="top-right">
+								<c:if test="${dto.user_num!=sessionScope.user_num &&dto.checkfollowing !=1 }">
+									<span class="follow" id="follow${dto.post_num}" followpost_num="follow${dto.post_num }"
+										unfollowpost_num="unfollow${dto.post_num }" from_user="${sessionScope.user_num }"
+										to_user="${dto.user_num }">팔로우 하기</span>
+
+									<span class="unfollow" id="unfollow${dto.post_num }"
+										followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }"
+										to_user="${dto.user_num }" style="display: none;">팔로우 끊기</span>
+								</c:if>
+								<c:if test="${dto.user_num!=sessionScope.user_num && dto.checkfollowing ==1 }">
+									<span class="unfollow" id="unfollow${dto.post_num }"
+										followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }"
+										to_user="${dto.user_num }">팔로우 끊기</span>
+									<span class="follow" id="follow${dto.post_num}" followpost_num="follow${dto.post_num }"
+										unfollowpost_num="unfollow${dto.post_num }" from_user="${sessionScope.user_num }"
+										to_user="${dto.user_num }" style="display: none;">팔로우 하기</span>
+								</c:if>
 								<span class="postmenu dropdown" post_num="${dto.post_num }"
 									user_num="${sessionScope.user_num }" dtouser_num="${dto.user_num}">
 									<i class="fa-solid fa-ellipsis"></i>
@@ -1534,14 +1583,6 @@ li {
 											style="font-size: 25pt; line-height: 1.5em; display: none;">
 											<li class="postdetail posthide" divpost_num="div${dto.post_num }"
 												divspost_num="divs${dto.post_num }">게시물 숨김</li>
-											<!--  이부분 팔로일땐 팔로우하기 or 팔로우 하고 있을 땐 팔로우 끊기 -->
-											<c:if test="${dto.checkfollowing !=1 }">
-												<li class="postdetail" id="postfollow" from_user="${sessionScope.user_num }"
-													to_user="${dto.user_num }">팔로우 하기</li>
-											</c:if>
-											<c:if test="${dto.checkfollowing ==1 }">
-												<li class="postdetail" id="postunfollow" to_user="${dto.user_num }">팔로우 끊기</li>
-											</c:if>
 										</ul>
 									</c:if>
 								</span>
@@ -1706,6 +1747,23 @@ li {
 								</span>
 							</div>
 							<span class="top-right2">
+							<c:if test="${dto.user_num!=sessionScope.user_num &&dto.checkfollowing !=1 }">
+									<span class="follow" id="follow${dto.post_num}" followpost_num="follow${dto.post_num }"
+										unfollowpost_num="unfollow${dto.post_num }" from_user="${sessionScope.user_num }"
+										to_user="${dto.user_num }">팔로우 하기</span>
+
+									<span class="unfollow" id="unfollow${dto.post_num }"
+										followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }"
+										to_user="${dto.user_num }" style="display: none;">팔로우 끊기</span>
+								</c:if>
+								<c:if test="${dto.user_num!=sessionScope.user_num && dto.checkfollowing ==1 }">
+									<span class="unfollow" id="unfollow${dto.post_num }"
+										followpost_num="follow${dto.post_num }" unfollowpost_num="unfollow${dto.post_num }"
+										to_user="${dto.user_num }">팔로우 끊기</span>
+									<span class="follow" id="follow${dto.post_num}" followpost_num="follow${dto.post_num }"
+										unfollowpost_num="unfollow${dto.post_num }" from_user="${sessionScope.user_num }"
+										to_user="${dto.user_num }" style="display: none;">팔로우 하기</span>
+								</c:if>
 								<span class="postmenu dropdown" post_num="${dto.post_num }"
 									user_num="${sessionScope.user_num }" dtouser_num="${dto.user_num}">
 									<i class="fa-solid fa-ellipsis"></i>
@@ -1726,13 +1784,6 @@ li {
 											style="font-size: 25pt; line-height: 1.5em; display: none;">
 											<li class="postdetail posthide" divpost_num="div${dto.post_num }"
 												divspost_num="divs${dto.post_num }">게시물 숨김</li>
-											<c:if test="${dto.checkfollowing !=1 }">
-												<li class="postdetail" id="postfollow" from_user="${sessionScope.user_num }"
-													to_user="${dto.user_num }">팔로우 하기</li>
-											</c:if>
-											<c:if test="${dto.checkfollowing ==1 }">
-												<li class="postdetail" id="postunfollow" to_user="${dto.user_num }">팔로우 끊기</li>
-											</c:if>
 										</ul>
 									</c:if>
 								</span>

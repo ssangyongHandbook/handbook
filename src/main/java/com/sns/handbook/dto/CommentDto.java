@@ -13,6 +13,7 @@ public class CommentDto {
 	private String comment_num;
 	private String user_num;
 	private String post_num;
+	private String guest_num;
 	private String comment_content;
 	private int comment_group;
 	private int comment_step;
