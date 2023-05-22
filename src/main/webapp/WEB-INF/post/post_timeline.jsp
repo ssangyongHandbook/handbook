@@ -803,6 +803,7 @@
     	  $(".commenth4").text(user_name+"님의 게시물");
     	  $("#commentsection").empty();
     	  scroll(0,post_num);
+    	  commentCount(post_num);
 		  $(".cmmodalbtn").trigger("click");
         
          
