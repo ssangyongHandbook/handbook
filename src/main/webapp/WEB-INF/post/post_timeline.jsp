@@ -445,64 +445,93 @@
                    url:"scroll",
                    data:{"offset":offset},
                    success:function(res){
-                      $.each(res,function(i,item){
+                	   
+                      $.each(res,function(i,dto){
                          
                          setTimeout(function(){
                              var s = "";
-                             if(item.post_file!='no'){
-                            	 s += "<div class='show' id='divs" + item.post_num + "'>";
+                             if(dto.post_file!='no'){
+                            	 s += "<div class='show' id='divs" + dto.post_num + "'>";
                             	 s += "<div class='showtext'>게시물을 숨겼습니다. 다시보려면 게시물을 눌러주세요.</div>";
-                            	 s += "<button type='button' class='showbtn' divpost_num='div" + item.post_num + "' divspost_num='divs" + item.post_num + "'>게시물보기</button></div>";
-                            	 s += "<div class='divmain' id='div" + item.post_num + "'>";
+                            	 s += "<button type='button' class='showbtn' divpost_num='div" + dto.post_num + "' divspost_num='divs" + dto.post_num + "'>게시물보기</button></div>";
+                            	 s += "<div class='divmain' id='div" + dto.post_num + "'>";
                             	 s += "<div class='top'>";
                             	 s += "<div class='top-left'>";
                             	 s += "<span style='float:left;'>";
-                            	 s += "<img src='${root}/photo/" + item.user_photo + "' class='userimg' user_num='" + item.user_num + "'></span>";
+                            	 s += "<img src='${root}/photo/" + dto.user_photo + "' class='userimg' user_num='" + dto.user_num + "'></span>";
 								 
                             	 s+="<span style='float :left; padding : 3%; margin-right: 5px;'><div>";
-								 s+="<b>"+item.user_name;
-								 if(item.post_access =='follower'){
+								 s+="<b>"+dto.user_name;
+								 if(dto.post_access =='follower'){
 									 s+="<i class='fa-solid fa-user-group'></i>";
 								 }
-								 if(item.post_access =='all'){
+								 if(dto.post_access =='all'){
 									 s+="<i class='fa-solid fa-earth-americas'></i>";
 								 }
-								 if(item.post_access =='onlyme'){
+								 if(dto.post_access =='onlyme'){
 									 s+="<i class='fa-solid fa-lock'></i>";
 								 }
 								 s += "<b></div>";
-								 s += "<div>" + item.post_time + "</div></span></div>";
+								 s += "<div>" + dto.post_time + "</div></span></div>";
 								 s += "<span class='top-right'>";
 								 
-								  /* if (item.user_num != sessionScope.user_num && item.checkfollowing != 1) {
-									    s += "<span class='follow' id='follow" + item.post_num + "' followpost_num='follow" + item.post_num + "' unfollowpost_num='unfollow" + item.user_num + "' from_user='${sessionScope.user_num}' to_user='" + item.user_num + "'>팔로우하기</span> ";
-									    s += "<span class='unfollow' id='unfollow" + item.post_num + "' followpost_num='follow" + item.post_num + "' unfollowpost_num='unfollow" + item.user_num + "' style='display:none;'>팔로우 끊기</span> ";
+								   if (dto.user_num != ${sessionScope.user_num} && dto.checkfollowing != 1) {
+									    s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "'>팔로우하기</span> ";
+									    s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "' style='display:none;'>팔로우 끊기</span> ";
 									}
 								 
-								 if (item.user_num != sessionScope.user_num && item.checkfollowing == 1) {
-									    s += "<span class='unfollow' id='unfollow" + item.post_num + "' followpost_num='follow" + item.post_num + "' unfollowpost_num='unfollow" + item.user_num + "'>팔로우 끊기</span> ";
-									    s += "<span class='follow' id='follow" + item.post_num + "' followpost_num='follow" + item.post_num + "' unfollowpost_num='unfollow" + item.user_num + "' from_user='${sessionScope.user_num}' to_user='" + item.user_num + "' style='display:none;'>팔로우 하기</span> ";
-									}  */
+								 if (dto.user_num != ${sessionScope.user_num} && dto.checkfollowing == 1) {
+									    s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "'>팔로우 끊기</span> ";
+									    s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.user_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "' style='display:none;'>팔로우 하기</span> ";
+									} 
 								 
 								 
-								 s += "<span class='postmenu dropdown' post_num='" + item.post_num + "' user_num='${sessionScope.user_num}' dtouser_num='" + item.user_num + "'>";
+								 s += "<span class='postmenu dropdown' post_num='" + dto.post_num + "' user_num='${sessionScope.user_num}' dtouser_num='" + dto.user_num + "'>";
 								 
 								 s+="<i class='fa-solid fa-ellipsis'>";
 								 
-								 if (item.checklogin == 1) {
-									    s += "<ul id='" + item.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20pt; line-height: 1.5em; display: none;'>";
-									     s+="<li id='postupdate' class='postdetail' data-toggle='modal' data-target='#updatepost' post_num='"+item.post_num+"' user_num='"+item.user_num+"'>게시물 수정</li>";
-									     s+="<li id='postdelete' class='postdetail' user_num='"+item.user_num+"' post_num='"+item.post_num+"'>게시물 삭제</li></ul></div>";
+								 if (dto.checklogin == 1) {
+									    s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20pt; line-height: 1.5em; display: none;'>";
+									     s+="<li id='postupdate' class='postdetail' data-toggle='modal' data-target='#updatepost' post_num='"+dto.post_num+"' user_num='"+dto.user_num+"'>게시물 수정</li>";
+									     s+="<li id='postdelete' class='postdetail' user_num='"+dto.user_num+"' post_num='"+dto.post_num+"'>게시물 삭제</li></ul></div>";
 									}
-								 if(item.checklogin != 1){
-									 s+="<ul id='"+item.post_num+"' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 25px; line-height:1.5em;display:none;'>";
-									 s+="<li class='postdetail posthide' divpost_num='div"+item.post_num+"' divpost_num='divs"+item.post_num+"'>게시물 숨김</li></ul>";
+								 if(dto.checklogin != 1){
+									 s+="<ul id='"+dto.post_num+"' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 25px; line-height:1.5em;display:none;'>";
+									 s+="<li class='postdetail posthide' divpost_num='div"+dto.post_num+"' divpost_num='divs"+dto.post_num+"'>게시물 숨김</li></ul>";
 									 
 								 }
-									 s+="</span></span></div></div>";
+									
+									 
+								 s += "</span></span></div>";
+								 s += "<div class='center'>";
+								 s += "<div class='center-up'>" + dto.post_content + "</div>";
+								 s += "<div class='center-down sliders' id='dto-" + dto.post_num + "'>";
+
+								 if (${fn:contains(dto.post_file, '.mp4')}) {
+								   s += "<div class='fileimg'> <video src='/post_file/" + dto.post_file + "' controls='controls' muted='muted'></video> </div>";
+								 }
+
+								 if (${!fn:contains(dto.post_file, '.mp4')}) {
+								   s += "<c:forTokens items='" + dto.post_file + "' delims=',' var='file'> <div class='fileimg'> <img src='/post_file/${file}'></div> </c:forTokens>";
+								 }
+
+								 s += "</div>";
+								 s += "</div>";
+								 
+								 s+="<div class='bottom'>";
+								 s+="<hr style='border:1px solid #ced0d4; margin-bottom: 1%;'>";
+								 s+="<div class='bottom=up'>";
+								 
+								 if(dto.likecheck ==0){
 									 
 								 }
-                                  
+								
+                             
+                             
+                             
+                             }
+								 
+								 
                                   
                                   
                                   
@@ -1594,25 +1623,26 @@ li {
 
 
 						<div class="center">
-							<div class="center-up">${dto.post_content }</div>
+                     <div class="center-up">${dto.post_content }</div>
 
-							<div class="center-down sliders" id="dto-${i.index}">
+                     <div class="center-down sliders" id="dto-${dto.post_num}">
 
-								<!-- 예지: 파일이 사진인지 영상인지 확인 -->
-								<c:if test="${fn:contains(dto.post_file, '.mp4')}">
-									<div class="fileimg">
-										<video src="/post_file/${dto.post_file }" controls="controls" muted="muted"></video>
-									</div>
-								</c:if>
-								<c:if test="${!fn:contains(dto.post_file, '.mp4')}">
-									<c:forTokens items="${dto.post_file }" delims="," var="file">
-										<div class="fileimg">
-											<img src="/post_file/${file }">
-										</div>
-									</c:forTokens>
-								</c:if>
-							</div>
-						</div>
+                        <!-- 예지: 파일이 사진인지 영상인지 확인 -->
+                        <c:if test="${fn:contains(dto.post_file, '.mp4')}">
+                           <div class="fileimg">
+                              <video src="/post_file/${dto.post_file }" controls="controls" muted="muted"></video>
+                           </div>
+                        </c:if>
+                        <c:if test="${!fn:contains(dto.post_file, '.mp4')}">
+                           <c:forTokens items="${dto.post_file }" delims="," var="file">
+                              <div class="fileimg">
+                                 <img src="/post_file/${file }">
+                              </div>
+                           </c:forTokens>
+                        </c:if>
+                     </div>
+                  </div>
+
 
 
 						<div class="bottom">
