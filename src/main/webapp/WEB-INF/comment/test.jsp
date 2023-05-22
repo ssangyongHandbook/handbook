@@ -411,9 +411,9 @@ li{
 							<c:if test="${dto.post_user_num.equals(sessionScope.user_num) or dto.user_num.equals(sessionScope.user_num) }">
 								<div style="height: 0; width: 450px; position: relative; left: -30px; top: 30px;">
 									<img src="../image/add.png" class="ulimg" style="width: 20px; float: right;" comment_num="${dto.comment_num }">
-									<ul class="list-group commentul" id="ul${dto.comment_num}">
-										<li class="list-group-item list-group-item-success commentmod" comment_num="${dto.comment_num }">수정</li>
-										<li class="list-group-item list-group-item-danger commentdel" comment_num="${dto.comment_num }">삭제</li>
+									<ul class="commentul" id="ul${dto.comment_num}">
+										<li class="commentmod" comment_num="${dto.comment_num }">수정</li>
+										<li class="commentdel" comment_num="${dto.comment_num }">삭제</li>
 									</ul>
 										<div class="comment" id="commentmod${dto.comment_num }" style="display: none; width: 447px; position: relative; left: 31px; bottom: 31px;">
 											<img src="/photo/${dto.user_photo }" class="profile">

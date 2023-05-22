@@ -225,7 +225,7 @@ public class PostController {
 	@GetMapping("/post/updateform")
 	@ResponseBody
 	public PostDto getData(String post_num) {
-
+		
 		return pservice.getDataByNum(post_num);
 	}
 
@@ -264,6 +264,8 @@ public class PostController {
 		    
 		    pservice.updatePhoto(dto.getPost_num(), uploadName);
 		    
+	    }else {
+	    	pservice.updatePhoto(dto.getPost_num(), "no");
 	    }
 	    
 	    pservice.updatePost(dto);

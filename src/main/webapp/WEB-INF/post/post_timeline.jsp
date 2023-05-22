@@ -179,7 +179,17 @@
             success : function(res) {
                $("#update_access").val(res.post_access);
                $("#update_content").val(res.post_content);
-
+               
+               var files=(res.post_file).split(',');
+               
+               var filename="";
+               
+               $.each(files,function(i,ele){
+            	   filename+="<img style='height: 250px'";
+            	   filename+="src='/post_file/"+ele+"'>";
+               })
+               
+               $("#showmodimg").html(filename);
             }
          })
       })
@@ -366,11 +376,11 @@
   
   
   //강제 호출
-  $("#btnmodcontentphoto").click(function(){
+/*   $("#btnmodcontentphoto").click(function(){
      
      $("#update_file").trigger("click");
   });
-  
+   */
 /*   //게시물 수정 시 사진 미리보기
   $("#update_file").change(function(){
      
@@ -392,17 +402,23 @@
 		});
 		
 		$("#update_file").change(function() {
+			var s="";
 			var file = this.files[0];
 			var reader = new FileReader();
 			reader.onload = function(e) {
-				$("#showmodimg").attr("src", e.target.result);
+				s+="<img style='height: 250px' src='"+e.target.result+"'>";
+				$("#showmodimg").html(s);
+				//$("#showmodimg").attr("src", e.target.result);
 			};
+			$("#showmodimg").html(s);
 			reader.readAsDataURL(file);
 		});
 		
 		$("#remove_photo_btn").click(function() {
 			$("#update_file").val("");
-			$("#showmodimg").attr("src", "");
+			$("#showmodimg").html("");
+			$("#update_file").val(null);
+			//$("#showmodimg").attr("src", "");
 		});
 	});
    
@@ -891,18 +907,22 @@ body {
 }
 
 .allmain {
-	width: 1000px;
+	/* width: 1000px; */
+	width: 100%;
 	height: 100%;
 	background-color: #F0F2F5;
 }
 
 .divmain {
 	margin: 0 auto;
-	max-width: 750px;
-	min-width: 650px;
-	height: 600px;
+	/* width,height 수정 */
+	width: 100%;
+	height: 100%;
 	border-radius: 10px 10px;
 	background-color: white;
+	display: inline-flex;
+	flex-direction: column;
+	box-shadow: 0px 0px 5px lightgray;
 }
 
 .top {
@@ -925,29 +945,29 @@ body {
 
 .center {
 	width: 100%;
-	height: 78.5%;
+	height: 70%;
 }
 
 .center-up {
 	width: 100%;
-	height: 20%;
+	margin: 15px;
+	font-size: 12pt;
 }
 
 .center-down {
 	text-align: center;
 	width: 100%;
-	height: 80%;
 	overflow: hidden;
 }
 
 .bottom {
 	width: 100%;
-	height: 6.5%;
+	height: 20%;
+	margin-bottom: 5px;
 }
 
 .bottom-up {
 	width: 100%;
-	height: 10%;
 }
 
 .bottom-left {
@@ -974,11 +994,14 @@ body {
 /* 파일 없을 경우  */
 .divmain2 {
 	margin: 0 auto;
-	max-width: 750px;
-	min-width: 550px;
-	height: 300px;
+	/* width, height 수정 */
+	width: 100%;
+	height: 100%;
 	border-radius: 10px 10px;
 	background-color: white;
+	display: inline-flex;
+	flex-direction: column;
+	box-shadow: 0px 0px 5px lightgray;
 }
 
 .top2 {
@@ -1006,7 +1029,8 @@ body {
 
 .center-up2 {
 	width: 100%;
-	height: 100%;
+	margin: 15px;
+	font-size: 12pt;
 }
 
 .bottom2 {
@@ -1060,21 +1084,28 @@ body {
 	color: black;
 }
 
-.userimg {
-	cursor: pointer;
+.userimgdiv{
 	width: 40px;
 	height: 40px;
-	border: 1px solid gray;
-	border-radius: 20px;
+	border-radius: 100px;
 	margin: 10px;
+	overflow: hidden;
+	box-shadow: 0px 0px 3px gray;
+}
+
+.userimg {
+	cursor: pointer;
+	width: 100%;
+	height: 100%;
+	object-fit: cover; 
 }
 
 .contentmodal {
 	/* background: #F0F2F5; */
 	border-radius: 60px;
 	margin: 0 auto;
-	max-width: 750px;
-	min-width: 550px;
+	/* width바꿈 100%로 */
+	width: 100%;
 }
 
 #writeinput {
@@ -1085,7 +1116,11 @@ body {
 	border: none;
 	font-size: 15pt;
 	background: #F0F2F5;
-	padding: 1.2%;
+	padding: 8px;
+}
+
+.writeinputdiv{
+	width: 95%;
 }
 
 #coverinput {
@@ -1093,15 +1128,27 @@ body {
 	height: 65px;
 	width: 100%;
 	border-radius: 10px;
-	padding: 1.5%;
-	padding-top: 2%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-left: 15px;
+	padding-right: 15px;
+	box-shadow: 0px 0px 5px lightgray;
+}
+
+.writeimgdiv{
+	width: 40px;
+	height: 40px;
+	margin-right: 15px;
+	border-radius: 100px;
+	overflow: hidden;
+	box-shadow: 0px 0px 3px gray;
 }
 
 .writeimg {
-	width: 35px;
-	height: 35px;
-	border: 1px solid gray;
-	border-radius: 20px;
+	width: 100%;
+	height: 100%;
+	object-fit: cover; 
 }
 
 .postimg {
@@ -1147,29 +1194,30 @@ body {
 
 .prev {
 	float: left;
-	position: relative;
+	position: absolute;
 	z-index: 1;
 	border: none;
 	width: 10%;
 	height: 10%;
 	cursor: pointer;
 	visibility: hidden;
+	left: 0px;
 }
 
 .next {
 	float: right;
 	border: none;
-	position: relative;
+	position: absolute;
 	z-index: 1;
 	width: 10%;
 	height: 10%;
 	cursor: pointer;
+	right: 0px;
 }
 
 .fileimg {
 	text-align: center;
-	width: 60%;
-	height: 350px;
+	width: 100%;
 }
 
 .fileimg img {
@@ -1194,7 +1242,12 @@ body {
 
 .slick-list {
 	float: left;
-	width: 500px;
+	width: 100%;
+}
+
+.slick-track{
+	display: inline-flex;
+	align-items: center;
 }
 
 /* comment */
@@ -1370,14 +1423,12 @@ li {
 
 		<div class="contentmodal">
 			<div id="coverinput">
-				<div>
-					<span style="float: left; width: 8%; top: 50%;">
-						<img src="${root }/photo/${user_photo}" class="writeimg">
-					</span>
-					<span style="float: right; width: 92%;">
-						<input type="button" data-toggle="modal" data-target="#contentwrite" name="contentwirte"
-							id="writeinput" value="무슨 생각을 하고 계신가요?">
-					</span>
+				<div class="writeimgdiv">
+					<img src="${root }/photo/${user_photo}" class="writeimg">
+				</div>
+				<div class="writeinputdiv">
+					<input type="button" data-toggle="modal" data-target="#contentwrite" name="contentwirte"
+						id="writeinput" value="무슨 생각을 하고 계신가요?">
 				</div>
 			</div>
 		</div>
@@ -1470,8 +1521,8 @@ li {
 							<textarea style="width: 550px; height: 150px;" name="update_content" class="form-control"
 								required="required" id="update_content" placeholder="내용을 입력해주세요"></textarea>
 						</div>
-						<img src="" id="showmodimg"
-							style="width: 500px; height: 150px; border: 1px solid gray; border-radius: 10px;">
+						<div id="showmodimg" style="width: 500px; height: 400px; border-radius: 10px; overflow: scroll; display: inline-flex; flex-direction: column;">
+						</div>
 						<br>
 						<button type="button" id="btnmodcontentphoto">사진 선택</button>
 						<button type="button" class="btn btn-default" id="remove_photo_btn">사진 없애기</button>
@@ -1482,6 +1533,7 @@ li {
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					</div>
 				</div>
+
 
 			</div>
 		</div>
@@ -1500,9 +1552,9 @@ li {
 					<div class="divmain" id="div${dto.post_num }">
 						<div class="top">
 							<div class="top-left">
-								<span style="float: left;">
+								<div style="float: left;" class="userimgdiv">
 									<img src="${root }/photo/${dto.user_photo}" class="userimg" user_num="${dto.user_num }">
-								</span>
+								</div>
 								<span style="float: left; padding: 3%; margin-right: 5px;">
 									<div>
 										<b>${dto.user_name }
@@ -1590,6 +1642,7 @@ li {
                         </c:if>
                      </div>
                   </div>
+
 
 
 						<div class="bottom">
@@ -1700,7 +1753,7 @@ li {
 					<div class="divmain2" id="div${dto.post_num }">
 						<div class="top2">
 							<div class="top-left2">
-								<span style="float: left;">
+								<span style="float: left;" class="userimgdiv">
 									<img src="${root }/photo/${dto.user_photo}" class="userimg" user_num="${dto.user_num }">
 								</span>
 								<span style="float: left; padding: 3%; margin-right: 5px;">
@@ -1771,8 +1824,9 @@ li {
 							<div class="center-up2">${dto.post_content }</div>
 
 						</div>
-						<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 						<div class="bottom2">
+							<!-- 선 없길래 추가함 -->
+							<hr style="border: 1px solid #ced0d4; margin-bottom: 1%;">
 							<div class="bottom-up2">
 
 

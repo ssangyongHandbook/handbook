@@ -20,6 +20,7 @@ public interface CommentMapperInter {
 	public List<CommentDto> getDataGroupStep(Map<String, Integer> map);
 	public void update(CommentDto dto);
 	public List<CommentDto> selectScroll(Map<String, Object> map);
+	public List<CommentDto> selectGuestScroll(Map<String, Object> map);
 	public List<CommentDto> getAllDatas();
 	
 	//댓글 좋아요 부분
