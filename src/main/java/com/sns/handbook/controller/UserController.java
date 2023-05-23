@@ -46,100 +46,97 @@ public class UserController {
 
 	@Autowired
 	UserService uservice;
-	
+
 	@Autowired
 	FollowingService fservice;
-	
+
 	@Autowired
 	PostService pservice;
-	
+
 	@Autowired
 	PostlikeService plservice;
-	
+
 	@Autowired
 	GuestbooklikeService glservice;
-	
+
 	@Autowired
 	CommentService cservice;
-	
+
 	//커버 사진 업데이트
 	@PostMapping("/user/coverupdate")
 	@ResponseBody
 	public void coverupdate(String user_num, MultipartFile cover,
-			HttpSession session,@ModelAttribute UserDto dto)
-	{
-			//업로드 경로
-			String path=session.getServletContext().getRealPath("/cover");
-			
-			//파일명 구하기
-			SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
-			String coverName="f_"+sdf.format(new Date())+cover.getOriginalFilename();
-			
-			try {
-				cover.transferTo(new File(path+"\\"+coverName));
-				
-				//db수정
-				uservice.updateCover(user_num, coverName);
-				
-			} catch (IllegalStateException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	
+							HttpSession session,@ModelAttribute UserDto dto) {
+		//업로드 경로
+		String path=session.getServletContext().getRealPath("/cover");
+
+		//파일명 구하기
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
+		String coverName="f_"+sdf.format(new Date())+cover.getOriginalFilename();
+
+		try {
+			cover.transferTo(new File(path+"\\"+coverName));
+
+			//db수정
+			uservice.updateCover(user_num, coverName);
+
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	
+
 	//프로필 사진 업데이트
 	@PostMapping("/user/photoupdate")
 	@ResponseBody
 	public void photoupdate(String user_num,MultipartFile photo,
-			HttpSession session,@ModelAttribute UserDto dto)
-	{
+							HttpSession session,@ModelAttribute UserDto dto) {
 		//업로드 경로
 		String path=session.getServletContext().getRealPath("/photo");
-		
-			//파일명 구하기
-			SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
-			String photoName="f_"+sdf.format(new Date())+photo.getOriginalFilename();
-			session.setAttribute("user_photo", photoName);
-			
-			try {
-				photo.transferTo(new File(path+"\\"+photoName));
-				
-				uservice.updatePhoto(user_num, photoName);
-				
-			} catch (IllegalStateException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+		//파일명 구하기
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
+		String photoName="f_"+sdf.format(new Date())+photo.getOriginalFilename();
+		session.setAttribute("user_photo", photoName);
+
+		try {
+			photo.transferTo(new File(path+"\\"+photoName));
+
+			uservice.updatePhoto(user_num, photoName);
+
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	
+
 	//마이페이지 이동
 	@GetMapping("/user/mypage")
-	public ModelAndView mypage(@RequestParam(defaultValue = "0") int offset,@RequestParam(defaultValue = "0") int commentoffset,String user_num,HttpSession session)
-	{
-		
+	public ModelAndView mypage(@RequestParam(defaultValue = "0") int offset,@RequestParam(defaultValue = "0") int commentoffset,String user_num,HttpSession session) {
+
 		ModelAndView model=new ModelAndView();
-		
+
 		int followercount=fservice.getTotalFollower(user_num);
 		int followcount=fservice.getTotalFollowing(user_num);
-		String loginnum=uservice.getUserById((String)session.getAttribute("myid")).getUser_num();	
-	
+		String loginnum=uservice.getUserById((String)session.getAttribute("myid")).getUser_num();
+
 		UserDto udto=uservice.getUserByNum(user_num);
 		List<GuestbookDto> guestlist=uservice.getGuestPost(user_num);
 		List<PostDto> postlist=uservice.getPost(user_num);
 		List<Map<String, Object>> alllist=new ArrayList<>();
-		
-		
+
+
 		for(int i=0;i<postlist.size();i++) {
 			postlist.get(i).setComment_count(cservice.getTotalCount(postlist.get(i).getPost_num()));
 		}
-		
+
 		for(int i=0;i<guestlist.size();i++) {
 			guestlist.get(i).setComment_count(cservice.getTotalGuestCount(guestlist.get(i).getGuest_num()));
 		}
-		
+
 		for(PostDto p:postlist) {
 			Map<String, Object> map=new HashMap<>();
-			
+
 			map.put("post_num", p.getPost_num());
 			map.put("user_num", p.getUser_num());
 			map.put("owner_num", null);
@@ -155,10 +152,10 @@ public class UserController {
 
 			alllist.add(map);
 		}
-		
+
 		for(GuestbookDto g:guestlist) {
 			Map<String, Object> map=new HashMap<>();
-			
+
 			map.put("post_num", g.getGuest_num());
 			map.put("user_num", g.getWrite_num());
 			map.put("owner_num", g.getOwner_num());
@@ -170,83 +167,83 @@ public class UserController {
 			map.put("likecheck", glservice.checkGuestLike((String)session.getAttribute("user_num"), g.getGuest_num()));
 			map.put("comment_count",g.getComment_count());
 			map.put("type", "guest");
-			
+
 			UserDto dto=uservice.getUserByNum(g.getWrite_num());
 			map.put("dto", dto);
-			
+
 			alllist.add(map);
 		}
-		
+
 		//최신 순 정렬
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 		for (int i = 0; i < alllist.size() - 1; i++) {
-		    for (int j = i + 1; j < alllist.size(); j++) {
-		        try {
-		            Date date1 = dateFormat.parse(alllist.get(i).get("post_writeday").toString());
-		            Date date2 = dateFormat.parse(alllist.get(j).get("post_writeday").toString());
+			for (int j = i + 1; j < alllist.size(); j++) {
+				try {
+					Date date1 = dateFormat.parse(alllist.get(i).get("post_writeday").toString());
+					Date date2 = dateFormat.parse(alllist.get(j).get("post_writeday").toString());
 
-		            // 뒤에 데이터가 더 최신이면 앞으로 옮기기 (자리 바꾸기)
-		            if (date2.compareTo(date1) > 0) {
-		                Map<String, Object> temp = alllist.get(j);
-		                alllist.set(j, alllist.get(i));
-		                alllist.set(i, temp);
-		            }
-		        } catch (ParseException e) {
-		            // 날짜 형식이 잘못되었을 경우 처리할 예외 처리 코드
-		            e.printStackTrace();
-		        }
-		    }
+					// 뒤에 데이터가 더 최신이면 앞으로 옮기기 (자리 바꾸기)
+					if (date2.compareTo(date1) > 0) {
+						Map<String, Object> temp = alllist.get(j);
+						alllist.set(j, alllist.get(i));
+						alllist.set(i, temp);
+					}
+				} catch (ParseException e) {
+					// 날짜 형식이 잘못되었을 경우 처리할 예외 처리 코드
+					e.printStackTrace();
+				}
+			}
 		}
-		
+
 		for(int i = 0; i<alllist.size(); i++) {
 			//대화 시간 오늘 날짜에서 빼기(몇 초전... 몇 분 전...)
-	         Date today=new Date();
-	         /* System.out.println(today); */
-	         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	         sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-	         Date writeday=new Date();
-	         try {
-	        	 writeday=sdf.parse(alllist.get(i).get("post_writeday").toString());
-	            /* System.out.println(writeday); */
-	         } catch (ParseException e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-	         }
+			Date today=new Date();
+			/* System.out.println(today); */
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+			Date writeday=new Date();
+			try {
+				writeday=sdf.parse(alllist.get(i).get("post_writeday").toString());
+				/* System.out.println(writeday); */
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-	         long diffSec=(today.getTime()-writeday.getTime());
-	         diffSec-=32400000L; //DB에 now()로 들어가는 시간이 9시간 차이 나서 빼줌
-	         /* System.out.println(diffSec); */
+			long diffSec=(today.getTime()-writeday.getTime());
+			diffSec-=32400000L; //DB에 now()로 들어가는 시간이 9시간 차이 나서 빼줌
+			/* System.out.println(diffSec); */
 
-	         //일시분초
-	         long day=(diffSec/(60*60*24*1000L))%365;
-	         long hour=(diffSec/(60*60*1000L))%24;
-	         long minute=(diffSec/(60*1000L))%60;
-	         long second=(diffSec/1000L)%60;
+			//일시분초
+			long day=(diffSec/(60*60*24*1000L))%365;
+			long hour=(diffSec/(60*60*1000L))%24;
+			long minute=(diffSec/(60*1000L))%60;
+			long second=(diffSec/1000L)%60;
 
-	         String preTime="";
+			String preTime="";
 
-	         if(day!=0) {
-	            //하루 이상이 지났으면 일수만 표시
-	            preTime=""+day+"일 전";
-	         }else {
-	            if(hour!=0) {
-	               //1시간 이상이 지났으면 시(hour)만 표시
-	               preTime=""+hour+"시간 전";
-	            }else {
-	               if(minute!=0) {
-	                  //1분 이상이 지났으면 분만 표시
-	                  preTime=""+minute+"분 전";
-	               }else {
-	                  //1분 미만 초만 표시
-	                  preTime=""+second+"초 전";
-	               }
-	            }
-	         }
+			if(day!=0) {
+				//하루 이상이 지났으면 일수만 표시
+				preTime=""+day+"일 전";
+			}else {
+				if(hour!=0) {
+					//1시간 이상이 지났으면 시(hour)만 표시
+					preTime=""+hour+"시간 전";
+				}else {
+					if(minute!=0) {
+						//1분 이상이 지났으면 분만 표시
+						preTime=""+minute+"분 전";
+					}else {
+						//1분 미만 초만 표시
+						preTime=""+second+"초 전";
+					}
+				}
+			}
 
-	         alllist.get(i).put("post_time", preTime);
+			alllist.get(i).put("post_time", preTime);
 		}
-		
+
 		List<FollowingDto> tflist=uservice.getFollowList(user_num, offset);
 
 		for(int i = 0; i<tflist.size(); i++) {
@@ -255,7 +252,7 @@ public class UserController {
 			tflist.get(i).setUser_photo(dto.getUser_photo());
 			tflist.get(i).setTf_count(fservice.togetherFollow(dto.getUser_num(),(String)session.getAttribute("user_num")));
 		}
-		
+
 		model.addObject("alllist", alllist);
 		model.addObject("loginnum", loginnum);
 		model.addObject("dto", udto);
@@ -268,172 +265,166 @@ public class UserController {
 		model.addObject("checkfollowing", fservice.checkFollowing((String)session.getAttribute("user_num"), user_num));
 		model.addObject("checkfollower", fservice.checkFollower((String)session.getAttribute("user_num"), user_num));
 		model.addObject("tf_count", fservice.getTotalFollowing((String)session.getAttribute("user_num")));
-	
+
 		model.setViewName("/sub/user/mypage");
 
 		return model;
 	}
-	
+
 	//게시물 사진 여러장 올리기
 	@PostMapping("/user/insertpost")
 	@ResponseBody
 	public void insertPost(@ModelAttribute PostDto dto, @RequestParam(required = false) List<MultipartFile> photo, HttpSession session) {
-		
-	    String path = session.getServletContext().getRealPath("/post_file");
-	    
-	    int idx = 1;
-	    String uploadName = "";
-	    
-	    if (photo == null) {
-	        dto.setPost_file("no");
-	        pservice.insertPost(dto);
-	        
-	    } else {
-	    	
-	        for (MultipartFile f : photo) {
-	            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
-	            String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
-	            uploadName += fileName + ",";
-	            
-	            try {
-	                f.transferTo(new File(path + "\\" + fileName));
-	            } catch (IllegalStateException | IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        //콤마 제거
-	        uploadName = uploadName.substring(0, uploadName.length() - 1);
-	        
-		    dto.setPost_file(uploadName);
-		    pservice.insertPost(dto);
-		    
-	    }
-	    
+
+		String path = session.getServletContext().getRealPath("/post_file");
+
+		int idx = 1;
+		String uploadName = "";
+
+		if (photo == null) {
+			dto.setPost_file("no");
+			pservice.insertPost(dto);
+
+		} else {
+
+			for (MultipartFile f : photo) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+				String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
+				uploadName += fileName + ",";
+
+				try {
+					f.transferTo(new File(path + "\\" + fileName));
+				} catch (IllegalStateException | IOException e) {
+					e.printStackTrace();
+				}
+			}
+			//콤마 제거
+			uploadName = uploadName.substring(0, uploadName.length() - 1);
+
+			dto.setPost_file(uploadName);
+			pservice.insertPost(dto);
+
+		}
+
 	}
-	
+
 	//프로필 업데이트
 	@ResponseBody
 	@PostMapping("/user/updateinfo")
-	public void updateinfo(UserDto dto)
-	{
+	public void updateinfo(UserDto dto) {
 		uservice.updateUserInfo(dto);
 	}
-	
+
 
 	//게시물 수정 값 불러오기
 	@ResponseBody
 	@GetMapping("/user/updateform")
-	public PostDto updateform(String post_num)
-	{
+	public PostDto updateform(String post_num) {
 		PostDto dto=pservice.getDataByNum(post_num);
-		
+
 		return dto;
 	}
-	
+
 	//게시물 수정
 	@ResponseBody
 	@PostMapping("/user/updatepost")
-	public void updatepost(@ModelAttribute PostDto dto,HttpSession session,@RequestParam(required = false) List<MultipartFile> photo)
-	{
-		
+	public void updatepost(@ModelAttribute PostDto dto,HttpSession session,@RequestParam(required = false) List<MultipartFile> photo) {
+
 		String path = session.getServletContext().getRealPath("/post_file");
-	    
-	    int idx = 1;
-	    String uploadName = "";
-	    
-	    
-	    if (photo != null) {
-	      
-	        for (MultipartFile f : photo) {
-	    	    
-	            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
-	            String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
-	            uploadName += fileName + ",";
-	            
-	            try {
-	            	
-	                f.transferTo(new File(path + "\\" + fileName));
-	                
-	            } catch (IllegalStateException | IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        //콤마 제거
-	        uploadName = uploadName.substring(0, uploadName.length() - 1);
-	        
-		    dto.setPost_file(uploadName);
-		    
-		    pservice.updatePhoto(dto.getPost_num(), uploadName);
-		    
-	    }
-	    
-	    pservice.updatePost(dto);
-	    
-	    
+
+		int idx = 1;
+		String uploadName = "";
+
+
+		if (photo != null) {
+
+			for (MultipartFile f : photo) {
+
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+				String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
+				uploadName += fileName + ",";
+
+				try {
+
+					f.transferTo(new File(path + "\\" + fileName));
+
+				} catch (IllegalStateException | IOException e) {
+					e.printStackTrace();
+				}
+			}
+			//콤마 제거
+			uploadName = uploadName.substring(0, uploadName.length() - 1);
+
+			dto.setPost_file(uploadName);
+
+			pservice.updatePhoto(dto.getPost_num(), uploadName);
+
+		}
+
+		pservice.updatePost(dto);
+
+
 	}
 
 
-	
 	//게시물 삭제(사진까지 삭제)
 	@ResponseBody
 	@GetMapping("/user/deletepost")
-	public void deletepost(String post_num, HttpSession session)
-	{
+	public void deletepost(String post_num, HttpSession session) {
 		String delPhoto=pservice.getDataByNum(post_num).getPost_file();
-		
+
 		if(delPhoto!="no") {
-			
+
 			String path=session.getServletContext().getRealPath("/post_file");
-			
+
 			File delFile=new File(path+"\\"+delPhoto);
-			
+
 			delFile.delete();
 		}
-		
+
 		pservice.deletePost(post_num);
 	}
-	
+
 	//좋아요
 	@GetMapping("/user/likeinsert")
 	@ResponseBody
 	public void insertLike(@ModelAttribute PostlikeDto dto) {
-		
-		
+
+
 		plservice.insertLike(dto);
 	}
-	
+
 	//좋아요 취소
 	@GetMapping("/user/likedelete")
 	@ResponseBody
 	public void deleteLike(String post_num,String user_num) {
-		
+
 		plservice.deleteLike(post_num,user_num);
 	}
-	
+
 	//방명록 좋아요
 	@GetMapping("/user/guestlikeinsert")
 	@ResponseBody
 	public void insertGuestLike(@ModelAttribute GuestbooklikeDto dto) {
-		
+
 		glservice.insertGuestLike(dto);
 	}
-	
+
 	//방명록 좋아요 취소
 	@GetMapping("/user/guestlikedelete")
 	@ResponseBody
 	public void deleteGuestLike(String guest_num,String user_num) {
-		
+
 		glservice.deleteGuestLike(guest_num, user_num);
 	}
-	
+
 	//팔로우 하기
 	@ResponseBody
 	@GetMapping("/user/insertfollowing")
-	public void insertfollowing(@ModelAttribute FollowingDto dto)
-	{
+	public void insertfollowing(@ModelAttribute FollowingDto dto) {
 		fservice.insertFollowing(dto);
 	}
-	
+
 	//팔로우 취소
 	@ResponseBody
 	@GetMapping("/user/unfollowing")
@@ -442,120 +433,117 @@ public class UserController {
 		fservice.deleteFollowing((String)session.getAttribute("user_num"),to_user);
 
 	}
-	
+
 	//방명록 작성
 	@ResponseBody
 	@PostMapping("/user/insertguestbook")
 	public void insertguestbook(@ModelAttribute GuestbookDto dto, @RequestParam(required = false) List<MultipartFile> photo, HttpSession session) {
-			
-		    String path = session.getServletContext().getRealPath("/guest_file");
-		    
-		    int idx = 1;
-		    String uploadName = "";
-		    
-		    if (photo == null) {
-		        dto.setGuest_file("no");
-		        uservice.insertGuestBook(dto);
-		        
-		    } else {
-		    	
-		        for (MultipartFile f : photo) {
-		            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
-		            String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
-		            uploadName += fileName + ",";
-		            
-		            try {
-		                f.transferTo(new File(path + "\\" + fileName));
-		            } catch (IllegalStateException | IOException e) {
-		                e.printStackTrace();
-		            }
-		        }
-		        //콤마 제거
-		        uploadName = uploadName.substring(0, uploadName.length() - 1);
-		        
-			    dto.setGuest_file(uploadName);
-			    uservice.insertGuestBook(dto);
-			    
-		    }
-		    
+
+		String path = session.getServletContext().getRealPath("/guest_file");
+
+		int idx = 1;
+		String uploadName = "";
+
+		if (photo == null) {
+			dto.setGuest_file("no");
+			uservice.insertGuestBook(dto);
+
+		} else {
+
+			for (MultipartFile f : photo) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+				String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
+				uploadName += fileName + ",";
+
+				try {
+					f.transferTo(new File(path + "\\" + fileName));
+				} catch (IllegalStateException | IOException e) {
+					e.printStackTrace();
+				}
+			}
+			//콤마 제거
+			uploadName = uploadName.substring(0, uploadName.length() - 1);
+
+			dto.setGuest_file(uploadName);
+			uservice.insertGuestBook(dto);
+
 		}
-	
+
+	}
+
 	//방명록 삭제(사진까지 삭제)
 	@ResponseBody
 	@GetMapping("/user/deleteguestbook")
-	public void deleteGuestBook(String guest_num,HttpSession session)
-	{
+	public void deleteGuestBook(String guest_num,HttpSession session) {
 		String delphoto=uservice.getDataByGuestNum(guest_num).getGuest_file();
-		
+
 		if(delphoto!="no") {
-			
+
 			String path=session.getServletContext().getRealPath("/guest_file");
-			
+
 			File delFile=new File(path+"\\"+delphoto);
-			
+
 			delFile.delete();
 		}
-		
+
 		uservice.deleteGuestBook(guest_num);
 	}
-	
-	
-	 //방명록 수정
-	 @ResponseBody
-	 @PostMapping("/user/updateguestbook")
-	 public void updateguestbook(@ModelAttribute GuestbookDto dto,HttpSession session,@RequestParam(required = false) List<MultipartFile> photo)
-		{
-			
-			String path = session.getServletContext().getRealPath("/guest_file");
-		    
-		    int idx = 1;
-		    String uploadName = "";
-		    
-		    if (photo != null) {
-		      
-		        for (MultipartFile f : photo) {
-		    	    
-		            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
-		            String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
-		            uploadName += fileName + ",";
-		            
-		            try {
-		            	
-		                f.transferTo(new File(path + "\\" + fileName));
-		                
-		            } catch (IllegalStateException | IOException e) {
-		                e.printStackTrace();
-		            }
-		        }
-		        //콤마 제거
-		        uploadName = uploadName.substring(0, uploadName.length() - 1);
-		        
-			    dto.setGuest_file(uploadName);
-		    }else {
-		    	
-		    	String prevFile=uservice.getDataByGuestNum(dto.getGuest_num()).getGuest_file();
-		    	dto.setGuest_file(prevFile);
-		    }
-		    
-		    uservice.updateGuestBook(dto);
+
+
+	//방명록 수정
+	@ResponseBody
+	@PostMapping("/user/updateguestbook")
+	public void updateguestbook(@ModelAttribute GuestbookDto dto,HttpSession session,@RequestParam(required = false) List<MultipartFile> photo) {
+
+		String path = session.getServletContext().getRealPath("/guest_file");
+
+		int idx = 1;
+		String uploadName = "";
+
+		if (photo != null) {
+
+			for (MultipartFile f : photo) {
+
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+				String fileName = idx++ + "_" + sdf.format(new Date()) + "_" + f.getOriginalFilename();
+				uploadName += fileName + ",";
+
+				try {
+
+					f.transferTo(new File(path + "\\" + fileName));
+
+				} catch (IllegalStateException | IOException e) {
+					e.printStackTrace();
+				}
+			}
+			//콤마 제거
+			uploadName = uploadName.substring(0, uploadName.length() - 1);
+
+			dto.setGuest_file(uploadName);
+		}else {
+
+			String prevFile=uservice.getDataByGuestNum(dto.getGuest_num()).getGuest_file();
+			dto.setGuest_file(prevFile);
 		}
-	 
-	
+
+		uservice.updateGuestBook(dto);
+	}
+
+
 	//방명록 수정 값 불러오기
 	@ResponseBody
 	@GetMapping("/user/updateguestform")
-	public GuestbookDto getDataByGuestNum(String guest_num)
-	{
+	public GuestbookDto getDataByGuestNum(String guest_num) {
 		GuestbookDto dto=uservice.getDataByGuestNum(guest_num);
 
 		return dto;
 	}
-	
+
 	//댓글 입력
 	@ResponseBody
 	@PostMapping("/user/cinsert")
 	public void insert(@ModelAttribute CommentDto dto,HttpSession session) {
-		
+
 		if(!dto.getComment_num().equals("0")) {
 			CommentDto momDto= cservice.getData(dto.getComment_num());
 
@@ -567,7 +555,7 @@ public class UserController {
 		cservice.insert(dto);
 
 	}
-	
+
 	//댓글 좋아요
 	@GetMapping("/user/commentlikeinsert")
 	@ResponseBody
@@ -580,7 +568,7 @@ public class UserController {
 
 		cservice.insertLike(dto);
 	}
-	
+
 	//댓글 좋아요 취소
 	@GetMapping("/user/commentlikedelete")
 	@ResponseBody
@@ -593,13 +581,13 @@ public class UserController {
 
 		cservice.deleteLike((String)session.getAttribute("user_num"), comment_num);
 	}
-	
+
 	//댓글 스크롤 json데이터 얻기
 	@GetMapping("user/scrollcomment")
 	@ResponseBody
 	public List<CommentDto> scroll (String post_num,int commentoffset,HttpSession session) {
 
-		List<CommentDto> list=cservice.selectScroll(post_num	, commentoffset);
+		List<CommentDto> list=cservice.selectScroll(post_num, commentoffset);
 
 		for(int i=0;i<list.size();i++) {
 
@@ -660,7 +648,7 @@ public class UserController {
 		return list;
 
 	}
-	
+
 	//방명록 댓글 스크롤 json데이터 얻기
 	@GetMapping("user/scrollguestcomment")
 	@ResponseBody
@@ -727,7 +715,7 @@ public class UserController {
 		return list;
 
 	}
-	
+
 	//방명록 수정
 	@PostMapping("user/commentupdate")
 	@ResponseBody
@@ -736,8 +724,8 @@ public class UserController {
 		dto.setUser_num((String)session.getAttribute("user_num"));
 		cservice.update(dto);
 
-	} 
-	
+	}
+
 	//방명록 삭제
 	@GetMapping("user/cdelete")
 	@ResponseBody
@@ -761,33 +749,51 @@ public class UserController {
 					cservice.delete(list.get(i).getComment_num());
 				else
 					break;
-			}	
+			}
 			cservice.delete(comment_num);
 		}
 
 	}
-	
-	
+
+
 	//정보 페이지 이동
 	@GetMapping("/user/info")
-	public String info()
-	{
+	public String info() {
 		return "/sub/user/info";
 	}
-	
+
 	//친구 목록 이동
 	@GetMapping("/user/friend")
-	public String friend()
-	{
+	public String friend() {
 		return "/sub/user/friend";
 	}
 
 	//회원 탈퇴
 	@GetMapping("/user/userdelete")
 	public String userdelete(String user_num, HttpSession session) {
-		uservice.userDelete(user_num);
-		session.removeAttribute("loginok");
+		//유저 프로필 이미지, 커버 삭제
+		UserDto user = uservice.getUserByNum(user_num);
+		String profile_path = session.getServletContext().getRealPath("/photo");
+		String cover_path = session.getServletContext().getRealPath("/cover");
+		//System.out.println(profile_path);
+		//System.out.println(cover_path);
+
+		String user_photo = "";
+		String user_cover = "";
+		if(user.getUser_photo() != null) {
+			user_photo = user.getUser_photo();
+			File file = new File(profile_path+"\\"+user_photo);
+			file.delete();
+		}
+		if(user.getUser_cover() != null) {
+			user_cover = user.getUser_cover();
+            File file = new File(cover_path+"\\"+user_cover);
+			file.delete();
+		}
+
+		//session.removeAttribute("loginok");
 		session.invalidate(); // 세션의 모든 속성을 삭제
+		uservice.userDelete(user_num);
 		return "redirect:/";
 	}
 }
