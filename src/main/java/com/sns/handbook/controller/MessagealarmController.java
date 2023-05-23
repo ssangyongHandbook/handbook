@@ -1,10 +1,15 @@
 package com.sns.handbook.controller;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,11 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sns.handbook.dto.CommentalarmDto;
 import com.sns.handbook.dto.FollowalarmDto;
 import com.sns.handbook.dto.MessageDto;
 import com.sns.handbook.dto.MessagealarmDto;
 import com.sns.handbook.dto.PostalarmDto;
 import com.sns.handbook.serivce.CommentService;
+import com.sns.handbook.serivce.CommentalarmService;
 import com.sns.handbook.serivce.FollowalarmService;
 import com.sns.handbook.serivce.MessageService;
 import com.sns.handbook.serivce.MessagealarmService;
@@ -43,6 +50,9 @@ public class MessagealarmController{
 	
 	@Autowired
 	FollowalarmService faservice;
+	
+	@Autowired
+	CommentalarmService caservice;
 	
 	//알림전송
 	@GetMapping("/messagealaramadd")
@@ -75,17 +85,13 @@ public class MessagealarmController{
 		dto.setReceiver_num(user_num);
 		dto.setPost_num(map.get("post_num"));
 		dto.setSender_num(map.get("sender_num"));
-		dto.setComment_num(map.get("comment_num"));
+		dto.setComment_content(map.get("comment_content"));
 		
 		String sender_name=uservice.getUserByNum(dto.getSender_num()).getUser_name();
 		String sender_photo=uservice.getUserByNum(dto.getSender_num()).getUser_photo();
-		String comment_content=cservice.getData(dto.getComment_num()).getComment_content();
-		Timestamp comment_writeday=cservice.getData(dto.getComment_num()).getComment_writeday();
 		
 		dto.setSender_name(sender_name);
 		dto.setSender_photo(sender_photo);
-		dto.setComment_content(comment_content);
-		dto.setComment_writeday(comment_writeday);
 		
 		//알림 insert
 		paservice.insertPostAlarm(dto);
@@ -133,6 +139,10 @@ public class MessagealarmController{
 		}
 		
 		//전체알림(메시지 제외)
+		Map<Integer, Long> alarmTime=new HashMap<>();
+		int timeNum=0;
+		Date today=new Date();
+		
 		List<Object> alarmList=new ArrayList<>();
 		int alarmCount=0;
 		
@@ -144,10 +154,144 @@ public class MessagealarmController{
 		if(postalarmCount!=0) {
 			//댓글 목록
 			List<PostalarmDto> paList=paservice.getAllPostAlarm(user_num);
+			
+			for(PostalarmDto p:paList) {
+				String sender_num=p.getSender_num();
+				
+				String sender_name=uservice.getUserByNum(sender_num).getUser_name();
+				String sender_photo=uservice.getUserByNum(sender_num).getUser_photo();
+				
+				p.setSender_name(sender_name);
+				p.setSender_photo(sender_photo);
+				
+				////////////////
+				//대화 시간 오늘 날짜에서 빼기(몇 초전... 몇 분 전...)
+				/* System.out.println(today); */
+				SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+				Date writeday=new Date();
+				try {
+					writeday=sdf.parse(p.getComment_writeday().toString());
+					/* System.out.println(writeday); */
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		
+				long diffSec=(today.getTime()-writeday.getTime());
+				diffSec-=32400000L; //DB에 now()로 들어가는 시간이 9시간 차이 나서 빼줌
+				/* System.out.println(diffSec); */
+		
+				p.setTimeSec(diffSec); //시간 다시 넣어주기
+				alarmTime.put(timeNum, diffSec);
+				timeNum++;
+				
+				//일시분초
+				long day=(diffSec/(60*60*24*1000L))%365;
+				long hour=(diffSec/(60*60*1000L))%24;
+				long minute=(diffSec/(60*1000L))%60;
+				long second=(diffSec/1000L)%60;
+		
+				String preTime="";
+		
+				if(day!=0) {
+					//하루 이상이 지났으면 일수만 표시
+					preTime=""+day+"일 전";
+				}else {
+					if(hour!=0) {
+						//1시간 이상이 지났으면 시(hour)만 표시
+						preTime=""+hour+"시간 전";
+					}else {
+						if(minute!=0) {
+							//1분 이상이 지났으면 분만 표시
+							preTime=""+minute+"분 전";
+						}else {
+							//1분 미만 초만 표시
+							preTime="방금전";
+						}
+					}
+				}
+				
+				p.setTime(preTime);
+				/////////////
+			}
+			
 			alarmList.addAll(paList);
 		}
 		
 		//답글
+		//답글 알림개수 세기
+		int commentalarmCount=caservice.getTotalCountCommentAlarm(user_num);
+		alarmCount+=commentalarmCount;
+
+		if(commentalarmCount!=0) {
+			//댓글 목록
+			List<CommentalarmDto> caList=caservice.getAllCommentAlarm(user_num);
+
+			for(CommentalarmDto c:caList) {
+				String sender_num=c.getSender_num();
+
+				String sender_name=uservice.getUserByNum(sender_num).getUser_name();
+				String sender_photo=uservice.getUserByNum(sender_num).getUser_photo();
+
+				c.setSender_name(sender_name);
+				c.setSender_photo(sender_photo);
+
+				////////////////
+				//대화 시간 오늘 날짜에서 빼기(몇 초전... 몇 분 전...)
+				/* System.out.println(today); */
+				SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+				Date writeday=new Date();
+				try {
+					writeday=sdf.parse(c.getComment_writeday().toString());
+					/* System.out.println(writeday); */
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				long diffSec=(today.getTime()-writeday.getTime());
+				diffSec-=32400000L; //DB에 now()로 들어가는 시간이 9시간 차이 나서 빼줌
+				/* System.out.println(diffSec); */
+
+				c.setTimeSec(diffSec); //시간 다시 넣어주기
+				alarmTime.put(timeNum, diffSec);
+				timeNum++;
+
+				//일시분초
+				long day=(diffSec/(60*60*24*1000L))%365;
+				long hour=(diffSec/(60*60*1000L))%24;
+				long minute=(diffSec/(60*1000L))%60;
+				long second=(diffSec/1000L)%60;
+
+				String preTime="";
+
+				if(day!=0) {
+					//하루 이상이 지났으면 일수만 표시
+					preTime=""+day+"일 전";
+				}else {
+					if(hour!=0) {
+						//1시간 이상이 지났으면 시(hour)만 표시
+						preTime=""+hour+"시간 전";
+					}else {
+						if(minute!=0) {
+							//1분 이상이 지났으면 분만 표시
+							preTime=""+minute+"분 전";
+						}else {
+							//1분 미만 초만 표시
+							preTime="방금전";
+						}
+					}
+				}
+
+				c.setTime(preTime);
+				/////////////
+			}
+
+			alarmList.addAll(caList);
+		}
+		
 		//좋아요
 		
 		//팔로우
@@ -158,8 +302,83 @@ public class MessagealarmController{
 		if(followalarmCount!=0) {
 			//팔로우 목록
 			List<FollowalarmDto> faList=faservice.getAllFollowalarm(user_num);
+			
+			for(FollowalarmDto f:faList) {
+				String sender_num=f.getSender_num();
+				
+				String sender_name=uservice.getUserByNum(sender_num).getUser_name();
+	    		String sender_photo=uservice.getUserByNum(sender_num).getUser_photo();
+	    		
+	    		f.setSender_name(sender_name);
+	    		f.setSender_photo(sender_photo);
+	    		
+	    		////////////////
+	    		//대화 시간 오늘 날짜에서 빼기(몇 초전... 몇 분 전...)
+	    		/* System.out.println(today); */
+	    		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+	    		Date writeday=new Date();
+	    		try {
+	    			writeday=sdf.parse(f.getAlarmtime().toString());
+	    			/* System.out.println(writeday); */
+	    		} catch (ParseException e) {
+	    			// TODO Auto-generated catch block
+	    			e.printStackTrace();
+	    		}
+
+	    		long diffSec=(today.getTime()-writeday.getTime());
+	    		diffSec-=32400000L; //DB에 now()로 들어가는 시간이 9시간 차이 나서 빼줌
+	    		/* System.out.println(diffSec); */
+
+	    		f.setTimeSec(diffSec); //시간 다시 넣어주기
+	    		alarmTime.put(timeNum, diffSec);
+				timeNum++;
+	    		
+	    		//일시분초
+				long day=(diffSec/(60*60*24*1000L))%365;
+				long hour=(diffSec/(60*60*1000L))%24;
+				long minute=(diffSec/(60*1000L))%60;
+				long second=(diffSec/1000L)%60;
+		
+				String preTime="";
+		
+				if(day!=0) {
+					//하루 이상이 지났으면 일수만 표시
+					preTime=""+day+"일 전";
+				}else {
+					if(hour!=0) {
+						//1시간 이상이 지났으면 시(hour)만 표시
+						preTime=""+hour+"시간 전";
+					}else {
+						if(minute!=0) {
+							//1분 이상이 지났으면 분만 표시
+							preTime=""+minute+"분 전";
+						}else {
+							//1분 미만 초만 표시
+							preTime="방금전";
+						}
+					}
+				}
+				
+				f.setTime(preTime);
+	    		/////////////
+			}
+			
 			alarmList.addAll(faList);
 		}
+		
+		//시간 순으로 맞춰주기
+		for(int i=0;i<alarmList.size()-1;i++) {
+			for(int j=i+1;j<alarmList.size();j++) {
+				if(alarmTime.get(i)<alarmTime.get(j)) {
+					Object temp=alarmList.get(i);
+					alarmList.set(i, alarmList.get(j));
+					alarmList.set(j, temp);
+				}
+			}
+		}
+		
+		Collections.reverse(alarmList);
 		
 		map.put("alarmCount", alarmCount);
 		map.put("alarmList", alarmList);

@@ -91,6 +91,8 @@
 </head>
 <script type="text/javascript">
 	$(function(){
+		wsOpen();
+		
 		offset=${offset};
 			$(document).on("click",".addbtn",function(){
 				

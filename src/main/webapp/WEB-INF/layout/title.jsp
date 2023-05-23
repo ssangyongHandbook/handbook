@@ -15,6 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
+
 <style type="text/css">
 .titlecontainer {
 	width: 100%;
@@ -120,7 +121,7 @@
 	visibility: hidden;
 }
 
-.msgalarmlist{
+.msgalarmlist, .allalarmlist{
 	width: 290px;
 	height: 100%;
 	margin: 0 auto;
@@ -129,7 +130,7 @@
 	overflow: auto;
 }
 
-.msgalarmone{
+.msgalarmone, .allalarmone{
 	display: inline-flex;
 	align-items: center;
 	width: 280px;
@@ -144,7 +145,7 @@
 	background-color: #F0F2F5;
 }
 
-.msgalarmphoto{
+.msgalarmphoto, .allalarmphoto{
 	width: 60px;
 	height: 60px;
 	overflow: hidden;
@@ -152,18 +153,18 @@
 	margin-right: 15px;
 }
 
-.msgalarmphoto img{
+.msgalarmphoto img, .allalarmphoto img{
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
 }
 
-.msgalarmdetail{
+.msgalarmdetail, .allalarmdetail{
 	display: inline-flex;
 	flex-direction: column;
 }
 
-.msgalarcontent{
+.msgalarcontent, .allalarmcontent{
 	display: inline-flex;
 	align-items: center;
 	justify-content: flex-start;
@@ -171,19 +172,24 @@
 	font-size: 10pt;
 }
 
-.msgalarmname{
+.msgalarmname, .allalarmname{
 	font-weight: bold;
 	font-size: 12pt;
 	margin-bottom: 2px;
 }
 
-.msgalarwrite{
+.msgalarwrite, .allalarmrwrite2{
 	margin-right: 10px;
 	width: 110px;
 	overflow: hidden;
 }
 
-.msgalarmheader{
+.allalarmrwrite{
+	margin-right: 10px;
+	width: 170px;
+}
+
+.msgalarmheader, .allalarmheader{
 	width: 100%;
 	height: 60px;
 	box-shadow: 0px 1px 3px lightgray;
@@ -208,11 +214,32 @@
 </style>
 
 <script type="text/javascript">
+
+	var ws2;
+	
+	//웹소켓 오픈(메시지 알림)
+	function wsOpen2(){
+		ws2 = new WebSocket("ws://" + location.host + "/chating");
+		wsEvt2();
+	}
+	
+	function wsEvt2(){
+		ws2.onopen = function(data) {
+			//소켓이 열리면 초기화 세팅하기
+			getMsgAlarm();
+		}
+	
+		//메시지 잘 들어왔을 때 실행하는 내용
+		ws2.onmessage = function(data){
+			getMsgAlarm(); //메시지 개수 확인->알림표시
+		}
+	}
+
 	$(function() {
+		wsOpen2(); //웹소켓 열기
+		
 		$(".msgalarmshow").hide();
 		$(".allalarmshow").hide();
-		
-		wsOpen(); //웹소켓 열기
 		
 		getMsgAlarm();
 		
@@ -265,7 +292,8 @@
 				totalCount=res.totalCount;
 				alarmCount=res.alarmCount;
 				
-				console.log(alarmCount);
+				console.log("totalCount: "+totalCount);
+				console.log("alarmCount: "+alarmCount);
 				
 				if(totalCount>0){
 					//알람이 있으면
@@ -317,8 +345,28 @@
 							alarmlist+='<div class="allalarmdetail">';
 							alarmlist+='<span class="allalarmname">'+ele.sender_name+'</span>';
 							alarmlist+='<div class="allalarmcontent">';
-							alarmlist+='<span class="allalarmrwrite">'+ele.comment_content+'</span>';
-							alarmlist+='<span class="allalarmtime">'+ele.comment_writeday+'</span>';
+							alarmlist+='<span class="allalarmrwrite2">'+ele.comment_content+'</span>';
+							alarmlist+='<span class="allalarmtime">'+ele.time+'</span>';
+							alarmlist+='</div>';
+							alarmlist+='</div>';
+							alarmlist+='</div>';	
+						}
+						
+						//답글 알림일 경우
+						else if(ele.type=="comment"){
+							alarmlist+='<div class="allalarmone" group='+ele.commental_num+'>';
+							alarmlist+='<div class="allalarmphoto">';
+							if(ele.sender_photo==null){
+								alarmlist+='<img alt="" src="/image/noimg.png">';
+							}else{
+								alarmlist+='<img alt="" src="/photo/'+ele.sender_photo+'">';
+							}
+							alarmlist+='</div>';
+							alarmlist+='<div class="allalarmdetail">';
+							alarmlist+='<span class="allalarmname">'+ele.sender_name+'</span>';
+							alarmlist+='<div class="allalarmcontent">';
+							alarmlist+='<span class="allalarmrwrite2">'+ele.comment_content+'</span>';
+							alarmlist+='<span class="allalarmtime">'+ele.time+'</span>';
 							alarmlist+='</div>';
 							alarmlist+='</div>';
 							alarmlist+='</div>';	
@@ -338,7 +386,6 @@
 							alarmlist+='<span class="allalarmname">'+ele.sender_name+'</span>';
 							alarmlist+='<div class="allalarmcontent">';
 							alarmlist+='<span class="allalarmrwrite">회원님을 팔로우했습니다.</span>';
-							alarmlist+='<span class="allalarmtime">'+ele.alarmtime+'</span>';
 							alarmlist+='</div>';
 							alarmlist+='</div>';
 							alarmlist+='</div>';	
@@ -349,26 +396,6 @@
 				}
 			}
 		})
-	}
-	
-	var ws;
-
-	//웹소켓 오픈(메시지 알림)
-	function wsOpen() {
-		ws = new WebSocket("ws://" + location.host + "/chating");
-		wsEvt();
-	}
-
-	function wsEvt() {
-		ws.onopen = function(data) {
-			//소켓이 열리면 초기화 세팅하기
-			getMsgAlarm();
-		}
-	
-		//메시지 잘 들어왔을 때 실행하는 내용
-		ws.onmessage = function(data) {
-			getMsgAlarm(); //메시지 개수 확인->알림표시
-		}
 	}
 </script>
 </head>

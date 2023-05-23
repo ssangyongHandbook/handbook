@@ -26,7 +26,8 @@
 
 <script type="text/javascript">
    $(function() {
-
+	   wsOpen();
+	   
       offset = ${offset};
       commentoffset = ${commentoffset};
       $("#showmodimg_insert").hide();
@@ -291,7 +292,7 @@
                "to_user" : to_user
             },
             success : function() {
-
+            	ws.send('{"type":"follow","receiver_num":"'+to_user+'","sender_num":"${sessionScope.user_num}"}');
             }
          })
       })
@@ -864,6 +865,9 @@
                   commentoffset = 0;
                   scroll(commentoffset, post_num);
                   commentCount(post_num);
+                  
+                  //답글 알람
+                  ws.send('{"type":"comment","sender_num":"${sessionScope.user_num}","comment_num":"'+comment_num+'","comment_content":"'+comment_content+'"}');
                }
             })
          }else
@@ -893,6 +897,9 @@
                   commentoffset = 0;
                   scroll(commentoffset, post_num);
                   commentCount(post_num);
+                  
+                  //웹소켓에 댓글 알림 보내기
+                  ws.send('{"type":"post","sender_num":"${sessionScope.user_num}","post_num":"'+post_num+'","comment_content":"'+inputdata+'"}');
                }
             })
          }else
@@ -1488,6 +1495,24 @@
          }
       });
    }
+   
+   
+   var ws;
+
+	//웹소켓 오픈(메시지 알림)
+	function wsOpen() {
+		ws = new WebSocket("ws://" + location.host + "/chating");
+		wsEvt();
+	}
+
+	function wsEvt() {
+		ws.onopen = function(data) {
+		}
+	
+		//메시지 잘 들어왔을 때 실행하는 내용
+		ws.onmessage = function(data) {
+		}
+	}
   
 </script>
 
