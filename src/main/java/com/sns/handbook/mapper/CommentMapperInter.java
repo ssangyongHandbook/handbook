@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.sns.handbook.dto.CommentDto;
 import com.sns.handbook.dto.CommentlikeDto;
+import com.sns.handbook.dto.GuestbookDto;
+import com.sns.handbook.dto.PostDto;
 
 @Mapper
 public interface CommentMapperInter {
@@ -31,4 +33,6 @@ public interface CommentMapperInter {
 	
 	
 	public int getTotalCount(String post_num);
+	public int getTotalGuestCount(String guest_num);
+	public GuestbookDto getDataByGuestNum(String guest_num);
 }

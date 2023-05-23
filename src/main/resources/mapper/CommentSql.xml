@@ -68,4 +68,14 @@
 	<select id="getTotalCount" resultType="int" parameterType="String">
 		select count(*) from comment where post_num=#{post_num}
 	</select>
+	
+	<select id="getTotalGuestCount" resultType="int" parameterType="String">
+		select count(*) from comment where guest_num=#{guest_num}
+	</select>
+	
+	
+	<!-- 방명록 데이터 얻기 -->
+	<select id="getDataByGuestNum" resultType="GuestbookDto" parameterType="String">
+	   select * from guestbook where guest_num=#{guest_num}
+	</select>
 </mapper>

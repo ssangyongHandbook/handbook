@@ -46,6 +46,7 @@
 
 .titledetail div {
 	margin-right: 20px;
+	
 }
 
 .stitle {
@@ -359,10 +360,12 @@
 <div class = "stitle">
  	<div class = "titlemenu allmenu" style = "height:300px; width: 200px; border-radius: 10px;"> 
             <div class = "subtitlemenu">
-            	<span>메뉴</span>
+               <span style="margin-bottom: 5px;">메뉴</span>
+               
                <div class = "titledetail"><a href = "#" data-toggle="modal" data-target="#contentwrite"><div class="titlecircle"><span class = "glyphicon glyphicon-check"></span></div><span>게시물 작성</span></a></div>
                <div class = "titledetail"><a href = "${root }/following/recommendlist?from_user=${sessionScope.user_num}"><div class="titlecircle"><span class = "glyphicon glyphicon-search"></span></div><span>친구 찾기</span></a></div>
                <div class = "titledetail"><a href = "#"><div class="titlecircle"><span class = "glyphicon glyphicon-star"></span></div><span>즐겨 찾기</span></a></div>
+               <div class = "titledetail"><a href = "${root }/user/userdelete?user_num=${sessionScope.user_num}"><div class="titlecircle"><i class="fa-solid fa-user-xmark"></i></div><span>회원탈퇴</span></a></div>
             </div>
             
 	</div> 

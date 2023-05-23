@@ -22,6 +22,8 @@ public class UserDto {
 	private String user_photo;
 	private String user_description;
 	private String user_cover;
+	private String mail_auth;
+	private String mail_key;
 	
 	private int tf_count;
 }

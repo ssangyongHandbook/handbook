@@ -11,6 +11,7 @@ import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sns.handbook.dto.MessageDto;
 import com.sns.handbook.dto.MessagealarmDto;
@@ -74,6 +75,8 @@ public class MessagealarmService implements MessagealarmServiceInter {
 	@Override
 	public List<MessageDto> getAllMessAlarm(String user_num) {
 		// TODO Auto-generated method stub
+		
+		
 		List<MessagealarmDto> alarm=mapperInter.getAllMessAlarm(user_num);
 		//알람 가져옴
 		
