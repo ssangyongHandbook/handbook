@@ -33,4 +33,23 @@ public class FindPasswordController {
 	public String findemail() {
 		return "/sub/login/findemail";
 	}
+
+	// 찾기 버튼 누르면 실행되는 로직.
+	@PostMapping("/find/findemailaction")
+	@ResponseBody
+	public String findemailaction(Model model, @RequestParam String user_name,
+								  @RequestParam String hp1, @RequestParam String hp2, @RequestParam String hp3) {
+		String email = "";
+		String hp = hp1+"-"+hp2+"-"+hp3;
+
+		try {
+			email = service.getUserEmailBynamehp(user_name, hp);
+			model.addAttribute(email);
+		} catch (Exception e) {
+			email = "해당하는 이메일 없음";
+			model.addAttribute(email);
+		}
+		//System.out.println(email);
+		return email;
+	}
 }
