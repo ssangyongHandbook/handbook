@@ -497,7 +497,7 @@
 									}
 								 if(dto.checklogin != 1){
 									 s+="<ul id='"+dto.post_num+"' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 25px; line-height:1.5em;display:none;'>";
-									 s+="<li class='postdetail posthide' divpost_num='div"+dto.post_num+"' divpost_num='divs"+dto.post_num+"'>게시물 숨김</li></ul>";
+									 s+="<li class='postdetail posthide' divpost_num='div"+dto.post_num+"' divspost_num='divs"+dto.post_num+"'>게시물 숨김</li></ul>";
 									 
 								 }
 									
