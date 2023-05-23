@@ -2,6 +2,7 @@ package com.sns.handbook.controller;
 
 import javax.servlet.http.HttpSession;
 
+import com.sns.handbook.dto.MailDto;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,9 +168,13 @@ public class LoginController {
             user.setUser_hp(mobile);
             user.setUser_id(user_id);
             user.setUser_name(name);
-            user.setUser_pass("naver");
+            //user.setUser_pass("naver");
+
 
             service.insertOauthUserInfo(user);
+            //임시 비밀번호 자동 생성
+            MailDto mail_dto = service.createMailAndChangePassword(email);
+            service.mailSend(mail_dto);
 
             UserDto user1 = service.getUserById(user_id);
             session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
@@ -178,8 +183,8 @@ public class LoginController {
             session.setAttribute("name", user1.getUser_name());
             session.setAttribute("myid", user_id);
             session.setAttribute("loginok", "yes");
-            session.setAttribute("user_num", user.getUser_num()); // session에 num값 넣음.
-            session.setAttribute("user_photo", user.getUser_photo());// session에 photo 넣음.
+            session.setAttribute("user_num", user1.getUser_num()); // session에 num값 넣음.
+            session.setAttribute("user_photo", user1.getUser_photo());// session에 photo 넣음.
             return "redirect:post/timeline";
         }
     }
@@ -236,11 +241,13 @@ public class LoginController {
             }
             user.setUser_id(user_id);
             user.setUser_name(name);
-            user.setUser_pass("kakao");
+            //user.setUser_pass("kakao");
 
             service.insertOauthUserInfo(user);
+            //임시 비밀번호 자동 생성
+            MailDto mail_dto = service.createMailAndChangePassword(email);
+            service.mailSend(mail_dto);
             UserDto user1 = service.getUserById(user_id);
-
             session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
             session.setAttribute("signIn", apiResult);
             session.setAttribute("email", user1.getUser_email());
@@ -297,10 +304,11 @@ public class LoginController {
             user.setUser_gender("기타");
             user.setUser_id(user_id);
             user.setUser_name(name);
-            user.setUser_pass("google");
+            //user.setUser_pass("google");
 
             service.insertOauthUserInfo(user);
-
+            MailDto mail_dto = service.createMailAndChangePassword(email);
+            service.mailSend(mail_dto);
             UserDto user1 = service.getUserById(user_id);
             session.setMaxInactiveInterval(60 * 60 * 8);
             session.setAttribute("signIn", apiResult);

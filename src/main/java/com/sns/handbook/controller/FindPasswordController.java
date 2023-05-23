@@ -22,6 +22,7 @@ public class FindPasswordController {
 		return "/sub/login/findpass";
 	}
 
+	//임시 비밀번호 발급 로직.
 	@PostMapping("/find/sendEmail")
 	public String sendEmail(@RequestParam("memberEmail") String memberEmail) {
 		MailDto dto = service.createMailAndChangePassword(memberEmail);
