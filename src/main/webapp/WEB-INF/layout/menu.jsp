@@ -21,9 +21,18 @@
 } 
 .menulist{
    font-size: 20pt;
-   margin-left: 10px;
+   margin-left: 30px;
    margin-top:10px;
+   
   
+}
+.menulist:hover {
+   background-color: #F0F3F7;
+   transition: width 0.3s;
+   transform: scale(1.05);
+   width:46%;
+   box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
+   border-radius: 10px;
 }
 .menub{
    font-size: 12pt;
@@ -39,11 +48,11 @@
 
 		<div class ="menuprofile" style="margin-top: 10px;">
 		<c:if test="${sessionScope.loginok==null }">
-		<img alt = "" src = "${root }/image/noimg.png" class = "img-circle" style ="border:1px solid black; border: none;">
+		<img alt = "" src = "${root }/image/noimg.png" class = "img-circle" style ="border:1px solid black; border: none; width: 35px; height: 35px; margin-left: 5px;">
 		</c:if>
 		
 		<c:if test="${sessionScope.loginok!=null }"> <!-- 로그인 컨트롤러에서 세션으로 받아온다 -->
-		<a href="/user/mypage?user_num=${sessionScope.user_num }" style="margin-left: 5px; "><img alt = "" src = "${root }/photo/${sessionScope.user_photo}" width="35" height="35" class = "img-circle"></a>
+		<a href="/user/mypage?user_num=${sessionScope.user_num }" style="margin-left: 30px; "><img alt = "" src = "${root }/photo/${sessionScope.user_photo}" width="35" height="35" class = "img-circle"></a>
 		<span style="font-size: 12pt; margin-left: 3px;">${sessionScope.name}</span>
 		</c:if>
 		</div>
@@ -51,21 +60,23 @@
 		
 		
 		
-        <div class = "menulist">
-            <a href="${root }/following/recommendlist?from_user=${sessionScope.user_num}" style="text-decoration-line: none;" ><i class="fa-solid fa-user-plus"></i><span class = "menub"><span>팔로워</span><span style="margin-left: 3px;">추천</span></span></a>
+      	<c:if test="${sessionScope.loginok!=null }"> <!-- 로그아웃 상태에서 메뉴 부분을 숨기기 위한 조건문 추가 -->
+        <div class="menulist">
+            <a href="${root}/following/recommendlist?from_user=${sessionScope.user_num}" style="text-decoration-line: none;"><i class="fa-solid fa-user-plus"></i><span class="menub"><span>팔로워</span><span style="margin-left: 3px;">추천</span></span></a>
         </div>
         
-        <div class = "menulist">
-            <a href="${root }/following/followlist?from_user=${sessionScope.user_num}" style="text-decoration-line: none;" ><i class="fa-solid fa-user-group"></i><span class = "menub"><span>팔로워</span><span style="margin-left: 3px;">목록</span></span></a>
+        <div class="menulist">
+            <a href="${root}/following/followlist?from_user=${sessionScope.user_num}" style="text-decoration-line: none;"><i class="fa-solid fa-user-group"></i><span class="menub"><span>팔로워</span><span style="margin-left: 3px;">목록</span></span></a>
         </div>
        
-        <div class = "menulist">
-            <a href="#" style="text-decoration-line: none;"><i class="fa-solid fa-star" style="color: #ffd43b;"></i><span class = "menub">즐겨찾기</span></a>
+        <div class="menulist">
+            <a href="#" style="text-decoration-line: none;"><i class="fa-solid fa-star" style="color: #ffd43b;"></i><span class="menub">&nbsp;즐겨찾기</span></a>
         </div>
       	
-        <div class = "menulist">
-            <a href="#" data-toggle="modal" data-target="#contentwrite" style="text-decoration-line: none;"><i class="fa-solid fa-pen-to-square" style="color: black;"></i><span class = "menub">게시글</span></a>
+        <div class="menulist">
+            <a href="#" data-toggle="modal" data-target="#contentwrite" style="text-decoration-line: none;"><i class="fa-solid fa-pen-to-square" style="color: black;"></i><span class="menub">게시글 작성</span></a>
         </div>
+        </c:if>
         
     </div>
 	
