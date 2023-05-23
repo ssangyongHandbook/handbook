@@ -257,6 +257,7 @@ public class UserController {
 			UserDto dto = uservice.getUserByNum(tflist.get(i).getTo_user()); //여러가지 수많은 데이터에서 i번째 데이터만 가져오기, 여기서 필요한 상대방 num을 list에서 뽑아옴
 			tflist.get(i).setUser_name(dto.getUser_name());// 위에서 dto에서 name photo를 뽑아내서 리스트에 set을 해줌
 			tflist.get(i).setUser_photo(dto.getUser_photo());
+			tflist.get(i).setUser_num(dto.getUser_num());
 			tflist.get(i).setTf_count(fservice.togetherFollow(dto.getUser_num(),(String)session.getAttribute("user_num")));
 		}
 		
@@ -271,7 +272,7 @@ public class UserController {
 		model.addObject("followcount", followcount);
 		model.addObject("checkfollowing", fservice.checkFollowing((String)session.getAttribute("user_num"), user_num));
 		model.addObject("checkfollower", fservice.checkFollower((String)session.getAttribute("user_num"), user_num));
-		model.addObject("tf_count", fservice.getTotalFollowing((String)session.getAttribute("user_num")));
+		model.addObject("tf_count", fservice.getTotalFollowing(uservice.getUserByNum(user_num).getUser_num()));
 	
 		model.setViewName("/sub/user/mypage");
 
