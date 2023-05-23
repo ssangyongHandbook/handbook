@@ -49,6 +49,7 @@ public class MessagealarmController{
 	}
 	
 	//알림받아오기
+
 	@GetMapping("/messagealarmget")
 	public Map<String, Object> messagealarmGet(HttpSession session)
 	{

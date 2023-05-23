@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.sns.handbook.dto.CommentDto;
 import com.sns.handbook.dto.CommentlikeDto;
+import com.sns.handbook.dto.GuestbookDto;
 
 public interface CommentServiceInter {
 
@@ -28,5 +29,7 @@ public interface CommentServiceInter {
 	
 	
 	public int getTotalCount(String post_num);
+	public int getTotalGuestCount(String guest_num);
+	public GuestbookDto getDataByGuestNum(String guest_num);
 
 }

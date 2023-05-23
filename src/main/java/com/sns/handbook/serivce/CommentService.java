@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.sns.handbook.dto.CommentDto;
 import com.sns.handbook.dto.CommentlikeDto;
+import com.sns.handbook.dto.GuestbookDto;
 import com.sns.handbook.mapper.CommentMapperInter;
 
 @Service
@@ -172,6 +173,18 @@ public class CommentService implements CommentServiceInter {
 	public int getTotalCount(String post_num) {
 		// TODO Auto-generated method stub
 		return mapper.getTotalCount(post_num);
+	}
+
+	@Override
+	public int getTotalGuestCount(String guest_num) {
+		// TODO Auto-generated method stub
+		return mapper.getTotalGuestCount(guest_num);
+	}
+
+	@Override
+	public GuestbookDto getDataByGuestNum(String guest_num) {
+		// TODO Auto-generated method stub
+		return mapper.getDataByGuestNum(guest_num);
 	}
 	
 	
