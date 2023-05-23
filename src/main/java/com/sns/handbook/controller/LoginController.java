@@ -101,8 +101,8 @@ public class LoginController {
 
 			return "redirect:../post/timeline"; // 로그인 하면 타임라인으로 넘어감.
 		} else { // 로그인 실패시
-			System.out.println("login failed, 로그인 실패");
-			System.out.println("store password : " + user.getUser_pass() + "\ninput pass : " + user_pass);
+			//System.out.println("login failed, 로그인 실패");
+			//System.out.println("store password : " + user.getUser_pass() + "\ninput pass : " + user_pass);
 			return "/login/passfail";
 		}
 	}
