@@ -128,10 +128,12 @@ public class UserController {
 
 		for(int i=0;i<postlist.size();i++) {
 			postlist.get(i).setComment_count(cservice.getTotalCount(postlist.get(i).getPost_num()));
+			postlist.get(i).setUser_name(uservice.getUserByNum(postlist.get(i).getUser_num()).getUser_name());
 		}
 
 		for(int i=0;i<guestlist.size();i++) {
 			guestlist.get(i).setComment_count(cservice.getTotalGuestCount(guestlist.get(i).getGuest_num()));
+			guestlist.get(i).setUser_name(uservice.getUserByNum(guestlist.get(i).getWrite_num()).getUser_name());
 		}
 
 		for(PostDto p:postlist) {
@@ -149,6 +151,7 @@ public class UserController {
 			map.put("likecheck", plservice.checklike((String)session.getAttribute("user_num"),p.getPost_num()));
 			map.put("comment_count",p.getComment_count());
 			map.put("type", "post");
+			map.put("user_name", p.getUser_name());
 
 			alllist.add(map);
 		}
@@ -167,6 +170,7 @@ public class UserController {
 			map.put("likecheck", glservice.checkGuestLike((String)session.getAttribute("user_num"), g.getGuest_num()));
 			map.put("comment_count",g.getComment_count());
 			map.put("type", "guest");
+			map.put("user_name", g.getUser_name());
 
 			UserDto dto=uservice.getUserByNum(g.getWrite_num());
 			map.put("dto", dto);
@@ -250,6 +254,7 @@ public class UserController {
 			UserDto dto = uservice.getUserByNum(tflist.get(i).getTo_user()); //여러가지 수많은 데이터에서 i번째 데이터만 가져오기, 여기서 필요한 상대방 num을 list에서 뽑아옴
 			tflist.get(i).setUser_name(dto.getUser_name());// 위에서 dto에서 name photo를 뽑아내서 리스트에 set을 해줌
 			tflist.get(i).setUser_photo(dto.getUser_photo());
+			tflist.get(i).setUser_num(dto.getUser_num());
 			tflist.get(i).setTf_count(fservice.togetherFollow(dto.getUser_num(),(String)session.getAttribute("user_num")));
 		}
 
@@ -264,7 +269,7 @@ public class UserController {
 		model.addObject("followcount", followcount);
 		model.addObject("checkfollowing", fservice.checkFollowing((String)session.getAttribute("user_num"), user_num));
 		model.addObject("checkfollower", fservice.checkFollower((String)session.getAttribute("user_num"), user_num));
-		model.addObject("tf_count", fservice.getTotalFollowing((String)session.getAttribute("user_num")));
+		model.addObject("tf_count", fservice.getTotalFollowing(uservice.getUserByNum(user_num).getUser_num()));
 
 		model.setViewName("/sub/user/mypage");
 
@@ -657,7 +662,6 @@ public class UserController {
 		List<CommentDto> list=cservice.selectGuestScroll(guest_num, commentoffset);
 
 		for(int i=0;i<list.size();i++) {
-
 			UserDto udto=uservice.getUserByNum(list.get(i).getUser_num());
 			list.get(i).setUser_name(udto.getUser_name());
 			list.get(i).setUser_photo(udto.getUser_photo());
@@ -754,7 +758,24 @@ public class UserController {
 		}
 
 	}
-
+	
+	@GetMapping("user/postcommentcount")
+	   @ResponseBody
+	   public int commentcount(String post_num) {
+	      
+	      int count=cservice.getTotalCount(post_num);
+	      
+	      return count;
+	   }
+	
+	   @GetMapping("user/guestcommentcount")
+	   @ResponseBody
+	   public int commentguestcount(String guest_num) {
+	      
+	      int count=cservice.getTotalGuestCount(guest_num);
+	      
+	      return count;
+	   }	
 
 	//정보 페이지 이동
 	@GetMapping("/user/info")

@@ -21,6 +21,7 @@ public class GuestbookDto {
 	//add
 	private String type="guest";
 	private int comment_count;
+	private String user_name;
 	
 	
 }

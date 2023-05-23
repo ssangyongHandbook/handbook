@@ -15,7 +15,9 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.sns.handbook.dto.FollowalarmDto;
 import com.sns.handbook.dto.MessageDto;
+import com.sns.handbook.serivce.FollowalarmService;
 import com.sns.handbook.serivce.MessageService;
 import com.sns.handbook.serivce.UserService;
 
@@ -31,6 +33,9 @@ public class SocketHandler extends TextWebSocketHandler{
 	
 	@Autowired
 	UserService uservice;
+	
+	@Autowired
+	FollowalarmService faservice;
     
 	//웹소켓 연결이 되면 동작하는 메소드
     @Override
@@ -57,50 +62,70 @@ public class SocketHandler extends TextWebSocketHandler{
         
         JSONObject ob=new JSONObject(msg);
         
-        //메시지 구분(보낸사람:내용)
-        String mynum=ob.getString("mynum"); //보낸사람
-        String upload=ob.getString("upload"); //메시지내용
-        String reciever=""+ob.getInt("receiver"); //받는사람num
-        String group=""+ob.getInt("group"); //그룹
-        String type=ob.getString("type"); //그룹
-        
-        //메시지 저장
-        MessageDto dto=new MessageDto();
-		  
-        String user_num=mynum;
-        dto.setSender_num(user_num);
-        
-        if(type.equals("chat")) {
-        	//사진을 선택 안했다면
-        	if(upload.contains("http")) {
-        		String checkContent="<div class='bubblecontent'>";
-				
-        		String[] linkArr=upload.split(" ");
-        		for(String s:linkArr) {
-        			if(s.contains("http")) {
-        				checkContent+="<a href='"+s+"' target='_new' rel=\"nofollow noopener\" role=\"link\">"+s+"</a>"+" ";
-        			}else {
-        				checkContent+=s+" ";
-        			}
-        		}
-        		
-        		checkContent+="</div>";
-        		upload=checkContent;
-        		
-        	}else {
-        		upload="<div class='bubblecontent'>"+upload+"</div>";
-        	}
-        	dto.setMess_content(upload);
-        }else {
-        	upload="<img src='/messagephoto/"+upload+"'>";
-        	dto.setMess_content(upload);
+        if((ob.getString("type")).equals("follow")) {
+        	FollowalarmDto dto=new FollowalarmDto();
+        	
+        	String receiver_num=ob.getString("receiver_num");
+        	String sender_num=ob.getString("sender_num");
+        	
+        	dto.setReceiver_num(receiver_num);
+        	dto.setSender_num(sender_num);
+        	
+        	String sender_name=uservice.getUserByNum(sender_num).getUser_name();
+    		String sender_photo=uservice.getUserByNum(sender_num).getUser_photo();
+
+    		dto.setSender_name(sender_name);
+    		dto.setSender_photo(sender_photo);
+        	
+        	faservice.insertFollowalarm(dto);
         }
-        dto.setReceiver_num(reciever);
         
-        dto.setMess_group(Integer.parseInt(group));
-		  
-        mservie.insertMessage(dto);
-		 
+        else {
+        	//메시지 구분(보낸사람:내용)
+            String mynum=ob.getString("mynum"); //보낸사람
+            String upload=ob.getString("upload"); //메시지내용
+            String reciever=""+ob.getInt("receiver"); //받는사람num
+            String group=""+ob.getInt("group"); //그룹
+            String type=ob.getString("type"); //그룹
+            
+            //메시지 저장
+            MessageDto dto=new MessageDto();
+    		  
+            String user_num=mynum;
+            dto.setSender_num(user_num);
+            
+            if(type.equals("chat")) {
+            	//사진을 선택 안했다면
+            	if(upload.contains("http")) {
+            		String checkContent="<div class='bubblecontent'>";
+    				
+            		String[] linkArr=upload.split(" ");
+            		for(String s:linkArr) {
+            			if(s.contains("http")) {
+            				checkContent+="<a href='"+s+"' target='_new' rel=\"nofollow noopener\" role=\"link\">"+s+"</a>"+" ";
+            			}else {
+            				checkContent+=s+" ";
+            			}
+            		}
+            		
+            		checkContent+="</div>";
+            		upload=checkContent;
+            		
+            	}else {
+            		upload="<div class='bubblecontent'>"+upload+"</div>";
+            	}
+            	dto.setMess_content(upload);
+            }else {
+            	upload="<img src='/messagephoto/"+upload+"'>";
+            	dto.setMess_content(upload);
+            }
+            dto.setReceiver_num(reciever);
+            
+            dto.setMess_group(Integer.parseInt(group));
+    		  
+            mservie.insertMessage(dto);
+    		
+        }
         
         for(String key : sessionMap.keySet()) {
             WebSocketSession wss = sessionMap.get(key);
@@ -110,5 +135,6 @@ public class SocketHandler extends TextWebSocketHandler{
                 e.printStackTrace();
             }
         }
+        /////
     }
 }
