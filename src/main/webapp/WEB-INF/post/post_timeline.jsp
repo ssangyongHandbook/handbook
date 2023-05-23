@@ -1097,13 +1097,13 @@
                          s+='<span class="top-right">';
                          
                          if (dto.user_num != "${sessionScope.user_num}" && dto.checkfollowing != 1){
-                            s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "'>팔로우</span> ";
-                             s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "' style='display:none;' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "' >팔로우 </span> ";
+                            s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "'></span> ";
+                             s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "' style='display:none;' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "' > </span> ";
                          }
                          
                          if (dto.user_num != "${sessionScope.user_num}" && dto.checkfollowing == 1) {
-                             s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "'>팔로우 </span> ";
-                             s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "' style='display:none;'>팔로우 </span> ";
+                             s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "'> </span> ";
+                             s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "' style='display:none;'> </span> ";
                          }
                          
                          s+='<span class="postmenu dropdown" post_num="'+dto.post_num +'"';
@@ -1233,18 +1233,17 @@
                           s+='<span class="top-right2">';
                           
                           if (dto.user_num != "${sessionScope.user_num}" && dto.checkfollowing != 1) {
-                              s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "'>팔로우</span> ";
-                              s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "' style='display:none;' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "'>팔로우 </span> ";
+                              s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "'></span> ";
+                              s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "' style='display:none;' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "'> </span> ";
                             }
                           
                           if (dto.user_num != "${sessionScope.user_num}" && dto.checkfollowing == 1) {
-                              s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "'from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "'>팔로우 </span> ";
-                              s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "' style='display:none;'>팔로우 </span> ";
+                              s += "<span class='unfollow' id='unfollow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "'from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "'> </span> ";
+                              s += "<span class='follow' id='follow" + dto.post_num + "' followpost_num='follow" + dto.post_num + "' unfollowpost_num='unfollow" + dto.post_num + "' from_user='${sessionScope.user_num}' to_user='" + dto.user_num + "' style='display:none;'> </span> ";
                             }
                           
                           s += "<span class='postmenu dropdown' post_num='" + dto.post_num + "' user_num='${sessionScope.user_num}' dtouser_num='" + dto.user_num + "'>";
 
-                          s += "<i class='fa-solid fa-ellipsis'></i>";
 
                           if (dto.checklogin == 1) {
                             s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20pt; line-height: 1.5em; display: none;'>";
@@ -1268,7 +1267,7 @@
                           if (dto.likecheck == 0) {
                               s += "<span class='bottom-left2 liketoggle' style='cursor:pointer' user_num='${sessionScope.user_num}' likehide1_num='likehide1" + dto.post_num + "' likeshow1_num='likeshow1" + dto.post_num + "' post_num='" + dto.post_num + "'>";
                               s += "<span class='like' id='likehide1" + dto.post_num + "' user_num='${sessionScope.user_num}' likehide1_num='likehide1" + dto.post_num + "' likeshow1_num='likeshow1" + dto.post_num + "' post_num='" + dto.post_num + "'>";
-                              s += "<span style='font-size: 1.2em; top: 3px; color: gray;'><i class='fa-regular fa-thumbs-up'></i></span>";
+                              s += "<span style='font-size: 1.2em; top: 3px; color: gray;'></span>";
 
                               if (dto.like_count == 0) {
                               }
