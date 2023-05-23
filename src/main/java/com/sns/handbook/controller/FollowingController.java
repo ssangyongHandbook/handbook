@@ -70,6 +70,11 @@ public class FollowingController {
 	public void deleteFollowing(String to_user, HttpSession session) {
 		
 		service.deleteFollowing((String)session.getAttribute("user_num"),to_user);
+		
+		int bookMarkCheck=bservice.bookmarkCheck((String)session.getAttribute("user_num"), to_user);
+		
+		if(bookMarkCheck == 1)
+			bservice.deleteBookmark((String)session.getAttribute("user_num"), to_user);
 	}
 	
 	@GetMapping("followlist")

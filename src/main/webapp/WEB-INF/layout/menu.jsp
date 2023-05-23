@@ -70,7 +70,7 @@
         </div>
        
         <div class="menulist">
-            <a href="#" style="text-decoration-line: none;"><i class="fa-solid fa-star" style="color: #ffd43b;"></i><span class="menub">&nbsp;즐겨찾기</span></a>
+            <a href="${root }/post/bookmarktimeline" style="text-decoration-line: none;"><i class="fa-solid fa-star" style="color: #ffd43b;"></i><span class="menub">&nbsp;즐겨찾기</span></a>
         </div>
       	
         <div class="menulist">
