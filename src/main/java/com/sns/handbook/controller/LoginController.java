@@ -48,7 +48,7 @@ public class LoginController {
 	PasswordEncoder passwordEncoder;
 
 	@PostMapping("/login/loginprocess")
-	public String loginproc(@RequestParam String user_id, @RequestParam String user_pass, HttpSession session) throws Exception {
+	public String loginproc(@RequestParam String user_id, @RequestParam String user_pass, HttpSession session, Model model) throws Exception {
 		int idCheck = service.loginIdCheck(user_id);
 
 		if (idCheck == 0) {
@@ -62,11 +62,14 @@ public class LoginController {
 		boolean matches = passwordEncoder.matches(user_pass, user.getUser_pass()); // 유저가 적은 비밀번호와, 저장되어있는 암호화된 비밀번호가 같은지
 
 		//아이디 비번 친 유저가 이메일 인증을 안했을 경우.
-		if(!user.getMail_auth().equals("1")) {
-			return "/login/emailAuthFail";
-		}
+
 
 		if (matches == true) {// 암호화 비번 비교
+			if(!user.getMail_auth().equals("1")) {
+				// 암호화 비번 비교하는 if문 안에 있어야 비번을 막쳤을 때 로그인 실패가 뜬다.
+				model.addAttribute("user_num", user.getUser_num());
+				return "/login/emailAuthFail";
+			}
 			System.out.println("암호화 password login");
 			UserDto dto = service.getUserDtoById(user_id);
 			session.setMaxInactiveInterval(60 * 60 * 8); // 8시간
@@ -98,8 +101,8 @@ public class LoginController {
 
 			return "redirect:../post/timeline"; // 로그인 하면 타임라인으로 넘어감.
 		} else { // 로그인 실패시
-			System.out.println("login failed, 로그인 실패");
-			System.out.println("store password : " + user.getUser_pass() + "\ninput pass : " + user_pass);
+			//System.out.println("login failed, 로그인 실패");
+			//System.out.println("store password : " + user.getUser_pass() + "\ninput pass : " + user_pass);
 			return "/login/passfail";
 		}
 	}

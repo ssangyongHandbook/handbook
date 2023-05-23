@@ -3,7 +3,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
-<>
 <head>
   <meta charset="UTF-8">
   <title>Insert title here</title>
@@ -14,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
 </head>
 <body>
-이메일 인증 완료!
-<button onclick="location.href='/'">로그인하러가기</button>
+<p style="margin-top: 150px;">이메일 인증 완료!</p>
+<button class="btn btn-primary" type="button" onclick="location.href='/'">로그인하러가기</button>
 </body>
 </html>

@@ -29,6 +29,10 @@ public class SignupController {
 	@PostMapping("/signupform/emailcheck")
 	@ResponseBody
 	public int emailCheck(String email) {
+		if(email.equals("")) {
+			return -1;
+		}
+
 		int result = service.loginEmailCheck(email);
 		return result;
 	}
@@ -79,15 +83,19 @@ public class SignupController {
 
 	//이메일 인증 실패했을 때 다시 요청 했을 때(메일 재요청)
 	@GetMapping("/signup/reregisterEmail")
-	public String reregisterEmail(String user_email, String user_num) throws Exception {
-//		System.out.println("Mail Key: " + dto.getMail_key());
-//		System.out.println("User Email: " + dto.getUser_email());
-//		System.out.println("User Number: " + dto.getUser_num());
+	public String reregisterEmail(String user_num) throws Exception {
+		//System.out.println("이메일 발송 버튼 누름");
+		//System.out.println("User Number: " + user_num);
 		UserDto dto = service.getUserByNum(user_num);
 		String mail_key = service.getTempPassword();
 		dto.setMail_key(mail_key);
 
 		service.sendEmailLogic(dto, mail_key);
 		return "redirect:/";
+	}
+
+	@GetMapping("/signup/moveEmailAuthFail")
+	public String moveEmailAuthFail(){
+		return "redirect:/login/emailAuthFail";
 	}
 }
