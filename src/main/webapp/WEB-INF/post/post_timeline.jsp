@@ -110,6 +110,9 @@
 
           var followpost_num = $(this).attr("followpost_num");
           var unfollowpost_num= $(this).attr("unfollowpost_num");
+          
+          console.log("followpost_num: "+followpost_num);
+          console.log("unfollowpost_num: "+unfollowpost_num);
 
           $("#" + followpost_num).toggle();
           $("#" + unfollowpost_num).toggle();
@@ -482,20 +485,7 @@
 	});
 
 
-   
-  
-  
-  
-  
-  
-  
-  
-  
-  
       
-      
-      
-
    window.onscroll = function(e) {
        if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
           
