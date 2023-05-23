@@ -71,6 +71,9 @@
 	margin-right: 15px;
 }
 
+.addbtn{
+	margin-right: 15px;
+}
 .section{
 	display: flex;
 	flex-wrap: wrap;
@@ -82,7 +85,7 @@
 .upunbox{
 	display: inline-flex;
 	align-items: center;
-	width: 250px;
+	width: 270px;
 }
 </style>
 </head>
@@ -120,6 +123,7 @@
 				
 			});
 			
+			
 			window.onscroll = function(e) {
 
 			      if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
@@ -150,7 +154,7 @@
 			    		        		}
 			    		    			s += '<div class="un">';
 			    		    			s += '<div style="display: inline-flex; flex-direction: column; ">';
-			    		    			s += '<span>'+item.user_name+'</span>';
+			    		    			s += '<span style="font-size:13px; font-weight: bold;">'+item.user_name+'</span>';
 			    		    			if(item.tf_count>0){
 			    		    				s += '<span class="tf" style="font-size: 8px;">함께아는친구:'+item.tf_count+'</span>';
 			    		    			}
@@ -158,7 +162,7 @@
 			    		    			s += '</div>';
 			    		    			s+='</div>';
 			    		    			
-			    		    			s += '<div class="btndiv" style="margin: auto 0;">';
+			    		    			s += '<div class="btndiv">';
 			    		    			if(item.to_user != null){
 			    		    				s += '<button type="button" class="btn btn-outline-primary btn-lg addbtn" id="btn'+item.user_num+'" user_num = "'+item.to_user+'">팔로워추가</button>';
 			    		    			}else{
@@ -198,7 +202,7 @@
 		
 			<span style="margin-left: 35px; margin-bottom: 20px; font-size: 20pt; font-weight: bold;">친구</span>
 			
-			<div style="margin-right: 60px; background-color: #F0F2F5; border-radius: 60px; display: inline-flex; align-items: center; padding-left: 2%">
+			<div style="margin-right: 60px; background-color: #F0F2F5; border-radius: 60px; display: inline-flex; padding-left: 2%">
 			
 				<span class="glyphicon glyphicon-search" style="font-size: 16pt;"></span>
 				
@@ -223,7 +227,7 @@
 						</c:if>
 						<div class="un">
 							<div style="display: inline-flex; flex-direction: column; ">
-							<span>${dto.user_name }</span>
+							<span style="font-size:13px; font-weight: bold;">${dto.user_name }</span>
 							<c:if test="${dto.tf_count>0 }">
 								<span class="tf" style="font-size: 8px;">함께아는친구: ${dto.tf_count }</span>
 							</c:if>
