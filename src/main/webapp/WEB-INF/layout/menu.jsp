@@ -17,11 +17,12 @@
 <style type="text/css">
 .menu{
    font-size: 25pt;
+   margin-top: 25px;
 } 
 .menulist{
    font-size: 20pt;
    margin-left: 10px;
-   margin-top:15px;
+   margin-top:10px;
   
 }
 .menub{
@@ -36,7 +37,7 @@
 
 	<div class = "menu">
 
-		<div class ="menuprofile">
+		<div class ="menuprofile" style="margin-top: 10px;">
 		<c:if test="${sessionScope.loginok==null }">
 		<img alt = "" src = "${root }/image/noimg.png" class = "img-circle" style ="border:1px solid black; border: none;">
 		</c:if>
@@ -47,7 +48,7 @@
 		</c:if>
 		</div>
 		
-		<br>
+		
 		
 		
         <div class = "menulist">
@@ -65,7 +66,8 @@
         <div class = "menulist">
             <a href="#" data-toggle="modal" data-target="#contentwrite" style="text-decoration-line: none;"><i class="fa-solid fa-pen-to-square" style="color: black;"></i><span class = "menub">게시글</span></a>
         </div>
-    	
-	</div>
+        
+    </div>
+	
 </body>
 </html>
