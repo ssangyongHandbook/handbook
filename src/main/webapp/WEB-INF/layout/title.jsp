@@ -210,6 +210,7 @@
 <script type="text/javascript">
 	$(function() {
 		$(".msgalarmshow").hide();
+		$(".allalarmshow").hide();
 		
 		wsOpen(); //웹소켓 열기
 		
@@ -223,6 +224,13 @@
 		
 		$(".ttimsg").click(function(){
 			$(".msgalarmshow").toggle();
+			$(".allalarmshow").hide();
+			$(".allmenu").hide();
+		})
+		
+		$(".ttialarm").click(function(){
+			$(".allalarmshow").toggle();
+			$(".msgalarmshow").hide();
 			$(".allmenu").hide();
 		})
 		
@@ -247,6 +255,7 @@
 	
 	function getMsgAlarm(){
 		var totalCount=0;
+		var alarmCount=0;
 		
 		$.ajax({
 			type:"get",
@@ -254,6 +263,9 @@
 			url:"../messagealarmget",
 			success:function(res){
 				totalCount=res.totalCount;
+				alarmCount=res.alarmCount;
+				
+				console.log(alarmCount);
 				
 				if(totalCount>0){
 					//알람이 있으면
@@ -282,6 +294,58 @@
 					})
 					
 					$(".msgalarmlist").html(msgalist);
+				}
+				
+				if(alarmCount>0){
+					//알람이 있으면
+					$(".allalarmcircle").css("visibility","visible");
+					
+					var alarmlist="";
+					
+					//메시지 알림 목록
+					$.each(res.alarmList,function(i,ele){
+						//댓글 알림일 경우
+						if(ele.type=="post"){
+							alarmlist+='<div class="allalarmone" group='+ele.postal_num+'>';
+							alarmlist+='<div class="allalarmphoto">';
+							if(ele.sender_photo==null){
+								alarmlist+='<img alt="" src="/image/noimg.png">';
+							}else{
+								alarmlist+='<img alt="" src="/photo/'+ele.sender_photo+'">';
+							}
+							alarmlist+='</div>';
+							alarmlist+='<div class="allalarmdetail">';
+							alarmlist+='<span class="allalarmname">'+ele.sender_name+'</span>';
+							alarmlist+='<div class="allalarmcontent">';
+							alarmlist+='<span class="allalarmrwrite">'+ele.comment_content+'</span>';
+							alarmlist+='<span class="allalarmtime">'+ele.comment_writeday+'</span>';
+							alarmlist+='</div>';
+							alarmlist+='</div>';
+							alarmlist+='</div>';	
+						}
+						
+						//팔로우 알림일 경우
+						else if(ele.type="follow"){
+							alarmlist+='<div class="allalarmone" group='+ele.fing_num+'>';
+							alarmlist+='<div class="allalarmphoto">';
+							if(ele.sender_photo==null){
+								alarmlist+='<img alt="" src="/image/noimg.png">';
+							}else{
+								alarmlist+='<img alt="" src="/photo/'+ele.sender_photo+'">';
+							}
+							alarmlist+='</div>';
+							alarmlist+='<div class="allalarmdetail">';
+							alarmlist+='<span class="allalarmname">'+ele.sender_name+'</span>';
+							alarmlist+='<div class="allalarmcontent">';
+							alarmlist+='<span class="allalarmrwrite">회원님을 팔로우했습니다.</span>';
+							alarmlist+='<span class="allalarmtime">'+ele.alarmtime+'</span>';
+							alarmlist+='</div>';
+							alarmlist+='</div>';
+							alarmlist+='</div>';	
+						}
+					})
+					
+					$(".allalarmlist").html(alarmlist);
 				}
 			}
 		})
@@ -344,7 +408,7 @@
 		<div class="msgalarmcircle"></div>
 		<!-- 메시지 알림 개수 표시 끝 -->
 		
-		<div class="titlecircle tti"><a href="#"><span style="font-size: 15pt; color: black;"><i class="fa-solid fa-bell"></i></span></a></div>
+		<div class="titlecircle tti ttialarm"><a href="#"><span style="font-size: 15pt; color: black;"><i class="fa-solid fa-bell"></i></span></a></div>
 		
 		<c:if test="${sessionScope.user_photo=='no' }">
 		<div class="tti ttiuphoto"><a href="/user/mypage?user_num=${sessionScope.user_num }"><img src="../image/noimg.png" alt=""></a></div>
@@ -381,11 +445,22 @@
 	</div> 
 </div>
 
+<div class = "stitle">
+ 	<div class = "titlemenu allalarmshow" style = "height:300px; width: 300px; border-radius: 10px;"> 
+            <div class="allalarmheader">
+            	<span>모두 읽기</span>
+            </div>
+            <div class = "allalarmlist">
+            </div>
+	</div> 
+</div>
+
 <script type="text/javascript">
    $(".allmenu").hide();
    $(".titlemenubar").click(function(){
       $(".allmenu").toggle();
       $(".msgalarmshow").hide();
+      $(".allalarmshow").hide();
    });
    
    
