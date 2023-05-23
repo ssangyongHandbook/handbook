@@ -56,7 +56,7 @@
                     <div class="form-floating">
                         <input type="password" class="form-control" id="user_pass" name="user_pass"
                                placeholder="비밀번호 입력" required pattern=".{6,20}" title="6자리 이상 20자리 이하로 작성하세요."
-                               onchange="check_pw()">
+                               onchange="check_pw()"><br>
                         <input type="password" class="form-control" id="user_pass_r" name="user_pass_r"
                                placeholder="비밀번호 다시 입력" required onchange="check_pw()">
                         <span id="check"></span>
@@ -90,7 +90,7 @@
                         <div class="row">
                             <div class="col-md-9" style="padding-right: 5px;">
                                 <input id="member_post" style=" background-color: white;" class="form-control"
-                                       type="text" placeholder="우편번호" readonly>
+                                       type="text" placeholder="우편번호" readonly required>
                             </div>
 
                             <div class="col-md-3">
@@ -101,14 +101,14 @@
                         </div>
                         <br>
                         <input id="member_addr" name="addr1" class="form-control" type="text" placeholder="주소" readonly
-                               style="background-color: white;" required="required"><br>
-                        <input type="text" name="addr2" class="form-control" placeholder="상세주소">
+                               style="background-color: white;" required><br>
+                        <input type="text" name="addr2" class="form-control" placeholder="상세주소" required>
                     </div>
                     <br>
 
                     <div class="form-floating">
                         <p>생일</p>
-                        <input type="date" class="form-control" name="user_birth" value="1990-01-01">
+                        <input type="date" class="form-control" name="user_birth" value="1990-01-01" required>
                     </div>
                     <br>
 
@@ -220,9 +220,12 @@
             success: function (data) {
                 if (data == 1) {
                     alert("중복된 이메일입니다.");
+                    $("#user_email").val("");
                 } else if (data == 0) {
                     $("#emailCheck").attr("value", "Y");
                     alert("사용 가능한 이메일입니다.")
+                } else if (data == -1) {
+                    alert("공백입니다.");
                 }
             }
         })

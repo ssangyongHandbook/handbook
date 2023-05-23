@@ -16,5 +16,4 @@
 <p style="margin-top: 150px;">이메일 인증 후 다시 시도해주세요! 메일함에 있습니다!</p>
 <button class="btn btn-primary" type="button" onclick="location.href='/signup/reregisterEmail?user_num=${user_num}'">다시 인증하기</button>
 </body>
-
 </html>
