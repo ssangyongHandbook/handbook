@@ -163,7 +163,7 @@
 			    		    			s += '</div>';
 			    		    			s+='</div>';
 			    		    			
-			    		    			s += '<div class="btndiv" style="margin: auto 0;">';
+			    		    			s += '<div class="btndiv">';
 			    		    			if(item.to_user != null){
 			    		    				s += '<button type="button" class="btn btn-outline-primary btn-lg addbtn" id="btn'+item.user_num+'" user_num = "'+item.to_user+'">팔로워추가</button>';
 			    		    			}else{
