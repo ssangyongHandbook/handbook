@@ -1435,12 +1435,12 @@
                   s += "</div>";
                }
                
-               if(item.post_user_num ==${sessionScope.user_num} || item.user_num == ${sessionScope.user_num}){
+               if(item.post_user_num =="${sessionScope.user_num}" || item.user_num == "${sessionScope.user_num}"){
                   
                   s += '<div style="height: 0; width: 450px; position: relative; left: -30px; top: 30px;">';
                    s += '<img src="../image/add.png" class="ulimg" style="width: 20px; float: right;" comment_num="'+item.comment_num+'">';
                    s += '<ul class="list-group commentul" style="height:0;" id="ul'+item.comment_num+'">';
-                   if(item.user_num == ${sessionScope.user_num})
+                   if(item.user_num == "${sessionScope.user_num}")
                       s += '<li class="list-group-item commentmod" comment_num="'+item.comment_num+'">수정</li>';
                    s += '<li class="list-group-item commentdel" comment_num="'+item.comment_num+'">삭제</li>';
                    s += '</ul>';
@@ -1818,9 +1818,9 @@ body {
 }
 
 .fileimg img {
-   width: 100%;
+   width: 60%;
    height: 100%;
-   obejct-fit: cover;
+   margin: 0 auto;
 }
 
 .fileimg video {
