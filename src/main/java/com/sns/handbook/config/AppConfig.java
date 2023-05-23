@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.sns.handbook.encryption.HandbookPasswordEncoder;
 
 import java.util.Properties;
-
+// @Value는 application.yml 설정을 가져옴
 @Configuration
 public class AppConfig {
 	@Value("${spring.mail.host}")
