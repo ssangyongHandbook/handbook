@@ -55,7 +55,7 @@
 	display: inline-block; */
 	display: flex;
 	flex-direction: column;
-	font-size:24px;
+	font-size:13px;
 	font-weight:bold;
 	padding-left: 15px;
 	justify-content: center;
@@ -127,6 +127,15 @@
 
 </style>
 </head>
+<script type="text/javascript">
+$(document).on("click", ".addbtn", function() {
+	  var $parentBox = $(this).closest(".userbox");
+	  var $friendMenus = $(".friendmenu");
+
+	  // 클릭한 부모 상자 안의 friendmenu를 제외한 모든 friendmenu를 숨깁니다.
+	  $friendMenus.not($parentBox.find(".friendmenu")).hide();
+	});
+</script>
 <body>
 
 	<div class = "followlist">
@@ -258,6 +267,19 @@
 				}
 			});
 		});
+		
+		/* $(".addbtn").each(function(i,ele){
+			$(".addbtn").eq(i).click(function(){
+				$.each($(".friendmenu"),function(k,elt){
+					if(i==k){
+						$(elt).toggle();
+					}else{
+						$(elt).hide();
+					}
+				})
+			})
+		}) */
+		
 		
 		window.onscroll = function(e) {
 
