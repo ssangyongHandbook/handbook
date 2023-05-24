@@ -70,7 +70,8 @@
       $(document).on("click", ".postmenu", function() {
          var user_num = $(this).attr("user_num");
          var post_num = $(this).attr("post_num");
-
+		
+         $(".postsubmenu").hide();
          $("#" + post_num).toggle();
 
       });
@@ -312,43 +313,13 @@
       })
 
       //사진 넘기면서 보기
-      $(document).ready(
-
-            function() {
-               $(".sliders").each(function(){
-                  var itemId=this.id;
-                  var slider_num= itemId.split("-")[1];
-               $("#"+itemId).slick({
-
-                  prevArrow : '<img id="prev-'+itemId+'" src="../image/left.png" class="prev" >',
-                  nextArrow : '<img id="next-'+itemId+'" src="../image/right.png" class="next">',
-                  autoplay : false, // 자동 재생 여부
-                  autoplaySpeed : 0, // 자동 재생 속도 (단위: ms)
-                  dots : false, // 점 네비게이션 표시 여부
-                  arrows : true, // 화살표 네비게이션 표시 여부
-                  infinite : false, // 무한 슬라이드 여부
-                  slidesToShow : 1, // 한 화면에 보여줄 슬라이드 수
-                  slidesToScroll : 1
-               // 한 번에 스크롤할 슬라이드 수
-
-               });
-
-               //마지막,처음 화살표 삭제
-               $("#" + itemId).on('afterChange', function(event, slick, currentSlide) {
-      if (currentSlide == 0) {
-        $('#prev-' + itemId).css("visibility", "hidden");
-      } else {
-        $('#prev-' + itemId).css("visibility", "visible");
-      }
-      if (currentSlide == slick.slideCount - 1) {
-        $('#next-' + itemId).css("visibility", "hidden");
-      } else {
-        $('#next-' + itemId).css("visibility", "visible");
-                        }
-                     });
-               })
-            });
-      
+   $(document).ready(function() {
+      $(".sliders").each(function() {
+         var itemId = this.id;
+         var slider_num = itemId.split("-")[1];
+         initializeSlider(itemId);
+      });
+   });
       
       $("#btncontentphoto").click(function(){
     	  $("#post_file").trigger("click");
@@ -397,6 +368,8 @@
   $("#btncontentphoto").click(function(){
          //$("#showimg").show();
       });
+  
+  
 
       
   
@@ -553,7 +526,7 @@
                         }
                         
                         if (dto.checklogin != 1) {
-                            s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 25px; line-height:1.5em;display:none;'>";
+                            s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20px; line-height:1.5em;display:none;'>";
                             s += "<li class='postdetail posthide' divpost_num='div" + dto.post_num + "' divspost_num='divs" + dto.post_num + "'>게시물 숨김</li></ul>";
                         
                         }
@@ -705,7 +678,7 @@
                            s += "<li id='postdelete' class='postdetail' user_num='" + dto.user_num + "' post_num='" + dto.post_num + "'>게시물 삭제</li></ul>";
                          }
                          if (dto.checklogin != 1) {
-                           s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 25px; line-height:1.5em;display:none;'>";
+                           s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20px; line-height:1.5em;display:none;'>";
                            s += "<li class='postdetail posthide' divpost_num='div" + dto.post_num + "' divspost_num='divs" + dto.post_num + "'>게시물 숨김</li></ul>";
 
                          }
@@ -798,6 +771,7 @@
                       addTimeline.innerHTML =s;
 
                       document.querySelector('section').appendChild(addTimeline);
+                      initializeSlider("dto-"+dto.post_num);
                   }, 1000) 
                })
             }
@@ -1116,7 +1090,7 @@
                          }
                          
                          if (dto.checklogin != 1) {
-                             s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 25px; line-height:1.5em;display:none;'>";
+                             s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20px; line-height:1.5em;display:none;'>";
                              s += "<li class='postdetail posthide' divpost_num='div" + dto.post_num + "' divspost_num='divs" + dto.post_num + "'>게시물 숨김</li></ul>";
                          
                          }
@@ -1251,7 +1225,7 @@
                             s += "<li id='postdelete' class='postdetail' user_num='" + dto.user_num + "' post_num='" + dto.post_num + "'>게시물 삭제</li></ul>";
                           }
                           if (dto.checklogin != 1) {
-                            s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 25px; line-height:1.5em;display:none;'>";
+                            s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20px; line-height:1.5em;display:none;'>";
                             s += "<li class='postdetail posthide' divpost_num='div" + dto.post_num + "' divspost_num='divs" + dto.post_num + "'>게시물 숨김</li></ul>";
 
                           }
@@ -1378,6 +1352,34 @@
       });
    }
    
+   
+   
+   function initializeSlider(elementId) {
+	      $("#" + elementId).slick({
+	         prevArrow: '<img id="prev-' + elementId + '" src="../image/left.png" class="prev">',
+	         nextArrow: '<img id="next-' + elementId + '" src="../image/right.png" class="next">',
+	         autoplay: false,
+	         autoplaySpeed: 0,
+	         dots: false,
+	         arrows: true,
+	         infinite: false,
+	         slidesToShow: 1,
+	         slidesToScroll: 1
+	      });
+
+	      $("#" + elementId).on('afterChange', function(event, slick, currentSlide) {
+	         if (currentSlide == 0) {
+	            $('#prev-' + elementId).css("visibility", "hidden");
+	         } else {
+	            $('#prev-' + elementId).css("visibility", "visible");
+	         }
+	         if (currentSlide == slick.slideCount - 1) {
+	            $('#next-' + elementId).css("visibility", "hidden");
+	         } else {
+	            $('#next-' + elementId).css("visibility", "visible");
+	         }
+	      });
+	   }
    
    /* 예지: 영상 화면에 보일 시 자동재생 */
    function videoStatus(video){
@@ -1533,17 +1535,22 @@ body {
    float: right;
    width: 50%;
    height: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .center {
    width: 100%;
    height: 70%;
+   
 }
 
 .center-up {
    width: 100%;
-   margin: 15px;
    font-size: 12pt;
+    padding-left:2%;
+   padding-right:2%;
 }
 
 .center-down {
@@ -1612,6 +1619,9 @@ body {
    float: right;
    width: 50%;
    height: 100%;
+       display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .center2 {
@@ -1621,7 +1631,8 @@ body {
 
 .center-up2 {
    width: 100%;
-   margin: 15px;
+   padding-left:2%;
+   padding-right:2%;
    font-size: 12pt;
 }
 
@@ -1665,16 +1676,22 @@ body {
 
 .postsubmenu {
    font-size: 1.5em;
+   text-align: center;
+   border-radius: 15px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    line-height: 1.5em;
 }
 
 .postdetail:hover {
-   text-decoration: underline;
+   background-color:#F0F2F5;
+   border-radius: 15px;
 }
 
 .postdetail {
    font-size: 0.8em;
    color: black;
 }
+
 
 
 .userimgdiv {
@@ -1818,7 +1835,7 @@ body {
 }
 
 .fileimg img {
-   width: 60%;
+	width:60%;
    height: 100%;
    margin: 0 auto;
 }
@@ -2009,17 +2026,20 @@ span.content {
    color: blue;
       cursor: pointer;
    font-size: 1.2em;
+     margin-right: 10px;
 }
 
 .follow {
    color: gray;
       cursor: pointer;
       font-size: 1.2em;
-   	
+      margin-right: 10px;
 }
 .follow:hover{
    color: blue;
    font-size: 1.2em;
+     border : none;
+  /*  box-shadow: rgba(0, 0, 0, 0.30) 0px 1px 10px; */
 }
 
 li {
@@ -2283,7 +2303,7 @@ li {
                            </c:if>
                            <c:if test="${dto.checklogin !=1 }">
                               <ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu"
-                                 style="font-size: 25pt; line-height: 1.5em; display: none;">
+                                 style="font-size: 20pt; line-height: 1.5em; display: none;">
                                  <li class="postdetail posthide" divpost_num="div${dto.post_num }"
                                     divspost_num="divs${dto.post_num }">게시물 숨김</li>
                               </ul>
@@ -2297,6 +2317,8 @@ li {
 
 
                   <div class="center">
+                  
+                  
                      <div class="center-up">${dto.post_content }</div>
 
                      <div class="center-down sliders" id="dto-${dto.post_num}">
@@ -2487,7 +2509,7 @@ li {
                            </c:if>
                            <c:if test="${dto.checklogin !=1 }">
                               <ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu"
-                                 style="font-size: 25pt; line-height: 1.5em; display: none;">
+                                 style="font-size: 20pt; line-height: 1.5em; display: none;">
                                  <li class="postdetail posthide" divpost_num="div${dto.post_num }"
                                     divspost_num="divs${dto.post_num }">게시물 숨김</li>
                               </ul>
@@ -2632,7 +2654,7 @@ li {
                      <div id="commentaddform">
                         <img src="/photo/${sessionScope.user_photo }" id="commentprofile">
                         <input hidden="hidden" /> <input type="text" class="mominput" name="comment_content"
-                           placeholder="댓글을 입력하세요" id="commentinput">
+                           placeholder="&nbsp;&nbsp;&nbsp;&nbsp;댓글을 입력하세요" id="commentinput">
                         <button type="button" id="insertcommentbtn" class="btn btn-info" style="margin-right: 20px;">입력</button>
                      </div>
                   </form>

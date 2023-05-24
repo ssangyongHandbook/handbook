@@ -162,6 +162,9 @@ public class PostController {
 	    
 	    int idx = 1;
 	    String uploadName = "";
+	    String postContent = dto.getPost_content();     
+        postContent = postContent.replaceAll(" ", "&nbsp;").replaceAll("\n", "<br>");
+        dto.setPost_content(postContent);
 	    
 	    if (photo == null) {
 	        dto.setPost_file("no");
@@ -237,7 +240,13 @@ public class PostController {
 	@ResponseBody
 	public PostDto getData(String post_num) {
 		
-		return pservice.getDataByNum(post_num);
+		PostDto dto=pservice.getDataByNum(post_num);
+		
+		String postContent = dto.getPost_content();     
+        postContent = postContent.replaceAll("&nbsp;"," ").replaceAll("<br>", "\n");
+        dto.setPost_content(postContent);
+		
+		return dto;	
 	}
 
 	// 수정
@@ -252,7 +261,9 @@ public class PostController {
 	    
 	    int idx = 1;
 	    String uploadName = "";
-	    
+	    String postContent = dto.getPost_content();     
+        postContent = postContent.replaceAll(" ", "&nbsp;").replaceAll("\n", "<br>");
+        dto.setPost_content(postContent);	    
 	    
 	    if (photo != null) {
 	      
