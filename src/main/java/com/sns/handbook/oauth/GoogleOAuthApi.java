@@ -1,31 +1,30 @@
 package com.sns.handbook.oauth;
 
-import org.springframework.stereotype.Component;
-
 import com.github.scribejava.core.builder.api.DefaultApi20;
+import org.springframework.stereotype.Component;
 
 
 @Component
-public class GoogleOAuthApi extends DefaultApi20{
-	
-	protected GoogleOAuthApi() {
-	}
+public class GoogleOAuthApi extends DefaultApi20 {
 
-	private static class InstanceHolder {
-		private static final GoogleOAuthApi INSTANCE = new GoogleOAuthApi();
-	}
+    protected GoogleOAuthApi() {
+    }
 
-	public static GoogleOAuthApi instance() {
-		return InstanceHolder.INSTANCE;
-	}
+    private static class InstanceHolder {
+        private static final GoogleOAuthApi INSTANCE = new GoogleOAuthApi();
+    }
 
-	@Override
-	public String getAccessTokenEndpoint() {
-		return "https://oauth2.googleapis.com/token";
-	}
+    public static GoogleOAuthApi instance() {
+        return InstanceHolder.INSTANCE;
+    }
 
-	@Override
-	protected String getAuthorizationBaseUrl() {
-		return "https://accounts.google.com/o/oauth2/auth";
-	}
+    @Override
+    public String getAccessTokenEndpoint() {
+        return "https://oauth2.googleapis.com/token";
+    }
+
+    @Override
+    protected String getAuthorizationBaseUrl() {
+        return "https://accounts.google.com/o/oauth2/auth";
+    }
 }

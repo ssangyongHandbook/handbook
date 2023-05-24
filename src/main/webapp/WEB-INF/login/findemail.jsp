@@ -99,8 +99,15 @@
     var windowHeight = window.innerHeight;
     $(".wrapper").css('height', windowHeight - 80);
 
+    // window.onresize = function (event) {
+    //     location.reload();
+    // }
+
+
+    // 브라우저 화면크기 바뀔 때마다 리로드하지 않고, 중앙에 배치.
     window.onresize = function (event) {
-        location.reload();
+        var windowHeight = window.innerHeight;
+        $(".wrapper").css('height', windowHeight - 80);
     }
 </script>
 </body>

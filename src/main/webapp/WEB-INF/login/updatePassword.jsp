@@ -6,25 +6,41 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Insert title here</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
+    <style>
+        body {
+            overflow: hidden;
+        }
+        .pmain {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 150px;
+        }
+
+        #user_pass, #user_pass_r {
+            width: 500px;
+        }
+    </style>
 </head>
 <body>
-<div>
-    <p style="margin-top:150px; font-size: 3em;"><b>비밀번호 수정</b></p><br>
+<div class="text-center pmain">
+    <p style=" font-size: 2em;"><b>비밀번호 수정</b></p><br>
     <form action="/user/updatePassword" method="post">
         <input type="hidden" id="user_num" name="user_num" value="${sessionScope.user_num}">
         <input type="password" class="form-control" id="user_pass" name="user_pass"
                placeholder="비밀번호 입력" required pattern=".{6,20}" title="6자리 이상 20자리 이하로 작성하세요."
                onchange="check_pw()"><br>
         <input type="password" class="form-control" id="user_pass_r" name="user_pass_r"
-               placeholder="비밀번호 다시 입력" required onchange="check_pw()">
-        <span id="check"></span>
-        <button type="submit" class="btn btn-primary" style="text-align: center;">비밀번호 수정</button>
+               placeholder="비밀번호 다시 입력" required onkeyup="check_pw()"><br>
+        <span id="check"></span><br>
+        <button type="submit" class="btn btn-primary text-center">비밀번호 수정</button>
     </form>
 </div>
 </body>
@@ -65,5 +81,6 @@
         }
         return true;
     }
+
 </script>
 </html>

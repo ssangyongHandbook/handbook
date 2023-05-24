@@ -1,8 +1,12 @@
 package com.sns.handbook.controller;
 
-import javax.servlet.http.HttpSession;
-
+import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.sns.handbook.dto.MailDto;
+import com.sns.handbook.dto.UserDto;
+import com.sns.handbook.oauth.GoogleLoginBO;
+import com.sns.handbook.oauth.KakaoLoginBO;
+import com.sns.handbook.oauth.NaverLoginBO;
+import com.sns.handbook.serivce.UserService;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.github.scribejava.core.model.OAuth2AccessToken;
-import com.sns.handbook.dto.UserDto;
-import com.sns.handbook.oauth.GoogleLoginBO;
-import com.sns.handbook.oauth.KakaoLoginBO;
-import com.sns.handbook.oauth.NaverLoginBO;
-import com.sns.handbook.serivce.UserService;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class LoginController {
