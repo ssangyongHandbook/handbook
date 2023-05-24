@@ -5,6 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Insert title here</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
@@ -39,33 +40,51 @@
             width: 40px;
         }
 
-        .oauth_box_2 {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
         .footer {
             position: fixed; /* 이 부분을 고정 */
             bottom: 0; /* 하단에 여백 없이 */
             width: 100%; /* 가로 사이즈를 브라우저에 가득 채움 */
+            display: flex;
+            justify-content: center; /* 내용을 수평으로 가운데 정렬 */
+            align-items: center; /*새로중앙*/
         }
 
-        li {
-            float:left;
+        .footer ul.nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
         }
+
+        .footer ul.nav-links li {
+            margin: 0 10px;
+        }
+
+        @media screen and (max-width: 768px) {
+            /* 화면 너비가 768px 이하일 때 적용되는 스타일 */
+            .wrapper {
+                flex-direction: column;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            /* 화면 너비가 480px 이하일 때 적용되는 스타일 */
+            .wrapper {
+                font-size: 14px;
+            }
+        }
+
     </style>
 </head>
 <body>
 <div class="main" style="height: 100vh; overflow-y: auto;">
     <div>
-
         <div class="wrapper">
             <div style="width: 30%;">
                 <div style="margin: 0 auto; width: 90%;">
-                    <p style="font-size: 50px; font-weight: bold;">HANDBOOK</p>
-                    <p style="font-size: 20px;">
-                        Handbook에서 전세계에 있는 친구, 가족 <br>지인들과 함께 이야기를 나눠 보세요.​
+                    <p style="font-size: 3em; font-weight: bold;">HANDBOOK</p>
+                    <p style="font-size: 1.5em;">
+                        Handbook에서 전세계에 있는 친구, 가족 지인들과 함께 이야기를 나눠 보세요.
                     </p>
                 </div>
             </div>
@@ -106,12 +125,9 @@
             </div>
         </div>
 
-        <div class="footer" style="margin: 0 auto;">
-            <div class="row justify-content-center">
+        <div class="footer" style="background-color: #F0F2F5; height: 25%;">
+            <div class="justify-content-center">
                 <div class="col-md text-center">
-                    <div class="footer-site-logo mb-4">
-                        <a href="index.jsp">handbook</a>
-                    </div>
                     <ul class="list-unstyled nav-links mb-5" style="font-size: 13px;">
                         <li><a href="#">About</a></li>
                         <li><a href="#">Contact</a></li>
@@ -119,17 +135,18 @@
                         <li><a href="#">Careers</a></li>
                         <li><a href="#">FAQ</a></li>
                         <li><a href="#">Legal</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
+                        <li><a href="#">Info</a></li>
+                    </ul><br>
 
                     <div class="social mb-4">
-                        <h3>Stay in touch</h3>
-                        <ul class="list-unstyled">
-                            <li class="in"><a href="https://github.com/SIST1/TodayWithMyDoggy"><span class="icon-github"></span></a></li>
-                            <li class="tw"><a href="https://github.com/lambdaramge"><span class="icon-github"></span></a></li>
-                            <li class="fb"><a href="https://github.com/tenta3802"><span class="icon-github"></span></a></li>
-                            <li class="dr"><a href="https://github.com/hesoo98"><span class="icon-github"></span></a></li>
-                            <li class="pin"><a href="https://github.com/028902"><span class="icon-github"></span></a></li>
+                        <h4>Social account</h4><br>
+                        <ul class="nav-links mb-5 list-unstyled">
+                            <li><a href="https://github.com/hesoo98"><i class="fa-brands fa-github fa-2xl" style="color: #005eff;"></i></a></li>
+                            <li><a href="https://github.com/JiSungUng"><i class="fa-brands fa-github fa-2xl" style="color: #e46767;"></i></a></li>
+                            <li><a href="https://github.com/woohyung0511"><i class="fa-brands fa-github fa-2xl" style="color: #6958bb;"></i></a></li>
+                            <li><a href="https://github.com/GUWONYezi"><i class="fa-brands fa-github fa-2xl" style="color: #df45cc;"></i></a></li>
+                            <li><a href="https://github.com/experthun"><i class="fa-brands fa-github fa-2xl" style="color: #41be50;"></i></a></li>
+                            <li><a href="https://github.com/seyeonpark12"><i class="fa-brands fa-github fa-2xl" style="color: #989f3c;"></i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -139,12 +156,12 @@
 </div>
 
 <script>
-    //브라우저 화면크기 바뀔 때마다 리로드하면서 중앙에 배치.
-    var windowHeight = window.innerHeight;
-    $(".main").css('height', windowHeight - 80);
 
+
+    // 브라우저 화면크기 바뀔 때마다 리로드하지 않고, 중앙에 배치.
     window.onresize = function (event) {
-        location.reload();
+        var windowHeight = window.innerHeight;
+        $(".main").css('height', windowHeight - 80);
     }
 </script>
 </body>
