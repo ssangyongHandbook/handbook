@@ -1507,7 +1507,11 @@
                     s += '</ul>';
                     s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display:flex; flex-wrap:wrap; visibility: hidden; position:relative; left: 30px; bottom: 30px;">';
                     s += '<span class="glyphicon glyphicon-remove modclose" comment_num="'+item.comment_num+'" style="position: relative; left:350px;"></span>';
-                    s += '<div><img src="/photo/'+item.user_photo+'" class="modprofile"></div>';
+                    if(item.user_photo != null)
+                    	s += '<div><img src="/photo/'+item.user_photo+'" class="modprofile"></div>';
+                    else
+                    	s += '<div><img src="/image/noimg.png" class="modprofile"></div>';
+                    	
                     s += '<div><b class="user_name" style="margin-left:-14px;">'+item.user_name+'</b>';
                     s += '<br>';
                    s += '<input type="text" class="inputmod form-control" id="cmmodinput'+item.comment_num+'" style="width: 200px; height:60%; padding:0; margin-left:-14px;" comment_num="'+item.comment_num+'" value="'+item.comment_content+'">';
@@ -1516,7 +1520,12 @@
                 }
                 
                 s += "<div class='comment' style='display:flex; flex-wrap:wrap;' visibility: visible; id='div"+item.comment_num+"'>";
-                s += '<div><a href="${root}/user/mypage?user_num='+item.user_num+'"><img src="/photo/'+item.user_photo+'" class="profile"></a></div>';
+                s += '<div><a href="${root}/user/mypage?user_num='+item.user_num+'">';
+                if(item.user_photo != null)
+                	s += '<img src="/photo/'+item.user_photo+'" class="profile">';
+                else
+                	s += '<img src="/image/noimg.png" class="profile">';
+                s += '</a></div>';
                 s += "<div><b class='user_name'>" + item.user_name + "</b><br>";
                 s += "<span class='spancontent'>" + item.comment_content + "</span></div></div>";
                 s += "<div class='cmlike'>";
@@ -1532,7 +1541,10 @@
                 s += '<form method="post" class="form-inline" id="comment'+item.comment_num+'" style="display: none;">';
                 s += '<div class="recommentaddform">';
                 s += "<div style='width: 50px; height: 50px;'></div>"; 
-                s += '<img src="/photo/${sessionScope.user_photo }" class="recommentprofile">';
+                if(${sessionScope.user_photo != null})
+               		s += '<img src="/photo/${sessionScope.user_photo }" class="recommentprofile">';
+               	else	
+               		s += '<img src="/image/noimg.png" class="recommentprofile">';
                 s += '<input hidden="hidden" /> ';
                 s += '<input type="text" class="input" name="comment_content" placeholder="댓글을 입력하세요" id="input'+item.comment_num+'">';
                 s += '<button type="button" class="cminsert" comment_num="'+item.comment_num+'" post_num="'+item.post_num+'" style="margin-left: -40px;"></button>';
@@ -2011,6 +2023,8 @@ span.content {
    width: 45px;
    height: 45px;
    border-radius: 50%;
+   margin-left: 20px;
+   margin-top: 7px;
 
 }
 
@@ -2755,7 +2769,12 @@ li {
                      <input type="hidden" name="comment_num" value="0"> <input type="hidden"
                         name="post_num" id="inputhidden-post_num">
                      <div id="commentaddform">
+                     	<c:if test="${sessionScope.user_photo != null }">
                         <img src="/photo/${sessionScope.user_photo }" id="commentprofile">
+                     	</c:if>
+                     	<c:if test="${sessionScope.user_photo == null }">
+                        <img src="/image/noimg.png" id="commentprofile">
+                     	</c:if>
                         <input hidden="hidden" /> <input type="text" class="mominput" name="comment_content"
                            placeholder="댓글을 입력하세요" id="commentinput">
                         <button type="button" id="insertcommentbtn" class="insertcommentimg" style="margin-right: 20px;"></button>
