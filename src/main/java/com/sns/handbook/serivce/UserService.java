@@ -137,7 +137,30 @@ public class UserService implements UserServiceInter {
 		// TODO Auto-generated method stub
 		return mapperInter.getDataByGuestNum(guest_num);
 	}
+
+	@Override
+	public List<PostDto> selectPostsByAccess(String user_num, String from_user) {
+		// TODO Auto-generated method stub
+		Map<String, String> map = new HashMap<>();
+
+		map.put("user_num", user_num);
+		map.put("from_user", from_user);
+
+		return mapperInter.selectPostsByAccess(map);
+	}
 	
+
+	@Override
+	public List<GuestbookDto> selectGuestbookByAccess(String user_num, String owner_num) {
+		// TODO Auto-generated method stub
+		Map<String, String> map = new HashMap<>();
+
+		map.put("user_num", user_num);
+		map.put("owner_num", owner_num);
+
+		return mapperInter.selectGuestbookByAccess(map);
+	}
+
 	//우형 끝	
 
 	//희수 시작
@@ -275,6 +298,16 @@ public class UserService implements UserServiceInter {
 	public int emailAuthFail(String user_num) throws Exception {
 		return mapperInter.emailAuthFail(user_num);
 	}
+
+	@Override
+	public void updateUserPass(UserDto dto) {
+		mapperInter.updateUserPass(dto);
+	}
+
+	@Override
+	public void updateMailAuthByOauthLogin(String user_num) {
+		mapperInter.updateMailAuthByOauthLogin(user_num);
+	}
 	// 희수 끝
 
 	//예지
@@ -283,4 +316,7 @@ public class UserService implements UserServiceInter {
 		// TODO Auto-generated method stub
 		return mapperInter.getUserByName(user_name);
 	}
+
+
+
 }

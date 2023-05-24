@@ -32,6 +32,8 @@ public interface UserMapperInter {
 	public void deleteGuestBook(String guest_num);
 	public void updateGuestBook(GuestbookDto dto);
 	public GuestbookDto getDataByGuestNum(String guest_num);
+	public List<PostDto> selectPostsByAccess(Map<String, String> map);
+	public List<GuestbookDto> selectGuestbookByAccess(Map<String, String> map);
 	//우형 끝
 	
 	//희수 시작
@@ -47,6 +49,8 @@ public interface UserMapperInter {
 	public int updateMailKey(UserDto dto) throws Exception;
 	public int updateMailAuth(UserDto dto) throws Exception;
 	public int emailAuthFail(String user_num) throws Exception;
+	public void updateUserPass(UserDto dto);
+	public void updateMailAuthByOauthLogin(String user_num);
 	//희수 끝
 
 	//예지

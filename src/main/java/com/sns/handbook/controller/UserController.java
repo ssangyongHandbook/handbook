@@ -18,6 +18,7 @@ import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,6 +64,9 @@ public class UserController {
 
 	@Autowired
 	CommentService cservice;
+
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	//커버 사진 업데이트
 	@PostMapping("/user/coverupdate")
@@ -156,8 +160,11 @@ public class UserController {
 		String loginnum=uservice.getUserById((String)session.getAttribute("myid")).getUser_num();
 
 		UserDto udto=uservice.getUserByNum(user_num);
-		List<GuestbookDto> guestlist=uservice.getGuestPost(user_num);
-		List<PostDto> postlist=uservice.getPost(user_num);
+		/* List<GuestbookDto> guestlist=uservice.getGuestPost(user_num); */
+		/* List<PostDto> postlist=uservice.getPost(user_num); */
+		List<GuestbookDto> guestlist=uservice.selectGuestbookByAccess((String)session.getAttribute("user_num"),user_num);
+		List<PostDto> postlist=uservice.selectPostsByAccess(user_num, (String)session.getAttribute("user_num"));
+		
 		List<Map<String, Object>> alllist=new ArrayList<>();
 
 
@@ -214,26 +221,12 @@ public class UserController {
 		}
 
 		//최신 순 정렬
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		alllist.sort((map1, map2) -> {
+		    Date date1 = (Date) map1.get("post_writeday");
+		    Date date2 = (Date) map2.get("post_writeday");
+		    return date2.compareTo(date1); // 내림차순 정렬
+		});
 
-		for (int i = 0; i < alllist.size() - 1; i++) {
-			for (int j = i + 1; j < alllist.size(); j++) {
-				try {
-					Date date1 = dateFormat.parse(alllist.get(i).get("post_writeday").toString());
-					Date date2 = dateFormat.parse(alllist.get(j).get("post_writeday").toString());
-
-					// 뒤에 데이터가 더 최신이면 앞으로 옮기기 (자리 바꾸기)
-					if (date2.compareTo(date1) > 0) {
-						Map<String, Object> temp = alllist.get(j);
-						alllist.set(j, alllist.get(i));
-						alllist.set(i, temp);
-					}
-				} catch (ParseException e) {
-					// 날짜 형식이 잘못되었을 경우 처리할 예외 처리 코드
-					e.printStackTrace();
-				}
-			}
-		}
 
 		for(int i = 0; i<alllist.size(); i++) {
 			//대화 시간 오늘 날짜에서 빼기(몇 초전... 몇 분 전...)
@@ -309,6 +302,130 @@ public class UserController {
 		model.setViewName("/sub/user/mypage");
 
 		return model;
+	}
+	
+	@GetMapping("user/getmypostdata")
+	@ResponseBody
+	public List<Map<String, Object>> mypostdata(@RequestParam(defaultValue = "0") String post_num,@RequestParam(defaultValue = "0") String guest_num,HttpSession session){
+		
+		
+		List<Map<String, Object>> alllist=new ArrayList<>();
+		
+		if(post_num.equals("0")) {
+			List<GuestbookDto> guestlist=new ArrayList<>();
+			GuestbookDto gdto=uservice.getDataByGuestNum(guest_num);
+			guestlist.add(gdto);
+			
+			for(int i=0;i<guestlist.size();i++) {
+				guestlist.get(i).setComment_count(cservice.getTotalGuestCount(guestlist.get(i).getGuest_num()));
+				guestlist.get(i).setUser_name(uservice.getUserByNum(guestlist.get(i).getWrite_num()).getUser_name());
+			}
+			
+			for(GuestbookDto g:guestlist) {
+				Map<String, Object> map=new HashMap<>();
+
+				map.put("post_num", g.getGuest_num());
+				map.put("user_num", g.getWrite_num());
+				map.put("owner_num", g.getOwner_num());
+				map.put("post_content", g.getGuest_content());
+				map.put("post_file", g.getGuest_file());
+				map.put("post_access", g.getGuest_access());
+				map.put("post_writeday", g.getGuest_writeday());
+				map.put("like_count", glservice.getTotalGuestLike(g.getGuest_num()));
+				map.put("likecheck", glservice.checkGuestLike((String)session.getAttribute("user_num"), g.getGuest_num()));
+				map.put("comment_count",g.getComment_count());
+				map.put("type", "guest");
+				map.put("user_name", g.getUser_name());
+
+				UserDto dto=uservice.getUserByNum(g.getWrite_num());
+				map.put("dto", dto);
+
+				alllist.add(map);
+			}
+			
+		}else {
+			List<PostDto> postlist=new ArrayList<>();
+			PostDto pdto=pservice.getDataByNum(post_num);
+			postlist.add(pdto);		
+			
+			for(int i=0;i<postlist.size();i++) {
+				postlist.get(i).setComment_count(cservice.getTotalCount(postlist.get(i).getPost_num()));
+				postlist.get(i).setUser_name(uservice.getUserByNum(postlist.get(i).getUser_num()).getUser_name());
+			}
+			
+			for(PostDto p:postlist) {
+				Map<String, Object> map=new HashMap<>();
+
+				map.put("post_num", p.getPost_num());
+				map.put("user_num", p.getUser_num());
+				map.put("owner_num", null);
+				map.put("post_content", p.getPost_content());
+				map.put("post_file", p.getPost_file());
+				map.put("post_access", p.getPost_access());
+				map.put("post_writeday", p.getPost_writeday());
+				map.put("post_time", p.getPost_time());
+				map.put("like_count", plservice.getTotalLike(p.getPost_num()));
+				map.put("likecheck", plservice.checklike((String)session.getAttribute("user_num"),p.getPost_num()));
+				map.put("comment_count",p.getComment_count());
+				map.put("type", "post");
+				map.put("user_name", p.getUser_name());
+				
+				UserDto dto=uservice.getUserByNum(p.getUser_num());
+				map.put("dto", dto);
+
+				alllist.add(map);
+			}
+			}
+		for(int i = 0; i<alllist.size(); i++) {
+			//대화 시간 오늘 날짜에서 빼기(몇 초전... 몇 분 전...)
+			Date today=new Date();
+			/* System.out.println(today); */
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+			Date writeday=new Date();
+			try {
+				writeday=sdf.parse(alllist.get(i).get("post_writeday").toString());
+				/* System.out.println(writeday); */
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			long diffSec=(today.getTime()-writeday.getTime());
+			diffSec-=32400000L; //DB에 now()로 들어가는 시간이 9시간 차이 나서 빼줌
+			/* System.out.println(diffSec); */
+
+			//일시분초
+			long day=(diffSec/(60*60*24*1000L))%365;
+			long hour=(diffSec/(60*60*1000L))%24;
+			long minute=(diffSec/(60*1000L))%60;
+			long second=(diffSec/1000L)%60;
+
+			String preTime="";
+
+			if(day!=0) {
+				//하루 이상이 지났으면 일수만 표시
+				preTime=""+day+"일 전";
+			}else {
+				if(hour!=0) {
+					//1시간 이상이 지났으면 시(hour)만 표시
+					preTime=""+hour+"시간 전";
+				}else {
+					if(minute!=0) {
+						//1분 이상이 지났으면 분만 표시
+						preTime=""+minute+"분 전";
+					}else {
+						//1분 미만 초만 표시
+						preTime=""+second+"초 전";
+					}
+				}
+			}
+
+			alllist.get(i).put("post_time", preTime);
+		}
+		
+		return alllist;
+			
 	}
 
 	//게시물 사진 여러장 올리기
@@ -850,6 +967,21 @@ public class UserController {
 		//session.removeAttribute("loginok");
 		session.invalidate(); // 세션의 모든 속성을 삭제
 		uservice.userDelete(user_num);
+		return "redirect:/";
+	}
+
+	//비밀번호 수정창으로 이동
+	@GetMapping("/user/moveupdatepassword")
+	public String moveupdatepassword() {
+		return "/login/updatePassword";
+	}
+
+	@PostMapping("/user/updatePassword")
+	public String updatepassword(String user_pass, String user_num) {
+		String encodedPassword = passwordEncoder.encode(user_pass);//비밀번호 암호화.
+		UserDto dto = uservice.getUserByNum(user_num);
+		dto.setUser_pass(encodedPassword);
+		uservice.updateUserPass(dto);
 		return "redirect:/";
 	}
 }

@@ -6,6 +6,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>sign up(회원가입)</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
@@ -19,7 +20,13 @@
             display: flex;
             justify-content: center; /* 가로 중앙. */
             align-items: center; /*새로중앙*/
-            height: 100%;
+            min-height: 100%;
+        }
+
+        @media (max-width: 600px) {
+            div.title {
+                font-size: 20px; /* 적절한 크기로 조정 */
+            }
         }
     </style>
 </head>
@@ -27,7 +34,7 @@
 <div>
     <div class="wrapper">
         <div>
-            <p style="font-size: 3em; font-weight: bold;" align="center">HandBook</p>
+            <p style="font-size: 3em; font-weight: bold;" align="center" class="title">HandBook</p>
             <div>
                 <form action="signupprocess" method="post" onsubmit="return validateForm()">
                     <p align="center" style="font-size: 1.2em;">새 계정 만들기</p>
@@ -138,12 +145,10 @@
 </div>
 </body>
 <script>
-    //브라우저 화면크기 바뀔 때마다 리로드하면서 중앙에 배치.
-    var windowHeight = window.innerHeight;
-    $(".wrapper").css('height', windowHeight - 80);
-
+    // 브라우저 화면크기 바뀔 때마다 리로드하지 않고, 중앙에 배치.
     window.onresize = function (event) {
-        location.reload();
+        var windowHeight = window.innerHeight;
+        $(".wrapper").css('height', windowHeight - 80);
     }
 </script>
 <script type="text/javascript">

@@ -133,11 +133,21 @@ public class PostController {
 		ModelAndView model = new ModelAndView();
 		int totalCount = pservice.getTotalCount();
 		
+		
+		//팔로우리스트 보내기
+		List<FollowingDto> ftlist = fservice.getFollowList((String)session.getAttribute("user_num"), 0); 
+		
+		for(int i = 0; i<ftlist.size(); i++) {
+			UserDto dto = uservice.getUserByNum(ftlist.get(i).getTo_user()); //여러가지 수많은 데이터에서 i번째 데이터만 가져오기, 여기서 필요한 상대방 num을 list에서 뽑아옴
+			ftlist.get(i).setUser_name(dto.getUser_name());// 위에서 dto에서 name photo를 뽑아내서 리스트에 set을 해줌
+			ftlist.get(i).setUser_photo(dto.getUser_photo());
+		}
 		model.addObject("offset", offset);
 		model.addObject("commentoffset", commentoffset);
 		model.addObject("searchcolumn", searchcolumn);
 		model.addObject("total", totalCount);
 		model.addObject("list", list);
+		model.addObject("ftlist", ftlist);
 		model.addObject("login_name", login_name);
 
 		model.setViewName("/post/post_timeline");
@@ -152,6 +162,9 @@ public class PostController {
 	    
 	    int idx = 1;
 	    String uploadName = "";
+	    String postContent = dto.getPost_content();     
+        postContent = postContent.replaceAll(" ", "&nbsp;").replaceAll("\n", "<br>");
+        dto.setPost_content(postContent);
 	    
 	    if (photo == null) {
 	        dto.setPost_file("no");
@@ -227,7 +240,13 @@ public class PostController {
 	@ResponseBody
 	public PostDto getData(String post_num) {
 		
-		return pservice.getDataByNum(post_num);
+		PostDto dto=pservice.getDataByNum(post_num);
+		
+		String postContent = dto.getPost_content();     
+        postContent = postContent.replaceAll("&nbsp;"," ").replaceAll("<br>", "\n");
+        dto.setPost_content(postContent);
+		
+		return dto;	
 	}
 
 	// 수정
@@ -242,7 +261,9 @@ public class PostController {
 	    
 	    int idx = 1;
 	    String uploadName = "";
-	    
+	    String postContent = dto.getPost_content();     
+        postContent = postContent.replaceAll(" ", "&nbsp;").replaceAll("\n", "<br>");
+        dto.setPost_content(postContent);	    
 	    
 	    if (photo != null) {
 	      
