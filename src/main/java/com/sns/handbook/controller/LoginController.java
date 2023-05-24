@@ -185,6 +185,8 @@ public class LoginController {
             session.setAttribute("loginok", "yes");
             session.setAttribute("user_num", user1.getUser_num()); // session에 num값 넣음.
             session.setAttribute("user_photo", user1.getUser_photo());// session에 photo 넣음.
+            service.updateMailAuthByOauthLogin(user1.getUser_num());//mail_auth값이 0에서 1로 바뀜.
+
             return "redirect:post/timeline";
         }
     }
@@ -256,7 +258,7 @@ public class LoginController {
             session.setAttribute("loginok", "yes");
             session.setAttribute("user_num", user1.getUser_num()); // session에 num값 넣음.
             //session.setAttribute("user_photo", user1.getUser_photo());// session에 photo 넣음.
-
+            service.updateMailAuthByOauthLogin(user1.getUser_num());//mail_auth값이 0에서 1로 바뀜.
             return "redirect:post/timeline";
         }
     }
@@ -318,7 +320,7 @@ public class LoginController {
             session.setAttribute("loginok", "yes");
             session.setAttribute("user_num", user1.getUser_num());
             session.setAttribute("user_photo", user1.getUser_photo());
-
+            service.updateMailAuthByOauthLogin(user1.getUser_num());//mail_auth값이 0에서 1로 바뀜.
             return "redirect:post/timeline";
         }
     }
