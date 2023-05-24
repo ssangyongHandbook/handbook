@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&family=Sunflower&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <style type="text/css">
         .up {
             width: 50px;
@@ -23,8 +24,9 @@
             right: 0;
             width: 300px;
             height: 100%;
-            background-color: #f4f4f4;
+            background-color: #F0F2F5;
             padding: 20px;
+            overflow-y: auto; /* 추가: 스크롤을 허용하는 스타일 속성 */
         }
         
         .userbox {
@@ -50,7 +52,7 @@
 <body>
     <c:set var="root" value="<%=request.getContextPath() %>" />
     <div class="sidebar">
-    <span style="font-size: 15pt; font-weight: bold; color: gray;">팔로워</span>
+    <span style="font-size: 15pt; font-weight: bold; color: gray; font-family: Jua">Follow List</span>
     <br>
     <hr style="height: 1px; background-color: black; border: none;">
         <c:forEach var="dto" items="${ftlist}">
