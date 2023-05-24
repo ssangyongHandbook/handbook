@@ -125,8 +125,11 @@ public class UserController {
 		String loginnum=uservice.getUserById((String)session.getAttribute("myid")).getUser_num();
 
 		UserDto udto=uservice.getUserByNum(user_num);
-		List<GuestbookDto> guestlist=uservice.getGuestPost(user_num);
-		List<PostDto> postlist=uservice.getPost(user_num);
+		/* List<GuestbookDto> guestlist=uservice.getGuestPost(user_num); */
+		/* List<PostDto> postlist=uservice.getPost(user_num); */
+		List<GuestbookDto> guestlist=uservice.selectGuestbookByAccess((String)session.getAttribute("user_num"),user_num);
+		List<PostDto> postlist=uservice.selectPostsByAccess(user_num, (String)session.getAttribute("user_num"));
+		
 		List<Map<String, Object>> alllist=new ArrayList<>();
 
 
@@ -183,26 +186,12 @@ public class UserController {
 		}
 
 		//최신 순 정렬
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		alllist.sort((map1, map2) -> {
+		    Date date1 = (Date) map1.get("post_writeday");
+		    Date date2 = (Date) map2.get("post_writeday");
+		    return date2.compareTo(date1); // 내림차순 정렬
+		});
 
-		for (int i = 0; i < alllist.size() - 1; i++) {
-			for (int j = i + 1; j < alllist.size(); j++) {
-				try {
-					Date date1 = dateFormat.parse(alllist.get(i).get("post_writeday").toString());
-					Date date2 = dateFormat.parse(alllist.get(j).get("post_writeday").toString());
-
-					// 뒤에 데이터가 더 최신이면 앞으로 옮기기 (자리 바꾸기)
-					if (date2.compareTo(date1) > 0) {
-						Map<String, Object> temp = alllist.get(j);
-						alllist.set(j, alllist.get(i));
-						alllist.set(i, temp);
-					}
-				} catch (ParseException e) {
-					// 날짜 형식이 잘못되었을 경우 처리할 예외 처리 코드
-					e.printStackTrace();
-				}
-			}
-		}
 
 		for(int i = 0; i<alllist.size(); i++) {
 			//대화 시간 오늘 날짜에서 빼기(몇 초전... 몇 분 전...)
