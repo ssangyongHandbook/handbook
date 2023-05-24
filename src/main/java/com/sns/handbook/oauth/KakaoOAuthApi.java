@@ -1,31 +1,30 @@
 package com.sns.handbook.oauth;
 
-import org.springframework.stereotype.Component;
-
 import com.github.scribejava.core.builder.api.DefaultApi20;
+import org.springframework.stereotype.Component;
 
 @Component
 public class KakaoOAuthApi extends DefaultApi20 {
-	
-	protected KakaoOAuthApi() {
-	}
 
-	private static class InstanceHolder {
-		private static final KakaoOAuthApi INSTANCE = new KakaoOAuthApi();
-	}
+    protected KakaoOAuthApi() {
+    }
 
-	public static KakaoOAuthApi instance() {
-		return InstanceHolder.INSTANCE;
-	}
+    private static class InstanceHolder {
+        private static final KakaoOAuthApi INSTANCE = new KakaoOAuthApi();
+    }
 
-	@Override
-	public String getAccessTokenEndpoint() {
-		return "https://kauth.kakao.com/oauth/token";
-	}
+    public static KakaoOAuthApi instance() {
+        return InstanceHolder.INSTANCE;
+    }
 
-	@Override
-	protected String getAuthorizationBaseUrl() {
-		return "https://kauth.kakao.com/oauth/authorize";
-	}
+    @Override
+    public String getAccessTokenEndpoint() {
+        return "https://kauth.kakao.com/oauth/token";
+    }
+
+    @Override
+    protected String getAuthorizationBaseUrl() {
+        return "https://kauth.kakao.com/oauth/authorize";
+    }
 
 }
