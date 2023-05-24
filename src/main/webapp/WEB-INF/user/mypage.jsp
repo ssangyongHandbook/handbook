@@ -238,13 +238,36 @@
                 }
             });
         }
+        
+        var ws;
+
+      	//웹소켓 오픈(메시지 알림)
+      	function wsOpen() {
+      		ws = new WebSocket("ws://" + location.host + "/chating");
+      		wsEvt();
+      	}
+
+      	function wsEvt() {
+      		ws.onopen = function(data) {
+      		}
+
+      		//메시지 잘 들어왔을 때 실행하는 내용
+      		ws.onmessage = function(data) {
+      		}
+      	}
 
 
         $(function () {
+        	wsOpen();
 
             offset =${offset};
             commentoffset =${commentoffset};
-
+            
+          	//메시지 보내기 누르면 메시지창으로 이동
+        	$(".btnmessage").click(function(){
+        		location.href="../message/main?search_name=${dto.user_name}&search_num=${dto.user_num}";
+        	})
+        	
             //스크롤 이벤트
             $(window).scroll(function () {
                 var left_side = $(".left").height();
@@ -832,7 +855,8 @@
                         url: "likeinsert",
                         data: {"post_num": post_num, "user_num": user_num},
                         success: function () {
-
+                        	//게시글 좋아요 알림
+                       	 	ws.send('{"type":"plike","sender_num":"${sessionScope.user_num}","post_num":"'+post_num+'","guest_num":"null"}');
                         }
                     })
 
@@ -844,7 +868,8 @@
                         url: "guestlikeinsert",
                         data: {"guest_num": post_num, "user_num": user_num},
                         success: function () {
-
+                        	//방명록 좋아요 알림
+                       		ws.send('{"type":"plike","sender_num":"${sessionScope.user_num}","guest_num":"'+post_num+'","post_num":"null"}');
                         }
                     })
                 }
@@ -918,7 +943,7 @@
                     url: "insertfollowing",
                     data: {"from_user": from_user, "to_user": to_user},
                     success: function () {
-
+                    	ws.send('{"type":"follow","receiver_num":"'+to_user+'","sender_num":"${sessionScope.user_num}"}');
                         location.reload();
                     }
                 });
@@ -1228,6 +1253,29 @@
                 $(".btncommentmodal").trigger("click");
 
             })
+            
+            //예지---
+            
+          //마이페이지 넘어갔을 때 post_num이 넘어온 경우
+        	if("${post_num}"!=""){
+        		$.each($(".img_comment"),function(i,ele){
+        			if($(ele).attr("post_num")=="${post_num}" && $(ele).attr("type")=="post"){
+        				 $(ele).trigger("click");
+        			}
+        		})
+        	}
+        	
+        	//마이페이지 넘어갔을 때 guest_num이 넘어온 경우
+        	if("${guest_num}"!=""){
+        		$.each($(".img_comment"),function(i,ele){
+        			if($(ele).attr("post_num")=="${guest_num}" && $(ele).attr("type")=="guest"){
+        				$(ele).trigger("click");
+        			}
+        		})
+        	}
+            
+            
+            ///예지끝---
 
             //댓글 입력
             $("#insertcommentbtn").click(function () {
@@ -1252,6 +1300,8 @@
                             commentoffset = 0;
                             scroll(commentoffset, post_num);
                             commentCount(post_num);
+                          	//웹소켓에 댓글 알림 보내기
+                            ws.send('{"type":"post","sender_num":"${sessionScope.user_num}","post_num":"'+post_num+'","guest_num":"null","comment_content":"'+comment_content+'"}');
                         }
                     })
                 } else {
@@ -1269,6 +1319,8 @@
                             commentoffset = 0;
                             guestscroll(commentoffset, guest_num);
                             commentGuestCount(guest_num);
+                          	//웹소켓에 댓글 알림 보내기
+                            ws.send('{"type":"post","sender_num":"${sessionScope.user_num}","guest_num":"'+guest_num+'","post_num":"null","comment_content":"'+comment_content+'"}');
                         }
                     })
                 }
@@ -1312,7 +1364,6 @@
                 var comment_content = $("#input" + comment_num).val();
                 var post_num = $(this).attr("post_num");
                 var guest_num = $(this).attr("guest_num");
-                alert(post_num + guest_num);
 
                 if (type == "post") {
 
@@ -1334,6 +1385,9 @@
                             commentoffset = 0;
                             scroll(commentoffset, post_num);
                             commentCount(post_num);
+                            
+                          	//답글 알람
+                          	ws.send('{"type":"comment","sender_num":"${sessionScope.user_num}","comment_num":"'+comment_num+'","comment_content":"'+comment_content+'"}');
                         }
                     })
                 } else {
@@ -1356,6 +1410,9 @@
                             commentoffset = 0;
                             guestscroll(commentoffset, guest_num);
                             commentGuestCount(guest_num);
+                            
+                          	//답글 알람
+                            ws.send('{"type":"comment","sender_num":"${sessionScope.user_num}","comment_num":"'+comment_num+'","comment_content":"'+comment_content+'"}');
                         }
                     })
                 }
@@ -1394,6 +1451,9 @@
                             $("#input" + comment_num).hide();
                             scroll(commentoffset, post_num);
                             commentCount(post_num);
+                            
+                          	//댓글 좋아요 알림
+                      	 	ws.send('{"type":"clike","sender_num":"${sessionScope.user_num}","comment_num":"'+comment_num+'"}');
                         }
                     });
                 } else {
@@ -1413,6 +1473,9 @@
                             $("#input" + comment_num).hide();
                             guestscroll(commentoffset, guest_num);
                             commentGuestCount(guest_num);
+                            
+                         	//댓글 좋아요 알림
+                      	 	ws.send('{"type":"clike","sender_num":"${sessionScope.user_num}","comment_num":"'+comment_num+'"}');
                         }
                     });
                 }

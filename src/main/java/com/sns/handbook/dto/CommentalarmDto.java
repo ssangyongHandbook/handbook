@@ -7,14 +7,13 @@ import org.apache.ibatis.type.Alias;
 import lombok.Data;
 
 @Data
-@Alias("PostalarmDto")
-public class PostalarmDto {
+@Alias("CommentalarmDto")
+public class CommentalarmDto {
 
-	private String postal_num;
+	private String commental_num;
 	private String receiver_num;
+	private String comment_num;
 	private String sender_num;
-	private String post_num;
-	private String guest_num;
 	private String comment_content;
 	private Timestamp comment_writeday;
 
@@ -24,5 +23,5 @@ public class PostalarmDto {
 	private long timeSec;
 	private String time;
 	
-	private String type="post";
+	private String type="comment";
 }
