@@ -76,6 +76,24 @@
 	<select id="getGuestPost" parameterType="String" resultType="GuestbookDto">
 		select guest_num,write_num,owner_num,guest_content,guest_file,guest_access,guest_writeday from guestbook where owner_num=#{owner_num} order by guest_num desc
 	</select>
+	
+	<!-- 접근권한에 따른 게시글 가져오기 -->
+	<select id="selectPostsByAccess" parameterType="String" resultType="PostDto">
+	  	select * from post where (post_access = 'all' AND user_num = #{user_num}) 
+	  	or (post_access='onlyme' and #{user_num}=#{from_user})
+	  	or (post_access='follower' and (#{user_num}=#{from_user} or #{from_user} in(select from_user from following where to_user=#{user_num})) )
+	</select>
+	
+	<select id="selectGuestbookByAccess" parameterType="Map" resultType="GuestbookDto">
+	  select * from guestbook where 
+	  <if test="owner_num==user_num">
+	  		owner_num=#{owner_num}
+	  </if>
+	  <if test="owner_num!=user_num">
+	  		(write_num=#{user_num} and owner_num=#{owner_num})
+	  </if>
+	</select>
+	
 	<!-- 우형 끝 -->
 
 	<!-- 이 아래는 김희수가 구현함. -->
