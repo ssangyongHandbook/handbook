@@ -275,6 +275,16 @@ public class UserService implements UserServiceInter {
 	public int emailAuthFail(String user_num) throws Exception {
 		return mapperInter.emailAuthFail(user_num);
 	}
+
+	@Override
+	public void updateUserPass(UserDto dto) {
+		mapperInter.updateUserPass(dto);
+	}
+
+	@Override
+	public void updateMailAuthByOauthLogin(String user_num) {
+		mapperInter.updateMailAuthByOauthLogin(user_num);
+	}
 	// 희수 끝
 
 	//예지
