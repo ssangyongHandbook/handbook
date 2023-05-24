@@ -238,7 +238,7 @@ function commentGuestCount(guest_num){
              
        }
    });
-} 
+}
 
 
 $(function(){
@@ -957,7 +957,7 @@ $(function(){
     	  
     	  var post_num=$(this).attr("post_num");
     	  var user_name=$(this).attr("user_name");
-    	 // alert(user_name);
+    	 
     	  type=$(this).attr("type");
     	  
     	  $("#inputhidden-post_num").val("");
@@ -973,15 +973,262 @@ $(function(){
 
     	  
           $("#commentsection").empty();
+          $("#timesection").empty();
           
           if(type=="post"){
           	scroll(0,post_num);
           	commentCount(post_num);
+          	$.ajax({
+                type:"get",
+                dataType:"json",
+                url:"getmypostdata",
+                data:{"post_num":post_num},
+                success:function(res){
+                	$.each(res,function(i,dto){
+
+                        var s='';
+                        var root="${root}";
+
+                        if (dto.post_file != 'no') {
+						   s += '<div class="content">' +
+                            '<div class="divmain">' +
+                            '<div class="top">' +
+                            '<div class="top-user">';
+
+                        if (dto.type === 'post') {
+                            s += '<a href="' + root + '/user/mypage?user_num=' + dto.user_num + '"><img alt="" src="/photo/'+dto.dto.user_photo+'" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>';
+                        }
+
+                        s += '<div class="top-writeday">' +
+                            '<span><b><a href="' + root + '/user/mypage?user_num=' + dto.user_num + '" style="color: black;">' + dto.user_name + '</a><br></b> ' + dto.post_time + '<b>';
+
+                        if (dto.post_access === 'follower') {
+                            s += '<i class="fa-solid fa-user-group"></i>';
+                        }
+
+                        if (dto.post_access === 'all') {
+                            s += '<i class="fa-solid fa-earth-americas"></i>';
+                        }
+
+                        if (dto.post_access === 'onlyme') {
+                            s += '<i class="fa-solid fa-lock"></i>';
+                        }
+
+                        s += '</b></span>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="center">' +
+                            '<div class="center-up">' + dto.post_content + '</div>' +
+                            '<div class="slider center-down" id="dto-' + dto.post_num + '">';
+
+                        if (dto.post_file.includes('.mp4')) {
+                            s += '<div class="fileimg">';
+
+                            if (dto.post_file !== 'no' && dto.type === 'post') {
+                                s += '<video src="/post_file/' + dto.post_file + '" controls="controls" muted="muted" style="width:100%;"></video>';
+                            }
+
+                            s += '</div>';
+                        } else {
+                            if (dto.post_file !== 'no' && dto.type === 'post') {
+                                var postFiles = dto.post_file.split(',');
+
+                                for (var i = 0; i < postFiles.length; i++) {
+                                    s += '<div class="fileimg">' +
+                                        '<a href="/post_file/' + postFiles[i] + '" target="_new" style="text-decoration: none; outline: none;">' +
+                                        '<img src="/post_file/' + postFiles[i] + '" style="width: 100%;height: 500px;">' +
+                                        '</a>' +
+                                        '</div>';
+                                }
+                            }
+                        }
+
+                        s += '</div>' +
+                            '</div>' +
+                            '</div>';
+                        }else{
+                        	
+                        	s += '<div class="content">' +
+                            '<div class="divmain">' +
+                            '<div class="top">' +
+                            '<div class="top-user">';
+
+                        if (dto.type === 'post') {
+                            s += '<a href="' + root + '/user/mypage?user_num=' + dto.user_num + '"><img alt="" src="/photo/'+dto.dto.user_photo+'" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>';
+                        }
+
+                        s += '<div class="top-writeday">' +
+                            '<span><b><a href="' + root + '/user/mypage?user_num=' + dto.user_num + '" style="color: black;">' + dto.user_name + '</a><br></b> ' + dto.post_time + '<b>';
+
+                        if (dto.post_access === 'follower') {
+                            s += '<i class="fa-solid fa-user-group"></i>';
+                        }
+
+                        if (dto.post_access === 'all') {
+                            s += '<i class="fa-solid fa-earth-americas"></i>';
+                        }
+
+                        if (dto.post_access === 'onlyme') {
+                            s += '<i class="fa-solid fa-lock"></i>';
+                        }
+
+                        s += '</b></span>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="center">' +
+                            '<div class="center-up">' + dto.post_content + '</div>' +
+                            '<div class="slider center-down" id="dto-' + dto.post_num + '">';	
+
+                        s += '</div>' +
+                            '</div>' +
+                            '</div>';
+                        }
+                        
+                        var addTimeline = document.createElement("div");
+                        console.log(s);
+                        addTimeline.innerHTML =s;
+                        document.querySelector('sectiontime').appendChild(addTimeline);
+                        return false;
+                  })
+                }
+              });
           }
           else{
         	  guestscroll(0,post_num);
               commentGuestCount(post_num);
+              $.ajax({
+                  type:"get",
+                  dataType:"json",
+                  url:"getmypostdata",
+                  data:{"guest_num":post_num},
+                  success:function(res){
+                	  $.each(res,function(i,dto){
+
+                          var s='';
+                          var root="${root}";
+
+                          if (dto.post_file != 'no') {
+                        	  s += '<div class="content">' +
+                              '<div class="divmain">' +
+                              '<div class="top">' +
+                              '<div class="top-user">';
+
+                          if (dto.type === 'guest') {
+                              s += '<a href="' + root + '/user/mypage?user_num=' + dto.user_num + '"><img alt="" src="' + root + '/photo/' + dto.dto.user_photo + '" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>';
+                          }
+
+                          s += '<div class="top-writeday">' +
+                              '<span><b><a href="' + root + '/user/mypage?user_num=' + dto.dto.user_num + '" style="color: black;">' + dto.dto.user_name + '</a>';
+
+                          if (dto.type === 'guest') {
+                              s += '<i class="fa-solid fa-caret-right"></i>';
+                          }
+
+                          s += '<a href="' + root + '/user/mypage?user_num="${dto.user_num}" style="color: black;"> ${dto.user_name} </a><br></b> ' + dto.post_time + '<b>';
+
+                          if (dto.post_access === 'follower') {
+                              s += '<i class="fa-solid fa-user-group"></i>';
+                          }
+
+                          if (dto.post_access === 'all') {
+                              s += '<i class="fa-solid fa-earth-americas"></i>';
+                          }
+
+                          if (dto.post_access === 'onlyme') {
+                              s += '<i class="fa-solid fa-lock"></i>';
+                          }
+
+                          s += '</b></span>' +
+                              '</div>' +
+                              '</div>' +
+                              '</div>' +
+                              '<div class="center">' +
+                              '<div class="center-up">' + dto.post_content + '</div>' +
+                              '<div class="slider center-down" id="dto-' + dto.post_num + '">';
+
+                          if (dto.post_file.includes('.mp4')) {
+                              s += '<div class="fileimg">';
+
+                              if (dto.post_file !== 'no' && dto.type === 'guest') {
+                                  s += '<video src="/guest_file/' + dto.post_file + '" controls="controls" muted="muted" style="width:100%;"></video>';
+                              }
+
+                              s += '</div>';
+                          } else {
+
+                              if (dto.post_file !== 'no' && dto.type === 'guest') {
+                                  var guestFiles = dto.post_file.split(',');
+
+                                  for (var j = 0; j < guestFiles.length; j++) {
+                                      s += '<div class="fileimg">' +
+                                          '<a href="/post_file/' + guestFiles[j] + '" target="_new" style="text-decoration: none; outline: none;">' +
+                                          '<img src="/guest_file/' + guestFiles[j] + '" style="width: 100%;height: 500px;">' +
+                                          '</a>' +
+                                          '</div>';
+                                  }
+                              }
+                          }
+
+                          s += '</div>' +
+                              '</div>' +
+                              '</div>';
+                          }else{
+                        	  s += '<div class="content">' +
+                              '<div class="divmain">' +
+                              '<div class="top">' +
+                              '<div class="top-user">';
+
+                          if (dto.type === 'guest') {
+                              s += '<a href="' + root + '/user/mypage?user_num=' + dto.user_num + '"><img alt="" src="' + root + '/photo/' + dto.dto.user_photo + '" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>';
+                          }
+
+                          s += '<div class="top-writeday">' +
+                              '<span><b><a href="' + root + '/user/mypage?user_num=' + dto.dto.user_num + '" style="color: black;">' + dto.dto.user_name + '</a>';
+
+                          if (dto.type === 'guest') {
+                              s += '<i class="fa-solid fa-caret-right"></i>';
+                          }
+
+                          s += '<a href="' + root + '/user/mypage?user_num="${dto.user_num}" style="color: black;"> ${dto.user_name} </a><br></b> ' + dto.post_time + '<b>';
+
+                          if (dto.post_access === 'follower') {
+                              s += '<i class="fa-solid fa-user-group"></i>';
+                          }
+
+                          if (dto.post_access === 'all') {
+                              s += '<i class="fa-solid fa-earth-americas"></i>';
+                          }
+
+                          if (dto.post_access === 'onlyme') {
+                              s += '<i class="fa-solid fa-lock"></i>';
+                          }
+
+                          s += '</b></span>' +
+                              '</div>' +
+                              '</div>' +
+                              '</div>' +
+                              '<div class="center">' +
+                              '<div class="center-up">' + dto.post_content + '</div>' +
+                              '<div class="slider center-down" id="dto-' + dto.post_num + '">';
+
+
+                          s += '</div>' +
+                              '</div>' +
+                              '</div>';
+                          }
+                          var addTimeline = document.createElement("div");
+                          console.log(s);
+                          addTimeline.innerHTML =s;
+                          document.querySelector('sectiontime').appendChild(addTimeline);
+                          return false;
+                    })
+                  }
+                });
           }
+          
+          
     	  $(".btncommentmodal").trigger("click");
     	  
       })
@@ -1865,7 +2112,11 @@ span.content {
                          
                          <span><b>이메일</b></span>
                          <div class="email">                
-                            <input type="text" id="uemail" class="form-control" value="${dto.user_email }">
+                            <input type="text" id="uemail" class="form-control" value="${dto.user_email }"><br>
+                         </div>
+                         <span><b>비밀번호</b></span>
+                         <div class="password">
+                             <button type="button" class="btn btn-primary" onclick="location.href='/user/moveupdatepassword'">비밀번호 수정</button>
                          </div>
                       </div>
                 
@@ -2016,7 +2267,7 @@ span.content {
                   </div>
                   <div class="modal-body commentmodal-body" style="max-height: 800px;">
                      <!-- 타임라인 -->
-                     
+                     <sectiontime id="timesection"></sectiontime>
                      <br>
                      <hr>
                      <section1 id="commentsection">
