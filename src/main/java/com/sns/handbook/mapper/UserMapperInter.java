@@ -32,6 +32,8 @@ public interface UserMapperInter {
 	public void deleteGuestBook(String guest_num);
 	public void updateGuestBook(GuestbookDto dto);
 	public GuestbookDto getDataByGuestNum(String guest_num);
+	public List<PostDto> selectPostsByAccess(Map<String, String> map);
+	public List<GuestbookDto> selectGuestbookByAccess(Map<String, String> map);
 	//우형 끝
 	
 	//희수 시작

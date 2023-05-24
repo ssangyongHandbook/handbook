@@ -1,6 +1,7 @@
 package com.sns.handbook.serivce;
 
 import java.util.List;
+import java.util.Map;
 
 import com.sns.handbook.dto.FollowingDto;
 import com.sns.handbook.dto.GuestbookDto;
@@ -29,6 +30,8 @@ public interface UserServiceInter {
 	public void deleteGuestBook(String guest_num);
 	public void updateGuestBook(GuestbookDto dto);
 	public GuestbookDto getDataByGuestNum(String guest_num);
+	public List<PostDto> selectPostsByAccess(String user_num,String from_user);
+	public List<GuestbookDto> selectGuestbookByAccess(String user_num,String owner_num);
 	//우형 끝	
 
 	//희수 시작
