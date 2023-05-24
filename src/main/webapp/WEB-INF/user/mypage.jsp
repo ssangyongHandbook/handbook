@@ -238,7 +238,7 @@ function commentGuestCount(guest_num){
              
        }
    });
-} 
+}
 
 
 $(function(){
@@ -2112,7 +2112,11 @@ span.content {
                          
                          <span><b>이메일</b></span>
                          <div class="email">                
-                            <input type="text" id="uemail" class="form-control" value="${dto.user_email }">
+                            <input type="text" id="uemail" class="form-control" value="${dto.user_email }"><br>
+                         </div>
+                         <span><b>비밀번호</b></span>
+                         <div class="password">
+                             <button type="button" class="btn btn-primary" onclick="location.href='/user/moveupdatepassword'">비밀번호 수정</button>
                          </div>
                       </div>
                 
