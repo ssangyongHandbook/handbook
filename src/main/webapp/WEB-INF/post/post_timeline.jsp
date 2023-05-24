@@ -912,6 +912,7 @@
          var comment_num = $(this).attr("comment_num");
          //alert(comment_num);
          $("#comment" + comment_num).toggle();
+         $("#input"+ comment_num).focus();
       })
 
       $(document).on("click", "span.nolike", function() {
@@ -1518,7 +1519,7 @@
                 s += "<span class='comment_writeday'>" + item.perTime + "</span></div>";
                 s += '<form method="post" class="form-inline" id="comment'+item.comment_num+'" style="display: none;">';
                 s += '<div class="recommentaddform">';
-                s += "<div style='width: 30px; height: 30px;'></div>"; 
+                s += "<div style='width: 50px; height: 50px;'></div>"; 
                 s += '<img src="/photo/${sessionScope.user_photo }" id="commentprofile">';
                 s += '<input hidden="hidden" /> ';
                 s += '<input type="text" class="input" name="comment_content" placeholder="댓글을 입력하세요" id="input'+item.comment_num+'">';
@@ -1936,7 +1937,7 @@ body {
    width: 40px;
    height: 40px;
    border-radius: 50%;
-   margin-right: 20px;
+   margin-right: 5px;
 }
 
 /* 좋아요,댓글,날짜 */
@@ -1995,10 +1996,10 @@ span.content {
 
 
 #commentprofile {
-   width: 40px;
-   height: 40px;
+   width: 60px;
+   height: 60px;
    border-radius: 50%;
-   margin-right: 10px;
+
 }
 
 .input {
@@ -2008,6 +2009,8 @@ span.content {
    outline: none;
    border-radius: 20px;
    padding: 5px 10px;
+   background-color: #f6f6f6;
+   margin-right: 3px;
 }
 
 .mominput {
@@ -2015,6 +2018,7 @@ span.content {
    border: none;
    outline: none;
    border-radius: 40px;
+   background-color: #f6f6f6;
 }
 
 
