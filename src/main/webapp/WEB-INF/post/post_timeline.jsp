@@ -541,7 +541,7 @@
                         s+='<i class="fa-solid fa-ellipsis"></i>';
                         
                         if (dto.checklogin == 1) {
-                            s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 18px; line-height: 1.5em; display: none;'>";
+                            s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20pt; line-height: 1.5em; display: none;'>";
                             s += "<li id='postupdate' class='postdetail' data-toggle='modal' data-target='#updatepost' post_num='" + dto.post_num + "' user_num='" + dto.user_num + "'>게시물 수정</li>";
                             s += "<li id='postdelete' class='postdetail' user_num='" + dto.user_num + "' post_num='" + dto.post_num + "'>게시물 삭제</li></ul>";
                         }
@@ -694,7 +694,7 @@
                          s += "<i class='fa-solid fa-ellipsis'></i>";
 
                          if (dto.checklogin == 1) {
-                           s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 18px; line-height: 1.5em; display: none;'>";
+                           s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20pt; line-height: 1.5em; display: none;'>";
                            s += "<li id='postupdate' class='postdetail' data-toggle='modal' data-target='#updatepost' post_num='" + dto.post_num + "' user_num='" + dto.user_num + "'>게시물 수정</li>";
                            s += "<li id='postdelete' class='postdetail' user_num='" + dto.user_num + "' post_num='" + dto.post_num + "'>게시물 삭제</li></ul>";
                          }
@@ -829,15 +829,8 @@
 
       $(document).on("click", ".ulimg", function() {
 
-    	  var i=$(".ulimg").index(this);
-
-          $.each($(".commentul"),function(k,elt){
-             if(i==k){
-                $(elt).toggle();
-             }else{
-                $(elt).hide();
-             }
-         })
+         var comment_num = $(this).attr("comment_num");
+         $("#ul" + comment_num).toggle();
       })
 
       $(document).on("click", ".cminsert", function() {
@@ -919,7 +912,6 @@
          var comment_num = $(this).attr("comment_num");
          //alert(comment_num);
          $("#comment" + comment_num).toggle();
-         $("#input"+ comment_num).focus();
       })
 
       $(document).on("click", "span.nolike", function() {
@@ -1020,11 +1012,7 @@
             $("#commentmod"+comment_num).css("visibility","visible");
        else
             $("#commentmod"+comment_num).css("visibility","hidden");
-       
        $("#ul" + comment_num).toggle();
-       $("#cmmodinput"+comment_num).focus();
-       $("#ulimg"+comment_num).css("visibility","hidden");
-       
        
       })
       
@@ -1042,7 +1030,6 @@
              $("#commentmod"+comment_num).css("visibility","visible");
         else
              $("#commentmod"+comment_num).css("visibility","hidden");
-        $("#ulimg"+comment_num).css("visibility","visible");
 
       })
       
@@ -1069,7 +1056,7 @@
                   scroll(commentoffset, post_num);
                   setTimeout(function() {
                       $(".commentmodal-body").scrollTop(modalScrollPosition);
-                    },500);
+                    },400);
                   commentCount(post_num);
                }
             });
@@ -1143,13 +1130,13 @@
                          s+='user_num="${sessionScope.user_num }" dtouser_num="'+dto.user_num+'">';
                          
                          if (dto.checklogin == 1) {
-                             s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 18px; line-height: 1.5em; display: none;'>";
+                             s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20pt; line-height: 1.5em; display: none;'>";
                              s += "<li id='postupdate' class='postdetail' data-toggle='modal' data-target='#updatepost' post_num='" + dto.post_num + "' user_num='" + dto.user_num + "'>게시물 수정</li>";
                              s += "<li id='postdelete' class='postdetail' user_num='" + dto.user_num + "' post_num='" + dto.post_num + "'>게시물 삭제</li></ul>";
                          }
                          
                          if (dto.checklogin != 1) {
-                             s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 18px; line-height:1.5em;display:none;'>";
+                             s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20px; line-height:1.5em;display:none;'>";
                              s += "<li class='postdetail posthide' divpost_num='div" + dto.post_num + "' divspost_num='divs" + dto.post_num + "'>게시물 숨김</li></ul>";
                          
                          }
@@ -1279,12 +1266,12 @@
 
 
                           if (dto.checklogin == 1) {
-                            s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 18px; line-height: 1.5em; display: none;'>";
+                            s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20pt; line-height: 1.5em; display: none;'>";
                             s += "<li id='postupdate' class='postdetail' data-toggle='modal' data-target='#updatepost' post_num='" + dto.post_num + "' user_num='" + dto.user_num + "'>게시물 수정</li>";
                             s += "<li id='postdelete' class='postdetail' user_num='" + dto.user_num + "' post_num='" + dto.post_num + "'>게시물 삭제</li></ul>";
                           }
                           if (dto.checklogin != 1) {
-                            s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 18px; line-height:1.5em;display:none;'>";
+                            s += "<ul id='" + dto.post_num + "' class='dropdown-menu dropdown-menu-right postsubmenu' style='font-size: 20px; line-height:1.5em;display:none;'>";
                             s += "<li class='postdetail posthide' divpost_num='div" + dto.post_num + "' divspost_num='divs" + dto.post_num + "'>게시물 숨김</li></ul>";
 
                           }
@@ -1499,18 +1486,18 @@
                 if(item.post_user_num =="${sessionScope.user_num}" || item.user_num == "${sessionScope.user_num}"){
                    
                    s += '<div style="height: 0; width: 450px; position: relative; left: -30px; top: 30px;">';
-                    s += '<img src="../image/add.png" class="ulimg" id="ulimg'+item.comment_num+'" style="width: 20px; float: right;" comment_num="'+item.comment_num+'">';
-                    s += '<ul class="list-group commentul" style="height:0; margin-top:10px;" id="ul'+item.comment_num+'">';
+                    s += '<img src="../image/add.png" class="ulimg" style="width: 20px; float: right;" comment_num="'+item.comment_num+'">';
+                    s += '<ul class="list-group commentul" style="height:0;" id="ul'+item.comment_num+'">';
                     if(item.user_num == "${sessionScope.user_num}")
                        s += '<li class="list-group-item commentmod" comment_num="'+item.comment_num+'">수정</li>';
                     s += '<li class="list-group-item commentdel" comment_num="'+item.comment_num+'">삭제</li>';
                     s += '</ul>';
-                    s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display:flex; flex-wrap:wrap; visibility: hidden; position:relative; left: 30px; bottom: 30px;">';
-                    s += '<span class="glyphicon glyphicon-remove modclose" comment_num="'+item.comment_num+'" style="position: relative; left:350px;"></span>';
-                    s += '<div><img src="/photo/'+item.user_photo+'" class="modprofile"></div>';
-                    s += '<div><b class="user_name" style="margin-left:-14px;">'+item.user_name+'</b>';
+                    s += '<div class="comment" id="commentmod'+item.comment_num+'" style="display:flex; flex-wrap:wrap; visibility: hidden; position:relative; left: 31px; bottom: 31px;">';
+                    s += '<span class="glyphicon glyphicon-remove modclose" comment_num="'+item.comment_num+'" style="position: relative; left:400px;"></span>';
+                    s += '<div><img src="/photo/'+item.user_photo+'" class="profile"></div>';
+                    s += '<div><b class="user_name">'+item.user_name+'</b>';
                     s += '<br>';
-                   s += '<input type="text" class="inputmod form-control" id="cmmodinput'+item.comment_num+'" style="width: 200px; height:60%; padding:0; margin-left:-14px;" comment_num="'+item.comment_num+'" value="'+item.comment_content+'">';
+                   s += '<input type="text" class="inputmod form-control" style="width: 200px;" comment_num="'+item.comment_num+'" value="'+item.comment_content+'">';
                    s += '</div></div>';
                    s += '</div>';
                 }
@@ -1527,15 +1514,15 @@
                    s += '<span class="glyphicon glyphicon-heart yeslike" style="color: red;" comment_num="'+item.comment_num+'"><span style="margin-left:2px; font-size:1.25em;">' + item.like_count + '</span></span>';
                 }
                 
-                s += "<span class='recontent' comment_num='"+item.comment_num+"'><b style='font-size:0.9em'>답글달기</b></span>";
-                s += "<span class='comment_writeday' style='font-size:0.9em;'>" + item.perTime + "</span></div>";
+                s += "<span class='recontent' comment_num='"+item.comment_num+"'><b style='font-size:1.1em'>답글달기</b></span>";
+                s += "<span class='comment_writeday'>" + item.perTime + "</span></div>";
                 s += '<form method="post" class="form-inline" id="comment'+item.comment_num+'" style="display: none;">';
                 s += '<div class="recommentaddform">';
-                s += "<div style='width: 50px; height: 50px;'></div>"; 
-                s += '<img src="/photo/${sessionScope.user_photo }" class="recommentprofile">';
+                s += "<div style='width: 30px; height: 30px;'></div>"; 
+                s += '<img src="/photo/${sessionScope.user_photo }" id="commentprofile">';
                 s += '<input hidden="hidden" /> ';
                 s += '<input type="text" class="input" name="comment_content" placeholder="댓글을 입력하세요" id="input'+item.comment_num+'">';
-                s += '<button type="button" class="cminsert" comment_num="'+item.comment_num+'" post_num="'+item.post_num+'" style="margin-left: -40px;"></button>';
+                s += '<button type="button" class="cminsert" comment_num="'+item.comment_num+'" post_num="'+item.post_num+'"  style="margin-right: 20px;"></button>';
                 s += '</div>';
                 s += '</form></div>';
                 console.log(s);
@@ -1938,29 +1925,18 @@ body {
 }
 
 .comment {
-   width: 400px;
+   width: 450px;
    border-radius: 20px;
    padding: 10px;
    margin-bottom: 10px;
-   background-color: #f6f6f6;
-   margin-left: 50px;
 }
 
 
 .profile {
-   width: 30px;
-   height: 30px;
+   width: 40px;
+   height: 40px;
    border-radius: 50%;
-   margin-right: 5px;
-   margin-left:-55px;
-}
-
-.modprofile {
-   width: 30px;
-   height: 30px;
-   border-radius: 50%;
-   margin-right: 5px;
-   margin-left:-69px;
+   margin-right: 20px;
 }
 
 /* 좋아요,댓글,날짜 */
@@ -1973,13 +1949,13 @@ body {
 
 /* 사용자 이름  */
 b.user_name {
-   font-size: 12px;
+   font-size: 14px;
    font-weight: bold;
 }
 
 /* 사용자 댓글  */
 span.content {
-   font-size: 10px;
+   font-size: 16px;
 }
 
 #commentaddform {
@@ -2007,18 +1983,22 @@ span.content {
    cursor: pointer; 
 }
 
-#commentprofile {
-   width: 45px;
-   height: 45px;
-   border-radius: 50%;
 
+
+.insertcommentimg {
+   background: url('/image/submit.png') no-repeat center;
+   background-size: cover;
+   width: 50px;
+   border: none;
+   cursor: pointer; 
 }
 
-.recommentprofile {
-   width: 30px;
-   height: 30px;
-   border-radius: 50%;
 
+#commentprofile {
+   width: 40px;
+   height: 40px;
+   border-radius: 50%;
+   margin-right: 10px;
 }
 
 .input {
@@ -2028,8 +2008,6 @@ span.content {
    outline: none;
    border-radius: 20px;
    padding: 5px 10px;
-   background-color: #f6f6f6;
-   margin-right: 3px;
 }
 
 .mominput {
@@ -2037,7 +2015,6 @@ span.content {
    border: none;
    outline: none;
    border-radius: 40px;
-   background-color: #f6f6f6;
 }
 
 
@@ -2049,11 +2026,10 @@ span.content {
 .cminsert {
    background: url(/image/submit.png) no-repeat center;
     background-size: cover;
-    width: 25px;
-    height: 35px;
+    width: 30px;
+    height: 40px;
     border: none;
     cursor: pointer;
-    margin-top: 2px;
 }
 
 
@@ -2128,14 +2104,14 @@ span.content {
 .unfollow {
    color: blue;
       cursor: pointer;
-   font-size: 1em;
+   font-size: 1.2em;
      margin-right: 10px;
 }
 
 .follow {
    color: gray;
       cursor: pointer;
-      font-size: 1em;
+      font-size: 1.2em;
       margin-right: 10px;
 }
 .follow:hover{
@@ -2395,7 +2371,7 @@ li {
                            <c:if test="${dto.checklogin ==1 }">
 
                               <ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu "
-                                 style="font-size: 18px; line-height: 1.5em; display: none;">
+                                 style="font-size: 20pt; line-height: 1.5em; display: none;">
 
 
                                  <li id="postupdate" class="postdetail" data-toggle="modal" data-target="#updatepost"
@@ -2406,7 +2382,7 @@ li {
                            </c:if>
                            <c:if test="${dto.checklogin !=1 }">
                               <ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu"
-                                 style="font-size: 18px; line-height: 1.5em; display: none;">
+                                 style="font-size: 20pt; line-height: 1.5em; display: none;">
                                  <li class="postdetail posthide" divpost_num="div${dto.post_num }"
                                     divspost_num="divs${dto.post_num }">게시물 숨김</li>
                               </ul>
@@ -2601,7 +2577,7 @@ li {
                            <c:if test="${dto.checklogin ==1 }">
 
                               <ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu"
-                                 style="font-size: 18px; line-height: 1.5em; display: none;">
+                                 style="font-size: 20pt; line-height: 1.5em; display: none;">
 
 
                                  <li id="postupdate" class="postdetail" data-toggle="modal" data-target="#updatepost"
@@ -2612,7 +2588,7 @@ li {
                            </c:if>
                            <c:if test="${dto.checklogin !=1 }">
                               <ul id="${dto.post_num }" class="dropdown-menu dropdown-menu-right postsubmenu"
-                                 style="font-size: 18px; line-height: 1.5em; display: none;">
+                                 style="font-size: 20pt; line-height: 1.5em; display: none;">
                                  <li class="postdetail posthide" divpost_num="div${dto.post_num }"
                                     divspost_num="divs${dto.post_num }">게시물 숨김</li>
                               </ul>
