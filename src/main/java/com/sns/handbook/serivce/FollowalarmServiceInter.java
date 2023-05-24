@@ -13,4 +13,5 @@ public interface FollowalarmServiceInter {
 	public int findSameFollowalarm(String receiver_num,String sender_num);
 	public FollowalarmDto getFollowalarmByNum(String receiver_num,String sender_num);
 	public void deleteFollowalarm(String followal_num);
+	public void deleteAllFollowalarm(String receiver_num);
 }

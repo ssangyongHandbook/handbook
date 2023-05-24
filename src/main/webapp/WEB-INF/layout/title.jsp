@@ -121,6 +121,19 @@
 	visibility: hidden;
 }
 
+.allalarmcircle{
+	width: 13px;
+	height: 13px;
+	border: 2px solid white;
+	background-color: red;
+	border-radius: 100px;
+	position: absolute;
+	right: 0px;
+	margin-right: 70px;
+	margin-bottom: 20px;
+	visibility: hidden;
+}
+
 .msgalarmlist, .allalarmlist{
 	width: 290px;
 	height: 100%;
@@ -130,10 +143,21 @@
 	overflow: auto;
 }
 
-.msgalarmone, .allalarmone{
+.msgalarmone{
 	display: inline-flex;
 	align-items: center;
 	width: 280px;
+	padding: 10px;
+	margin: 0 auto;
+	margin-top: 15px;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+.allalarmone{
+	display: inline-flex;
+	align-items: center;
+	width: 270px;
 	padding: 10px;
 	margin: 0 auto;
 	margin-top: 15px;
@@ -182,11 +206,12 @@
 	margin-right: 10px;
 	width: 110px;
 	overflow: hidden;
+	height: 20px;
 }
 
 .allalarmrwrite{
 	margin-right: 10px;
-	width: 170px;
+	width: 160px;
 }
 
 .msgalarmheader, .allalarmheader{
@@ -209,6 +234,11 @@
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+}
+
+.readallalarm{
+	font-size: 12pt;
+	cursor: pointer;
 }
 
 </style>
@@ -263,6 +293,49 @@
 		
 		$(document).on("click",".msgalarmone",function(){
 			location.href="../message/main?selgroup="+$(this).attr("group");
+		})
+		
+		$(document).on("click",".readallalarm",function(){
+			$.ajax({
+				type:"get",
+				dataType:"text",
+				url:"../allalarmdelete",
+				success:function(){
+					$(".allalarmcircle").css("visibility","hidden");
+					$(".allalarmlist").html("");
+				}
+			})
+		})
+		
+		$(document).on("click",".allalarmone",function(){
+			if($(this).attr("alarm_type")=="post"){
+				if($(this).attr("guest_num")=="null"){
+					location.href="../user/mypage?user_num=${sessionScope.user_num}&post_num="+$(this).attr("post_num");
+				}
+				
+				else{
+					location.href="../user/mypage?user_num=${sessionScope.user_num}&guest_num="+$(this).attr("guest_num");
+				}
+			}
+			
+			else if($(this).attr("alarm_type")=="comment"){
+				location.href="../user/mypage?user_num=${sessionScope.user_num}&comment_num="+$(this).attr("comment_num");
+			}
+			
+			else if($(this).attr("alarm_type")=="plike"){
+				if($(this).attr("guest_num")=="null"){
+					location.href="../user/mypage?user_num=${sessionScope.user_num}&post_num="+$(this).attr("post_num");
+				}
+				
+				else{
+					location.href="../user/mypage?user_num=${sessionScope.user_num}&guest_num="+$(this).attr("guest_num");
+				}
+			}
+			
+			else if($(this).attr("alarm_type")=="clike"){
+				location.href="../user/mypage?user_num=${sessionScope.user_num}&comment_num="+$(this).attr("comment_num");
+			}
+			
 		})
 	})
 
@@ -334,7 +407,7 @@
 					$.each(res.alarmList,function(i,ele){
 						//댓글 알림일 경우
 						if(ele.type=="post"){
-							alarmlist+='<div class="allalarmone" group='+ele.postal_num+'>';
+							alarmlist+='<div class="allalarmone" alarm_type="post" post_num='+ele.post_num+' guest_num='+ele.guest_num+'>';
 							alarmlist+='<div class="allalarmphoto">';
 							if(ele.sender_photo==null){
 								alarmlist+='<img alt="" src="/image/noimg.png">';
@@ -354,7 +427,7 @@
 						
 						//답글 알림일 경우
 						else if(ele.type=="comment"){
-							alarmlist+='<div class="allalarmone" group='+ele.commental_num+'>';
+							alarmlist+='<div class="allalarmone" alarm_type="comment" comment_num='+ele.comment_num+'>';
 							alarmlist+='<div class="allalarmphoto">';
 							if(ele.sender_photo==null){
 								alarmlist+='<img alt="" src="/image/noimg.png">';
@@ -373,8 +446,8 @@
 						}
 						
 						//팔로우 알림일 경우
-						else if(ele.type="follow"){
-							alarmlist+='<div class="allalarmone" group='+ele.fing_num+'>';
+						else if(ele.type=="follow"){
+							alarmlist+='<div class="allalarmone" alarm_type="follow">';
 							alarmlist+='<div class="allalarmphoto">';
 							if(ele.sender_photo==null){
 								alarmlist+='<img alt="" src="/image/noimg.png">';
@@ -388,6 +461,51 @@
 							alarmlist+='<span class="allalarmrwrite">회원님을 팔로우했습니다.</span>';
 							alarmlist+='</div>';
 							alarmlist+='</div>';
+							alarmlist+='</div>';	
+						}
+						
+						//게시글 좋아요 알림일 경우
+						else if(ele.type=="plike"){
+							alarmlist+='<div class="allalarmone" alarm_type="plike" post_num='+ele.post_num+' guest_num='+ele.guest_num+'>';
+							alarmlist+='<div class="allalarmphoto">';
+							if(ele.sender_photo==null){
+								alarmlist+='<img alt="" src="/image/noimg.png">';
+							}else{
+								alarmlist+='<img alt="" src="/photo/'+ele.sender_photo+'">';
+							}
+							alarmlist+='</div>';
+							alarmlist+='<div class="allalarmdetail">';
+							alarmlist+='<span class="allalarmname">'+ele.sender_name+'</span>';
+							alarmlist+='<div class="allalarmcontent">';
+							alarmlist+='<span class="allalarmrwrite">회원님의 게시글에 좋아요를 눌렀습니다.</span>';
+							alarmlist+='</div>';
+							alarmlist+='</div>';
+							alarmlist+='</div>';	
+						}
+						
+						//댓글 좋아요 알림일 경우
+						else if(ele.type=="clike"){
+							alarmlist+='<div class="allalarmone" alarm_type="clike" comment_num='+ele.comment_num
+							+'>';
+							alarmlist+='<div class="allalarmphoto">';
+							if(ele.sender_photo==null){
+								alarmlist+='<img alt="" src="/image/noimg.png">';
+							}else{
+								alarmlist+='<img alt="" src="/photo/'+ele.sender_photo+'">';
+							}
+							alarmlist+='</div>';
+							alarmlist+='<div class="allalarmdetail">';
+							alarmlist+='<span class="allalarmname">'+ele.sender_name+'</span>';
+							alarmlist+='<div class="allalarmcontent">';
+							alarmlist+='<span class="allalarmrwrite">회원님의 댓글에 좋아요를 눌렀습니다.</span>';
+							alarmlist+='</div>';
+							alarmlist+='</div>';
+							alarmlist+='</div>';	
+						}
+						
+						else if(ele.type="pass"){
+							alarmlist+='<div class="allalarmone" style="background-color:#F0F2F5">';
+							alarmlist+='<div style="text-align:center; width:100%; font-size:12pt;"><b>임시 비밀번호를 바꿔주세요!</b></div>'
 							alarmlist+='</div>';	
 						}
 					})
@@ -436,12 +554,15 @@
 		<!-- 메시지 알림 개수 표시 끝 -->
 		
 		<div class="titlecircle tti ttialarm"><a href="#"><span style="font-size: 15pt; color: black;"><i class="fa-solid fa-bell"></i></span></a></div>
+		<!-- 메시지 알림 개수 표시 시작 -->
+		<div class="allalarmcircle"></div>
+		<!-- 메시지 알림 개수 표시 끝 -->
 		
-		<c:if test="${sessionScope.user_photo=='no' }">
+		<c:if test="${sessionScope.user_photo==null }">
 		<div class="tti ttiuphoto"><a href="/user/mypage?user_num=${sessionScope.user_num }"><img src="../image/noimg.png" alt=""></a></div>
 		</c:if>
 		
-		<c:if test="${sessionScope.user_photo!='no' }">
+		<c:if test="${sessionScope.user_photo!=null }">
 		<div class="tti ttiuphoto"><a href="/user/mypage?user_num=${sessionScope.user_num }"><img src="../photo/${sessionScope.user_photo }" alt=""></a></div>
 		</c:if>
 	</div>
@@ -475,7 +596,7 @@
 <div class = "stitle">
  	<div class = "titlemenu allalarmshow" style = "height:300px; width: 300px; border-radius: 10px;"> 
             <div class="allalarmheader">
-            	<span>모두 읽기</span>
+            	<span class="readallalarm"><b>모두 비우기</b></span>
             </div>
             <div class = "allalarmlist">
             </div>

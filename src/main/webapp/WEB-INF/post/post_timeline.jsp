@@ -256,6 +256,8 @@
                "user_num" : user_num
             },
             success : function() {
+            	//게시글 좋아요 알림
+           	 	ws.send('{"type":"plike","sender_num":"${sessionScope.user_num}","post_num":"'+post_num+'","guest_num":"null"}');
             }
          })
       })
@@ -899,7 +901,7 @@
                   commentCount(post_num);
                   
                   //웹소켓에 댓글 알림 보내기
-                  ws.send('{"type":"post","sender_num":"${sessionScope.user_num}","post_num":"'+post_num+'","comment_content":"'+inputdata+'"}');
+                  ws.send('{"type":"post","sender_num":"${sessionScope.user_num}","post_num":"'+post_num+'","guest_num":"null","comment_content":"'+inputdata+'"}');
                }
             })
          }else
@@ -938,6 +940,9 @@
                $("#input" + comment_num).hide();
                scroll(commentoffset, post_num);
                commentCount(post_num);
+               
+               //댓글 좋아요 알림
+          	 	ws.send('{"type":"clike","sender_num":"${sessionScope.user_num}","comment_num":"'+comment_num+'"}');
             }
          });
 

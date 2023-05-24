@@ -16,4 +16,5 @@ public interface FollowalarmMapperInter {
 	public int findSameFollowalarm(Map<String, String> map);
 	public FollowalarmDto getFollowalarmByNum(Map<String, String> map);
 	public void deleteFollowalarm(String followal_num);
+	public void deleteAllFollowalarm(String receiver_num);
 }

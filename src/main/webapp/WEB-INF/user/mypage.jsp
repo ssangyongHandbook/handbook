@@ -264,6 +264,86 @@ $(function(){
 	offset=${offset};
 	commentoffset=${commentoffset};
 	
+	//메시지 보내기 누르면 메시지창으로 이동
+	$(".btnmessage").click(function(){
+		location.href="../message/main?search_name=${dto.user_name}&search_num=${dto.user_num}";
+	})
+	
+	//마이페이지 넘어갔을 때 post_num이 넘어온 경우
+	if("${post_num}"!=""){
+		$.each($(".img_comment"),function(i,ele){
+			if($(ele).attr("post_num")=="${post_num}" && $(ele).attr("type")=="post"){
+				 var post_num=$(this).attr("post_num");
+		    	  var user_name=$(this).attr("user_name");
+		    	 // alert(user_name);
+		    	  type=$(this).attr("type");
+		    	  
+		    	  $("#inputhidden-post_num").val("");
+		    	  $("#inputhidden-guest_num").val("");
+		    	  $(".commenth4").text(user_name+"님의 게시물");
+		    	  
+
+		    	  $("#insertcommentbtn").attr("writetype",type);
+				if(type=="post"){
+			    	  $("#inputhidden-post_num").val(post_num);
+		    	  }else
+		    		  $("#inputhidden-guest_num").val(post_num);
+
+		    	  
+		          $("#commentsection").empty();
+		          
+		          if(type=="post"){
+		          	scroll(0,post_num);
+		          	commentCount(post_num);
+		          }
+		          else{
+		        	  guestscroll(0,post_num);
+		              commentGuestCount(post_num);
+		          }
+		          
+				$(".btncommentmodal").trigger("click")
+			}
+		})
+	}
+	
+	//마이페이지 넘어갔을 때 guest_num이 넘어온 경우
+	if("${guest_num}"!=""){
+		$.each($(".img_comment"),function(i,ele){
+			if($(ele).attr("post_num")=="${guest_num}" && $(ele).attr("type")=="guest"){
+				 var post_num=$(this).attr("post_num");
+		    	  var user_name=$(this).attr("user_name");
+		    	 // alert(user_name);
+		    	  type=$(this).attr("type");
+		    	  
+		    	  $("#inputhidden-post_num").val("");
+		    	  $("#inputhidden-guest_num").val("");
+		    	  $(".commenth4").text(user_name+"님의 게시물");
+		    	  
+
+		    	  $("#insertcommentbtn").attr("writetype",type);
+				if(type=="post"){
+			    	  $("#inputhidden-post_num").val(post_num);
+		    	  }else
+		    		  $("#inputhidden-guest_num").val(post_num);
+
+		    	  
+		          $("#commentsection").empty();
+		          
+		          if(type=="post"){
+		          	scroll(0,post_num);
+		          	commentCount(post_num);
+		          }
+		          else{
+		        	  guestscroll(0,post_num);
+		              commentGuestCount(post_num);
+		          }
+		          
+				$(".btncommentmodal").trigger("click")
+			}
+		})
+	}
+	
+	
 		//스크롤 이벤트
 		$(window).scroll(function(){
 			var left_side=$(".left").height();
@@ -853,7 +933,8 @@ $(function(){
                  url : "likeinsert",
                  data : {"post_num" : post_num,"user_num" : user_num},
                  success : function() {
-                	 
+                	 //게시글 좋아요 알림
+                	 ws.send('{"type":"plike","sender_num":"${sessionScope.user_num}","post_num":"'+post_num+'","guest_num":"null"}');
                  }
               })  
               
@@ -865,7 +946,8 @@ $(function(){
                  url : "guestlikeinsert",
                  data : {"guest_num" : post_num,"user_num" : user_num},
                  success : function() {
-                 	
+                 	//방명록 좋아요 알림
+                	 ws.send('{"type":"plike","sender_num":"${sessionScope.user_num}","guest_num":"'+post_num+'","post_num":"null"}');
                  }
               })   	 
          }
@@ -1028,7 +1110,7 @@ $(function(){
                      scroll(commentoffset, post_num);
                      commentCount(post_num);
                    //웹소켓에 댓글 알림 보내기
-                     ws.send('{"type":"post","sender_num":"${sessionScope.user_num}","post_num":"'+post_num+'","comment_content":"'+comment_content+'"}');
+                     ws.send('{"type":"post","sender_num":"${sessionScope.user_num}","post_num":"'+post_num+'","guest_num":"null","comment_content":"'+comment_content+'"}');
                   }
                })
           }else{
@@ -1047,7 +1129,7 @@ $(function(){
                      guestscroll(commentoffset, guest_num);
                      commentGuestCount(guest_num);
                    //웹소켓에 댓글 알림 보내기
-                     ws.send('{"type":"post","sender_num":"${sessionScope.user_num}","post_num":"'+post_num+'","comment_content":"'+comment_content+'"}');
+                     ws.send('{"type":"post","sender_num":"${sessionScope.user_num}","guest_num":"'+guest_num+'","post_num":"null","comment_content":"'+comment_content+'"}');
                   }
                })
           }
@@ -1177,6 +1259,9 @@ $(function(){
                     $("#input" + comment_num).hide();
                     scroll(commentoffset, post_num);
                     commentCount(post_num);
+                    
+                  	//댓글 좋아요 알림
+              	 	ws.send('{"type":"clike","sender_num":"${sessionScope.user_num}","comment_num":"'+comment_num+'"}');
                  }
               });
          }else{
@@ -1196,6 +1281,9 @@ $(function(){
                     $("#input" + comment_num).hide();
                     guestscroll(commentoffset, guest_num);
                     commentGuestCount(guest_num);
+                    
+                  	//댓글 좋아요 알림
+              	 	ws.send('{"type":"clike","sender_num":"${sessionScope.user_num}","comment_num":"'+comment_num+'"}');
                  }
               });
          }

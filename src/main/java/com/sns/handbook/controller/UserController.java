@@ -1,5 +1,7 @@
 package com.sns.handbook.controller;
 
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -112,9 +114,42 @@ public class UserController {
 
 	//마이페이지 이동
 	@GetMapping("/user/mypage")
-	public ModelAndView mypage(@RequestParam(defaultValue = "0") int offset,@RequestParam(defaultValue = "0") int commentoffset,String user_num,HttpSession session) {
+	public ModelAndView mypage(@RequestParam(defaultValue = "0") int offset,@RequestParam(defaultValue = "0") int commentoffset,
+			String user_num,
+			@RequestParam(required = false) String post_num,
+			@RequestParam(required = false) String guest_num,
+			@RequestParam(required = false) String comment_num,
+			HttpSession session) {
 
 		ModelAndView model=new ModelAndView();
+		
+		//예지
+		
+		model.addObject("post_num",post_num);
+		
+		//게스트글
+		
+		if(guest_num!=null) {
+			GuestbookDto guestdto=uservice.getDataByGuestNum(guest_num);
+			model.addObject("guest_num",guest_num);
+			
+			user_num=guestdto.getOwner_num();
+		}
+		
+		//댓글
+		if(comment_num!=null) {
+			CommentDto commentdto=cservice.getData(comment_num);
+			model.addObject("post_num",commentdto.getPost_num());
+			model.addObject("guest_num",commentdto.getGuest_num());
+			
+			if(commentdto.getPost_num()==null) {
+				user_num=uservice.getDataByGuestNum(commentdto.getGuest_num()).getOwner_num();
+			}
+			
+			System.out.println("post: "+commentdto.getPost_num()+", guest: "+commentdto.getGuest_num());
+		}
+		
+		//////
 
 		int followercount=fservice.getTotalFollower(user_num);
 		int followcount=fservice.getTotalFollowing(user_num);

@@ -33,4 +33,10 @@ public class CommentalarmService implements CommentalarmServiceInter {
 		// TODO Auto-generated method stub
 		return mapperInter.getTotalCountCommentAlarm(receiver_num);
 	}
+
+	@Override
+	public void deleteAllCommentAlarm(String receiver_num) {
+		// TODO Auto-generated method stub
+		mapperInter.deleteAllCommentAlarm(receiver_num);
+	}
 }

@@ -17,16 +17,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sns.handbook.dto.ClikealarmDto;
 import com.sns.handbook.dto.CommentalarmDto;
 import com.sns.handbook.dto.FollowalarmDto;
 import com.sns.handbook.dto.MessageDto;
 import com.sns.handbook.dto.MessagealarmDto;
+import com.sns.handbook.dto.PlikealarmDto;
 import com.sns.handbook.dto.PostalarmDto;
+import com.sns.handbook.serivce.ClikealarmService;
 import com.sns.handbook.serivce.CommentService;
 import com.sns.handbook.serivce.CommentalarmService;
 import com.sns.handbook.serivce.FollowalarmService;
 import com.sns.handbook.serivce.MessageService;
 import com.sns.handbook.serivce.MessagealarmService;
+import com.sns.handbook.serivce.PlikealarmService;
 import com.sns.handbook.serivce.PostalarmService;
 import com.sns.handbook.serivce.UserService;
 
@@ -53,6 +57,12 @@ public class MessagealarmController{
 	
 	@Autowired
 	CommentalarmService caservice;
+	
+	@Autowired
+	PlikealarmService plaservice;
+	
+	@Autowired
+	ClikealarmService claservice;
 	
 	//알림전송
 	@GetMapping("/messagealaramadd")
@@ -97,25 +107,17 @@ public class MessagealarmController{
 		paservice.insertPostAlarm(dto);
 	}
 	
-	//팔로우 알림 전송
-	@GetMapping("/followalarmadd")
-	public void followalarmAdd(HttpSession session, String receiver_num) {
-		//현재 사용자의 user_num
-		String user_num=(String)session.getAttribute("user_num");
-
-		FollowalarmDto dto=new FollowalarmDto();
-
-		dto.setReceiver_num(receiver_num);
-		dto.setSender_num(user_num);
-
-		String sender_name=uservice.getUserByNum(dto.getSender_num()).getUser_name();
-		String sender_photo=uservice.getUserByNum(dto.getSender_num()).getUser_photo();
-
-		dto.setSender_name(sender_name);
-		dto.setSender_photo(sender_photo);
-
-		//알림 insert
-		faservice.insertFollowalarm(dto);
+	//알림 모두 지우기
+	@GetMapping("/allalarmdelete")
+	public void allAlarmDelete(HttpSession session)
+	{
+		String receiver_num=(String)session.getAttribute("user_num");
+		
+		faservice.deleteAllFollowalarm(receiver_num);
+		paservice.deleteallPostAlarm(receiver_num);
+		caservice.deleteAllCommentAlarm(receiver_num);
+		plaservice.deleteAllPlikeAlarm(receiver_num);
+		claservice.deleteAllClikealarm(receiver_num);
 	}
 	
 	//알림받아오기
@@ -184,7 +186,7 @@ public class MessagealarmController{
 		
 				p.setTimeSec(diffSec); //시간 다시 넣어주기
 				alarmTime.put(timeNum, diffSec);
-				timeNum++;
+				++timeNum;
 				
 				//일시분초
 				long day=(diffSec/(60*60*24*1000L))%365;
@@ -257,7 +259,7 @@ public class MessagealarmController{
 
 				c.setTimeSec(diffSec); //시간 다시 넣어주기
 				alarmTime.put(timeNum, diffSec);
-				timeNum++;
+				++timeNum;
 
 				//일시분초
 				long day=(diffSec/(60*60*24*1000L))%365;
@@ -292,7 +294,151 @@ public class MessagealarmController{
 			alarmList.addAll(caList);
 		}
 		
-		//좋아요
+		//게시글 좋아요
+		//게시글 좋아요 알림개수 세기
+		int plikealarmCount=plaservice.getTotalCountPlikealarm(user_num);
+		alarmCount+=plikealarmCount;
+
+		if(plikealarmCount!=0) {
+			//댓글 목록
+			List<PlikealarmDto> plaList=plaservice.getAllPlikealarm(user_num);
+
+			for(PlikealarmDto pl:plaList) {
+				String sender_num=pl.getSender_num();
+
+				String sender_name=uservice.getUserByNum(sender_num).getUser_name();
+				String sender_photo=uservice.getUserByNum(sender_num).getUser_photo();
+
+				pl.setSender_name(sender_name);
+				pl.setSender_photo(sender_photo);
+
+				////////////////
+				//대화 시간 오늘 날짜에서 빼기(몇 초전... 몇 분 전...)
+				/* System.out.println(today); */
+				SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+				Date writeday=new Date();
+				try {
+					writeday=sdf.parse(pl.getAlarmtime().toString());
+					/* System.out.println(writeday); */
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				long diffSec=(today.getTime()-writeday.getTime());
+				diffSec-=32400000L; //DB에 now()로 들어가는 시간이 9시간 차이 나서 빼줌
+				/* System.out.println(diffSec); */
+
+				pl.setTimeSec(diffSec); //시간 다시 넣어주기
+				alarmTime.put(timeNum, diffSec);
+				++timeNum;
+
+				//일시분초
+				long day=(diffSec/(60*60*24*1000L))%365;
+				long hour=(diffSec/(60*60*1000L))%24;
+				long minute=(diffSec/(60*1000L))%60;
+				long second=(diffSec/1000L)%60;
+
+				String preTime="";
+
+				if(day!=0) {
+					//하루 이상이 지났으면 일수만 표시
+					preTime=""+day+"일 전";
+				}else {
+					if(hour!=0) {
+						//1시간 이상이 지났으면 시(hour)만 표시
+						preTime=""+hour+"시간 전";
+					}else {
+						if(minute!=0) {
+							//1분 이상이 지났으면 분만 표시
+							preTime=""+minute+"분 전";
+						}else {
+							//1분 미만 초만 표시
+							preTime="방금전";
+						}
+					}
+				}
+
+				pl.setTime(preTime);
+				/////////////
+			}
+
+			alarmList.addAll(plaList);
+		}
+		
+		//댓글 좋아요
+		//댓글 좋아요 알림개수 세기
+		int clikealarmCount=claservice.getTotalCountClikealarm(user_num);
+		alarmCount+=clikealarmCount;
+
+		if(clikealarmCount!=0) {
+			//댓글 목록
+			List<ClikealarmDto> claList=claservice.getAllClikealarm(user_num);
+
+			for(ClikealarmDto cl:claList) {
+				String sender_num=cl.getSender_num();
+
+				String sender_name=uservice.getUserByNum(sender_num).getUser_name();
+				String sender_photo=uservice.getUserByNum(sender_num).getUser_photo();
+
+				cl.setSender_name(sender_name);
+				cl.setSender_photo(sender_photo);
+
+				////////////////
+				//대화 시간 오늘 날짜에서 빼기(몇 초전... 몇 분 전...)
+				/* System.out.println(today); */
+				SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+				Date writeday=new Date();
+				try {
+					writeday=sdf.parse(cl.getAlarmtime().toString());
+					/* System.out.println(writeday); */
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				long diffSec=(today.getTime()-writeday.getTime());
+				diffSec-=32400000L; //DB에 now()로 들어가는 시간이 9시간 차이 나서 빼줌
+				/* System.out.println(diffSec); */
+
+				cl.setTimeSec(diffSec); //시간 다시 넣어주기
+				alarmTime.put(timeNum, diffSec);
+				++timeNum;
+
+				//일시분초
+				long day=(diffSec/(60*60*24*1000L))%365;
+				long hour=(diffSec/(60*60*1000L))%24;
+				long minute=(diffSec/(60*1000L))%60;
+				long second=(diffSec/1000L)%60;
+
+				String preTime="";
+
+				if(day!=0) {
+					//하루 이상이 지났으면 일수만 표시
+					preTime=""+day+"일 전";
+				}else {
+					if(hour!=0) {
+						//1시간 이상이 지났으면 시(hour)만 표시
+						preTime=""+hour+"시간 전";
+					}else {
+						if(minute!=0) {
+							//1분 이상이 지났으면 분만 표시
+							preTime=""+minute+"분 전";
+						}else {
+							//1분 미만 초만 표시
+							preTime="방금전";
+						}
+					}
+				}
+
+				cl.setTime(preTime);
+				/////////////
+			}
+
+			alarmList.addAll(claList);
+		}
 		
 		//팔로우
 		//팔로우 알림개수 세기
@@ -332,7 +478,7 @@ public class MessagealarmController{
 
 	    		f.setTimeSec(diffSec); //시간 다시 넣어주기
 	    		alarmTime.put(timeNum, diffSec);
-				timeNum++;
+	    		++timeNum;
 	    		
 	    		//일시분초
 				long day=(diffSec/(60*60*24*1000L))%365;
@@ -376,6 +522,15 @@ public class MessagealarmController{
 					alarmList.set(j, temp);
 				}
 			}
+		}
+		
+		String pass=uservice.getUserByNum(user_num).getUser_pass();
+		
+		if(pass.length()<=11) {
+			Map<String, String> passMap=new HashMap<>();
+			map.put("type", "pass");
+			alarmList.add(passMap);
+			alarmCount++;
 		}
 		
 		Collections.reverse(alarmList);

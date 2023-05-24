@@ -62,4 +62,10 @@ public class FollowalarmService implements FollowalarmServiceInter {
 		mapperInter.deleteFollowalarm(followal_num);
 	}
 
+	@Override
+	public void deleteAllFollowalarm(String receiver_num) {
+		// TODO Auto-generated method stub
+		mapperInter.deleteAllFollowalarm(receiver_num);
+	}
+
 }

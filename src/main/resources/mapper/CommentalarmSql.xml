@@ -10,4 +10,7 @@
 	<select id="getTotalCountCommentAlarm" parameterType="String" resultType="int">
 		select count(*) from commentalarm where receiver_num=#{receiver_num}
 	</select>
+	<delete id="deleteAllCommentAlarm" parameterType="String">
+		delete from commentalarm where receiver_num=#{receiver_num}
+	</delete>
 </mapper>

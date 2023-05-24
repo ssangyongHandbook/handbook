@@ -19,4 +19,7 @@
 	<delete id="deleteFollowalarm" parameterType="String">
 		delete from followalarm where followal_num=#{followal_num}
 	</delete>
+	<delete id="deleteAllFollowalarm" parameterType="String">
+		delete from followalarm where receiver_num=#{receiver_num}
+	</delete>
 </mapper>
