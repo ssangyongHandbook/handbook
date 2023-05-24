@@ -106,6 +106,7 @@
 						data:{"from_user":"${sessionScope.user_num}", "to_user":user_num},
 						success:function(){
 							btn.innerText="팔로워취소";
+							ws.send('{"type":"follow","receiver_num":"'+user_num+'","sender_num":"${sessionScope.user_num}"}');
 						}
 					}); 
 				}else{
@@ -162,7 +163,7 @@
 			    		    			s += '</div>';
 			    		    			s+='</div>';
 			    		    			
-			    		    			s += '<div class="btndiv" style="margin: auto 0;">';
+			    		    			s += '<div class="btndiv">';
 			    		    			if(item.to_user != null){
 			    		    				s += '<button type="button" class="btn btn-outline-primary btn-lg addbtn" id="btn'+item.user_num+'" user_num = "'+item.to_user+'">팔로워추가</button>';
 			    		    			}else{
@@ -192,6 +193,23 @@
 				}
 			});
 		});
+	
+	var ws;
+
+	//웹소켓 오픈(메시지 알림)
+	function wsOpen() {
+		ws = new WebSocket("ws://" + location.host + "/chating");
+		wsEvt();
+	}
+
+	function wsEvt() {
+		ws.onopen = function(data) {
+		}
+	
+		//메시지 잘 들어왔을 때 실행하는 내용
+		ws.onmessage = function(data) {
+		}
+	}
 	
 </script>
 

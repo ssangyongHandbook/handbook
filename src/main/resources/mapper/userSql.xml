@@ -134,10 +134,20 @@
 		update user set mail_auth=1 where user_email=#{user_email} and mail_key=#{mail_key}
 	</update>
 
+	<!-- 소셜 로그인 하면 자동으로 mail_auth컬럼 1로 바꿈-->
+	<update id="updateMailAuthByOauthLogin" parameterType="String">
+		update user set mail_auth=1 where user_num=#{user_num}
+	</update>
+
 	<!-- 이메일 인증 했으면 0반환, 로그인 할때 인증했는지 안했는지 체크하기 위해 -->
 	<select id="emailAuthFail" parameterType="String" resultType="int">
 		select count(*) from user where user_num=#{user_num} and mail_auth=1
 	</select>
+
+	<!-- 비밀번호만 수정 -->
+	<update id="updateUserPass" parameterType="UserDto">
+		update user set user_pass=#{user_pass} where user_num=#{user_num}
+	</update>
 	<!-- 여기 위까지는 김희수가 구현함. -->
 	
 	<!-- 예지 -->
