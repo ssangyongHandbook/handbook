@@ -152,6 +152,9 @@ public class PostController {
 	    
 	    int idx = 1;
 	    String uploadName = "";
+	    String postContent = dto.getPost_content();     
+        postContent = postContent.replaceAll(" ", "&nbsp;").replaceAll("\n", "<br>");
+        dto.setPost_content(postContent);
 	    
 	    if (photo == null) {
 	        dto.setPost_file("no");
