@@ -26,7 +26,8 @@
 
 <script type="text/javascript">
    $(function() {
-
+	   wsOpen();
+	   
       offset = ${offset};
       commentoffset = ${commentoffset};
       modalScrollPosition = 0;
@@ -277,6 +278,8 @@
                "user_num" : user_num
             },
             success : function() {
+            	//게시글 좋아요 알림
+           	 	ws.send('{"type":"plike","sender_num":"${sessionScope.user_num}","post_num":"'+post_num+'","guest_num":"null"}');
             }
          })
       })
@@ -313,7 +316,7 @@
                "to_user" : to_user
             },
             success : function() {
-
+            	ws.send('{"type":"follow","receiver_num":"'+to_user+'","sender_num":"${sessionScope.user_num}"}');
             }
          })
       })
@@ -882,6 +885,9 @@
                       $(".commentmodal-body").scrollTop(modalScrollPosition);
                     },400);
                   commentCount(post_num);
+                  
+                  //답글 알람
+                  ws.send('{"type":"comment","sender_num":"${sessionScope.user_num}","comment_num":"'+comment_num+'","comment_content":"'+comment_content+'"}');
                }
             })
          }else
@@ -915,6 +921,9 @@
                       $(".commentmodal-body").scrollTop(modalScrollPosition);
                     },400);
                   commentCount(post_num);
+                  
+                  //웹소켓에 댓글 알림 보내기
+                  ws.send('{"type":"post","sender_num":"${sessionScope.user_num}","post_num":"'+post_num+'","guest_num":"null","comment_content":"'+inputdata+'"}');
                }
             })
          }else
@@ -958,6 +967,9 @@
                    $(".commentmodal-body").scrollTop(modalScrollPosition);
                  },400);
                commentCount(post_num);
+               
+               //댓글 좋아요 알림
+          	 	ws.send('{"type":"clike","sender_num":"${sessionScope.user_num}","comment_num":"'+comment_num+'"}');
             }
          });
 
@@ -1587,6 +1599,24 @@
          }
       });
    }
+   
+   
+   var ws;
+
+	//웹소켓 오픈(메시지 알림)
+	function wsOpen() {
+		ws = new WebSocket("ws://" + location.host + "/chating");
+		wsEvt();
+	}
+
+	function wsEvt() {
+		ws.onopen = function(data) {
+		}
+	
+		//메시지 잘 들어왔을 때 실행하는 내용
+		ws.onmessage = function(data) {
+		}
+	}
   
 </script>
 

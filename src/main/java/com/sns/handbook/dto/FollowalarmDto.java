@@ -18,5 +18,8 @@ public class FollowalarmDto {
 	private String sender_name;
 	private String sender_photo;
 	
+	private long timeSec;
+	private String time;
+	
 	private String type="follow";
 }
