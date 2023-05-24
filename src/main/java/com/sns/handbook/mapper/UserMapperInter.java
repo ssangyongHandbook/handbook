@@ -49,6 +49,8 @@ public interface UserMapperInter {
 	public int updateMailKey(UserDto dto) throws Exception;
 	public int updateMailAuth(UserDto dto) throws Exception;
 	public int emailAuthFail(String user_num) throws Exception;
+	public void updateUserPass(UserDto dto);
+	public void updateMailAuthByOauthLogin(String user_num);
 	//희수 끝
 
 	//예지

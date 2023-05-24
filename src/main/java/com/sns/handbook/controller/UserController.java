@@ -16,6 +16,7 @@ import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,6 +62,9 @@ public class UserController {
 
 	@Autowired
 	CommentService cservice;
+
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	//커버 사진 업데이트
 	@PostMapping("/user/coverupdate")
@@ -928,6 +932,21 @@ public class UserController {
 		//session.removeAttribute("loginok");
 		session.invalidate(); // 세션의 모든 속성을 삭제
 		uservice.userDelete(user_num);
+		return "redirect:/";
+	}
+
+	//비밀번호 수정창으로 이동
+	@GetMapping("/user/moveupdatepassword")
+	public String moveupdatepassword() {
+		return "/login/updatePassword";
+	}
+
+	@PostMapping("/user/updatePassword")
+	public String updatepassword(String user_pass, String user_num) {
+		String encodedPassword = passwordEncoder.encode(user_pass);//비밀번호 암호화.
+		UserDto dto = uservice.getUserByNum(user_num);
+		dto.setUser_pass(encodedPassword);
+		uservice.updateUserPass(dto);
 		return "redirect:/";
 	}
 }
