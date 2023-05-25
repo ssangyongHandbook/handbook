@@ -155,13 +155,17 @@ $(document).on("click", ".addbtn", function() {
 
 				<c:if test="${dto.user_photo!=null}">
 					<div class="up">
+						<a href="../user/mypage?user_num=${dto.from_user }">
 						<img src="/photo/${dto.user_photo }" class="userphoto">
+						</a>
 					</div>
 				</c:if>
 
 				<c:if test="${dto.user_photo==null}">
 					<div class="up">
+						<a href="../user/mypage?user_num=${dto.from_user }">
 						<img src="../image/noimg.png" class="userphoto">
+						</a>
 					</div>
 				</c:if>
 				<div class="un">
@@ -270,10 +274,13 @@ $(document).on("click", ".addbtn", function() {
 		    					
 		    		        		var s = "";
 		    		        		if(item.user_photo != null){
+		    		        			s+='<a href="../user/mypage?user_num='+item.from_user+'">';
 		    		        			s += "<div class='up'><img src='/photo/"+item.user_photo+"' class='userphoto'></div>";
+		    		        			s+='</a>'
 		    		        		}else{
-		    		        			
+		    		        			s+='<a href="../user/mypage?user_num='+item.from_user+'">';
 		    		        			s += "<div class='up'><img src='../image/noimg.png' class='userphoto'></div>";
+		    		        			s+='</a>'
 		    		        		}
 		    		        		s += "<div class='un'><span>"+item.user_name+"</span>";
 		    		        		
