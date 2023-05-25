@@ -119,7 +119,6 @@
                         s += '<button type="button" class="cminsert" comment_num="'+item.comment_num+'" post_num="'+item.post_num+'" style="margin-left: -40px;"></button>';
                         s += '</div>';
                         s += '</form></div>';
-                        console.log(s);
                         addContent.innerHTML = s;
                         document.querySelector('section1').appendChild(addContent);
 
@@ -202,10 +201,10 @@
                        		s += '<img src="/image/noimg.png" class="recommentprofile">';
                         s += '<input hidden="hidden" /> ';
                         s += '<input type="text" class="input" name="comment_content" placeholder="댓글을 입력하세요" id="input'+item.comment_num+'">';
-                        s += '<button type="button" class="cminsert" comment_num="'+item.comment_num+'" guest_num="'+item.post_num+'" style="margin-left: -40px;"></button>';
+                        s += '<button type="button" class="cminsert" comment_num="'+item.comment_num+'" guest_num="'+item.guest_num+'" style="margin-left: -40px;"></button>';
                         s += '</div>';
                         s += '</form></div>';
-                        console.log(s);
+                        
                         addContent.innerHTML = s;
                         document.querySelector('section1').appendChild(addContent);
 
@@ -1127,7 +1126,6 @@
                                 }
 
                                 var addTimeline = document.createElement("div");
-                                console.log(s);
                                 addTimeline.innerHTML = s;
                                 document.querySelector('sectiontime').appendChild(addTimeline);
                                 return false;
@@ -1258,7 +1256,6 @@
                                         '</div>';
                                 }
                                 var addTimeline = document.createElement("div");
-                                console.log(s);
                                 addTimeline.innerHTML = s;
                                 document.querySelector('sectiontime').appendChild(addTimeline);
                                 return false;
