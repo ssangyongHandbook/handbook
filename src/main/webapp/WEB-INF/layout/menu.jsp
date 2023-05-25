@@ -43,7 +43,6 @@
 </head>
 <body>
 	<c:set var = "root" value = "<%=request.getContextPath() %>"/>
-
 	<div class = "menu">
 		<div class ="menuprofile" style="margin-top: 10px;">
 
