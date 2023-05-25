@@ -511,7 +511,7 @@
                         s+='<div style="float: left;" class="userimgdiv">';
                         if(dto.user_photo==null){
                             
-                            s+='<img src="/image/noimg.png" class="userimg">';
+                            s+='<img src="/image/noimg.png" class="userimg" user_num="'+dto.user_num+'">';
                          }                         
                                 if(dto.user_photo!=null){
                                 s+='<img src="${root }/photo/'+dto.user_photo+'" class="userimg" user_num="'+dto.user_num+'">';
@@ -564,7 +564,7 @@
                         s += "</span></span></div>";
                         
                         s+='<div class="center">';
-                        s+='<div class="center-up">'+dto.post_content+'</div>';
+                        s+='<div class="center-up">'+dto.post_content+'<br><br></div>';
                         s+='<div class="center-down sliders" id="dto-'+dto.post_num+'">';
                                        
                         if((dto.post_file).includes('.mp4')){
@@ -670,7 +670,7 @@
                          s+='<span style="float: left;" class="userimgdiv">';
                          if(dto.user_photo==null){
                              
-                             s+='<img src="/image/noimg.png" class="userimg"></span>';
+                             s+='<img src="/image/noimg.png" class="userimg" user_num="'+dto.user_num+'"></span>';
                           }                         
                                  if(dto.user_photo!=null){
                                  s+='<img src="${root }/photo/'+dto.user_photo+'" class="userimg" user_num="'+dto.user_num+'"></span>';
@@ -1135,7 +1135,7 @@
                          s+='<div style="float: left;" class="userimgdiv">';
                          if(dto.user_photo==null){
                              
-                             s+='<img src="/image/noimg.png" class="userimg">';
+                             s+='<img src="/image/noimg.png" class="userimg" user_num="'+dto.user_num+'">';
                           }                         
                                  if(dto.user_photo!=null){
                                  s+='<img src="${root }/photo/'+dto.user_photo+'" class="userimg" user_num="'+dto.user_num+'">';
@@ -1187,7 +1187,7 @@
                          s += "</span></span></div>";
                          
                          s+='<div class="center">';
-                         s+='<div class="center-up">'+dto.post_content+'</div>';
+                         s+='<div class="center-up">'+dto.post_content+'<br><br></div>';
                          s+='<div class="center-down sliders" id="dto-'+dto.post_num+'">';
                                         
                          if((dto.post_file).includes('.mp4')){
@@ -1277,7 +1277,7 @@
                           s+='<span style="float: left;" class="userimgdiv">';
                           if(dto.user_photo==null){
                               
-                              s+='<img src="/image/noimg.png" class="userimg"></span>';
+                              s+='<img src="/image/noimg.png" class="userimg" user_num="'+dto.user_num+'"></span>';
                            }                         
                                   if(dto.user_photo!=null){
                                   s+='<img src="${root }/photo/'+dto.user_photo+'" class="userimg" user_num="'+dto.user_num+'"></span>';
@@ -1675,8 +1675,8 @@ body {
 .center-up {
 	width: 100%;
 	font-size: 12pt;
-	padding-left: 2%;
-	padding-right: 2%;
+	padding-left: 8.5%;
+	padding-right: 8.5%;
 }
 
 .center-down {
@@ -1757,8 +1757,8 @@ body {
 
 .center-up2 {
 	width: 100%;
-	padding-left: 2%;
-	padding-right: 2%;
+	padding-left: 8.5%;
+	padding-right: 8.5%;
 	font-size: 12pt;
 }
 
@@ -2419,7 +2419,7 @@ li {
 							<div class="top-left">
 								<div style="float: left;" class="userimgdiv">
 									 <c:if test="${dto.user_photo==null }">
-                              <img src="/image/noimg.png" class="userimg">;
+                              <img src="/image/noimg.png" class="userimg" user_num="${dto.user_num}">;
                         </c:if>
                            <c:if test="${dto.user_photo!=null }">
                               <img src="${root }/photo/${dto.user_photo}" class="userimg" user_num="${dto.user_num }">
@@ -2496,7 +2496,7 @@ li {
 						<div class="center">
 
 
-							<div class="center-up">${dto.post_content }</div>
+							<div class="center-up">${dto.post_content }<br><br></div>
 
 							<div class="center-down sliders" id="dto-${dto.post_num}">
 								<!-- 예지: 파일이 사진인지 영상인지 확인 -->
@@ -2630,7 +2630,7 @@ li {
 							<div class="top-left2">
 								<span style="float: left;" class="userimgdiv">
 									 <c:if test="${dto.user_photo==null }">
-                              <img src="/image/noimg.png" class="userimg">;
+                              <img src="/image/noimg.png" class="userimg" user_num="${dto.user_num}">;
                         </c:if>
                            <c:if test="${dto.user_photo!=null }">
                               <img src="${root }/photo/${dto.user_photo}" class="userimg" user_num="${dto.user_num }">
