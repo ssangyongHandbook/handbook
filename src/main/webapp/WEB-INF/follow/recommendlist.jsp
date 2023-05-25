@@ -152,7 +152,7 @@
 			    		        			
 			    		        		}else{
 			    		        			s += '<div class="up">';
-		    		    					s += '<img src="../image/noimg.png" class="userphoto">';
+		    		    					s += '<a href="/user/mypage?user_num='+item.user_num+'"><img src="../image/noimg.png" class="userphoto"></a>';
 		    		    					s += '</div>';		
 			    		        		}
 			    		    			s += '<div class="un">';
@@ -190,7 +190,6 @@
 			    }
 				$(".followsearchbox").keyup(function(e){
 				if(e.keyCode == 13){
-					alert("넘어감");
 					location.href = "recommendlist?from_user="+${sessionScope.user_num}+"&searchword="+$(".followsearchbox").val(); //sessionScope.user_num 로그인한 사람
 				}
 			});
@@ -220,7 +219,7 @@
 	
 		<div style="display: inline-flex; align-items: center; justify-content: space-between; margin-top: 20px;">
 		
-			<span style="margin-left: 35px; margin-bottom: 20px; font-size: 20pt; font-weight: bold;">친구</span>
+			<span style="margin-left: 35px; margin-bottom: 20px; font-size: 20pt; font-weight: bold;">팔로잉 추천</span>
 			
 			<div style="margin-right: 60px; background-color: #F0F2F5; border-radius: 60px; display: inline-flex; padding-left: 2%">
 			

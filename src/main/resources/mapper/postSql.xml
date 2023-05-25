@@ -49,7 +49,7 @@ WHERE (post_access = 'all'
      AND ${searchcolumn} LIKE CONCAT('%', #{searchword}, '%')
   </if>
   <if test="searchcolumn=='user_name'">
-     AND user_num = ANY(SELECT user_num FROM user WHERE user_name = #{searchword})
+     AND user_num = ANY(SELECT user_num FROM user WHERE user_name LIKE CONCAT('%', #{searchword}, '%'))
   </if>
 </if>
 ORDER BY CASE 
@@ -60,7 +60,7 @@ ORDER BY CASE
     WHERE from_user = #{user_num}
   ) THEN 0
   ELSE 1
-END, post_writeday DESC
+END, post_writeday DESC,post_num desc
 LIMIT 10
 OFFSET #{offset}
   

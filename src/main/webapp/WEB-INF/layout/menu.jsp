@@ -22,9 +22,8 @@
 .menulist{
    font-size: 20pt;
    margin-left: 30px;
-   margin-top:10px;
-   
-  
+   margin-top:5px;
+   padding: 5px;
 }
 .menulist:hover {
    background-color: #F0F3F7;
@@ -44,7 +43,7 @@
 <body>
 	<c:set var = "root" value = "<%=request.getContextPath() %>"/>
 	<div class = "menu">
-		<div class ="menuprofile" style="margin-top: 10px;">
+		<div class ="menuprofile" style="margin-top: 10px; padding: 5px;">
 
 		<c:if test="${sessionScope.loginok!=null }">
 		
@@ -65,11 +64,11 @@
 		
       	<c:if test="${sessionScope.loginok!=null }"> <!-- 로그아웃 상태에서 메뉴 부분을 숨기기 위한 조건문 추가 -->
         <div class="menulist">
-            <a href="${root}/following/recommendlist?from_user=${sessionScope.user_num}" style="text-decoration-line: none;"><i class="fa-solid fa-user-plus"></i><span class="menub"><span>팔로워</span><span style="margin-left: 3px;">추천</span></span></a>
+            <a href="${root}/following/recommendlist?from_user=${sessionScope.user_num}" style="text-decoration-line: none;"><i class="fa-solid fa-user-plus"></i><span class="menub"><span>팔로잉</span><span style="margin-left: 3px;">추천</span></span></a>
         </div>
         
         <div class="menulist">
-            <a href="${root}/following/followlist?from_user=${sessionScope.user_num}" style="text-decoration-line: none;"><i class="fa-solid fa-user-group"></i><span class="menub"><span>팔로워</span><span style="margin-left: 3px;">목록</span></span></a>
+            <a href="${root}/following/followlist?from_user=${sessionScope.user_num}" style="text-decoration-line: none;"><i class="fa-solid fa-user-group"></i><span class="menub"><span>팔로잉</span><span style="margin-left: 3px;">목록</span></span></a>
         </div>
        
         <div class="menulist">

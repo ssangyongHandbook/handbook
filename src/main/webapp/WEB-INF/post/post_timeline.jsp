@@ -21,7 +21,6 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
 
 <script src="https://kit.fontawesome.com/2663817d27.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="post_css.css">
 
 
 <script type="text/javascript">
@@ -140,10 +139,6 @@
 
           var followpost_num = $(this).attr("followpost_num");
           var unfollowpost_num= $(this).attr("unfollowpost_num");
-          
-         // console.log("followpost_num: "+followpost_num);
-          //console.log("unfollowpost_num: "+unfollowpost_num);
-
           $("#" + followpost_num).toggle();
           $("#" + unfollowpost_num).toggle();
 
@@ -650,7 +645,7 @@
                               s += '&nbsp;좋아요 ' + (dto.like_count - 1) + '명';
                             }
                             if(dto.like_count !=1){
-                            	s += '&nbsp;좋아요 +' (dto.like_count - 1)+'명';
+                            	s += '&nbsp;좋아요 '+ (dto.like_count - 1)+'명';
                             }
                             s += '</span></span></span>';
                         
@@ -809,11 +804,11 @@
                      }
                   
                      var addTimeline = document.createElement("div");
-                      //console.log(s);
                       addTimeline.innerHTML =s;
 
                       document.querySelector('section').appendChild(addTimeline);
-                      initializeSlider("dto-"+dto.post_num);
+                      if (!dto.post_file.includes('.mp4'))
+                        	initializeSlider("dto-"+dto.post_num);
                   }, 1000) 
                })
             }
@@ -823,17 +818,6 @@
        }
      } 
  
-             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-      
       /* comment */
       $('#commentinput').keydown(function() {
          if (event.keyCode === 13) {
@@ -1399,7 +1383,6 @@
                       }
                    
                       var addTimeline = document.createElement("div");
-                      //console.log(s);
                       addTimeline.innerHTML =s;
                       document.querySelector('sectiontime').appendChild(addTimeline);
                       return false;
@@ -1532,11 +1515,6 @@
             	var s = "";
                 var addContent = document.createElement("div");
                 s += "<div class='allcomment' style='margin-left:"+item.comment_level*70+"px;'>";
-                /* if (item.comment_level > 0) {
-                   s += "<div style='position: relative; left: -50px; top: 30px; height: 0;' >";
-                   s += "<img src='../image/re.png' style='width: 30px;\'>";
-                   s += "</div>";
-                } */
                 
                 if(item.post_user_num =="${sessionScope.user_num}" || item.user_num == "${sessionScope.user_num}"){
                    
@@ -1592,7 +1570,6 @@
                 s += '<button type="button" class="cminsert" comment_num="'+item.comment_num+'" post_num="'+item.post_num+'" style="margin-left: -40px;"></button>';
                 s += '</div>';
                 s += '</form></div>';
-                //console.log(s);
                 addContent.innerHTML = s;
                 document.querySelector('section1').appendChild(addContent);
 

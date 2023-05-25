@@ -1935,12 +1935,12 @@
             height: 0px;
         }
 
-        .galary-photo.galary-photo-1 {
+        .galary-photo.galary-photo-1, .galary-video.galary-photo-1 {
             margin-right: 5px; /* 첫 번째 이미지의 우측 간격 설정 */
             margin-bottom: 5px; /* 첫 번째 이미지의 하단 간격 설정 */
         }
 
-        .galary-photo.galary-photo-2 {
+        .galary-photo.galary-photo-2, .galary-video.galary-photo-2 {
             margin-right: 5px; /* 두 번째 이미지의 우측 간격 설정 */
             margin-bottom: 5px; /* 두 번째 이미지의 하단 간격 설정 */
         }
@@ -2360,14 +2360,15 @@
 
     <div class="cover">
 
+	<div style="width: 100%; height: 100%; overflow: hidden;">
         <c:if test="${sessionScope.loginok!=null && dto.user_cover!=null }">
-            <img src="${root }/cover/${dto.user_cover }" style="width: 100%; height: 100%; ">
+            <img src="${root }/cover/${dto.user_cover }" style="width: 100%; height: 100%; object-fit:cover;">
         </c:if>
 
         <c:if test="${sessionScope.loginok!=null && dto.user_cover==null }">
-            <img src="${root }/image/cover.png" style="width: 100%; height: 100%;">
+            <img src="${root }/image/cover.png" style="width: 100%; height: 100%; object-fit:cover;">
         </c:if>
-
+	</div>
         <input type="file" id="newcover" style="display: none;" num="${dto.user_num }">
 
         <!-- 수정 시 호출 -->
@@ -2384,32 +2385,39 @@
             <input type="file" id="newphoto" style="display: none;" num="${dto.user_num }">
 
             <c:if test="${sessionScope.loginok!=null && dto.user_photo!=null }">
-                <img data-toggle="dropdown" alt=""
-                     src="${root }/photo/${dto.user_photo}"
-                     style="width: 180px; height: 180px; border: 3px solid gray; cursor: pointer; border-radius: 90px;
-                        position: relative; left: 250px; bottom: 80px;">
+            	<div data-toggle="dropdown" style="position: relative; left: 250px; bottom: 80px; width: 180px; height: 180px; 
+            	display: inline-flex; overflow: hidden; border: 3px solid gray; border-radius: 100px">
+                <img alt="" src="${root }/photo/${dto.user_photo}"
+                     style="width: 100%; height: 100%; object-fit:cover; cursor: pointer;">
+                </div>
             </c:if>
 
             <c:if test="${sessionScope.loginok!=null && dto.user_photo==null }">
-                <img data-toggle="dropdown" alt="" src="${root }/image/profile.png"
-                     style="width: 180px; height: 180px; cursor: pointer; border-radius: 90px;
-                        position: relative; left: 250px; bottom: 80px;">
+            	<div data-toggle="dropdown" style="position: relative; left: 250px; bottom: 80px; width: 180px; height: 180px; 
+            	display: inline-flex; overflow: hidden; border-radius: 100px">
+                <img alt="" src="${root }/image/profile.png"
+                     style="width: 100%; height: 100%; object-fit:cover; cursor: pointer;">
+                </div>
             </c:if>
             
             <c:if test="${sessionScope.user_num==dto.user_num }">
-            	<img alt="" src="${root }/image/camera.png" style="width: 50px; height: 50px; cursor: pointer;
-                  position: relative; left: 180px; bottom: 7px;" class="userphotochangeimg">
+            	<div style="display: inline-flex; position: relative; left: 195px; bottom: 80px;">
+            	<img alt="" src="${root }/image/camera.png" style="width: 50px; height: 50px; cursor: pointer;" class="userphotochangeimg">
+                </div>
             </c:if>
             <c:if test="${sessionScope.user_num!=dto.user_num }">
-            	<img alt="" src="${root }/image/camera.png" style="width: 50px; height: 50px; cursor: pointer;
-                  position: relative; left: 180px; bottom: 7px; visibility: hidden;" class="userphotochangeimg">
+            	<div style="display: inline-flex; position: relative; left: 195px; bottom: 80px; 
+            	visibility: hidden;">
+            	<img alt="" src="${root }/image/camera.png" style="width: 50px; height: 50px; cursor: pointer;" class="userphotochangeimg">
+                </div>
             </c:if>
 
-            <span style="font-size: 22pt; font-weight: bold; position: relative; left: 200px; bottom: 60px;">${dto.user_name }</span>
-
-            <span style="font-size: 13pt; font-weight: bold; color:#65676b; position: relative; left: 108px; bottom: 33px;">
+			<div style="display: inline-flex; flex-direction:column; position: relative; left: 200px; bottom: 120px;">
+            <span style="font-size: 22pt; font-weight: bold;">${dto.user_name }</span>
+            <span style="font-size: 13pt; font-weight: bold; color:#65676b;">
                      <a href="${root }/following/followlist?from_user=${dto.user_num}" style="color: #65676b;">친구 ${tf_count}명 </a>
                      </span>
+            </div>
 
 
             <ul class="dropdown-menu" style="position: absolute; left: 200px; top: 100px;">
@@ -2470,10 +2478,10 @@
 
     <div class="menu">
         <hr style="border: 1px solid lightgray; margin:0px;">
-        <div style="font-weight: bold; font-size: 15pt;">
+        <div style="font-weight: bold; font-size: 15pt; display: inline-flex; align-items: center; height: 100%;">
             <a href="/user/mypage?user_num=${dto.user_num }" style="color: black;"><span>게시글</span></a>
             <!-- <a href="/user/info" style="color: black;"><span>정보</span></a> -->
-            <a href="${root }/following/followlist?from_user=${sessionScope.user_num}" style="color: black;"><span>친구</span></a>
+            <a href="${root }/following/followlist?from_user=${dto.user_num}" style="color: black;"><span>친구</span></a>
         </div>
     </div>
 
@@ -2499,9 +2507,11 @@
                             <c:if test="${!fn:contains(pdto.post_file, '.mp4')}">
                                 <c:forEach var="file" items="${fn:split(pdto.post_file, ',')}" varStatus="j">
                                     <c:if test="${j.count <= 9 - counter}">
+                                    <div style="overflow: hidden;" class="galary-photo galary-photo-${j.count}">
                                         <a href="${root}/post_file/${file}" target="_new" style="text-decoration: none; outline: none;">
-                                            <img class="galary-photo galary-photo-${j.count}" src="${root}/post_file/${file}">
+                                            <img src="${root}/post_file/${file}" style="object-fit:cover; width: 100%; height: 100%">
                                         </a>
+                                    </div>
                                         <c:set var="counter" value="${counter + 1}"/>
                                     </c:if>
                                 </c:forEach>
@@ -2510,8 +2520,11 @@
                             <c:if test="${fn:contains(pdto.post_file, '.mp4')}">
                                 <c:forEach var="file" items="${fn:split(pdto.post_file, ',')}" varStatus="j">
                                     <c:if test="${j.count <= 9 - counter}">
-                                        <video class="galary-video galary-video-${j.count}" src="/post_file/${file}" controls="controls" muted="muted"></video>
+                                    <div style="overflow: hidden;" class="galary-video galary-video-${j.count}">
+                                        <video src="/post_file/${file}" controls="controls" 
+                                        muted="muted" style="width: 100%; height: 100%; obejct-fit: cover;"></video>
                                         <c:set var="counter" value="${counter + 1}"/>
+                                    </div>
                                     </c:if>
                                 </c:forEach>
                             </c:if>
@@ -2530,12 +2543,16 @@
                     <c:forEach var="fdto" items="${tflist }" varStatus="i">
                         <div style="margin: 1% 1% 0.25% 1%;">
                             <div>
-                                <c:if test="${ fdto.user_photo!=null }">
-                                    <a href="${root }/user/mypage?user_num=${fdto.user_num}"><img class="friend-photo" src="${root }/photo/${fdto.user_photo}"></a>
-                                </c:if>
-                                <c:if test="${fdto.user_photo==null }">
-                                    <a href="${root }/user/mypage?user_num=${fdto.user_num}"><img class="friend-photo" src="${root }/image/noprofile.png"></a>
-                                </c:if>
+                            	<div class="friend-photo" style="overflow: hidden;">
+	                                <c:if test="${ fdto.user_photo!=null }">
+	                                    <a href="${root }/user/mypage?user_num=${fdto.user_num}"><img src="${root }/photo/${fdto.user_photo}" 
+	                                    style="width: 100%; height: 100%; object-fit:cover;"></a>
+	                                </c:if>
+	                                <c:if test="${fdto.user_photo==null }">
+	                                    <a href="${root }/user/mypage?user_num=${fdto.user_num}"><img src="${root }/image/noprofile.png" 
+	                                    style="width: 100%; height: 100%; object-fit:cover;"></a>
+	                                </c:if>
+                                </div>
                                 <div>
                                     <span><b>${fdto.user_name }</b></span><br>
                                     <c:if test="${fdto.tf_count>0 }">
@@ -2550,16 +2567,20 @@
         </div>
 
         <div class="right">
-            <div class="write">
+            <div class="write" style="display: inline-flex; align-items: center;">
                 <div class="searcharea">
-                    <div style="width: 700px; display: inline-flex; align-items: center; margin: 3%;">
+                    <div style="width: 800px; display: inline-flex; align-items: center; margin-left: 20px; overflow: hidden;">
                         <c:if test="${sessionScope.user_num!=dto.user_num }">
-                            <img alt="" src="${root }/photo/${sessionScope.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
+                        	<div style="width: 40px; height: 40px; border-radius: 100px;">
+                            	<img alt="" src="${root }/photo/${sessionScope.user_photo}" style="object-fit: cover; height: 100%; width: 100%;">
+                            </div>
                             &nbsp;&nbsp;&nbsp;
                         </c:if>
 
                         <c:if test="${sessionScope.user_num==dto.user_num }">
-                            <img alt="" src="${root }/photo/${dto.user_photo}" style="width: 40px; height: 40px; border-radius: 20px;">
+                        	<div style="width: 40px; height: 40px; border-radius: 100px; overflow: hidden;">
+                            	<img alt="" src="${root }/photo/${dto.user_photo}" style="object-fit: cover; height: 100%; width: 100%;">
+                            </div>
                             &nbsp;&nbsp;&nbsp;
                         </c:if>
 
@@ -2587,25 +2608,29 @@
                         <div class="top">
                             <div class="top-user">
                                 <c:if test="${adto.type=='post' }">
+                                <div style="width: 40px; height: 40px; border-radius: 100px; margin: 10px; overflow: hidden;">
                                     <a href="${root }/user/mypage?user_num=${dto.user_num}">
                                     	<c:if test="${dto.user_photo!=null }">
-                                    		<img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
+                                    		<img alt="" src="${root }/photo/${dto.user_photo}" style="object-fit: cover; height: 100%; width: 100%;">
                                     	</c:if>
                                     	
                                     	<c:if test="${dto.user_photo==null }">
-                                    		<img alt="" src="${root }/image/noimg.png" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
+                                    		<img alt="" src="${root }/image/noimg.png" style="object-fit: cover; height: 100%; width: 100%;">
                                     	</c:if>
                                     </a>
+                                </div>
                                 </c:if>
 
                                 <c:if test="${adto.type=='guest' }">
+                                <div style="width: 40px; height: 40px; border-radius: 100px; margin: 10px; overflow: hidden;">
                                 	<c:if test="${adto.dto.user_photo!=null }">
-                                    	<a href="${root }/user/mypage?user_num=${adto.dto.user_num}"><img alt="" src="${root }/photo/${adto.dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
+                                    	<a href="${root }/user/mypage?user_num=${adto.dto.user_num}"><img alt="" src="${root }/photo/${adto.dto.user_photo}" style="object-fit: cover; height: 100%; width: 100%;"></a>
                                     </c:if>
                                     
                                     <c:if test="${adto.dto.user_photo==null }">
-                                    	<a href="${root }/user/mypage?user_num=${adto.dto.user_num}"><img alt="" src="${root }/image/noimg.png" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
+                                    	<a href="${root }/user/mypage?user_num=${adto.dto.user_num}"><img alt="" src="${root }/image/noimg.png" style="object-fit: cover; height: 100%; width: 100%;"></a>
                                     </c:if>
+                                </div>    
                                 </c:if>
                                 <div class="top-writeday">
                                        <span><b><a href="${root }/user/mypage?user_num=${adto.dto.user_num}" style="color: black;">${adto.dto.user_name }</a><c:if test="${adto.type=='guest' }"><i class="fa-solid fa-caret-right"></i></c:if>
@@ -2657,12 +2682,14 @@
 
 
                                 <c:if test="${fn:contains(adto.post_file, '.mp4')}">
-                                    <div class="fileimg">
+                                    <div class="fileimg" style="text-align: center;">
                                         <c:if test="${adto.post_file!='no' && adto.type=='post'}">
-                                            <video src="/post_file/${adto.post_file }" controls="controls" muted="muted" style="width:100%;"></video>
+                                            <video src="/post_file/${adto.post_file }" controls="controls" muted="muted" 
+                                            style='width: 60%;height: 100%; margin: 0 auto;'></video>
                                         </c:if>
                                         <c:if test="${adto.post_file!='no' && adto.type=='guest'}">
-                                            <video src="/guest_file/${adto.post_file }" controls="controls" muted="muted" style="width:100%;"></video>
+                                            <video src="/guest_file/${adto.post_file }" controls="controls" muted="muted" 
+                                            style='width: 60%;height: 100%; margin: 0 auto;'></video>
                                         </c:if>
                                     </div>
                                 </c:if>

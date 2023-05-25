@@ -155,13 +155,17 @@ $(document).on("click", ".addbtn", function() {
 
 				<c:if test="${dto.user_photo!=null}">
 					<div class="up">
+						<a href="../user/mypage?user_num=${dto.from_user }">
 						<img src="/photo/${dto.user_photo }" class="userphoto">
+						</a>
 					</div>
 				</c:if>
 
 				<c:if test="${dto.user_photo==null}">
 					<div class="up">
+						<a href="../user/mypage?user_num=${dto.from_user }">
 						<img src="../image/noimg.png" class="userphoto">
+						</a>
 					</div>
 				</c:if>
 				<div class="un">
@@ -270,10 +274,13 @@ $(document).on("click", ".addbtn", function() {
 		    					
 		    		        		var s = "";
 		    		        		if(item.user_photo != null){
+		    		        			s+='<a href="../user/mypage?user_num='+item.from_user+'">';
 		    		        			s += "<div class='up'><img src='/photo/"+item.user_photo+"' class='userphoto'></div>";
+		    		        			s+='</a>'
 		    		        		}else{
-		    		        			
+		    		        			s+='<a href="../user/mypage?user_num='+item.from_user+'">';
 		    		        			s += "<div class='up'><img src='../image/noimg.png' class='userphoto'></div>";
+		    		        			s+='</a>'
 		    		        		}
 		    		        		s += "<div class='un'><span>"+item.user_name+"</span>";
 		    		        		
@@ -281,6 +288,8 @@ $(document).on("click", ".addbtn", function() {
 		    		        			s += "<span class='tf' style='font-size: 11px;'>함께아는친구: "+item.tf_count+"</span>";
 		    		        		
 		    		        		s += "</div>";
+		    		        		if(item.from_user=="${sessionScope.user_num}"){
+		    		        		
 		    		        		s += "<div class='btndiv' style='margin: auto 0;'><button type='button' class='addbtn' fing_num = "+item.fing_num+"><img src='../image/add.png'></button></div>";
 		    		        		s += "<ul class='friendmenu' id="+item.fing_num+" style='float: left; margin: auto 0; padding: 0; display:none;'>";
 		    		        		s += "<li class = 'followbookmark'><button><i class='fa-star fa-regular' style='color: #ffd43b;''></i> &nbsp;즐겨찾기</span></button></li>"
@@ -304,7 +313,6 @@ $(document).on("click", ".addbtn", function() {
 		
 			$(".followsearchbox").keyup(function(e){
 				if(e.keyCode == 13){
-					alert("넘어감");
 					location.href = "followersearch?searchword="+$(".followsearchbox").val()+"&to_user="+${to_user};
 				}
 			});
