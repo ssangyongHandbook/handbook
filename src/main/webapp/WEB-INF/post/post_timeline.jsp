@@ -1522,11 +1522,6 @@
             	var s = "";
                 var addContent = document.createElement("div");
                 s += "<div class='allcomment' style='margin-left:"+item.comment_level*70+"px;'>";
-                /* if (item.comment_level > 0) {
-                   s += "<div style='position: relative; left: -50px; top: 30px; height: 0;' >";
-                   s += "<img src='../image/re.png' style='width: 30px;\'>";
-                   s += "</div>";
-                } */
                 
                 if(item.post_user_num =="${sessionScope.user_num}" || item.user_num == "${sessionScope.user_num}"){
                    
