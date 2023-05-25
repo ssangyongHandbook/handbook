@@ -171,34 +171,36 @@ $(document).on("click", ".addbtn", function() {
 						<span class="tf" style="font-size: 11px;">함께아는친구: ${dto.tf_count }</span>
 					</c:if>
 				</div>
-				<div class="btndiv">
-					<button type="button" class="addbtn" fing_num = ${dto.fing_num }><img src="../image/add.png"></button>
-					
-					<div class="friendmenu" id="${dto.fing_num }">
-								
-								<div class = "detailbtn">
-								 
-								<c:if test="${dto.bookmarkcheck!=1 }">
-								<button type="button" class="insbookbtn" bfriend_num = "${dto.to_user }"><b><span style="font-size: 15pt;">
-								<i class="fa-star fa-regular" style="color: #ffd43b;"></i> 
-								즐겨찾기추가</span></b></button>
-								</c:if>
-								
-								<c:if test="${dto.bookmarkcheck==1 }">
-								<button type="button" class="delbookbtn" bfriend_num = "${dto.to_user }"><b><span style="font-size: 15pt;">
-								<i class="fa-solid fa-star" style="color: #ffd43b;"></i> 
-								즐겨찾기취소</span></b></button>
-								</c:if>
-								</div>
-								
-								
-								<div class = "detailbtn">
-								<button type = "button" class="fldelete"  to_user = ${dto.to_user }><b><span style="font-size: 15pt; margin-left: 4px;">
-								<i class="fa-solid fa-xmark" style="color: #cd2323;"></i>
-								팔로우취소</span></b></button>
-								</div>
-					</div>
-					</div>
+				<c:if test="${from_user==sessionScope.user_num}">
+					<div class="btndiv">
+						<button type="button" class="addbtn" fing_num = ${dto.fing_num }><img src="../image/add.png"></button>
+						
+						<div class="friendmenu" id="${dto.fing_num }">
+									
+									<div class = "detailbtn">
+									 
+									<c:if test="${dto.bookmarkcheck!=1 }">
+									<button type="button" class="insbookbtn" bfriend_num = "${dto.to_user }"><b><span style="font-size: 15pt;">
+									<i class="fa-star fa-regular" style="color: #ffd43b;"></i> 
+									즐겨찾기추가</span></b></button>
+									</c:if>
+									
+									<c:if test="${dto.bookmarkcheck==1 }">
+									<button type="button" class="delbookbtn" bfriend_num = "${dto.to_user }"><b><span style="font-size: 15pt;">
+									<i class="fa-solid fa-star" style="color: #ffd43b;"></i> 
+									즐겨찾기취소</span></b></button>
+									</c:if>
+									</div>
+									
+									
+									<div class = "detailbtn">
+									<button type = "button" class="fldelete"  to_user = ${dto.to_user }><b><span style="font-size: 15pt; margin-left: 4px;">
+									<i class="fa-solid fa-xmark" style="color: #cd2323;"></i>
+									팔로우취소</span></b></button>
+									</div>
+						</div>
+						</div>
+					</c:if>
 				</div>
 		</c:forEach>
 		
@@ -310,29 +312,32 @@ $(document).on("click", ".addbtn", function() {
 		    		        			s += "<span class='tf' style='font-size: 11px;'>함께아는친구: "+item.tf_count+"</span>";
 		    		        		
 		    		        		s += "</div>";
-		    		        		s += "<div class='btndiv' style='margin: auto 0;'><button type='button' class='addbtn' fing_num = "+item.fing_num+"><img src='../image/add.png'></button>";
-		    		        		s += "<div class='friendmenu' id="+item.fing_num+" style='display: none;'>";
-									
-									s += '<div class = "detailbtn">';
-									 
-									if(item.bookmarkcheck!=1){
-									s += '<button type="button" class="insbookbtn" bfriend_num = '+item.to_user+'><b><span style="font-size: 15pt;">';
-									s += '<i class="fa-star fa-regular" style="color: #ffd43b;"></i>&nbsp;즐겨찾기추가</span></b></button>';
-									}
+		    		        		if(item.from_user=="${sessionScope.user_num}"){
+			    		        		s += "<div class='btndiv' style='margin: auto 0;'><button type='button' class='addbtn' fing_num = "+item.fing_num+"><img src='../image/add.png'></button>";
+			    		        		s += "<div class='friendmenu' id="+item.fing_num+" style='display: none;'>";
 										
-									
-									if(item.bookmarkcheck==1){
-									s += '<button type="button" class="delbookbtn" bfriend_num = '+item.to_user+'><b><span style="font-size: 15pt;">';
-									s += '<i class="fa-solid fa-star" style="color: #ffd43b;"></i>&nbsp;즐겨찾기취소</span></b></button>';
-									}
+										s += '<div class = "detailbtn">';
+										 
+										if(item.bookmarkcheck!=1){
+										s += '<button type="button" class="insbookbtn" bfriend_num = '+item.to_user+'><b><span style="font-size: 15pt;">';
+										s += '<i class="fa-star fa-regular" style="color: #ffd43b;"></i>&nbsp;즐겨찾기추가</span></b></button>';
+										}
+											
+										
+										if(item.bookmarkcheck==1){
+										s += '<button type="button" class="delbookbtn" bfriend_num = '+item.to_user+'><b><span style="font-size: 15pt;">';
+										s += '<i class="fa-solid fa-star" style="color: #ffd43b;"></i>&nbsp;즐겨찾기취소</span></b></button>';
+										}
+										s += '</div>';
+										
+										
+										s += '<div class = "detailbtn">';
+										s += '<button type = "button" class="fldelete"  to_user = '+item.to_user+'><b><span style="font-size: 15pt; margin-left: 4px;">';
+										s += '<i class="fa-solid fa-xmark" style="color: #cd2323;"></i>&nbsp;팔로우취소</span></b></button>';
+										s += '</div></div>';
+		    		        		}
 									s += '</div>';
-									
-									
-									s += '<div class = "detailbtn">';
-									s += '<button type = "button" class="fldelete"  to_user = '+item.to_user+'><b><span style="font-size: 15pt; margin-left: 4px;">';
-									s += '<i class="fa-solid fa-xmark" style="color: #cd2323;"></i>&nbsp;팔로우취소</span></b></button>';
-									s += '</div></div>';
-									s += '</div>';
+		    		    
 		    		        		
 		    		        		
 		    		             	var addContent = document.createElement("div");
@@ -353,8 +358,7 @@ $(document).on("click", ".addbtn", function() {
 		
 			$(".followsearchbox").keyup(function(e){
 				if(e.keyCode == 13){
-					alert("넘어감");
-					location.href = "followsearch?searchword="+$(".followsearchbox").val();
+					location.href = "followsearch?searchword="+$(".followsearchbox").val()+"&from_user="+${from_user};
 				}
 			});
 	</script>

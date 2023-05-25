@@ -374,9 +374,6 @@
 				totalCount=res.totalCount;
 				alarmCount=res.alarmCount;
 				
-				console.log("totalCount: "+totalCount);
-				console.log("alarmCount: "+alarmCount);
-				
 				if(totalCount>0){
 					//알람이 있으면
 					$(".msgalarmcircle").css("visibility","visible");
