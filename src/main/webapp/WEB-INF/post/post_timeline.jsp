@@ -809,7 +809,7 @@
                       document.querySelector('section').appendChild(addTimeline);
                       if (!dto.post_file.includes('.mp4'))
                         	initializeSlider("dto-"+dto.post_num);
-                  }, 1000) 
+                  }, 1) 
                })
             }
           });
