@@ -220,7 +220,7 @@
 	
 		<div style="display: inline-flex; align-items: center; justify-content: space-between; margin-top: 20px;">
 		
-			<span style="margin-left: 35px; margin-bottom: 20px; font-size: 20pt; font-weight: bold;">친구</span>
+			<span style="margin-left: 35px; margin-bottom: 20px; font-size: 20pt; font-weight: bold;">팔로잉 추천</span>
 			
 			<div style="margin-right: 60px; background-color: #F0F2F5; border-radius: 60px; display: inline-flex; padding-left: 2%">
 			
