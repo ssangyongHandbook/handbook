@@ -91,7 +91,7 @@
 	 	left join following on user.user_num = following.to_user and following.from_user = #{from_user}
 	 	where following.from_user is null and user.user_num != #{from_user}
 	 	<if test = "searchword != null">
-	 		and user.user_name = #{searchword}
+	 		and user.user_name like concat('%', #{searchword}, '%')
 	 	</if> 
 	 	order by(
 	 		select count(to_user)

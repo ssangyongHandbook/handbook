@@ -22,9 +22,8 @@
 .menulist{
    font-size: 20pt;
    margin-left: 30px;
-   margin-top:10px;
-   
-  
+   margin-top:5px;
+   padding: 5px;
 }
 .menulist:hover {
    background-color: #F0F3F7;
@@ -44,7 +43,7 @@
 <body>
 	<c:set var = "root" value = "<%=request.getContextPath() %>"/>
 	<div class = "menu">
-		<div class ="menuprofile" style="margin-top: 10px;">
+		<div class ="menuprofile" style="margin-top: 10px; padding: 5px;">
 
 		<c:if test="${sessionScope.loginok!=null }">
 		

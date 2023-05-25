@@ -1077,7 +1077,6 @@ div.msgsearchuser {
 	function wsEvt() {
 		ws.onopen = function(data) {
 			//소켓이 열리면 초기화 세팅하기
-			console.log("메시지  페이지 들어옴");
 		}
 	
 		//메시지 잘 들어왔을 때 실행하는 내용
