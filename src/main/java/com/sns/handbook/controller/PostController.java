@@ -301,10 +301,9 @@ public class PostController {
 	@GetMapping("/post/scroll")
 	@ResponseBody
 	public List<PostDto> scroll(int offset, @RequestParam(required = false) String searchcolumn,
-			@RequestParam(required = false) String searchword, HttpSession session,
-			String user_num) {
+			@RequestParam(required = false) String searchword, HttpSession session) {
 
-		List<PostDto> list = pservice.postList(user_num,searchcolumn, searchword, offset);
+		List<PostDto> list = pservice.postList((String)session.getAttribute("user_num"),searchcolumn, searchword, offset);
 		
 		for (int i = 0; i < list.size(); i++) {
 			UserDto dto = uservice.getUserByNum(list.get(i).getUser_num()); // 여러가지 수많은 데이터에서 i번째 데이터만 가져오기, 여기서 필요한 상대방
