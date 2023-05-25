@@ -524,13 +524,17 @@ public class MessagealarmController{
 			}
 		}
 		
-		String pass=uservice.getUserByNum(user_num).getUser_pass();
-		
-		if(pass.length()<=11) {
-			Map<String, String> passMap=new HashMap<>();
-			map.put("type", "pass");
-			alarmList.add(passMap);
-			alarmCount++;
+		try {
+			String pass=uservice.getUserByNum(user_num).getUser_pass();
+			
+			if(pass.length()<=11) {
+				Map<String, String> passMap=new HashMap<>();
+				map.put("type", "pass");
+				alarmList.add(passMap);
+				alarmCount++;
+			}
+		}catch(Exception e) {
+			
 		}
 		
 		Collections.reverse(alarmList);

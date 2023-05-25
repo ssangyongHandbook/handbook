@@ -77,7 +77,7 @@
 		select guest_num,write_num,owner_num,guest_content,guest_file,guest_access,guest_writeday from guestbook where owner_num=#{owner_num} order by guest_num desc
 	</select>
 	
-	<!-- 접근권한에 따른 게시글 가져오기 -->
+	<!-- 접근권한에 따른 게시글 가져오기(예지가 여기 수정함) -->
 	<select id="selectPostsByAccess" parameterType="String" resultType="PostDto">
   		select * from post where (user_num = #{user_num}) and (post_access = 'all' or (post_access = 'onlyme' and #{user_num} = #{from_user})
       	or (post_access = 'follower' and (#{user_num} = #{from_user} or #{from_user} in (select from_user from following where to_user = #{user_num}))))

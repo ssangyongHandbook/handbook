@@ -99,7 +99,6 @@
 	background: none;
 	outline: none;
 	font-size: 3px;
-	
 }
 
 .detailbtn button{
@@ -141,7 +140,7 @@ $(document).on("click", ".addbtn", function() {
 
 	<div class = "followlist">
 	<div style="display: inline-flex; align-items: center; justify-content: space-between; margin-top: 20px;">
-	<span style="margin-left:35px; margin-bottom: 20px; font-size: 20pt; font-weight: bold;">친구</span>
+	<span style="margin-left:35px; margin-bottom: 20px; font-size: 20pt; font-weight: bold;">팔로워 목록</span>
 	
 	<div style=" margin-right:60px; background-color: #F0F2F5; border-radius: 60px; display: inline-flex; align-items: center; padding-left: 2%">
 						<span class = "glyphicon glyphicon-search" style = "font-size: 16pt;"></span>
@@ -156,13 +155,17 @@ $(document).on("click", ".addbtn", function() {
 
 				<c:if test="${dto.user_photo!=null}">
 					<div class="up">
-						<a href="/user/mypage?user_num=${dto.to_user }"><img src="/photo/${dto.user_photo }" class="userphoto"></a>
+						<a href="../user/mypage?user_num=${dto.from_user }">
+						<img src="/photo/${dto.user_photo }" class="userphoto">
+						</a>
 					</div>
 				</c:if>
 
 				<c:if test="${dto.user_photo==null}">
 					<div class="up">
-						<a href="/user/mypage?user_num=${dto.to_user }"><img src="../image/noimg.png" class="userphoto"></a>
+						<a href="../user/mypage?user_num=${dto.from_user }">
+						<img src="../image/noimg.png" class="userphoto">
+						</a>
 					</div>
 				</c:if>
 				<div class="un">
@@ -171,34 +174,6 @@ $(document).on("click", ".addbtn", function() {
 						<span class="tf" style="font-size: 11px;">함께아는친구: ${dto.tf_count }</span>
 					</c:if>
 				</div>
-				<div class="btndiv">
-					<button type="button" class="addbtn" fing_num = ${dto.fing_num }><img src="../image/add.png"></button>
-					
-					<div class="friendmenu" id="${dto.fing_num }">
-								
-								<div class = "detailbtn">
-								 
-								<c:if test="${dto.bookmarkcheck!=1 }">
-								<button type="button" class="insbookbtn" bfriend_num = "${dto.to_user }"><b><span style="font-size: 15pt;">
-								<i class="fa-star fa-regular" style="color: #ffd43b;"></i> 
-								즐겨찾기추가</span></b></button>
-								</c:if>
-								
-								<c:if test="${dto.bookmarkcheck==1 }">
-								<button type="button" class="delbookbtn" bfriend_num = "${dto.to_user }"><b><span style="font-size: 15pt;">
-								<i class="fa-solid fa-star" style="color: #ffd43b;"></i> 
-								즐겨찾기취소</span></b></button>
-								</c:if>
-								</div>
-								
-								
-								<div class = "detailbtn">
-								<button type = "button" class="fldelete"  to_user = ${dto.to_user }><b><span style="font-size: 15pt; margin-left: 4px;">
-								<i class="fa-solid fa-xmark" style="color: #cd2323;"></i>
-								팔로우취소</span></b></button>
-								</div>
-					</div>
-					</div>
 				</div>
 		</c:forEach>
 		
@@ -291,18 +266,21 @@ $(document).on("click", ".addbtn", function() {
 		    	  $.ajax({
 		    		 type:"get",
 		    		 dataType:"json",
-		    		 url:"followlistscroll",
-		    		 data:{"offset":offset,"from_user":${from_user}},
+		    		 url:"followerlistscroll",
+		    		 data:{"offset":offset,"to_user":"${to_user}"},
 		    		 success:function(res){
 		    			 $.each(res,function(i,item){
 		    				 setTimeout(function(){
 		    					
 		    		        		var s = "";
 		    		        		if(item.user_photo != null){
+		    		        			s+='<a href="../user/mypage?user_num='+item.from_user+'">';
 		    		        			s += "<div class='up'><img src='/photo/"+item.user_photo+"' class='userphoto'></div>";
+		    		        			s+='</a>'
 		    		        		}else{
-		    		        			
+		    		        			s+='<a href="../user/mypage?user_num='+item.from_user+'">';
 		    		        			s += "<div class='up'><img src='../image/noimg.png' class='userphoto'></div>";
+		    		        			s+='</a>'
 		    		        		}
 		    		        		s += "<div class='un'><span>"+item.user_name+"</span>";
 		    		        		
@@ -310,38 +288,18 @@ $(document).on("click", ".addbtn", function() {
 		    		        			s += "<span class='tf' style='font-size: 11px;'>함께아는친구: "+item.tf_count+"</span>";
 		    		        		
 		    		        		s += "</div>";
-		    		        		s += "<div class='btndiv' style='margin: auto 0;'><button type='button' class='addbtn' fing_num = "+item.fing_num+"><img src='../image/add.png'></button>";
-		    		        		s += "<div class='friendmenu' id="+item.fing_num+" style='display: none;'>";
-									
-									s += '<div class = "detailbtn">';
-									 
-									if(item.bookmarkcheck!=1){
-									s += '<button type="button" class="insbookbtn" bfriend_num = '+item.to_user+'><b><span style="font-size: 15pt;">';
-									s += '<i class="fa-star fa-regular" style="color: #ffd43b;"></i>&nbsp;즐겨찾기추가</span></b></button>';
-									}
-										
-									
-									if(item.bookmarkcheck==1){
-									s += '<button type="button" class="delbookbtn" bfriend_num = '+item.to_user+'><b><span style="font-size: 15pt;">';
-									s += '<i class="fa-solid fa-star" style="color: #ffd43b;"></i>&nbsp;즐겨찾기취소</span></b></button>';
-									}
-									s += '</div>';
-									
-									
-									s += '<div class = "detailbtn">';
-									s += '<button type = "button" class="fldelete"  to_user = '+item.to_user+'><b><span style="font-size: 15pt; margin-left: 4px;">';
-									s += '<i class="fa-solid fa-xmark" style="color: #cd2323;"></i>&nbsp;팔로우취소</span></b></button>';
-									s += '</div></div>';
-									s += '</div>';
+		    		        		s += "<div class='btndiv' style='margin: auto 0;'><button type='button' class='addbtn' fing_num = "+item.fing_num+"><img src='../image/add.png'></button></div>";
+		    		        		s += "<ul class='friendmenu' id="+item.fing_num+" style='float: left; margin: auto 0; padding: 0; display:none;'>";
+		    		        		s += "<li class = 'followbookmark'><button><i class='fa-star fa-regular' style='color: #ffd43b;''></i> &nbsp;즐겨찾기</span></button></li>"
+		    		       			s += "<li class = 'followcancel'><button type = 'button' to_user = "+item.to_user+"><span class='glyphicon glyphicon-remove' style='font-size: 17pt;'>&nbsp;팔로우취소</span></button></li></ul></div></div>"
 		    		        		
 		    		        		
 		    		             	var addContent = document.createElement("div");
 		    		                addContent.classList.add("userbox");
 		    		                addContent.innerHTML = s;
-		    		                console.log(s);
 		    		                document.querySelector('section').appendChild(addContent);
 		    		              	
-		    		         }, 100)  
+		    		         }, 1000)  
 		    			 })
 		    		 }
 		    	  });
@@ -354,7 +312,7 @@ $(document).on("click", ".addbtn", function() {
 			$(".followsearchbox").keyup(function(e){
 				if(e.keyCode == 13){
 					alert("넘어감");
-					location.href = "followsearch?searchword="+$(".followsearchbox").val();
+					location.href = "followersearch?searchword="+$(".followsearchbox").val()+"&to_user="+${to_user};
 				}
 			});
 	</script>

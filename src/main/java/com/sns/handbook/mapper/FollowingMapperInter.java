@@ -20,5 +20,7 @@ public interface FollowingMapperInter {
 	public List<FollowingDto> getFollowList(Map<String, Object> map);
 	public int togetherFollow(Map<String, String> map);
 	public List<FollowingDto> followSearch(Map<String, Object> map);
+	public List<FollowingDto> followerSearch(Map<String, Object> map);
 	public List<UserDto> followRecommend(Map<String, Object> map);
+	public List<FollowingDto> getFollowingList(Map<String, Object> map);
 }

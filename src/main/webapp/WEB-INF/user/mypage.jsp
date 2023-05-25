@@ -27,8 +27,6 @@
             new daum.Postcode({
                 oncomplete: function (data) {
 
-                    console.log(data);
-
                     // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
                     // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
                     // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
@@ -204,7 +202,6 @@
                         s += '<button type="button" class="cminsert" comment_num="'+item.comment_num+'" guest_num="'+item.guest_num+'" style="margin-left: -40px;"></button>';
                         s += '</div>';
                         s += '</form></div>';
-                        
                         addContent.innerHTML = s;
                         document.querySelector('section1').appendChild(addContent);
 
@@ -289,15 +286,24 @@
                 var left_side = $(".left").height();
                 var scrollValue = $(document).scrollTop();
 
-                console.log("left: " + left_side);
-                console.log("scroll: " + scrollValue);
-
                 if (left_side < scrollValue + 450) {
                     $(".left").css("top", scrollValue - 1200);
                 } else {
                     $(".left").css("top", 0);
                 }
             });
+          	
+          	//예지 추가: 팔로워 목록(나를 팔로우한 사람)
+          	$(".followerListBtn").click(function(){
+          		location.href='../following/followerlist?to_user=${dto.user_num}';
+          	})
+          	
+          	//프사트리거
+        	$(".userphotochangeimg").click(function(){
+        		$("#newphoto").trigger("click");
+        	})
+        	
+        	//예지 추가 끝
 
             //강제 호출
             $("#btnnewcover").click(function () {
@@ -1076,7 +1082,7 @@
                                             for (var i = 0; i < postFiles.length; i++) {
                                                 s += '<div class="fileimg">' +
                                                     '<a href="/post_file/' + postFiles[i] + '" target="_new" style="text-decoration: none; outline: none;">' +
-                                                    '<img src="/post_file/' + postFiles[i] + '" style="width: 100%;height: 500px;">' +
+                                                    '<img src="/post_file/' + postFiles[i] + '" style="width: 60%;height: 100%; margin: 0 auto;">' +
                                                     '</a>' +
                                                     '</div>';
                                             }
@@ -1201,7 +1207,7 @@
                                             for (var j = 0; j < guestFiles.length; j++) {
                                                 s += '<div class="fileimg">' +
                                                     '<a href="/post_file/' + guestFiles[j] + '" target="_new" style="text-decoration: none; outline: none;">' +
-                                                    '<img src="/guest_file/' + guestFiles[j] + '" style="width: 100%;height: 500px;">' +
+                                                    '<img src="/guest_file/' + guestFiles[j] + '" style="width: 60%;height: 100%; margin: 0 auto;">' +
                                                     '</a>' +
                                                     '</div>';
                                             }
@@ -2418,7 +2424,6 @@ span.content {
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" id="btnwrite" num="${dto.user_num }">게시</button>
                 </div>
-                c
 
             </div>
 
@@ -2510,8 +2515,15 @@ span.content {
                      style="width: 180px; height: 180px; cursor: pointer; border-radius: 90px;
                         position: relative; left: 250px; bottom: 80px;">
             </c:if>
-            <img alt="" src="${root }/image/camera.png" style="width: 50px; height: 50px; cursor: pointer;
-                  position: relative; left: 180px; bottom: 7px;">
+            
+            <c:if test="${sessionScope.user_num==dto.user_num }">
+            	<img alt="" src="${root }/image/camera.png" style="width: 50px; height: 50px; cursor: pointer;
+                  position: relative; left: 180px; bottom: 7px;" class="userphotochangeimg">
+            </c:if>
+            <c:if test="${sessionScope.user_num!=dto.user_num }">
+            	<img alt="" src="${root }/image/camera.png" style="width: 50px; height: 50px; cursor: pointer;
+                  position: relative; left: 180px; bottom: 7px; visibility: hidden;" class="userphotochangeimg">
+            </c:if>
 
             <span style="font-size: 22pt; font-weight: bold; position: relative; left: 200px; bottom: 60px;">${dto.user_name }</span>
 
@@ -2521,8 +2533,14 @@ span.content {
 
 
             <ul class="dropdown-menu" style="position: absolute; left: 200px; top: 100px;">
-                <li><a href="${root }/photo/${sessionScope.user_photo}" target="_new" style="text-decoration: none; outline: none;">프로필
+            	<c:if test="${dto.user_photo==null }">
+            		<li><a href="${root }/image/noimg.png" target="_new" style="text-decoration: none; outline: none;">프로필
                     사진 보기</a></li>
+            	</c:if>
+            	<c:if test="${dto.user_photo!=null }">
+                	<li><a href="${root }/photo/${dto.user_photo}" target="_new" style="text-decoration: none; outline: none;">프로필
+                    사진 보기</a></li>
+                </c:if>
                 <c:if test="${sessionScope.user_num==dto.user_num }">
                     <li><a href="#" id="btnnewphoto">프로필 사진 업데이트</a></li>
                 </c:if>
@@ -2558,7 +2576,9 @@ span.content {
                 </c:if>
             </c:if>
 
+			<c:if test="${sessionScope.user_num!=dto.user_num }">
             <button type="button" class="btnmessage"><i class="fa-solid fa-comment"></i>&nbsp;메시지 보내기</button>
+			</c:if>
 
             <c:if test="${sessionScope.user_num==dto.user_num }">
                 <button type="button" class="btnprofile" data-toggle="modal" data-target="#infoupdate" style="border-radius: 5px; border: none;">
@@ -2584,7 +2604,7 @@ span.content {
                 <div class="intro-info">
                     <span>&nbsp;<i class="fa-solid fa-house fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr.replaceAll(',', ' ') }</b>&nbsp;&nbsp;</span><br>
                     <span>&nbsp;&nbsp;<i class="fa-solid fa-location-dot  fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr.substring(0, 2)}</b>&nbsp;&nbsp;출신</span><br>
-                    <span><i class="fa-solid fa-wifi fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${followercount }</b>&nbsp;&nbsp;명이 팔로우함</span><br>
+                    <span class="followerListBtn" style="cursor: pointer;"><i class="fa-solid fa-wifi fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${followercount }</b>&nbsp;&nbsp;명이 팔로우함</span><br>
                     <span>&nbsp;<i class="fa-solid fa-envelope fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_email }</b>&nbsp;&nbsp;</span><br>
                     <span>&nbsp;&nbsp;<i class="fa-solid fa-mobile-screen-button fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_hp}</b>&nbsp;&nbsp;</span>
                 </div>
@@ -2687,11 +2707,25 @@ span.content {
                         <div class="top">
                             <div class="top-user">
                                 <c:if test="${adto.type=='post' }">
-                                    <a href="${root }/user/mypage?user_num=${dto.user_num}"><img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
+                                    <a href="${root }/user/mypage?user_num=${dto.user_num}">
+                                    	<c:if test="${dto.user_photo!=null }">
+                                    		<img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
+                                    	</c:if>
+                                    	
+                                    	<c:if test="${dto.user_photo==null }">
+                                    		<img alt="" src="${root }/image/noimg.png" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
+                                    	</c:if>
+                                    </a>
                                 </c:if>
 
                                 <c:if test="${adto.type=='guest' }">
-                                    <a href="${root }/user/mypage?user_num=${adto.dto.user_num}"><img alt="" src="${root }/photo/${adto.dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
+                                	<c:if test="${adto.dto.user_photo!=null }">
+                                    	<a href="${root }/user/mypage?user_num=${adto.dto.user_num}"><img alt="" src="${root }/photo/${adto.dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
+                                    </c:if>
+                                    
+                                    <c:if test="${adto.dto.user_photo==null }">
+                                    	<a href="${root }/user/mypage?user_num=${adto.dto.user_num}"><img alt="" src="${root }/image/noimg.png" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
+                                    </c:if>
                                 </c:if>
                                 <div class="top-writeday">
                                        <span><b><a href="${root }/user/mypage?user_num=${adto.dto.user_num}" style="color: black;">${adto.dto.user_name }</a><c:if test="${adto.type=='guest' }"><i class="fa-solid fa-caret-right"></i></c:if>
@@ -2758,7 +2792,7 @@ span.content {
                                         <c:forTokens items="${adto.post_file }" delims="," var="file">
                                             <div class="fileimg">
                                                 <a href="/post_file/${file }" target="_new" style="text-decoration: none; outline: none;">
-                                                    <img src="/post_file/${file }" style="width: 100%;height: 500px;">
+                                                    <img src="/post_file/${file }" style="width: 60%;height: 100%; margin: 0 auto;">
                                                 </a>
                                             </div>
                                         </c:forTokens>
@@ -2768,7 +2802,7 @@ span.content {
                                         <c:forTokens items="${adto.post_file }" delims="," var="file">
                                             <div class="fileimg">
                                                 <a href="/post_file/${file }" target="_new" style="text-decoration: none; outline: none;">
-                                                    <img src="/guest_file/${file }" style="width: 100%;height: 500px;">
+                                                    <img src="/guest_file/${file }" style="width: 60%;height: 100%; margin: 0 auto;">
                                                 </a>
                                             </div>
                                         </c:forTokens>
