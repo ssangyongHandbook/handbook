@@ -2682,12 +2682,14 @@
 
 
                                 <c:if test="${fn:contains(adto.post_file, '.mp4')}">
-                                    <div class="fileimg">
+                                    <div class="fileimg" style="text-align: center;">
                                         <c:if test="${adto.post_file!='no' && adto.type=='post'}">
-                                            <video src="/post_file/${adto.post_file }" controls="controls" muted="muted" style="width:100%;"></video>
+                                            <video src="/post_file/${adto.post_file }" controls="controls" muted="muted" 
+                                            style='width: 60%;height: 100%; margin: 0 auto;'></video>
                                         </c:if>
                                         <c:if test="${adto.post_file!='no' && adto.type=='guest'}">
-                                            <video src="/guest_file/${adto.post_file }" controls="controls" muted="muted" style="width:100%;"></video>
+                                            <video src="/guest_file/${adto.post_file }" controls="controls" muted="muted" 
+                                            style='width: 60%;height: 100%; margin: 0 auto;'></video>
                                         </c:if>
                                     </div>
                                 </c:if>
