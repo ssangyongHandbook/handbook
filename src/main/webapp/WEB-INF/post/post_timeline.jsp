@@ -492,8 +492,8 @@
       
    window.onscroll = function(e) {
        if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
-          
           offset=offset+10;
+          console.log("이벤트발생"+offset);
           $.ajax({
             type:"get",
             dataType:"json",
@@ -651,7 +651,7 @@
                               s += '&nbsp;좋아요 ' + (dto.like_count - 1) + '명';
                             }
                             if(dto.like_count !=1){
-                            	s += '&nbsp;좋아요 +' (dto.like_count - 1)+'명';
+                            	s += '&nbsp;좋아요 '+ (dto.like_count - 1)+'명';
                             }
                             s += '</span></span></span>';
                         
@@ -810,11 +810,12 @@
                      }
                   
                      var addTimeline = document.createElement("div");
-                      console.log(s);
+                      
                       addTimeline.innerHTML =s;
 
                       document.querySelector('section').appendChild(addTimeline);
-                      initializeSlider("dto-"+dto.post_num);
+                      if (!dto.post_file.includes('.mp4'))
+                        	initializeSlider("dto-"+dto.post_num);
                   }, 1000) 
                })
             }
@@ -1389,7 +1390,7 @@
                       }
                    
                       var addTimeline = document.createElement("div");
-                      console.log(s);
+                     
                       addTimeline.innerHTML =s;
                       document.querySelector('sectiontime').appendChild(addTimeline);
                       return false;
@@ -1577,7 +1578,7 @@
                 s += '<button type="button" class="cminsert" comment_num="'+item.comment_num+'" post_num="'+item.post_num+'" style="margin-left: -40px;"></button>';
                 s += '</div>';
                 s += '</form></div>';
-                console.log(s);
+                
                 addContent.innerHTML = s;
                 document.querySelector('section1').appendChild(addContent);
 
