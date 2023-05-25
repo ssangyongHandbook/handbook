@@ -236,13 +236,13 @@
 					<div class="upunbox">
 						<c:if test="${dto.user_photo!=null}">
 							<div class="up">
-								<img src="/photo/${dto.user_photo }" class="userphoto">
+								<a href="/user/mypage?user_num=${dto.user_num }"><img src="/photo/${dto.user_photo }" class="userphoto"></a>
 							</div>
 						</c:if>
 	
 						<c:if test="${dto.user_photo==null}">
 							<div class="up">
-								<img src="../image/noimg.png" class="userphoto">
+								<a href="/user/mypage?user_num=${dto.user_num }"><img src="../image/noimg.png" class="userphoto"></a>
 							</div>
 						</c:if>
 						<div class="un">
