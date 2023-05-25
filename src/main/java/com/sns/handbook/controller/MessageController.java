@@ -44,9 +44,17 @@ public class MessageController {
 	MessagealarmService maservice;
 
 	@GetMapping("/message/main")
-	public ModelAndView meesageMain(HttpSession session,@RequestParam(defaultValue = "0") int selgroup)
+	public ModelAndView meesageMain(HttpSession session,
+			@RequestParam(defaultValue = "0") int selgroup,
+			@RequestParam(required = false) String search_name,
+			@RequestParam(required = false) String search_num)
 	{
 		ModelAndView model=new ModelAndView();
+		
+		if(search_name!=null) {
+			model.addObject("search_name",search_name);
+			model.addObject("search_num",search_num);
+		}
 		
 		//사용자의 num 받기
 		String myid=(String)session.getAttribute("myid");
