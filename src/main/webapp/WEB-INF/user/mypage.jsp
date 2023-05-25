@@ -476,8 +476,11 @@
                 var post_access = $("#post_access").val();
                 var post_content = $("#post_content").val();
                 var files = $("#contentphoto")[0].files;
-
+                var filecheck=$("#contentphoto").val();
+                
                 var form = new FormData();
+                
+
 
                 for (var i = 0; i < files.length; i++) {
                     form.append("photo", files[i]);
@@ -489,38 +492,48 @@
                     form.append("post_content", post_content);
                     form.append("user_num", owner_num);
 
-                    $.ajax({
+                    if(post_content == "" && filecheck == "")
+                    	alert("사진 또는 내용을 입력해주세요");
+                    else{
+                    	$.ajax({
 
-                        type: "post",
-                        dataType: "text",
-                        processData: false,
-                        contentType: false,
-                        data: form,
-                        url: "insertpost",
-                        success: function () {
+                            type: "post",
+                            dataType: "text",
+                            processData: false,
+                            contentType: false,
+                            data: form,
+                            url: "insertpost",
+                            success: function () {
 
-                            location.reload();
-                        }
-                    });
+                                location.reload();
+                            }
+                        });
+                    }
+                    
                 } else {
 
                     form.append("guest_content", guest_content);
                     form.append("write_num", write_num);
                     form.append("owner_num", owner_num);
 
-                    $.ajax({
+                    if(guest_content == "" && filecheck == "")
+                    	alert("사진 또는 내용을 입력해주세요");
+                    else{
+                    	$.ajax({
 
-                        type: "post",
-                        dataType: "text",
-                        processData: false,
-                        contentType: false,
-                        data: form,
-                        url: "insertguestbook",
-                        success: function () {
+                            type: "post",
+                            dataType: "text",
+                            processData: false,
+                            contentType: false,
+                            data: form,
+                            url: "insertguestbook",
+                            success: function () {
 
-                            location.reload();
-                        }
-                    });
+                                location.reload();
+                            }
+                        });
+                    }
+                  
                 }
             })
 
