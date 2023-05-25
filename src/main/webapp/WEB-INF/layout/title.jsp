@@ -85,6 +85,7 @@
 	line-height: 45px;
 	font-size: 15pt;
 	overflow: hidden;
+	cursor: pointer;
 }
 
 .tti{
@@ -555,13 +556,13 @@
     		<div class="titlecircle tti"><button type ="button" onclick="location.href='/login/logoutprocess'" class = "btntti"><img alt="" src="../image/logout.png" style="width: 23px; margin-bottom: 5px;"></button></div>
 		</c:if>
 		
-		<div class="titlecircle tti"><a href="#"><span class = "glyphicon glyphicon-th titlemenubar" style="font-size: 15pt; color: black;"></span></a></div>
-		<div class="titlecircle tti ttimsg"><a href="#"><span style="font-size: 15pt; color: black;"><i class="fa-regular fa-comment-dots"></i></span></a></div>
+		<div class="titlecircle tti"><span class = "glyphicon glyphicon-th titlemenubar" style="font-size: 15pt; color: black;"></span></div>
+		<div class="titlecircle tti ttimsg"><span style="font-size: 15pt; color: black;"><i class="fa-regular fa-comment-dots"></i></span></div>
 		<!-- 메시지 알림 개수 표시 시작 -->
 		<div class="msgalarmcircle"></div>
 		<!-- 메시지 알림 개수 표시 끝 -->
 		
-		<div class="titlecircle tti ttialarm"><a href="#"><span style="font-size: 15pt; color: black;"><i class="fa-solid fa-bell"></i></span></a></div>
+		<div class="titlecircle tti ttialarm"><span style="font-size: 15pt; color: black;"><i class="fa-solid fa-bell"></i></span></div>
 		<!-- 메시지 알림 개수 표시 시작 -->
 		<div class="allalarmcircle"></div>
 		<!-- 메시지 알림 개수 표시 끝 -->
