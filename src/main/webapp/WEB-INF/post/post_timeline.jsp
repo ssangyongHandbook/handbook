@@ -139,7 +139,6 @@
 
           var followpost_num = $(this).attr("followpost_num");
           var unfollowpost_num= $(this).attr("unfollowpost_num");
-       
           $("#" + followpost_num).toggle();
           $("#" + unfollowpost_num).toggle();
 
@@ -805,13 +804,12 @@
                      }
                   
                      var addTimeline = document.createElement("div");
-                     
                       addTimeline.innerHTML =s;
 
                       document.querySelector('section').appendChild(addTimeline);
-                      if (!dto.post_file.includes('.mp4'))
-                        	initializeSlider("dto-"+dto.post_num);
-                  }, 1000) 
+	                      if (!dto.post_file.includes('.mp4'))
+	                        	initializeSlider("dto-"+dto.post_num);
+                  }, 200) 
                })
             }
           });
@@ -1385,7 +1383,6 @@
                       }
                    
                       var addTimeline = document.createElement("div");
-
                       addTimeline.innerHTML =s;
                       document.querySelector('sectiontime').appendChild(addTimeline);
                       return false;
@@ -1573,7 +1570,6 @@
                 s += '<button type="button" class="cminsert" comment_num="'+item.comment_num+'" post_num="'+item.post_num+'" style="margin-left: -40px;"></button>';
                 s += '</div>';
                 s += '</form></div>';
-
                 addContent.innerHTML = s;
                 document.querySelector('section1').appendChild(addContent);
 
