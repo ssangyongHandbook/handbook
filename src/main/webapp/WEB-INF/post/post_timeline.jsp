@@ -824,17 +824,6 @@
        }
      } 
  
-             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-      
       /* comment */
       $('#commentinput').keydown(function() {
          if (event.keyCode === 13) {
