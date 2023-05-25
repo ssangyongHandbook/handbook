@@ -99,6 +99,7 @@
 	background: none;
 	outline: none;
 	font-size: 3px;
+	
 }
 
 .detailbtn button{
@@ -155,13 +156,13 @@ $(document).on("click", ".addbtn", function() {
 
 				<c:if test="${dto.user_photo!=null}">
 					<div class="up">
-						<img src="/photo/${dto.user_photo }" class="userphoto">
+						<a href="/user/mypage?user_num=${dto.to_user }"><img src="/photo/${dto.user_photo }" class="userphoto"></a>
 					</div>
 				</c:if>
 
 				<c:if test="${dto.user_photo==null}">
 					<div class="up">
-						<img src="../image/noimg.png" class="userphoto">
+						<a href="/user/mypage?user_num=${dto.to_user }"><img src="../image/noimg.png" class="userphoto"></a>
 					</div>
 				</c:if>
 				<div class="un">
@@ -190,7 +191,7 @@ $(document).on("click", ".addbtn", function() {
 								</c:if>
 								</div>
 								
-								<!-- <i class="fa-solid fa-star" style="color: #ffd43b;"></i> -->
+								
 								<div class = "detailbtn">
 								<button type = "button" class="fldelete"  to_user = ${dto.to_user }><b><span style="font-size: 15pt; margin-left: 4px;">
 								<i class="fa-solid fa-xmark" style="color: #cd2323;"></i>
@@ -309,18 +310,38 @@ $(document).on("click", ".addbtn", function() {
 		    		        			s += "<span class='tf' style='font-size: 11px;'>함께아는친구: "+item.tf_count+"</span>";
 		    		        		
 		    		        		s += "</div>";
-		    		        		s += "<div class='btndiv' style='margin: auto 0;'><button type='button' class='addbtn' fing_num = "+item.fing_num+"><img src='../image/add.png'></button></div>";
-		    		        		s += "<ul class='friendmenu' id="+item.fing_num+" style='float: left; margin: auto 0; padding: 0; display:none;'>";
-		    		        		s += "<li class = 'followbookmark'><button><i class='fa-star fa-regular' style='color: #ffd43b;''></i> &nbsp;즐겨찾기</span></button></li>"
-		    		       			s += "<li class = 'followcancel'><button type = 'button' to_user = "+item.to_user+"><span class='glyphicon glyphicon-remove' style='font-size: 17pt;'>&nbsp;팔로우취소</span></button></li></ul></div></div>"
+		    		        		s += "<div class='btndiv' style='margin: auto 0;'><button type='button' class='addbtn' fing_num = "+item.fing_num+"><img src='../image/add.png'></button>";
+		    		        		s += "<div class='friendmenu' id="+item.fing_num+" style='display: none;'>";
+									
+									s += '<div class = "detailbtn">';
+									 
+									if(item.bookmarkcheck!=1){
+									s += '<button type="button" class="insbookbtn" bfriend_num = '+item.to_user+'><b><span style="font-size: 15pt;">';
+									s += '<i class="fa-star fa-regular" style="color: #ffd43b;"></i>&nbsp;즐겨찾기추가</span></b></button>';
+									}
+										
+									
+									if(item.bookmarkcheck==1){
+									s += '<button type="button" class="delbookbtn" bfriend_num = '+item.to_user+'><b><span style="font-size: 15pt;">';
+									s += '<i class="fa-solid fa-star" style="color: #ffd43b;"></i>&nbsp;즐겨찾기취소</span></b></button>';
+									}
+									s += '</div>';
+									
+									
+									s += '<div class = "detailbtn">';
+									s += '<button type = "button" class="fldelete"  to_user = '+item.to_user+'><b><span style="font-size: 15pt; margin-left: 4px;">';
+									s += '<i class="fa-solid fa-xmark" style="color: #cd2323;"></i>&nbsp;팔로우취소</span></b></button>';
+									s += '</div></div>';
+									s += '</div>';
 		    		        		
 		    		        		
 		    		             	var addContent = document.createElement("div");
 		    		                addContent.classList.add("userbox");
 		    		                addContent.innerHTML = s;
+		    		                console.log(s);
 		    		                document.querySelector('section').appendChild(addContent);
 		    		              	
-		    		         }, 1000)  
+		    		         }, 100)  
 		    			 })
 		    		 }
 		    	  });
