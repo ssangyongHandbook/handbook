@@ -488,7 +488,6 @@
       
    window.onscroll = function(e) {
        if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
-          
           offset=offset+10;
           $.ajax({
             type:"get",
@@ -647,7 +646,7 @@
                               s += '&nbsp;좋아요 ' + (dto.like_count - 1) + '명';
                             }
                             if(dto.like_count !=1){
-                            	s += '&nbsp;좋아요 +' (dto.like_count - 1)+'명';
+                            	s += '&nbsp;좋아요 '+ (dto.like_count - 1)+'명';
                             }
                             s += '</span></span></span>';
                         
@@ -806,10 +805,12 @@
                      }
                   
                      var addTimeline = document.createElement("div");
+                     
                       addTimeline.innerHTML =s;
 
                       document.querySelector('section').appendChild(addTimeline);
-                      initializeSlider("dto-"+dto.post_num);
+                      if (!dto.post_file.includes('.mp4'))
+                        	initializeSlider("dto-"+dto.post_num);
                   }, 1000) 
                })
             }
@@ -819,17 +820,6 @@
        }
      } 
  
-             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-      
       /* comment */
       $('#commentinput').keydown(function() {
          if (event.keyCode === 13) {
@@ -1395,6 +1385,7 @@
                       }
                    
                       var addTimeline = document.createElement("div");
+
                       addTimeline.innerHTML =s;
                       document.querySelector('sectiontime').appendChild(addTimeline);
                       return false;
@@ -1582,6 +1573,7 @@
                 s += '<button type="button" class="cminsert" comment_num="'+item.comment_num+'" post_num="'+item.post_num+'" style="margin-left: -40px;"></button>';
                 s += '</div>';
                 s += '</form></div>';
+
                 addContent.innerHTML = s;
                 document.querySelector('section1').appendChild(addContent);
 

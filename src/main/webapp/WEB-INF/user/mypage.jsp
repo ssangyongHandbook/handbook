@@ -2478,10 +2478,10 @@
 
     <div class="menu">
         <hr style="border: 1px solid lightgray; margin:0px;">
-        <div style="font-weight: bold; font-size: 15pt;">
+        <div style="font-weight: bold; font-size: 15pt; display: inline-flex; align-items: center; height: 100%;">
             <a href="/user/mypage?user_num=${dto.user_num }" style="color: black;"><span>게시글</span></a>
             <!-- <a href="/user/info" style="color: black;"><span>정보</span></a> -->
-            <a href="${root }/following/followlist?from_user=${sessionScope.user_num}" style="color: black;"><span>친구</span></a>
+            <a href="${root }/following/followlist?from_user=${dto.user_num}" style="color: black;"><span>친구</span></a>
         </div>
     </div>
 

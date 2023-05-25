@@ -60,7 +60,7 @@ ORDER BY CASE
     WHERE from_user = #{user_num}
   ) THEN 0
   ELSE 1
-END, post_writeday DESC
+END, post_writeday DESC,post_num desc
 LIMIT 10
 OFFSET #{offset}
   

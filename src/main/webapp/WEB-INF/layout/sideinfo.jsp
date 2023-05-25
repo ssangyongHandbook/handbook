@@ -60,13 +60,13 @@
                 <!-- 프로필 사진을 표시 -->
                 <c:if test="${dto.user_photo != null }">
                         <div class="up">
-                            <a href="/user/mypage?user_num=${sessionScope.user_num }"><img src="/photo/${dto.user_photo}" class="userphoto"></a>
+                            <a href="/user/mypage?user_num=${dto.to_user }"><img src="/photo/${dto.user_photo}" class="userphoto"></a>
                         </div>
                 </c:if>
 				
 				<c:if test="${dto.user_photo == null }">
 					<div class="up">
-                        <a href="/user/mypage?user_num=${sessionScope.user_num }"><img src="../image/noimg.png" class="userphoto"></a>
+                        <a href="/user/mypage?user_num=${dto.to_user }"><img src="../image/noimg.png" class="userphoto"></a>
                     </div>
 				</c:if>
 

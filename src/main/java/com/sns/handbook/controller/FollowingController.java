@@ -172,8 +172,6 @@ public class FollowingController {
 											@RequestParam(required = false) String searchword,
 											@RequestParam(defaultValue = "0") int offset,HttpSession session)
 	{
-		String myid=(String)session.getAttribute("myid");
-		from_user=uservice.getUserById(myid).getUser_num();
 		
 		List<FollowingDto> list = service.followSearch(from_user, searchword, offset);
 		

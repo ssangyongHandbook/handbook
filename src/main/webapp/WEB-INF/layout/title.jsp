@@ -43,6 +43,7 @@
 	margin-bottom: 10px;
 	width: 150px;
 	margin-bottom: 20px;
+	cursor: pointer;	
 }
 
 .titledetail div {
@@ -338,6 +339,13 @@
 			}
 			
 		})
+		
+		$("#deleteuser").click(function(){
+			var deletecheck=confirm("정말로 탈퇴하시겠습니까?");
+			if(deletecheck)
+				location.href="${root }/user/userdelete?user_num=${sessionScope.user_num}";
+				
+		})
 	})
 
 	function searchWidhtChange() {
@@ -365,9 +373,6 @@
 			success:function(res){
 				totalCount=res.totalCount;
 				alarmCount=res.alarmCount;
-				
-				console.log("totalCount: "+totalCount);
-				console.log("alarmCount: "+alarmCount);
 				
 				if(totalCount>0){
 					//알람이 있으면
@@ -575,10 +580,10 @@
             <div class = "subtitlemenu">
                <span style="margin-bottom: 5px;">메뉴</span>
                
-               <div class = "titledetail"><a href = "#" data-toggle="modal" data-target="#contentwrite"><div class="titlecircle"><span class = "glyphicon glyphicon-check"></span></div><span>게시물 작성</span></a></div>
+               <div class = "titledetail"><a data-toggle="modal" data-target="#contentwrite"><div class="titlecircle"><span class = "glyphicon glyphicon-check"></span></div><span>게시물 작성</span></a></div>
                <div class = "titledetail"><a href = "${root }/following/recommendlist?from_user=${sessionScope.user_num}"><div class="titlecircle"><span class = "glyphicon glyphicon-search"></span></div><span>친구 찾기</span></a></div>
                <div class = "titledetail"><a href = "${root }/post/bookmarktimeline"><div class="titlecircle"><span class = "glyphicon glyphicon-star"></span></div><span>즐겨 찾기</span></a></div>
-               <div class = "titledetail"><a href = "${root }/user/userdelete?user_num=${sessionScope.user_num}"><div class="titlecircle"><i class="fa-solid fa-user-xmark"></i></div><span>회원탈퇴</span></a></div>
+               <div class = "titledetail" id="deleteuser"><a><div class="titlecircle"><i class="fa-solid fa-user-xmark"></i></div><span>회원탈퇴</span></a></div>
             </div>
             
 	</div> 
