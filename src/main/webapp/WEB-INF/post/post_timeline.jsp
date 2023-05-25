@@ -141,8 +141,8 @@
           var followpost_num = $(this).attr("followpost_num");
           var unfollowpost_num= $(this).attr("unfollowpost_num");
           
-          console.log("followpost_num: "+followpost_num);
-          console.log("unfollowpost_num: "+unfollowpost_num);
+         // console.log("followpost_num: "+followpost_num);
+          //console.log("unfollowpost_num: "+unfollowpost_num);
 
           $("#" + followpost_num).toggle();
           $("#" + unfollowpost_num).toggle();
@@ -492,7 +492,6 @@
       
    window.onscroll = function(e) {
        if((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
-          
           offset=offset+10;
           $.ajax({
             type:"get",
@@ -810,7 +809,7 @@
                      }
                   
                      var addTimeline = document.createElement("div");
-                      console.log(s);
+                      //console.log(s);
                       addTimeline.innerHTML =s;
 
                       document.querySelector('section').appendChild(addTimeline);
@@ -1400,7 +1399,7 @@
                       }
                    
                       var addTimeline = document.createElement("div");
-                      console.log(s);
+                      //console.log(s);
                       addTimeline.innerHTML =s;
                       document.querySelector('sectiontime').appendChild(addTimeline);
                       return false;
@@ -1593,7 +1592,7 @@
                 s += '<button type="button" class="cminsert" comment_num="'+item.comment_num+'" post_num="'+item.post_num+'" style="margin-left: -40px;"></button>';
                 s += '</div>';
                 s += '</form></div>';
-                console.log(s);
+                //console.log(s);
                 addContent.innerHTML = s;
                 document.querySelector('section1').appendChild(addContent);
 
