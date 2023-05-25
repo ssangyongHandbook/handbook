@@ -522,6 +522,7 @@ div.msgsearchuser {
 		$(".messagefilepreview").hide();
 		$(".ttimsg").hide();
 		$(".msgalarmcircle").hide();
+		$(".allalarmcircle").css("margin-right","95px");
 		
 		//상단의 채팅중인 사람 num 변경
 		$(".chatinfophoto").attr("memeber_num", "${otherinfo.user_num}");
@@ -864,6 +865,43 @@ div.msgsearchuser {
 				}
 			})
 		})
+		
+		if("${search_name}"!=""){
+			setTimeout(function(){
+				$(".msgadd").trigger("click");
+				$("input.msgaddname").val("${search_name}");
+				
+				var addName = "${search_name}"; //검색한 (추가할)사람 이름
+				$.ajax({
+					type : "get",
+					dataType : "json",
+					data : {"user_name" : addName},
+					url : "searchuser",
+					success : function(res) {
+						var users = "";
+						$.each(res,function(i, ele) {
+							users += "<div class='msgserachuserone'><div class='searchuphoto'>";
+							if (ele.user_photo == null) {
+								users += "<img src='/image/noimg.png'>";
+								} else {
+									users += "<img src='/photo/"+ele.user_photo+"'>";
+									}
+							users += "</div><span class='searchuname'>"+ ele.user_name + "</span>";
+							users += "<span class='searchuid'>"+ ele.user_id + "</span>";
+							users += "<input type='hidden' value="+ele.user_num+">";
+							users += "</div>";
+							})
+							$('.msgsearchuser').html(users);
+						
+							$.each($(".msgserachuserone"),function(i,ele){
+								if($(".msgserachuserone input").eq(i).val()=="${search_num}"){
+									$(ele).trigger("click");
+								}
+							})
+						}
+					})
+			},300)
+		}
 
 	})
 
@@ -920,10 +958,14 @@ div.msgsearchuser {
 				$("#chatShow").html(chatContent);
 
 				if (scrollPos == null) {
-					$(".chatlist").scrollTop($(".chatlist").prop('scrollHeight'));
+					setTimeout(function(){
+						$(".chatlist").scrollTop($(".chatlist").prop('scrollHeight'));
+					},300)
 					//$(".chatlist").scrollTop($(".chatlist")[0].scrollHeight); //스크롤 맨 아래로 내리기	
 				} else {
-					$(".chatlist").scrollTop(scrollPos);
+					setTimeout(function(){
+						$(".chatlist").scrollTop(scrollPos);
+					},300)
 				}
 			}
 		})
@@ -1035,6 +1077,7 @@ div.msgsearchuser {
 	function wsEvt() {
 		ws.onopen = function(data) {
 			//소켓이 열리면 초기화 세팅하기
+			console.log("메시지  페이지 들어옴");
 		}
 	
 		//메시지 잘 들어왔을 때 실행하는 내용
@@ -1052,6 +1095,7 @@ div.msgsearchuser {
 
 				memberListOut();//멤버 리스트 다시 불러오기
 			}
+			
 		}
 
 		//채팅 입력창에서 엔터 누르면 채팅 보내짐

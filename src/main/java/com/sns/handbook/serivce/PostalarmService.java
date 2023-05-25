@@ -31,4 +31,10 @@ public class PostalarmService implements PostalarmServiceInter {
 		// TODO Auto-generated method stub
 		return mapperInter.getTotalCountPostAlarm(receiver_num);
 	}
+
+	@Override
+	public void deleteallPostAlarm(String receiver_num) {
+		// TODO Auto-generated method stub
+		mapperInter.deleteallPostAlarm(receiver_num);
+	}
 }
