@@ -79,11 +79,11 @@
 	
 	<!-- 접근권한에 따른 게시글 가져오기 -->
 	<select id="selectPostsByAccess" parameterType="String" resultType="PostDto">
-	  	select * from post where (post_access = 'all' AND user_num = #{user_num}) 
-	  	or (post_access='onlyme' and #{user_num}=#{from_user})
-	  	or (post_access='follower' and (#{user_num}=#{from_user} or #{from_user} in(select from_user from following where to_user=#{user_num})) )
+  		select * from post where (user_num = #{user_num}) and (post_access = 'all' or (post_access = 'onlyme' and #{user_num} = #{from_user})
+      	or (post_access = 'follower' and (#{user_num} = #{from_user} or #{from_user} in (select from_user from following where to_user = #{user_num}))))
 	</select>
 	
+	<!-- 접근권한에 따른 방명록 가져오기 -->
 	<select id="selectGuestbookByAccess" parameterType="Map" resultType="GuestbookDto">
 	  select * from guestbook where 
 	  <if test="owner_num==user_num">
