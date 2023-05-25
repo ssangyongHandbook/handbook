@@ -27,8 +27,6 @@
             new daum.Postcode({
                 oncomplete: function (data) {
 
-                    console.log(data);
-
                     // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
                     // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
                     // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
@@ -111,7 +109,6 @@
                         s += '<button type="button" class="btn btn-info cminsert" comment_num="' + item.comment_num + '"  post_num="' + item.post_num + '"  style="margin-right: 20px;">답글입력</button>';
                         s += '</div>';
                         s += '</form></div>';
-                        console.log(s);
                         addContent.innerHTML = s;
                         document.querySelector('section1').appendChild(addContent);
 
@@ -189,7 +186,6 @@
                         s += '<button type="button" class="btn btn-info cminsert" comment_num="' + item.comment_num + '" guest_num="' + item.guest_num + '"  style="margin-right: 20px;">답글입력</button>';
                         s += '</div>';
                         s += '</form></div>';
-                        console.log(s);
                         addContent.innerHTML = s;
                         document.querySelector('section1').appendChild(addContent);
 
@@ -238,20 +234,40 @@
                 }
             });
         }
+        
+        var ws;
+
+      	//웹소켓 오픈(메시지 알림)
+      	function wsOpen() {
+      		ws = new WebSocket("ws://" + location.host + "/chating");
+      		wsEvt();
+      	}
+
+      	function wsEvt() {
+      		ws.onopen = function(data) {
+      		}
+
+      		//메시지 잘 들어왔을 때 실행하는 내용
+      		ws.onmessage = function(data) {
+      		}
+      	}
 
 
         $(function () {
+        	wsOpen();
 
             offset =${offset};
             commentoffset =${commentoffset};
-
+            
+          	//메시지 보내기 누르면 메시지창으로 이동
+        	$(".btnmessage").click(function(){
+        		location.href="../message/main?search_name=${dto.user_name}&search_num=${dto.user_num}";
+        	})
+        	
             //스크롤 이벤트
             $(window).scroll(function () {
                 var left_side = $(".left").height();
                 var scrollValue = $(document).scrollTop();
-
-                console.log("left: " + left_side);
-                console.log("scroll: " + scrollValue);
 
                 if (left_side < scrollValue + 450) {
                     $(".left").css("top", scrollValue - 1200);
@@ -259,6 +275,18 @@
                     $(".left").css("top", 0);
                 }
             });
+          	
+          	//예지 추가: 팔로워 목록(나를 팔로우한 사람)
+          	$(".followerListBtn").click(function(){
+          		location.href='../following/followerlist?to_user=${dto.user_num}';
+          	})
+          	
+          	//프사트리거
+        	$(".userphotochangeimg").click(function(){
+        		$("#newphoto").trigger("click");
+        	})
+        	
+        	//예지 추가 끝
 
             //강제 호출
             $("#btnnewcover").click(function () {
@@ -832,7 +860,8 @@
                         url: "likeinsert",
                         data: {"post_num": post_num, "user_num": user_num},
                         success: function () {
-
+                        	//게시글 좋아요 알림
+                       	 	ws.send('{"type":"plike","sender_num":"${sessionScope.user_num}","post_num":"'+post_num+'","guest_num":"null"}');
                         }
                     })
 
@@ -844,7 +873,8 @@
                         url: "guestlikeinsert",
                         data: {"guest_num": post_num, "user_num": user_num},
                         success: function () {
-
+                        	//방명록 좋아요 알림
+                       		ws.send('{"type":"plike","sender_num":"${sessionScope.user_num}","guest_num":"'+post_num+'","post_num":"null"}');
                         }
                     })
                 }
@@ -918,7 +948,7 @@
                     url: "insertfollowing",
                     data: {"from_user": from_user, "to_user": to_user},
                     success: function () {
-
+                    	ws.send('{"type":"follow","receiver_num":"'+to_user+'","sender_num":"${sessionScope.user_num}"}');
                         location.reload();
                     }
                 });
@@ -1034,7 +1064,7 @@
                                             for (var i = 0; i < postFiles.length; i++) {
                                                 s += '<div class="fileimg">' +
                                                     '<a href="/post_file/' + postFiles[i] + '" target="_new" style="text-decoration: none; outline: none;">' +
-                                                    '<img src="/post_file/' + postFiles[i] + '" style="width: 100%;height: 500px;">' +
+                                                    '<img src="/post_file/' + postFiles[i] + '" style="width: 60%;height: 100%; margin: 0 auto;">' +
                                                     '</a>' +
                                                     '</div>';
                                             }
@@ -1084,7 +1114,6 @@
                                 }
 
                                 var addTimeline = document.createElement("div");
-                                console.log(s);
                                 addTimeline.innerHTML = s;
                                 document.querySelector('sectiontime').appendChild(addTimeline);
                                 return false;
@@ -1160,7 +1189,7 @@
                                             for (var j = 0; j < guestFiles.length; j++) {
                                                 s += '<div class="fileimg">' +
                                                     '<a href="/post_file/' + guestFiles[j] + '" target="_new" style="text-decoration: none; outline: none;">' +
-                                                    '<img src="/guest_file/' + guestFiles[j] + '" style="width: 100%;height: 500px;">' +
+                                                    '<img src="/guest_file/' + guestFiles[j] + '" style="width: 60%;height: 100%; margin: 0 auto;">' +
                                                     '</a>' +
                                                     '</div>';
                                             }
@@ -1215,7 +1244,6 @@
                                         '</div>';
                                 }
                                 var addTimeline = document.createElement("div");
-                                console.log(s);
                                 addTimeline.innerHTML = s;
                                 document.querySelector('sectiontime').appendChild(addTimeline);
                                 return false;
@@ -1228,6 +1256,29 @@
                 $(".btncommentmodal").trigger("click");
 
             })
+            
+            //예지---
+            
+          //마이페이지 넘어갔을 때 post_num이 넘어온 경우
+        	if("${post_num}"!=""){
+        		$.each($(".img_comment"),function(i,ele){
+        			if($(ele).attr("post_num")=="${post_num}" && $(ele).attr("type")=="post"){
+        				 $(ele).trigger("click");
+        			}
+        		})
+        	}
+        	
+        	//마이페이지 넘어갔을 때 guest_num이 넘어온 경우
+        	if("${guest_num}"!=""){
+        		$.each($(".img_comment"),function(i,ele){
+        			if($(ele).attr("post_num")=="${guest_num}" && $(ele).attr("type")=="guest"){
+        				$(ele).trigger("click");
+        			}
+        		})
+        	}
+            
+            
+            ///예지끝---
 
             //댓글 입력
             $("#insertcommentbtn").click(function () {
@@ -1252,6 +1303,8 @@
                             commentoffset = 0;
                             scroll(commentoffset, post_num);
                             commentCount(post_num);
+                          	//웹소켓에 댓글 알림 보내기
+                            ws.send('{"type":"post","sender_num":"${sessionScope.user_num}","post_num":"'+post_num+'","guest_num":"null","comment_content":"'+comment_content+'"}');
                         }
                     })
                 } else {
@@ -1269,6 +1322,8 @@
                             commentoffset = 0;
                             guestscroll(commentoffset, guest_num);
                             commentGuestCount(guest_num);
+                          	//웹소켓에 댓글 알림 보내기
+                            ws.send('{"type":"post","sender_num":"${sessionScope.user_num}","guest_num":"'+guest_num+'","post_num":"null","comment_content":"'+comment_content+'"}');
                         }
                     })
                 }
@@ -1312,7 +1367,6 @@
                 var comment_content = $("#input" + comment_num).val();
                 var post_num = $(this).attr("post_num");
                 var guest_num = $(this).attr("guest_num");
-                alert(post_num + guest_num);
 
                 if (type == "post") {
 
@@ -1334,6 +1388,9 @@
                             commentoffset = 0;
                             scroll(commentoffset, post_num);
                             commentCount(post_num);
+                            
+                          	//답글 알람
+                          	ws.send('{"type":"comment","sender_num":"${sessionScope.user_num}","comment_num":"'+comment_num+'","comment_content":"'+comment_content+'"}');
                         }
                     })
                 } else {
@@ -1356,6 +1413,9 @@
                             commentoffset = 0;
                             guestscroll(commentoffset, guest_num);
                             commentGuestCount(guest_num);
+                            
+                          	//답글 알람
+                            ws.send('{"type":"comment","sender_num":"${sessionScope.user_num}","comment_num":"'+comment_num+'","comment_content":"'+comment_content+'"}');
                         }
                     })
                 }
@@ -1394,6 +1454,9 @@
                             $("#input" + comment_num).hide();
                             scroll(commentoffset, post_num);
                             commentCount(post_num);
+                            
+                          	//댓글 좋아요 알림
+                      	 	ws.send('{"type":"clike","sender_num":"${sessionScope.user_num}","comment_num":"'+comment_num+'"}');
                         }
                     });
                 } else {
@@ -1413,6 +1476,9 @@
                             $("#input" + comment_num).hide();
                             guestscroll(commentoffset, guest_num);
                             commentGuestCount(guest_num);
+                            
+                         	//댓글 좋아요 알림
+                      	 	ws.send('{"type":"clike","sender_num":"${sessionScope.user_num}","comment_num":"'+comment_num+'"}');
                         }
                     });
                 }
@@ -2244,7 +2310,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" id="btnwrite" num="${dto.user_num }">게시</button>
                 </div>
-                c
 
             </div>
 
@@ -2330,8 +2395,15 @@
                      style="width: 180px; height: 180px; cursor: pointer; border-radius: 90px;
                         position: relative; left: 250px; bottom: 80px;">
             </c:if>
-            <img alt="" src="${root }/image/camera.png" style="width: 50px; height: 50px; cursor: pointer;
-                  position: relative; left: 180px; bottom: 7px;">
+            
+            <c:if test="${sessionScope.user_num==dto.user_num }">
+            	<img alt="" src="${root }/image/camera.png" style="width: 50px; height: 50px; cursor: pointer;
+                  position: relative; left: 180px; bottom: 7px;" class="userphotochangeimg">
+            </c:if>
+            <c:if test="${sessionScope.user_num!=dto.user_num }">
+            	<img alt="" src="${root }/image/camera.png" style="width: 50px; height: 50px; cursor: pointer;
+                  position: relative; left: 180px; bottom: 7px; visibility: hidden;" class="userphotochangeimg">
+            </c:if>
 
             <span style="font-size: 22pt; font-weight: bold; position: relative; left: 200px; bottom: 60px;">${dto.user_name }</span>
 
@@ -2341,8 +2413,14 @@
 
 
             <ul class="dropdown-menu" style="position: absolute; left: 200px; top: 100px;">
-                <li><a href="${root }/photo/${sessionScope.user_photo}" target="_new" style="text-decoration: none; outline: none;">프로필
+            	<c:if test="${dto.user_photo==null }">
+            		<li><a href="${root }/image/noimg.png" target="_new" style="text-decoration: none; outline: none;">프로필
                     사진 보기</a></li>
+            	</c:if>
+            	<c:if test="${dto.user_photo!=null }">
+                	<li><a href="${root }/photo/${dto.user_photo}" target="_new" style="text-decoration: none; outline: none;">프로필
+                    사진 보기</a></li>
+                </c:if>
                 <c:if test="${sessionScope.user_num==dto.user_num }">
                     <li><a href="#" id="btnnewphoto">프로필 사진 업데이트</a></li>
                 </c:if>
@@ -2378,7 +2456,9 @@
                 </c:if>
             </c:if>
 
+			<c:if test="${sessionScope.user_num!=dto.user_num }">
             <button type="button" class="btnmessage"><i class="fa-solid fa-comment"></i>&nbsp;메시지 보내기</button>
+			</c:if>
 
             <c:if test="${sessionScope.user_num==dto.user_num }">
                 <button type="button" class="btnprofile" data-toggle="modal" data-target="#infoupdate" style="border-radius: 5px; border: none;">
@@ -2404,7 +2484,7 @@
                 <div class="intro-info">
                     <span>&nbsp;<i class="fa-solid fa-house fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr.replaceAll(',', ' ') }</b>&nbsp;&nbsp;</span><br>
                     <span>&nbsp;&nbsp;<i class="fa-solid fa-location-dot  fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_addr.substring(0, 2)}</b>&nbsp;&nbsp;출신</span><br>
-                    <span><i class="fa-solid fa-wifi fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${followercount }</b>&nbsp;&nbsp;명이 팔로우함</span><br>
+                    <span class="followerListBtn" style="cursor: pointer;"><i class="fa-solid fa-wifi fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${followercount }</b>&nbsp;&nbsp;명이 팔로우함</span><br>
                     <span>&nbsp;<i class="fa-solid fa-envelope fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_email }</b>&nbsp;&nbsp;</span><br>
                     <span>&nbsp;&nbsp;<i class="fa-solid fa-mobile-screen-button fa-2x - 2em"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b>${dto.user_hp}</b>&nbsp;&nbsp;</span>
                 </div>
@@ -2507,11 +2587,25 @@
                         <div class="top">
                             <div class="top-user">
                                 <c:if test="${adto.type=='post' }">
-                                    <a href="${root }/user/mypage?user_num=${dto.user_num}"><img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
+                                    <a href="${root }/user/mypage?user_num=${dto.user_num}">
+                                    	<c:if test="${dto.user_photo!=null }">
+                                    		<img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
+                                    	</c:if>
+                                    	
+                                    	<c:if test="${dto.user_photo==null }">
+                                    		<img alt="" src="${root }/image/noimg.png" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
+                                    	</c:if>
+                                    </a>
                                 </c:if>
 
                                 <c:if test="${adto.type=='guest' }">
-                                    <a href="${root }/user/mypage?user_num=${adto.dto.user_num}"><img alt="" src="${root }/photo/${adto.dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
+                                	<c:if test="${adto.dto.user_photo!=null }">
+                                    	<a href="${root }/user/mypage?user_num=${adto.dto.user_num}"><img alt="" src="${root }/photo/${adto.dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
+                                    </c:if>
+                                    
+                                    <c:if test="${adto.dto.user_photo==null }">
+                                    	<a href="${root }/user/mypage?user_num=${adto.dto.user_num}"><img alt="" src="${root }/image/noimg.png" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
+                                    </c:if>
                                 </c:if>
                                 <div class="top-writeday">
                                        <span><b><a href="${root }/user/mypage?user_num=${adto.dto.user_num}" style="color: black;">${adto.dto.user_name }</a><c:if test="${adto.type=='guest' }"><i class="fa-solid fa-caret-right"></i></c:if>
@@ -2578,7 +2672,7 @@
                                         <c:forTokens items="${adto.post_file }" delims="," var="file">
                                             <div class="fileimg">
                                                 <a href="/post_file/${file }" target="_new" style="text-decoration: none; outline: none;">
-                                                    <img src="/post_file/${file }" style="width: 100%;height: 500px;">
+                                                    <img src="/post_file/${file }" style="width: 60%;height: 100%; margin: 0 auto;">
                                                 </a>
                                             </div>
                                         </c:forTokens>
@@ -2588,7 +2682,7 @@
                                         <c:forTokens items="${adto.post_file }" delims="," var="file">
                                             <div class="fileimg">
                                                 <a href="/post_file/${file }" target="_new" style="text-decoration: none; outline: none;">
-                                                    <img src="/guest_file/${file }" style="width: 100%;height: 500px;">
+                                                    <img src="/guest_file/${file }" style="width: 60%;height: 100%; margin: 0 auto;">
                                                 </a>
                                             </div>
                                         </c:forTokens>
