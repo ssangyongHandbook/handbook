@@ -21,7 +21,6 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
 
 <script src="https://kit.fontawesome.com/2663817d27.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="post_css.css">
 
 
 <script type="text/javascript">
@@ -140,10 +139,7 @@
 
           var followpost_num = $(this).attr("followpost_num");
           var unfollowpost_num= $(this).attr("unfollowpost_num");
-          
-          console.log("followpost_num: "+followpost_num);
-          console.log("unfollowpost_num: "+unfollowpost_num);
-
+       
           $("#" + followpost_num).toggle();
           $("#" + unfollowpost_num).toggle();
 
@@ -810,7 +806,6 @@
                      }
                   
                      var addTimeline = document.createElement("div");
-                      console.log(s);
                       addTimeline.innerHTML =s;
 
                       document.querySelector('section').appendChild(addTimeline);
@@ -1400,7 +1395,6 @@
                       }
                    
                       var addTimeline = document.createElement("div");
-                      console.log(s);
                       addTimeline.innerHTML =s;
                       document.querySelector('sectiontime').appendChild(addTimeline);
                       return false;
@@ -1588,7 +1582,6 @@
                 s += '<button type="button" class="cminsert" comment_num="'+item.comment_num+'" post_num="'+item.post_num+'" style="margin-left: -40px;"></button>';
                 s += '</div>';
                 s += '</form></div>';
-                console.log(s);
                 addContent.innerHTML = s;
                 document.querySelector('section1').appendChild(addContent);
 
