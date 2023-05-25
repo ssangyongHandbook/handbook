@@ -45,15 +45,19 @@
 	<c:set var = "root" value = "<%=request.getContextPath() %>"/>
 
 	<div class = "menu">
-
 		<div class ="menuprofile" style="margin-top: 10px;">
-		<c:if test="${sessionScope.loginok==null }">
-		<img alt = "" src = "${root }/image/noimg.png" class = "img-circle" style ="border:1px solid black; border: none; width: 35px; height: 35px; margin-left: 5px;">
-		</c:if>
+
+		<c:if test="${sessionScope.loginok!=null }">
 		
-		<c:if test="${sessionScope.loginok!=null }"> <!-- 로그인 컨트롤러에서 세션으로 받아온다 -->
-		<a href="/user/mypage?user_num=${sessionScope.user_num }" style="margin-left: 30px; "><img alt = "" src = "${root }/photo/${sessionScope.user_photo}" width="35" height="35" class = "img-circle"></a>
-		<span style="font-size: 12pt; margin-left: 3px;">${sessionScope.name}</span>
+			<c:if test="${sessionScope.user_photo==null }">
+			<a href="/user/mypage?user_num=${sessionScope.user_num }" style="margin-left: 30px; "><img alt = "" src = "${root }/image/noimg.png" width="35" height="35" class = "img-circle"></a>
+			<span style="font-size: 12pt; margin-left: 3px;">${sessionScope.name}</span>
+			</c:if>
+			
+			<c:if test="${sessionScope.user_photo!=null }">
+			<a href="/user/mypage?user_num=${sessionScope.user_num }" style="margin-left: 30px; "><img alt = "" src = "${root }/photo/${sessionScope.user_photo}" width="35" height="35" class = "img-circle"></a>
+			<span style="font-size: 12pt; margin-left: 3px;">${sessionScope.name}</span>
+			</c:if>
 		</c:if>
 		</div>
 		

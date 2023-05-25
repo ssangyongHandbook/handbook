@@ -1064,7 +1064,7 @@
                                             for (var i = 0; i < postFiles.length; i++) {
                                                 s += '<div class="fileimg">' +
                                                     '<a href="/post_file/' + postFiles[i] + '" target="_new" style="text-decoration: none; outline: none;">' +
-                                                    '<img src="/post_file/' + postFiles[i] + '" style="width: 100%;height: 500px;">' +
+                                                    '<img src="/post_file/' + postFiles[i] + '" style="width: 60%;height: 100%; margin: 0 auto;">' +
                                                     '</a>' +
                                                     '</div>';
                                             }
@@ -1189,7 +1189,7 @@
                                             for (var j = 0; j < guestFiles.length; j++) {
                                                 s += '<div class="fileimg">' +
                                                     '<a href="/post_file/' + guestFiles[j] + '" target="_new" style="text-decoration: none; outline: none;">' +
-                                                    '<img src="/guest_file/' + guestFiles[j] + '" style="width: 100%;height: 500px;">' +
+                                                    '<img src="/guest_file/' + guestFiles[j] + '" style="width: 60%;height: 100%; margin: 0 auto;">' +
                                                     '</a>' +
                                                     '</div>';
                                             }
@@ -2310,7 +2310,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" id="btnwrite" num="${dto.user_num }">게시</button>
                 </div>
-                c
 
             </div>
 
@@ -2588,11 +2587,25 @@
                         <div class="top">
                             <div class="top-user">
                                 <c:if test="${adto.type=='post' }">
-                                    <a href="${root }/user/mypage?user_num=${dto.user_num}"><img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
+                                    <a href="${root }/user/mypage?user_num=${dto.user_num}">
+                                    	<c:if test="${dto.user_photo!=null }">
+                                    		<img alt="" src="${root }/photo/${dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
+                                    	</c:if>
+                                    	
+                                    	<c:if test="${dto.user_photo==null }">
+                                    		<img alt="" src="${root }/image/noimg.png" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;">
+                                    	</c:if>
+                                    </a>
                                 </c:if>
 
                                 <c:if test="${adto.type=='guest' }">
-                                    <a href="${root }/user/mypage?user_num=${adto.dto.user_num}"><img alt="" src="${root }/photo/${adto.dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
+                                	<c:if test="${adto.dto.user_photo!=null }">
+                                    	<a href="${root }/user/mypage?user_num=${adto.dto.user_num}"><img alt="" src="${root }/photo/${adto.dto.user_photo}" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
+                                    </c:if>
+                                    
+                                    <c:if test="${adto.dto.user_photo==null }">
+                                    	<a href="${root }/user/mypage?user_num=${adto.dto.user_num}"><img alt="" src="${root }/image/noimg.png" style="width:40px; height: 40px; border-radius: 20px; margin: 10px;"></a>
+                                    </c:if>
                                 </c:if>
                                 <div class="top-writeday">
                                        <span><b><a href="${root }/user/mypage?user_num=${adto.dto.user_num}" style="color: black;">${adto.dto.user_name }</a><c:if test="${adto.type=='guest' }"><i class="fa-solid fa-caret-right"></i></c:if>
@@ -2659,7 +2672,7 @@
                                         <c:forTokens items="${adto.post_file }" delims="," var="file">
                                             <div class="fileimg">
                                                 <a href="/post_file/${file }" target="_new" style="text-decoration: none; outline: none;">
-                                                    <img src="/post_file/${file }" style="width: 100%;height: 500px;">
+                                                    <img src="/post_file/${file }" style="width: 60%;height: 100%; margin: 0 auto;">
                                                 </a>
                                             </div>
                                         </c:forTokens>
@@ -2669,7 +2682,7 @@
                                         <c:forTokens items="${adto.post_file }" delims="," var="file">
                                             <div class="fileimg">
                                                 <a href="/post_file/${file }" target="_new" style="text-decoration: none; outline: none;">
-                                                    <img src="/guest_file/${file }" style="width: 100%;height: 500px;">
+                                                    <img src="/guest_file/${file }" style="width: 60%;height: 100%; margin: 0 auto;">
                                                 </a>
                                             </div>
                                         </c:forTokens>
