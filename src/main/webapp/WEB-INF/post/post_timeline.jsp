@@ -39,7 +39,9 @@
          var post_access = $("#post_access").val();
          var post_content = $("#post_content").val();
          var user_num = $("#user_num").val();
+         var file=$("#post_file").val();
          var files = $("#post_file")[0].files;
+
          //var data="num="+updatenum+"&name="+updatename+"&hp="+updatehp+"&email="+updateemail+"&addr="+updateaddr;
          //var data=$("#postInsert").serialize();
 
@@ -55,19 +57,24 @@
          form.append("post_access", post_access);
          form.append("post_content", post_content);
          form.append("user_num", user_num);
+         
+         if(post_content == "" && file == "")
+        	 alert("사진 또는 내용을 입력해주세요");
+         else{
+        	 $.ajax({
 
-         $.ajax({
-
-            type : "post",
-            dataType : "text",
-            processData : false,
-            contentType : false,
-            data : form,
-            url : "insertpost",
-            success : function() {
-               location.reload();
-            }
-         });
+                 type : "post",
+                 dataType : "text",
+                 processData : false,
+                 contentType : false,
+                 data : form,
+                 url : "insertpost",
+                 success : function() {
+                    location.reload();
+                 }
+              });
+         }
+         
       });
 
      /* $(document).on("click", ".postmenu", function() {
