@@ -299,10 +299,10 @@ $(document).on("click", ".addbtn", function() {
 		    					
 		    		        		var s = "";
 		    		        		if(item.user_photo != null){
-		    		        			s += "<div class='up'><img src='/photo/"+item.user_photo+"' class='userphoto'></div>";
+		    		        			s += "<div class='up'><a href='/user/mypage?user_num="+item.to_user+"'><img src='/photo/" + item.user_photo + "' class='userphoto'></a></div>"
 		    		        		}else{
 		    		        			
-		    		        			s += "<div class='up'><img src='../image/noimg.png' class='userphoto'></div>";
+		    		        			s += "<div class='up'><a href='/user/mypage?user_num="+item.to_user+"'><img src='../image/noimg.png' class='userphoto'></a></div>";
 		    		        		}
 		    		        		s += "<div class='un'><span>"+item.user_name+"</span>";
 		    		        		

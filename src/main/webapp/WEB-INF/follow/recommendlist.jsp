@@ -152,7 +152,7 @@
 			    		        			
 			    		        		}else{
 			    		        			s += '<div class="up">';
-		    		    					s += '<img src="../image/noimg.png" class="userphoto">';
+		    		    					s += '<a href="/user/mypage?user_num='+item.user_num+'"><img src="../image/noimg.png" class="userphoto"></a>';
 		    		    					s += '</div>';		
 			    		        		}
 			    		    			s += '<div class="un">';
