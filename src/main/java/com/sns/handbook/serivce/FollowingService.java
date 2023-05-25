@@ -119,4 +119,27 @@ public class FollowingService implements FollowingServiceInter {
 		return mapper.followRecommend(map);
 	}
 
+	@Override
+	public List<FollowingDto> getFollowingList(String to_user, int offset) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("to_user", to_user);
+		map.put("offset", offset);
+		
+		return mapper.getFollowingList(map);
+	}
+
+	@Override
+	public List<FollowingDto> followerSearch(String to_user, String searchword, int offset) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("to_user", to_user);
+		map.put("searchword", searchword);
+		map.put("offset", offset);
+		
+		return mapper.followerSearch(map);
+	}
+
 }
