@@ -873,7 +873,7 @@
                   scroll(commentoffset, post_num);
                   setTimeout(function() {
                       $(".commentmodal-body").scrollTop(modalScrollPosition);
-                    },400);
+                    },600);
                   commentCount(post_num);
                   
                   //답글 알람
@@ -909,7 +909,7 @@
                   scroll(commentoffset, post_num);
                   setTimeout(function() {
                       $(".commentmodal-body").scrollTop(modalScrollPosition);
-                    },400);
+                    },600);
                   commentCount(post_num);
                   
                   //웹소켓에 댓글 알림 보내기
@@ -955,7 +955,7 @@
                scroll(commentoffset, post_num);
                setTimeout(function() {
                    $(".commentmodal-body").scrollTop(modalScrollPosition);
-                 },400);
+                 },600);
                commentCount(post_num);
                
                //댓글 좋아요 알림
@@ -987,7 +987,7 @@
                scroll(commentoffset, post_num);
                setTimeout(function() {
                    $(".commentmodal-body").scrollTop(modalScrollPosition);
-                 },400);
+                 },600);
                commentCount(post_num);
             }
          });
@@ -1013,7 +1013,7 @@
                scroll(commentoffset, post_num);
                setTimeout(function() {
                    $(".commentmodal-body").scrollTop(modalScrollPosition);
-                 },400);
+                 },600);
                commentCount(post_num);
             }
          })
@@ -1083,7 +1083,7 @@
                   scroll(commentoffset, post_num);
                   setTimeout(function() {
                       $(".commentmodal-body").scrollTop(modalScrollPosition);
-                    },500);
+                    },700);
                   commentCount(post_num);
                }
             });
