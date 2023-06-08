@@ -104,7 +104,8 @@
   </ul>
   <br><br>
   <h3>프로젝트 산출물</h3>
-  <a href='https://youtu.be/sdiJD54SL24'><img src='http://img.youtube.com/vi/sdiJD54SL24/0.jpg'></a>
   <hr>
+  <a href='https://youtu.be/sdiJD54SL24'><img src='http://img.youtube.com/vi/sdiJD54SL24/0.jpg'></a>
+ 
   
 </div>
