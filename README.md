@@ -105,5 +105,7 @@
   <br><br>
   <h3>프로젝트 산출물</h3>
   <hr>
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/sdiJD54SL24" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </div>
+
+[![Video Label](http://img.youtube.com/vi/sdiJD54SL24/0.jpg)](https://youtu.be/sdiJD54SL24?t=0s)
+
