@@ -1,6 +1,6 @@
 <div align='center'>
 <h3>SNS 사이트 구현</h3>
-<h2>핸드북</h2>
+<h2>HandBook</h2>
 <img src='https://github.com/ssangyongHandbook/handbook/assets/124232240/f086e79a-7b6b-4cdb-9502-65050c27db90' alt='handbook logo' width='400'>
 </div>
 <div>
@@ -17,4 +17,8 @@
   <br><br>
   <h3>프로젝트 개요</h3>
   <hr>
+  <p>
+    HandBook은 차세대 소셜 네트워킹 플랫폼으로, 사용자 중심의 커뮤니케이션과 개인화를 제공합니다.<br>
+    HandBook은 모든 사용자에게 안전하고 개인화된 소셜 네트워킹 경험을 제공하는 것을 목표로 하고 있습니다.
+  </p>
 </div>
