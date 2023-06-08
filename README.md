@@ -56,4 +56,10 @@
   <hr>
   <img src='https://github.com/ssangyongHandbook/handbook/assets/124232240/6f952ee4-58fb-4bd8-afbe-300a0dc70964'>
   ERDCloud 링크참고 https://www.erdcloud.com/d/5RBWkdXjoxxYPw3Nb
+  <br><br>
+  <h3>주요기능</h3>
+  <hr>
+  <ul>
+    <li>회원가입+로그인</li>
+  </ul>
 </div>
