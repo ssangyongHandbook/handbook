@@ -25,8 +25,16 @@
   <h3>기술스택</h3>
   <hr>
   <b>사용언어</b>
+  <br>
   <ul>
     <li>JavaScript</li>
     <li>Java</li>
+  </ul>
+  <br>
+  <b>v프론트앤드</b>
+  <br>
+  <ul>
+    <li>html</li>
+    <li>css</li>
   </ul>
 </div>
