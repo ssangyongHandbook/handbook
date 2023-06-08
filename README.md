@@ -105,6 +105,5 @@
   <br><br>
   <h3>프로젝트 산출물</h3>
   <hr>
-  <h4>시연연상</h4>
-  <a href='https://youtu.be/sdiJD54SL24' target='_new'></a>
+  <h4><a href='https://youtu.be/sdiJD54SL24' target='_new'>시연연상</a></h4>
 </div>
