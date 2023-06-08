@@ -54,5 +54,5 @@
   <br><br>
   <h3>ERD</h3>
   <hr>
-  <img src='https://github.com/ssangyongHandbook/handbook/assets/124232240/6f952ee4-58fb-4bd8-afbe-300a0dc70964' width='500'>
+  <img src='https://github.com/ssangyongHandbook/handbook/assets/124232240/6f952ee4-58fb-4bd8-afbe-300a0dc70964' width='800'>
 </div>
