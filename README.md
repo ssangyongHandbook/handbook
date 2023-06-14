@@ -36,13 +36,14 @@
   <ul>
     <li>html</li>
     <li>css</li>
+    <li>jquery</li>
   </ul>
   <br>
   <b>백엔드</b>
   <br>
   <ul>
     <li>Spring Boot</li>
-    <li>jquery</li>
+    
   </ul>
   <br>
   <b>데이터베이스</b>
